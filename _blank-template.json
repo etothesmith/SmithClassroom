@@ -1,0 +1,116 @@
+[
+ {
+  "id": "my-course",
+  "color": "#4DE0B1",
+  "name": {
+   "en": "Course name",
+   "es": "Nombre del curso"
+  },
+  "units": [
+   {
+    "id": "my-course-u1",
+    "title": {
+     "en": "Unit 1 · Title",
+     "es": "Unidad 1 · Título"
+    },
+    "brief": {
+     "en": "Study notes students read before the challenge.",
+     "es": "Apuntes que los estudiantes leen antes del reto."
+    },
+    "items": [
+     {
+      "id": "mc-101",
+      "type": "mcq",
+      "diff": 1,
+      "q": {
+       "en": "Question?",
+       "es": "¿Pregunta?"
+      },
+      "c": {
+       "en": [
+        "Right",
+        "Wrong 1",
+        "Wrong 2",
+        "Wrong 3"
+       ],
+       "es": [
+        "Correcta",
+        "Incorrecta 1",
+        "Incorrecta 2",
+        "Incorrecta 3"
+       ]
+      },
+      "a": 0,
+      "why": {
+       "en": "Why the answer is right.",
+       "es": "Por qué la respuesta es correcta."
+      }
+     },
+     {
+      "id": "mc-102",
+      "type": "multi",
+      "diff": 2,
+      "q": {
+       "en": "Pick all that apply.",
+       "es": "Elige todas las que apliquen."
+      },
+      "c": {
+       "en": [
+        "A",
+        "B",
+        "C",
+        "D"
+       ],
+       "es": [
+        "A",
+        "B",
+        "C",
+        "D"
+       ]
+      },
+      "a": [
+       0,
+       2
+      ],
+      "why": {
+       "en": "Explanation.",
+       "es": "Explicación."
+      }
+     },
+     {
+      "id": "mc-103",
+      "type": "numeric",
+      "diff": 2,
+      "q": {
+       "en": "Compute 12 × 4.",
+       "es": "Calcula 12 × 4."
+      },
+      "a": 48,
+      "tol": 0,
+      "why": {
+       "en": "12 × 4 = 48.",
+       "es": "12 × 4 = 48."
+      }
+     },
+     {
+      "id": "mc-104",
+      "type": "short",
+      "diff": 3,
+      "q": {
+       "en": "Explain in one sentence.",
+       "es": "Explica en una oración."
+      },
+      "keys": [
+       "keyword",
+       "palabra"
+      ],
+      "why": {
+       "en": "Model answer.",
+       "es": "Respuesta modelo."
+      }
+     }
+    ]
+   }
+  ]
+ }
+]

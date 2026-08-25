@@ -1,0 +1,840 @@
+{
+ "id": "u-s-government-honors",
+ "color": "#F2B441",
+ "name": {
+  "en": "U.S. Government Honors"
+ },
+ "units": [
+  {
+   "id": "u-s-government-honors-smith-island-bank",
+   "title": {
+    "en": "Smith Island Bank"
+   },
+   "brief": {
+    "en": "Study notes for this unit go here."
+   },
+   "items": [
+    {
+     "id": "gov-question-001",
+     "type": "mcq",
+     "diff": 2,
+     "q": {
+      "en": "Coach Smith wants absolute power, but the citizens demand a 'Social Contract'. Which Enlightenment philosopher argued that government exists to protect natural rights?"
+     },
+     "c": {
+      "en": [
+       "John Locke",
+       "Thomas Hobbes",
+       "Karl Marx",
+       "Niccolò Machiavelli"
+      ]
+     },
+     "a": 0,
+     "why": {
+      "en": "See the lesson notes for this unit."
+     }
+    },
+    {
+     "id": "gov-question-002",
+     "type": "mcq",
+     "diff": 2,
+     "q": {
+      "en": "You suggest dividing Smith's Island into three branches of government so he can't become a tyrant. Who inspired this 'Separation of Powers'?"
+     },
+     "c": {
+      "en": [
+       "Baron de Montesquieu",
+       "Jean-Jacques Rousseau",
+       "Voltaire",
+       "King George III"
+      ]
+     },
+     "a": 0,
+     "why": {
+      "en": "See the lesson notes for this unit."
+     }
+    },
+    {
+     "id": "gov-question-003",
+     "type": "mcq",
+     "diff": 2,
+     "q": {
+      "en": "Citizens hand Coach Smith a document demanding he follow the law, similar to how King John was forced to limit his own power in 1215. What historical document is this based on?"
+     },
+     "c": {
+      "en": [
+       "The Magna Carta",
+       "The Mayflower Compact",
+       "The English Bill of Rights",
+       "Common Sense"
+      ]
+     },
+     "a": 0,
+     "why": {
+      "en": "See the lesson notes for this unit."
+     }
+    },
+    {
+     "id": "gov-question-004",
+     "type": "mcq",
+     "diff": 2,
+     "q": {
+      "en": "Coach Smith reads 'Common Sense' and decides to declare independence from the mainland. Who wrote this influential pamphlet?"
+     },
+     "c": {
+      "en": [
+       "Thomas Paine",
+       "Thomas Jefferson",
+       "Alexander Hamilton",
+       "James Madison"
+      ]
+     },
+     "a": 0,
+     "why": {
+      "en": "See the lesson notes for this unit."
+     }
+    },
+    {
+     "id": "gov-question-005",
+     "type": "mcq",
+     "diff": 2,
+     "q": {
+      "en": "The citizens say their rights to 'Life, Liberty, and Property' are unalienable. Coach Smith says he gives them those rights. According to the Declaration of Independence, who is correct?"
+     },
+     "c": {
+      "en": [
+       "The citizens; rights are endowed by their Creator.",
+       "Coach Smith; the government grants all rights.",
+       "Neither; rights are earned through taxes.",
+       "Both share power over rights."
+      ]
+     },
+     "a": 0,
+     "why": {
+      "en": "See the lesson notes for this unit."
+     }
+    },
+    {
+     "id": "gov-question-006",
+     "type": "mcq",
+     "diff": 2,
+     "q": {
+      "en": "Your first draft of the government is too weak! Coach Smith can't collect taxes or enforce laws, just like America's first failed constitution known as:"
+     },
+     "c": {
+      "en": [
+       "The Articles of Confederation",
+       "The Bill of Rights",
+       "The Federalist Papers",
+       "The Northwest Ordinance"
+      ]
+     },
+     "a": 0,
+     "why": {
+      "en": "See the lesson notes for this unit."
+     }
+    },
+    {
+     "id": "gov-question-007",
+     "type": "mcq",
+     "diff": 2,
+     "q": {
+      "en": "The small provinces on Smith's Island want equal representation, but the large provinces want it based on population. You solve this with a bicameral legislature, mimicking the:"
+     },
+     "c": {
+      "en": [
+       "Great Compromise (Connecticut Compromise)",
+       "Three-Fifths Compromise",
+       "New Jersey Plan",
+       "Virginia Plan"
+      ]
+     },
+     "a": 0,
+     "why": {
+      "en": "See the lesson notes for this unit."
+     }
+    },
+    {
+     "id": "gov-question-008",
+     "type": "mcq",
+     "diff": 2,
+     "q": {
+      "en": "Coach Smith demands to know who has the ultimate authority in this new Republic. You point to the preamble which starts with 'We the People', demonstrating:"
+     },
+     "c": {
+      "en": [
+       "Popular Sovereignty",
+       "Federalism",
+       "Judicial Review",
+       "Checks and Balances"
+      ]
+     },
+     "a": 0,
+     "why": {
+      "en": "See the lesson notes for this unit."
+     }
+    },
+    {
+     "id": "gov-question-009",
+     "type": "mcq",
+     "diff": 2,
+     "q": {
+      "en": "Anti-Federalist citizens refuse to ratify your new constitution unless you add a specific section protecting their individual liberties. You must add:"
+     },
+     "c": {
+      "en": [
+       "A Bill of Rights",
+       "The Supremacy Clause",
+       "The Elastic Clause",
+       "An Electoral College"
+      ]
+     },
+     "a": 0,
+     "why": {
+      "en": "See the lesson notes for this unit."
+     }
+    },
+    {
+     "id": "gov-question-010",
+     "type": "mcq",
+     "diff": 2,
+     "q": {
+      "en": "A local mayor on the island makes a law that contradicts Coach Smith's national law. You tell the mayor that the national law wins because of the:"
+     },
+     "c": {
+      "en": [
+       "Supremacy Clause",
+       "Commerce Clause",
+       "Necessary and Proper Clause",
+       "Establishment Clause"
+      ]
+     },
+     "a": 0,
+     "why": {
+      "en": "See the lesson notes for this unit."
+     }
+    },
+    {
+     "id": "gov-question-011",
+     "type": "mcq",
+     "diff": 2,
+     "q": {
+      "en": "Coach Smith wants to control the local schools, but the Constitution reserves powers not given to the national government to the states. Which amendment guarantees these 'Reserved Powers'?"
+     },
+     "c": {
+      "en": [
+       "10th Amendment",
+       "1st Amendment",
+       "5th Amendment",
+       "14th Amendment"
+      ]
+     },
+     "a": 0,
+     "why": {
+      "en": "See the lesson notes for this unit."
+     }
+    },
+    {
+     "id": "gov-question-012",
+     "type": "mcq",
+     "diff": 2,
+     "q": {
+      "en": "The national government and the local provinces BOTH have the power to tax the citizens of Smith's Island. This is an example of:"
+     },
+     "c": {
+      "en": [
+       "Concurrent Powers",
+       "Enumerated Powers",
+       "Implied Powers",
+       "Reserved Powers"
+      ]
+     },
+     "a": 0,
+     "why": {
+      "en": "See the lesson notes for this unit."
+     }
+    },
+    {
+     "id": "gov-question-013",
+     "type": "mcq",
+     "diff": 2,
+     "q": {
+      "en": "Coach Smith uses the 'Necessary and Proper Clause' to create a National Bank, even though the Constitution doesn't specifically mention banks. These powers are called:"
+     },
+     "c": {
+      "en": [
+       "Implied Powers",
+       "Expressed Powers",
+       "Concurrent Powers",
+       "Inherent Powers"
+      ]
+     },
+     "a": 0,
+     "why": {
+      "en": "See the lesson notes for this unit."
+     }
+    },
+    {
+     "id": "gov-question-014",
+     "type": "mcq",
+     "diff": 2,
+     "q": {
+      "en": "The legislature passes a budget that Coach Smith hates. He refuses to sign it. This presidential power is called a:"
+     },
+     "c": {
+      "en": [
+       "Veto",
+       "Filibuster",
+       "Executive Order",
+       "Pardon"
+      ]
+     },
+     "a": 0,
+     "why": {
+      "en": "See the lesson notes for this unit."
+     }
+    },
+    {
+     "id": "gov-question-015",
+     "type": "mcq",
+     "diff": 2,
+     "q": {
+      "en": "Even though Coach Smith vetoed the bill, the legislature passes it anyway with a 2/3rds majority vote in both houses. This is a primary example of:"
+     },
+     "c": {
+      "en": [
+       "Checks and Balances",
+       "Judicial Review",
+       "Federalism",
+       "Executive Privilege"
+      ]
+     },
+     "a": 0,
+     "why": {
+      "en": "See the lesson notes for this unit."
+     }
+    },
+    {
+     "id": "gov-question-016",
+     "type": "mcq",
+     "diff": 2,
+     "q": {
+      "en": "A senator on Smith Island talks for 14 hours straight to delay a vote on a bill he doesn't like. This tactic is known as a:"
+     },
+     "c": {
+      "en": [
+       "Filibuster",
+       "Cloture",
+       "Gerrymandering",
+       "Pocket Veto"
+      ]
+     },
+     "a": 0,
+     "why": {
+      "en": "See the lesson notes for this unit."
+     }
+    },
+    {
+     "id": "gov-question-017",
+     "type": "mcq",
+     "diff": 2,
+     "q": {
+      "en": "Coach Smith wants to redraw the voting districts so his political party is guaranteed to win the legislature. This controversial practice is called:"
+     },
+     "c": {
+      "en": [
+       "Gerrymandering",
+       "Redlining",
+       "Reapportionment",
+       "Logrolling"
+      ]
+     },
+     "a": 0,
+     "why": {
+      "en": "See the lesson notes for this unit."
+     }
+    },
+    {
+     "id": "gov-question-018",
+     "type": "mcq",
+     "diff": 2,
+     "q": {
+      "en": "The Island Congress has two chambers: a House based on population and a Senate with equal representation. This structure is called:"
+     },
+     "c": {
+      "en": [
+       "Bicameral",
+       "Unicameral",
+       "Oligarchic",
+       "Parliamentary"
+      ]
+     },
+     "a": 0,
+     "why": {
+      "en": "See the lesson notes for this unit."
+     }
+    },
+    {
+     "id": "gov-question-019",
+     "type": "mcq",
+     "diff": 2,
+     "q": {
+      "en": "A hurricane hits the island! Instead of waiting for Congress to pass a law, Coach Smith issues a directive that has the force of law to manage the crisis. This is an:"
+     },
+     "c": {
+      "en": [
+       "Executive Order",
+       "Executive Agreement",
+       "Amnesty",
+       "Executive Privilege"
+      ]
+     },
+     "a": 0,
+     "why": {
+      "en": "See the lesson notes for this unit."
+     }
+    },
+    {
+     "id": "gov-question-020",
+     "type": "mcq",
+     "diff": 2,
+     "q": {
+      "en": "Coach Smith appoints a new Supreme Judge for the island, but the appointment must be approved by the Senate. Which Senate power is this?"
+     },
+     "c": {
+      "en": [
+       "Advice and Consent",
+       "Judicial Review",
+       "Impeachment",
+       "Filibuster"
+      ]
+     },
+     "a": 0,
+     "why": {
+      "en": "See the lesson notes for this unit."
+     }
+    },
+    {
+     "id": "gov-question-021",
+     "type": "mcq",
+     "diff": 2,
+     "q": {
+      "en": "Coach Smith commits a 'high crime and misdemeanor'. The House votes to bring formal charges against him. This process is called:"
+     },
+     "c": {
+      "en": [
+       "Impeachment",
+       "Conviction",
+       "Recall",
+       "Censure"
+      ]
+     },
+     "a": 0,
+     "why": {
+      "en": "See the lesson notes for this unit."
+     }
+    },
+    {
+     "id": "gov-question-022",
+     "type": "mcq",
+     "diff": 2,
+     "q": {
+      "en": "In the general election, Coach Smith wins the popular vote, but loses the island's presidency because his opponent won a majority of the 538 electoral votes. This system is the:"
+     },
+     "c": {
+      "en": [
+       "Electoral College",
+       "Direct Democracy",
+       "Proportional Representation",
+       "Primary System"
+      ]
+     },
+     "a": 0,
+     "why": {
+      "en": "See the lesson notes for this unit."
+     }
+    },
+    {
+     "id": "gov-question-023",
+     "type": "mcq",
+     "diff": 2,
+     "q": {
+      "en": "The Supreme Court of Smith Island strikes down one of Coach Smith's executive orders for being 'unconstitutional'. This power is known as:"
+     },
+     "c": {
+      "en": [
+       "Judicial Review",
+       "Stare Decisis",
+       "Habeas Corpus",
+       "Writ of Certiorari"
+      ]
+     },
+     "a": 0,
+     "why": {
+      "en": "See the lesson notes for this unit."
+     }
+    },
+    {
+     "id": "gov-question-024",
+     "type": "mcq",
+     "diff": 2,
+     "q": {
+      "en": "Which landmark U.S. Supreme Court case originally established the principle of Judicial Review?"
+     },
+     "c": {
+      "en": [
+       "Marbury v. Madison",
+       "McCulloch v. Maryland",
+       "Brown v. Board of Education",
+       "Gideon v. Wainwright"
+      ]
+     },
+     "a": 0,
+     "why": {
+      "en": "See the lesson notes for this unit."
+     }
+    },
+    {
+     "id": "gov-question-025",
+     "type": "mcq",
+     "diff": 2,
+     "q": {
+      "en": "Coach Smith tries to arrest a teenager for not having an attorney. The teen argues the government must provide one if he can't afford it, based on which Supreme Court case?"
+     },
+     "c": {
+      "en": [
+       "Gideon v. Wainwright",
+       "Miranda v. Arizona",
+       "Tinker v. Des Moines",
+       "Plessy v. Ferguson"
+      ]
+     },
+     "a": 0,
+     "why": {
+      "en": "See the lesson notes for this unit."
+     }
+    },
+    {
+     "id": "gov-question-026",
+     "type": "mcq",
+     "diff": 2,
+     "q": {
+      "en": "A student wears a black armband to school to protest Coach Smith's policies. The Court rules students don't 'shed their constitutional rights at the schoolhouse gate'. Which case?"
+     },
+     "c": {
+      "en": [
+       "Tinker v. Des Moines",
+       "Hazelwood v. Kuhlmeier",
+       "Bush v. Gore",
+       "U.S. v. Nixon"
+      ]
+     },
+     "a": 0,
+     "why": {
+      "en": "See the lesson notes for this unit."
+     }
+    },
+    {
+     "id": "gov-question-027",
+     "type": "mcq",
+     "diff": 2,
+     "q": {
+      "en": "Coach Smith tries to hide secret tapes of his corruption, claiming 'Executive Privilege'. The Supreme Court forces him to hand them over. Which case?"
+     },
+     "c": {
+      "en": [
+       "United States v. Nixon",
+       "Citizens United v. FEC",
+       "Roe v. Wade",
+       "McCulloch v. Maryland"
+      ]
+     },
+     "a": 0,
+     "why": {
+      "en": "See the lesson notes for this unit."
+     }
+    },
+    {
+     "id": "gov-question-028",
+     "type": "mcq",
+     "diff": 2,
+     "q": {
+      "en": "Coach Smith hates the local newspaper and orders the police to shut it down. Which First Amendment right is he violating?"
+     },
+     "c": {
+      "en": [
+       "Freedom of the Press",
+       "Freedom of Assembly",
+       "Freedom of Petition",
+       "Freedom of Religion (Establishment Clause)"
+      ]
+     },
+     "a": 0,
+     "why": {
+      "en": "See the lesson notes for this unit."
+     }
+    },
+    {
+     "id": "gov-question-029",
+     "type": "mcq",
+     "diff": 2,
+     "q": {
+      "en": "Coach Smith's police break into a house without a warrant or probable cause to search for stolen grading pens. Which amendment does this violate?"
+     },
+     "c": {
+      "en": [
+       "4th Amendment",
+       "2nd Amendment",
+       "3rd Amendment",
+       "8th Amendment"
+      ]
+     },
+     "a": 0,
+     "why": {
+      "en": "See the lesson notes for this unit."
+     }
+    },
+    {
+     "id": "gov-question-030",
+     "type": "mcq",
+     "diff": 2,
+     "q": {
+      "en": "A citizen is put on trial for stealing the school mascot, but refuses to testify against himself. He is pleading the:"
+     },
+     "c": {
+      "en": [
+       "5th Amendment",
+       "1st Amendment",
+       "6th Amendment",
+       "10th Amendment"
+      ]
+     },
+     "a": 0,
+     "why": {
+      "en": "See the lesson notes for this unit."
+     }
+    },
+    {
+     "id": "gov-question-031",
+     "type": "mcq",
+     "diff": 2,
+     "q": {
+      "en": "After being found innocent, Coach Smith tries to put the citizen on trial AGAIN for the exact same crime. This illegal act is called:"
+     },
+     "c": {
+      "en": [
+       "Double Jeopardy",
+       "Eminent Domain",
+       "Cruel and Unusual Punishment",
+       "Ex Post Facto"
+      ]
+     },
+     "a": 0,
+     "why": {
+      "en": "See the lesson notes for this unit."
+     }
+    },
+    {
+     "id": "gov-question-032",
+     "type": "mcq",
+     "diff": 2,
+     "q": {
+      "en": "Coach Smith sentences a student to 40 years of hard labor for chewing gum in class. This violates the 8th Amendment's protection against:"
+     },
+     "c": {
+      "en": [
+       "Cruel and Unusual Punishment",
+       "Unreasonable Searches",
+       "Self-Incrimination",
+       "Prior Restraint"
+      ]
+     },
+     "a": 0,
+     "why": {
+      "en": "See the lesson notes for this unit."
+     }
+    },
+    {
+     "id": "gov-question-033",
+     "type": "mcq",
+     "diff": 2,
+     "q": {
+      "en": "Coach Smith wants to build a new highway right through a citizen's house. The government takes the land but pays the citizen fair market value. This is known as:"
+     },
+     "c": {
+      "en": [
+       "Eminent Domain",
+       "Gerrymandering",
+       "Incorporation",
+       "Due Process"
+      ]
+     },
+     "a": 0,
+     "why": {
+      "en": "See the lesson notes for this unit."
+     }
+    },
+    {
+     "id": "gov-question-034",
+     "type": "mcq",
+     "diff": 2,
+     "q": {
+      "en": "Coach Smith says only people with blue eyes get a free public education on the island. This violates the 14th Amendment's:"
+     },
+     "c": {
+      "en": [
+       "Equal Protection Clause",
+       "Due Process Clause",
+       "Establishment Clause",
+       "Free Exercise Clause"
+      ]
+     },
+     "a": 0,
+     "why": {
+      "en": "See the lesson notes for this unit."
+     }
+    },
+    {
+     "id": "gov-question-035",
+     "type": "mcq",
+     "diff": 2,
+     "q": {
+      "en": "The 14th Amendment was historically used to apply the Bill of Rights to the state and local governments, a process known as:"
+     },
+     "c": {
+      "en": [
+       "Selective Incorporation",
+       "Suffrage",
+       "Federalism",
+       "Reapportionment"
+      ]
+     },
+     "a": 0,
+     "why": {
+      "en": "See the lesson notes for this unit."
+     }
+    },
+    {
+     "id": "gov-question-036",
+     "type": "mcq",
+     "diff": 2,
+     "q": {
+      "en": "Which landmark Supreme Court case ruled that 'separate but equal' facilities were unconstitutional, heavily relying on the 14th Amendment?"
+     },
+     "c": {
+      "en": [
+       "Brown v. Board of Education",
+       "Plessy v. Ferguson",
+       "Dred Scott v. Sandford",
+       "Miranda v. Arizona"
+      ]
+     },
+     "a": 0,
+     "why": {
+      "en": "See the lesson notes for this unit."
+     }
+    },
+    {
+     "id": "gov-question-037",
+     "type": "mcq",
+     "diff": 2,
+     "q": {
+      "en": "To become a naturalized citizen of Smith Island, an immigrant must do all of the following EXCEPT:"
+     },
+     "c": {
+      "en": [
+       "Be related to Coach Smith",
+       "Be at least 18 years old",
+       "Pass a Civics test",
+       "Swear an oath of allegiance"
+      ]
+     },
+     "a": 0,
+     "why": {
+      "en": "See the lesson notes for this unit."
+     }
+    },
+    {
+     "id": "gov-question-038",
+     "type": "mcq",
+     "diff": 2,
+     "q": {
+      "en": "Interest groups on the island hire people to meet directly with legislators to persuade them to pass favorable laws. These people are called:"
+     },
+     "c": {
+      "en": [
+       "Lobbyists",
+       "Bureaucrats",
+       "Electors",
+       "Justices"
+      ]
+     },
+     "a": 0,
+     "why": {
+      "en": "See the lesson notes for this unit."
+     }
+    },
+    {
+     "id": "gov-question-039",
+     "type": "mcq",
+     "diff": 2,
+     "q": {
+      "en": "An island politician forms an organization solely to raise money to fund campaign ads for Coach Smith's re-election. This organization is a:"
+     },
+     "c": {
+      "en": [
+       "Political Action Committee (PAC)",
+       "Third Party",
+       "Regulatory Agency",
+       "Cabinet Department"
+      ]
+     },
+     "a": 0,
+     "why": {
+      "en": "See the lesson notes for this unit."
+     }
+    },
+    {
+     "id": "gov-question-040",
+     "type": "mcq",
+     "diff": 2,
+     "q": {
+      "en": "A news station continuously runs stories about the poor conditions of the island's roads, forcing the government to address it. The media is acting in its role as a:"
+     },
+     "c": {
+      "en": [
+       "Gatekeeper / Agenda Setter",
+       "Watchdog",
+       "Scorekeeper",
+       "Lobbyist"
+      ]
+     },
+     "a": 0,
+     "why": {
+      "en": "See the lesson notes for this unit."
+     }
+    },
+    {
+     "id": "gov-question-041",
+     "type": "mcq",
+     "diff": 2,
+     "q": {
+      "en": "Coach Smith only reads news that already agrees with his worldview, ignoring all facts to the contrary. This psychological phenomenon in voter behavior is called:"
+     },
+     "c": {
+      "en": [
+       "Confirmation Bias",
+       "Rational Choice",
+       "Retrospective Voting",
+       "Party-line Voting"
+      ]
+     },
+     "a": 0,
+     "why": {
+      "en": "See the lesson notes for this unit."
+     }
+    }
+   ]
+  }
+ ]
+}

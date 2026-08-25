@@ -1,0 +1,1114 @@
+{
+ "id": "econ-h",
+ "color": "#FF4D9D",
+ "name": {
+  "en": "Economics Honors",
+  "es": "Economía Honores"
+ },
+ "units": [
+  {
+   "id": "eh-u1",
+   "title": {
+    "en": "Unit 1 · Markets and the U.S. Economy (SS.912.E.1)",
+    "es": "Unidad 1 · Mercados y la economía de EE. UU. (SS.912.E.1)"
+   },
+   "brief": {
+    "en": "Every economy answers three questions: what to produce, how to produce it, and for whom. A market economy answers them through prices set by supply and demand, a command economy through central planning, and a mixed economy through both. Prices act as signals: shortages push prices up, surpluses push them down, and profit draws producers toward what buyers want. Competition among sellers lowers prices and raises quality, while monopoly power does the opposite. Private property, voluntary exchange, and the profit motive are the defining features of the U.S. free enterprise system.",
+    "es": "Toda economía responde tres preguntas: qué producir, cómo producirlo y para quién. Una economía de mercado las responde mediante precios fijados por la oferta y la demanda, una centralizada mediante planificación estatal y una mixta mediante ambas. Los precios son señales: la escasez los sube, el excedente los baja y el beneficio atrae a los productores hacia lo que los compradores quieren. La competencia entre vendedores baja precios y mejora la calidad; el poder monopólico hace lo contrario. La propiedad privada, el intercambio voluntario y el afán de lucro definen el sistema de libre empresa de EE. UU."
+   },
+   "items": [
+    {
+     "id": "eh101",
+     "type": "mcq",
+     "diff": 1,
+     "q": {
+      "en": "In a market economy, what mainly determines which goods get produced?",
+      "es": "En una economía de mercado, ¿qué determina principalmente qué bienes se producen?"
+     },
+     "c": {
+      "en": [
+       "Prices set by supply and demand",
+       "A central planning agency",
+       "A vote in Congress",
+       "Random assignment"
+      ],
+      "es": [
+       "Los precios fijados por la oferta y la demanda",
+       "Una agencia de planificación central",
+       "Una votación en el Congreso",
+       "Asignación al azar"
+      ]
+     },
+     "a": 0,
+     "why": {
+      "en": "Prices signal what buyers value, and profit pulls resources toward those goods.",
+      "es": "Los precios señalan lo que valoran los compradores y el beneficio atrae recursos hacia esos bienes."
+     }
+    },
+    {
+     "id": "eh102",
+     "type": "mcq",
+     "diff": 1,
+     "q": {
+      "en": "Which is a characteristic of the U.S. free enterprise system?",
+      "es": "¿Cuál es una característica del sistema de libre empresa de EE. UU.?"
+     },
+     "c": {
+      "en": [
+       "Private ownership of property",
+       "Government ownership of all factories",
+       "Fixed wages set by law for every job",
+       "A ban on competition"
+      ],
+      "es": [
+       "Propiedad privada",
+       "Propiedad estatal de todas las fábricas",
+       "Salarios fijos por ley para cada empleo",
+       "Prohibición de la competencia"
+      ]
+     },
+     "a": 0,
+     "why": {
+      "en": "Private property and voluntary exchange are foundations of free enterprise.",
+      "es": "La propiedad privada y el intercambio voluntario son bases de la libre empresa."
+     }
+    },
+    {
+     "id": "eh103",
+     "type": "multi",
+     "diff": 2,
+     "q": {
+      "en": "Select the three basic economic questions every society must answer.",
+      "es": "Selecciona las tres preguntas económicas básicas que toda sociedad debe responder."
+     },
+     "c": {
+      "en": [
+       "What to produce",
+       "How to produce it",
+       "For whom to produce",
+       "When to hold elections"
+      ],
+      "es": [
+       "Qué producir",
+       "Cómo producirlo",
+       "Para quién producir",
+       "Cuándo celebrar elecciones"
+      ]
+     },
+     "a": [
+      0,
+      1,
+      2
+     ],
+     "why": {
+      "en": "Elections are a political question, not one of the three economic questions.",
+      "es": "Las elecciones son una cuestión política, no una de las tres preguntas económicas."
+     }
+    },
+    {
+     "id": "eh104",
+     "type": "mcq",
+     "diff": 2,
+     "q": {
+      "en": "A shortage of a good in a competitive market usually causes:",
+      "es": "La escasez de un bien en un mercado competitivo suele causar:"
+     },
+     "c": {
+      "en": [
+       "The price to rise until quantity supplied and demanded match",
+       "The price to fall",
+       "Producers to leave the market",
+       "Permanent rationing by the state"
+      ],
+      "es": [
+       "Que el precio suba hasta igualar cantidad ofrecida y demandada",
+       "Que el precio baje",
+       "Que los productores salgan del mercado",
+       "Racionamiento estatal permanente"
+      ]
+     },
+     "a": 0,
+     "why": {
+      "en": "Rising prices ration the good and encourage more production until the shortage clears.",
+      "es": "El alza de precios raciona el bien y estimula más producción hasta acabar la escasez."
+     }
+    },
+    {
+     "id": "eh105",
+     "type": "mcq",
+     "diff": 2,
+     "q": {
+      "en": "Which situation best describes a mixed economy?",
+      "es": "¿Qué situación describe mejor una economía mixta?"
+     },
+     "c": {
+      "en": [
+       "Private markets operate alongside government regulation and public services",
+       "All decisions come from central planners",
+       "Barter replaces money entirely",
+       "Only foreign firms may produce"
+      ],
+      "es": [
+       "Los mercados privados conviven con la regulación estatal y los servicios públicos",
+       "Todas las decisiones vienen de planificadores centrales",
+       "El trueque reemplaza al dinero por completo",
+       "Solo empresas extranjeras pueden producir"
+      ]
+     },
+     "a": 0,
+     "why": {
+      "en": "Most modern economies, including the United States, mix market and government roles.",
+      "es": "La mayoría de las economías modernas, incluida EE. UU., mezclan mercado y Estado."
+     }
+    },
+    {
+     "id": "eh106",
+     "type": "mcq",
+     "diff": 3,
+     "q": {
+      "en": "Increased competition in an industry most likely leads to:",
+      "es": "Un aumento de la competencia en una industria probablemente lleva a:"
+     },
+     "c": {
+      "en": [
+       "Lower prices and better quality for consumers",
+       "Higher prices and fewer choices",
+       "Guaranteed profits for every firm",
+       "Fewer products on the market"
+      ],
+      "es": [
+       "Precios más bajos y mejor calidad para el consumidor",
+       "Precios más altos y menos opciones",
+       "Beneficios garantizados para toda empresa",
+       "Menos productos en el mercado"
+      ]
+     },
+     "a": 0,
+     "why": {
+      "en": "Firms compete for buyers by cutting prices and improving what they offer.",
+      "es": "Las empresas compiten por los compradores bajando precios y mejorando su oferta."
+     }
+    },
+    {
+     "id": "eh107",
+     "type": "mcq",
+     "diff": 2,
+     "q": {
+      "en": "Which is an example of a public good?",
+      "es": "¿Cuál es un ejemplo de bien público?"
+     },
+     "c": {
+      "en": [
+       "National defense",
+       "A cheeseburger",
+       "A concert ticket",
+       "A private gym membership"
+      ],
+      "es": [
+       "La defensa nacional",
+       "Una hamburguesa",
+       "Un boleto de concierto",
+       "Una membresía de gimnasio privado"
+      ]
+     },
+     "a": 0,
+     "why": {
+      "en": "Public goods are non-excludable and non-rival, so markets underprovide them.",
+      "es": "Los bienes públicos no son excluyentes ni rivales, así que el mercado los provee de menos."
+     }
+    },
+    {
+     "id": "eh108",
+     "type": "mcq",
+     "diff": 3,
+     "q": {
+      "en": "A factory pollutes a river used by a town downstream. This is an example of:",
+      "es": "Una fábrica contamina un río usado por un pueblo aguas abajo. Esto es un ejemplo de:"
+     },
+     "c": {
+      "en": [
+       "A negative externality",
+       "A public good",
+       "A subsidy",
+       "A price ceiling"
+      ],
+      "es": [
+       "Una externalidad negativa",
+       "Un bien público",
+       "Un subsidio",
+       "Un precio máximo"
+      ]
+     },
+     "a": 0,
+     "why": {
+      "en": "The cost falls on third parties who are not part of the transaction.",
+      "es": "El costo recae en terceros que no participan en la transacción."
+     }
+    },
+    {
+     "id": "eh109",
+     "type": "short",
+     "diff": 2,
+     "q": {
+      "en": "Explain how profit acts as a signal to producers.",
+      "es": "Explica cómo el beneficio funciona como señal para los productores."
+     },
+     "keys": [
+      "profit",
+      "attract",
+      "enter",
+      "signal",
+      "demand",
+      "want",
+      "more",
+      "beneficio",
+      "atrae",
+      "entrar",
+      "señal",
+      "demanda",
+      "más"
+     ],
+     "why": {
+      "en": "High profit attracts producers into a market, increasing supply of what buyers want most.",
+      "es": "Un beneficio alto atrae productores al mercado y aumenta la oferta de lo que más quieren los compradores."
+     }
+    },
+    {
+     "id": "eh110",
+     "type": "mcq",
+     "diff": 2,
+     "q": {
+      "en": "Entrepreneurs are best described as people who:",
+      "es": "Los emprendedores se describen mejor como personas que:"
+     },
+     "c": {
+      "en": [
+       "Take on risk to combine resources into a new business",
+       "Are guaranteed a profit by law",
+       "Work only for large corporations",
+       "Set national interest rates"
+      ],
+      "es": [
+       "Asumen riesgo para combinar recursos en un negocio nuevo",
+       "Tienen beneficio garantizado por ley",
+       "Solo trabajan para grandes corporaciones",
+       "Fijan las tasas de interés nacionales"
+      ]
+     },
+     "a": 0,
+     "why": {
+      "en": "Entrepreneurship is the factor of production that organizes the others and bears risk.",
+      "es": "El emprendimiento es el factor que organiza a los demás y asume el riesgo."
+     }
+    }
+   ]
+  },
+  {
+   "id": "eh-u2",
+   "title": {
+    "en": "Unit 2 · The National Economy (SS.912.E.2)",
+    "es": "Unidad 2 · La economía nacional (SS.912.E.2)"
+   },
+   "brief": {
+    "en": "GDP measures the value of final goods and services produced in a country in a year and is the standard gauge of economic health. The business cycle moves through expansion, peak, contraction, and trough; two consecutive quarters of falling real GDP is a common recession marker. Unemployment is measured as a share of the labor force and comes in frictional, structural, and cyclical forms. Inflation, tracked by the CPI, reduces purchasing power and hurts savers and lenders most. Government uses fiscal policy — taxes and spending — while the Federal Reserve uses monetary policy to steady growth, employment, and prices.",
+    "es": "El PIB mide el valor de los bienes y servicios finales producidos en un país en un año y es la medida estándar de la salud económica. El ciclo económico pasa por expansión, cima, contracción y fondo; dos trimestres seguidos de caída del PIB real es una señal común de recesión. El desempleo se mide como porcentaje de la fuerza laboral y puede ser friccional, estructural o cíclico. La inflación, medida por el IPC, reduce el poder adquisitivo y perjudica sobre todo a ahorradores y prestamistas. El gobierno usa la política fiscal —impuestos y gasto— y la Reserva Federal la política monetaria para estabilizar crecimiento, empleo y precios."
+   },
+   "items": [
+    {
+     "id": "eh201",
+     "type": "mcq",
+     "diff": 1,
+     "q": {
+      "en": "Gross domestic product measures:",
+      "es": "El producto interno bruto mide:"
+     },
+     "c": {
+      "en": [
+       "The value of final goods and services produced in a country in a year",
+       "The total money in circulation",
+       "The number of people employed",
+       "Government debt"
+      ],
+      "es": [
+       "El valor de bienes y servicios finales producidos en un país en un año",
+       "El dinero total en circulación",
+       "El número de personas empleadas",
+       "La deuda del gobierno"
+      ]
+     },
+     "a": 0,
+     "why": {
+      "en": "GDP counts production, not money supply, employment counts, or debt.",
+      "es": "El PIB cuenta producción, no oferta monetaria, empleo ni deuda."
+     }
+    },
+    {
+     "id": "eh202",
+     "type": "mcq",
+     "diff": 2,
+     "q": {
+      "en": "Which phase of the business cycle follows a peak?",
+      "es": "¿Qué fase del ciclo económico sigue a una cima?"
+     },
+     "c": {
+      "en": [
+       "Contraction",
+       "Expansion",
+       "Trough",
+       "Recovery"
+      ],
+      "es": [
+       "Contracción",
+       "Expansión",
+       "Fondo",
+       "Recuperación"
+      ]
+     },
+     "a": 0,
+     "why": {
+      "en": "After a peak, output and employment decline into a contraction.",
+      "es": "Tras la cima, la producción y el empleo caen en una contracción."
+     }
+    },
+    {
+     "id": "eh203",
+     "type": "numeric",
+     "diff": 2,
+     "q": {
+      "en": "A worker earned $40,000 and prices rose 5% while their pay stayed the same. By how many dollars did their purchasing power effectively fall, to the nearest dollar?",
+      "es": "Un trabajador ganó $40,000, los precios subieron 5% y su pago no cambió. ¿En cuántos dólares cayó efectivamente su poder adquisitivo, al dólar más cercano?"
+     },
+     "a": 2000,
+     "tol": 0,
+     "why": {
+      "en": "5% of 40,000 = 2,000 in lost buying power.",
+      "es": "5% de 40,000 = 2,000 de poder de compra perdido."
+     }
+    },
+    {
+     "id": "eh204",
+     "type": "mcq",
+     "diff": 2,
+     "q": {
+      "en": "A worker between jobs after moving to a new city is experiencing:",
+      "es": "Un trabajador entre empleos tras mudarse de ciudad experimenta desempleo:"
+     },
+     "c": {
+      "en": [
+       "Frictional unemployment",
+       "Structural unemployment",
+       "Cyclical unemployment",
+       "Permanent unemployment"
+      ],
+      "es": [
+       "Friccional",
+       "Estructural",
+       "Cíclico",
+       "Permanente"
+      ]
+     },
+     "a": 0,
+     "why": {
+      "en": "Frictional unemployment is short-term job searching and is normal in a healthy economy.",
+      "es": "El desempleo friccional es la búsqueda de empleo a corto plazo y es normal en una economía sana."
+     }
+    },
+    {
+     "id": "eh205",
+     "type": "mcq",
+     "diff": 2,
+     "q": {
+      "en": "Which is an example of fiscal policy?",
+      "es": "¿Cuál es un ejemplo de política fiscal?"
+     },
+     "c": {
+      "en": [
+       "Congress cutting income tax rates",
+       "The Fed buying government bonds",
+       "A bank raising its loan rates",
+       "A company hiring more workers"
+      ],
+      "es": [
+       "El Congreso recorta las tasas del impuesto sobre la renta",
+       "La Fed compra bonos del gobierno",
+       "Un banco sube sus tasas de préstamo",
+       "Una empresa contrata más trabajadores"
+      ]
+     },
+     "a": 0,
+     "why": {
+      "en": "Fiscal policy is government taxing and spending; bond operations are monetary policy.",
+      "es": "La política fiscal son los impuestos y el gasto público; las operaciones con bonos son monetarias."
+     }
+    },
+    {
+     "id": "eh206",
+     "type": "multi",
+     "diff": 3,
+     "q": {
+      "en": "Select every group typically hurt by unexpected high inflation.",
+      "es": "Selecciona cada grupo perjudicado normalmente por una inflación alta inesperada."
+     },
+     "c": {
+      "en": [
+       "People living on fixed incomes",
+       "Lenders holding fixed-rate loans",
+       "Savers with low-interest accounts",
+       "Borrowers repaying fixed-rate loans"
+      ],
+      "es": [
+       "Personas con ingresos fijos",
+       "Prestamistas con préstamos a tasa fija",
+       "Ahorradores con cuentas de bajo interés",
+       "Prestatarios que pagan préstamos a tasa fija"
+      ]
+     },
+     "a": [
+      0,
+      1,
+      2
+     ],
+     "why": {
+      "en": "Borrowers gain, because they repay with dollars worth less than they borrowed.",
+      "es": "Los prestatarios ganan porque pagan con dinero que vale menos del que pidieron."
+     }
+    },
+    {
+     "id": "eh207",
+     "type": "mcq",
+     "diff": 3,
+     "q": {
+      "en": "During a recession, the government would most likely:",
+      "es": "Durante una recesión, el gobierno probablemente:"
+     },
+     "c": {
+      "en": [
+       "Increase spending or cut taxes to boost demand",
+       "Cut spending and raise taxes sharply",
+       "Stop issuing currency",
+       "Raise tariffs on all exports"
+      ],
+      "es": [
+       "Aumentaría el gasto o bajaría impuestos para impulsar la demanda",
+       "Recortaría el gasto y subiría impuestos bruscamente",
+       "Dejaría de emitir moneda",
+       "Subiría aranceles a todas las exportaciones"
+      ]
+     },
+     "a": 0,
+     "why": {
+      "en": "Expansionary fiscal policy puts money into circulation and raises total demand.",
+      "es": "La política fiscal expansiva pone dinero en circulación y eleva la demanda total."
+     }
+    },
+    {
+     "id": "eh208",
+     "type": "mcq",
+     "diff": 2,
+     "q": {
+      "en": "A progressive income tax means that as income rises, the:",
+      "es": "Un impuesto progresivo sobre la renta significa que al subir el ingreso, la:"
+     },
+     "c": {
+      "en": [
+       "Percentage of income paid in tax rises",
+       "Percentage paid falls",
+       "Dollar amount paid stays fixed",
+       "Tax disappears entirely"
+      ],
+      "es": [
+       "Proporción del ingreso pagada en impuestos sube",
+       "Proporción pagada baja",
+       "Cantidad en dólares queda fija",
+       "Impuesto desaparece por completo"
+      ]
+     },
+     "a": 0,
+     "why": {
+      "en": "Higher brackets pay a higher share; a regressive tax does the opposite.",
+      "es": "Los tramos altos pagan una proporción mayor; un impuesto regresivo hace lo contrario."
+     }
+    },
+    {
+     "id": "eh209",
+     "type": "short",
+     "diff": 3,
+     "q": {
+      "en": "Explain why the unemployment rate can fall even when no new jobs are created.",
+      "es": "Explica por qué la tasa de desempleo puede bajar aunque no se creen empleos nuevos."
+     },
+     "keys": [
+      "labor force",
+      "stop looking",
+      "discouraged",
+      "leave",
+      "shrink",
+      "fuerza laboral",
+      "dejan de buscar",
+      "desalentad",
+      "salen",
+      "reduce"
+     ],
+     "why": {
+      "en": "People who stop looking leave the labor force and are no longer counted as unemployed.",
+      "es": "Quienes dejan de buscar salen de la fuerza laboral y ya no cuentan como desempleados."
+     }
+    },
+    {
+     "id": "eh210",
+     "type": "mcq",
+     "diff": 2,
+     "q": {
+      "en": "The Federal Reserve's main responsibilities include:",
+      "es": "Las principales responsabilidades de la Reserva Federal incluyen:"
+     },
+     "c": {
+      "en": [
+       "Controlling the money supply and supervising banks",
+       "Setting income tax rates",
+       "Passing the federal budget",
+       "Running Social Security"
+      ],
+      "es": [
+       "Controlar la oferta monetaria y supervisar bancos",
+       "Fijar las tasas del impuesto sobre la renta",
+       "Aprobar el presupuesto federal",
+       "Administrar la seguridad social"
+      ]
+     },
+     "a": 0,
+     "why": {
+      "en": "Taxing and budgeting belong to Congress; the Fed handles monetary policy.",
+      "es": "Impuestos y presupuesto corresponden al Congreso; la Fed maneja la política monetaria."
+     }
+    }
+   ]
+  },
+  {
+   "id": "eh-u3",
+   "title": {
+    "en": "Unit 3 · Trade and the Global Economy (SS.912.E.3)",
+    "es": "Unidad 3 · Comercio y economía global (SS.912.E.3)"
+   },
+   "brief": {
+    "en": "Nations trade because specialization based on comparative advantage lets both sides consume more than they could alone. Exports are goods sold abroad and imports are goods bought from abroad; the balance of trade is the difference. Tariffs are taxes on imports and quotas are limits on quantity; both protect domestic producers while raising prices for consumers. Exchange rates set the price of one currency in terms of another, and a weaker dollar makes U.S. exports cheaper abroad and imports more expensive at home. Trade agreements and organizations lower barriers, while embargoes cut trade off for political reasons.",
+    "es": "Las naciones comercian porque la especialización basada en la ventaja comparativa permite a ambas partes consumir más que por separado. Las exportaciones son bienes vendidos al exterior y las importaciones bienes comprados del exterior; la balanza comercial es la diferencia. Los aranceles son impuestos a las importaciones y las cuotas limitan la cantidad; ambos protegen a los productores nacionales pero encarecen los precios al consumidor. Los tipos de cambio fijan el precio de una moneda en términos de otra, y un dólar más débil abarata las exportaciones de EE. UU. y encarece las importaciones. Los acuerdos comerciales reducen barreras, mientras los embargos cortan el comercio por razones políticas."
+   },
+   "items": [
+    {
+     "id": "eh301",
+     "type": "mcq",
+     "diff": 1,
+     "q": {
+      "en": "A tariff is best described as:",
+      "es": "Un arancel se describe mejor como:"
+     },
+     "c": {
+      "en": [
+       "A tax on imported goods",
+       "A limit on how many goods may enter",
+       "A ban on all trade",
+       "A subsidy to foreign firms"
+      ],
+      "es": [
+       "Un impuesto a los bienes importados",
+       "Un límite a la cantidad que puede entrar",
+       "Una prohibición total del comercio",
+       "Un subsidio a empresas extranjeras"
+      ]
+     },
+     "a": 0,
+     "why": {
+      "en": "A quota limits quantity; a tariff raises the price through a tax.",
+      "es": "Una cuota limita la cantidad; un arancel sube el precio mediante un impuesto."
+     }
+    },
+    {
+     "id": "eh302",
+     "type": "numeric",
+     "diff": 2,
+     "q": {
+      "en": "A country exports $500 billion and imports $620 billion. What is its trade balance in billions? Use a negative number for a deficit.",
+      "es": "Un país exporta $500 mil millones e importa $620 mil millones. ¿Cuál es su balanza comercial en miles de millones? Usa número negativo si hay déficit."
+     },
+     "a": -120,
+     "tol": 0,
+     "why": {
+      "en": "500 − 620 = −120, a trade deficit of $120 billion.",
+      "es": "500 − 620 = −120, un déficit comercial de $120 mil millones."
+     }
+    },
+    {
+     "id": "eh303",
+     "type": "mcq",
+     "diff": 2,
+     "q": {
+      "en": "If the U.S. dollar weakens against the euro, U.S. exports to Europe become:",
+      "es": "Si el dólar se debilita frente al euro, las exportaciones de EE. UU. a Europa se vuelven:"
+     },
+     "c": {
+      "en": [
+       "Cheaper for European buyers",
+       "More expensive for European buyers",
+       "Illegal",
+       "Unchanged in price"
+      ],
+      "es": [
+       "Más baratas para los compradores europeos",
+       "Más caras para los compradores europeos",
+       "Ilegales",
+       "Iguales en precio"
+      ]
+     },
+     "a": 0,
+     "why": {
+      "en": "A weaker dollar means euros buy more dollars, so U.S. goods cost Europeans less.",
+      "es": "Un dólar débil hace que los euros compren más dólares, así que los bienes de EE. UU. cuestan menos."
+     }
+    },
+    {
+     "id": "eh304",
+     "type": "multi",
+     "diff": 3,
+     "q": {
+      "en": "Select every likely effect of a new tariff on imported steel.",
+      "es": "Selecciona cada efecto probable de un nuevo arancel al acero importado."
+     },
+     "c": {
+      "en": [
+       "Domestic steel producers gain sales",
+       "Steel-using manufacturers face higher costs",
+       "Consumer prices for steel products rise",
+       "Imported steel becomes cheaper"
+      ],
+      "es": [
+       "Los productores nacionales de acero ganan ventas",
+       "Los fabricantes que usan acero enfrentan costos mayores",
+       "Suben los precios de productos de acero",
+       "El acero importado se abarata"
+      ]
+     },
+     "a": [
+      0,
+      1,
+      2
+     ],
+     "why": {
+      "en": "A tariff raises the price of imports, so imported steel becomes more expensive, not cheaper.",
+      "es": "Un arancel sube el precio de las importaciones, así que el acero importado se encarece."
+     }
+    },
+    {
+     "id": "eh305",
+     "type": "mcq",
+     "diff": 2,
+     "q": {
+      "en": "Specialization and trade between two nations generally result in:",
+      "es": "La especialización y el comercio entre dos naciones generalmente resultan en:"
+     },
+     "c": {
+      "en": [
+       "More total output and consumption for both",
+       "Less output for both",
+       "Gains only for the larger nation",
+       "No change in living standards"
+      ],
+      "es": [
+       "Mayor producción y consumo total para ambas",
+       "Menor producción para ambas",
+       "Ganancias solo para la nación más grande",
+       "Ningún cambio en el nivel de vida"
+      ]
+     },
+     "a": 0,
+     "why": {
+      "en": "Each nation produces where its opportunity cost is lower, expanding total output.",
+      "es": "Cada nación produce donde su costo de oportunidad es menor, ampliando la producción total."
+     }
+    },
+    {
+     "id": "eh306",
+     "type": "mcq",
+     "diff": 3,
+     "q": {
+      "en": "An embargo differs from a tariff because an embargo:",
+      "es": "Un embargo difiere de un arancel porque el embargo:"
+     },
+     "c": {
+      "en": [
+       "Halts trade with a country, usually for political reasons",
+       "Taxes imports at the border",
+       "Subsidizes exporters",
+       "Fixes the exchange rate"
+      ],
+      "es": [
+       "Detiene el comercio con un país, normalmente por razones políticas",
+       "Grava las importaciones en la frontera",
+       "Subsidia a los exportadores",
+       "Fija el tipo de cambio"
+      ]
+     },
+     "a": 0,
+     "why": {
+      "en": "Embargoes are political tools that stop trade rather than tax it.",
+      "es": "Los embargos son instrumentos políticos que detienen el comercio en vez de gravarlo."
+     }
+    },
+    {
+     "id": "eh307",
+     "type": "mcq",
+     "diff": 2,
+     "q": {
+      "en": "Which is the most common argument used to justify protectionism?",
+      "es": "¿Cuál es el argumento más común para justificar el proteccionismo?"
+     },
+     "c": {
+      "en": [
+       "Protecting domestic jobs and new industries",
+       "Lowering consumer prices",
+       "Increasing product variety",
+       "Speeding up global shipping"
+      ],
+      "es": [
+       "Proteger empleos nacionales e industrias nuevas",
+       "Bajar los precios al consumidor",
+       "Aumentar la variedad de productos",
+       "Acelerar el envío global"
+      ]
+     },
+     "a": 0,
+     "why": {
+      "en": "Protection is usually defended on jobs and infant-industry grounds, though it raises prices.",
+      "es": "El proteccionismo suele defenderse por el empleo y las industrias nacientes, aunque sube precios."
+     }
+    },
+    {
+     "id": "eh308",
+     "type": "mcq",
+     "diff": 3,
+     "q": {
+      "en": "Florida's economy depends heavily on international trade mainly through:",
+      "es": "La economía de Florida depende del comercio internacional sobre todo mediante:"
+     },
+     "c": {
+      "en": [
+       "Its seaports, airports, and tourism links to Latin America",
+       "Coal mining exports",
+       "Automobile manufacturing",
+       "Steel production"
+      ],
+      "es": [
+       "Sus puertos, aeropuertos y vínculos turísticos con América Latina",
+       "Exportaciones de carbón",
+       "La fabricación de automóviles",
+       "La producción de acero"
+      ]
+     },
+     "a": 0,
+     "why": {
+      "en": "Florida's location makes it a shipping, aviation, and tourism gateway to the Americas.",
+      "es": "La ubicación de Florida la hace una puerta de envíos, aviación y turismo hacia América."
+     }
+    },
+    {
+     "id": "eh309",
+     "type": "short",
+     "diff": 3,
+     "q": {
+      "en": "Explain one cost consumers pay when their government imposes tariffs.",
+      "es": "Explica un costo que pagan los consumidores cuando su gobierno impone aranceles."
+     },
+     "keys": [
+      "higher price",
+      "more expensive",
+      "pay more",
+      "less choice",
+      "fewer options",
+      "precio",
+      "más caro",
+      "pagan más",
+      "menos opciones"
+     ],
+     "why": {
+      "en": "Tariffs raise the price of imports, so consumers pay more and have fewer options.",
+      "es": "Los aranceles suben el precio de las importaciones, así que el consumidor paga más y tiene menos opciones."
+     }
+    },
+    {
+     "id": "eh310",
+     "type": "mcq",
+     "diff": 2,
+     "q": {
+      "en": "A trade surplus occurs when a country:",
+      "es": "Un superávit comercial ocurre cuando un país:"
+     },
+     "c": {
+      "en": [
+       "Exports more than it imports",
+       "Imports more than it exports",
+       "Stops trading entirely",
+       "Devalues its currency"
+      ],
+      "es": [
+       "Exporta más de lo que importa",
+       "Importa más de lo que exporta",
+       "Deja de comerciar por completo",
+       "Devalúa su moneda"
+      ]
+     },
+     "a": 0,
+     "why": {
+      "en": "Surplus means exports exceed imports; a deficit is the reverse.",
+      "es": "El superávit significa que las exportaciones superan a las importaciones; el déficit es lo contrario."
+     }
+    }
+   ]
+  },
+  {
+   "id": "eh-u4",
+   "title": {
+    "en": "Unit 4 · Financial Literacy (SS.912.FL)",
+    "es": "Unidad 4 · Educación financiera (SS.912.FL)"
+   },
+   "brief": {
+    "en": "Gross pay is what you earn; net pay is what remains after taxes and deductions. A budget gives every dollar of net pay a job, and a common starting frame is 50% needs, 30% wants, 20% saving and debt payoff. Credit scores are built mostly from payment history and credit utilization, the share of your limit you are using. Simple interest is paid on the principal alone; compound interest is paid on the principal plus prior interest, which is why saving early matters. Insurance transfers risk in exchange for a premium, and an emergency fund keeps a surprise expense from becoming high-interest debt.",
+    "es": "El salario bruto es lo que ganas; el neto es lo que queda tras impuestos y deducciones. Un presupuesto asigna una función a cada dólar del salario neto, y un marco común es 50% necesidades, 30% deseos y 20% ahorro y pago de deudas. El puntaje de crédito se basa sobre todo en el historial de pagos y en la utilización del crédito, la parte del límite que usas. El interés simple se paga solo sobre el capital; el compuesto se paga sobre el capital más los intereses previos, por eso ahorrar temprano importa. El seguro transfiere el riesgo a cambio de una prima, y un fondo de emergencia evita que un gasto imprevisto se convierta en deuda cara."
+   },
+   "items": [
+    {
+     "id": "eh401",
+     "type": "numeric",
+     "diff": 1,
+     "q": {
+      "en": "You earn $18 per hour for 30 hours. What is your gross pay in dollars?",
+      "es": "Ganas $18 por hora durante 30 horas. ¿Cuál es tu salario bruto en dólares?"
+     },
+     "a": 540,
+     "tol": 0,
+     "why": {
+      "en": "18 × 30 = 540 before taxes or deductions.",
+      "es": "18 × 30 = 540 antes de impuestos o deducciones."
+     }
+    },
+    {
+     "id": "eh402",
+     "type": "mcq",
+     "diff": 1,
+     "q": {
+      "en": "Net pay is best described as:",
+      "es": "El salario neto se describe mejor como:"
+     },
+     "c": {
+      "en": [
+       "Take-home pay after taxes and deductions",
+       "Total pay before deductions",
+       "Pay plus benefits",
+       "Hourly wage times 40"
+      ],
+      "es": [
+       "El pago que recibes tras impuestos y deducciones",
+       "El pago total antes de deducciones",
+       "El pago más las prestaciones",
+       "El salario por hora por 40"
+      ]
+     },
+     "a": 0,
+     "why": {
+      "en": "Deductions come out first; what remains is take-home, or net, pay.",
+      "es": "Las deducciones se restan primero; lo que queda es el pago neto."
+     }
+    },
+    {
+     "id": "eh403",
+     "type": "numeric",
+     "diff": 2,
+     "q": {
+      "en": "Net pay is $2,000 a month. Under a 50/30/20 budget, how many dollars go to saving and debt payoff?",
+      "es": "El pago neto es $2,000 al mes. Con un presupuesto 50/30/20, ¿cuántos dólares van a ahorro y pago de deudas?"
+     },
+     "a": 400,
+     "tol": 0,
+     "why": {
+      "en": "20% of 2,000 = 400.",
+      "es": "20% de 2,000 = 400."
+     }
+    },
+    {
+     "id": "eh404",
+     "type": "numeric",
+     "diff": 2,
+     "q": {
+      "en": "A card has a $2,000 limit and a $600 balance. What is the credit utilization percentage?",
+      "es": "Una tarjeta tiene límite de $2,000 y saldo de $600. ¿Cuál es el porcentaje de utilización de crédito?"
+     },
+     "a": 30,
+     "tol": 0,
+     "why": {
+      "en": "600 ÷ 2,000 = 0.30, or 30%.",
+      "es": "600 ÷ 2,000 = 0.30, o sea 30%."
+     }
+    },
+    {
+     "id": "eh405",
+     "type": "numeric",
+     "diff": 3,
+     "q": {
+      "en": "You deposit $1,000 at 5% simple interest for 3 years. How many dollars of interest do you earn?",
+      "es": "Depositas $1,000 al 5% de interés simple durante 3 años. ¿Cuántos dólares de interés ganas?"
+     },
+     "a": 150,
+     "tol": 0,
+     "why": {
+      "en": "1,000 × 0.05 × 3 = 150.",
+      "es": "1,000 × 0.05 × 3 = 150."
+     }
+    },
+    {
+     "id": "eh406",
+     "type": "mcq",
+     "diff": 2,
+     "q": {
+      "en": "Which action helps a credit score the most over time?",
+      "es": "¿Qué acción mejora más el puntaje de crédito con el tiempo?"
+     },
+     "c": {
+      "en": [
+       "Paying every bill on time",
+       "Closing your oldest account",
+       "Using 95% of your credit limit",
+       "Applying for many cards at once"
+      ],
+      "es": [
+       "Pagar cada factura a tiempo",
+       "Cerrar tu cuenta más antigua",
+       "Usar el 95% de tu límite",
+       "Solicitar muchas tarjetas a la vez"
+      ]
+     },
+     "a": 0,
+     "why": {
+      "en": "Payment history is the single largest factor in most scoring models.",
+      "es": "El historial de pagos es el factor más importante en la mayoría de los modelos."
+     }
+    },
+    {
+     "id": "eh407",
+     "type": "mcq",
+     "diff": 3,
+     "q": {
+      "en": "Why does compound interest grow savings faster than simple interest?",
+      "es": "¿Por qué el interés compuesto hace crecer el ahorro más rápido que el simple?"
+     },
+     "c": {
+      "en": [
+       "Interest is earned on prior interest as well as the principal",
+       "The interest rate is always higher",
+       "Banks charge fewer fees",
+       "Taxes are waived on it"
+      ],
+      "es": [
+       "Se gana interés sobre los intereses previos además del capital",
+       "La tasa siempre es más alta",
+       "Los bancos cobran menos comisiones",
+       "Está exento de impuestos"
+      ]
+     },
+     "a": 0,
+     "why": {
+      "en": "Each period's balance is larger, so the next interest payment is larger too.",
+      "es": "El saldo de cada período es mayor, así que el siguiente interés también lo es."
+     }
+    },
+    {
+     "id": "eh408",
+     "type": "multi",
+     "diff": 3,
+     "q": {
+      "en": "Select every expense that belongs in the 'needs' category of a budget.",
+      "es": "Selecciona cada gasto que pertenece a la categoría de 'necesidades'."
+     },
+     "c": {
+      "en": [
+       "Rent",
+       "Groceries",
+       "Concert tickets",
+       "Basic phone service"
+      ],
+      "es": [
+       "Renta",
+       "Comestibles",
+       "Boletos de concierto",
+       "Servicio telefónico básico"
+      ]
+     },
+     "a": [
+      0,
+      1,
+      3
+     ],
+     "why": {
+      "en": "Needs cover housing, food, and basic utilities; entertainment is a want.",
+      "es": "Las necesidades cubren vivienda, alimentos y servicios básicos; el entretenimiento es un deseo."
+     }
+    },
+    {
+     "id": "eh409",
+     "type": "mcq",
+     "diff": 2,
+     "q": {
+      "en": "The main purpose of insurance is to:",
+      "es": "El propósito principal del seguro es:"
+     },
+     "c": {
+      "en": [
+       "Transfer the risk of a large loss in exchange for a premium",
+       "Guarantee investment profits",
+       "Eliminate all taxes",
+       "Raise your credit score"
+      ],
+      "es": [
+       "Transferir el riesgo de una pérdida grande a cambio de una prima",
+       "Garantizar ganancias de inversión",
+       "Eliminar todos los impuestos",
+       "Subir tu puntaje de crédito"
+      ]
+     },
+     "a": 0,
+     "why": {
+      "en": "You pay a predictable premium so an unpredictable loss does not ruin you.",
+      "es": "Pagas una prima predecible para que una pérdida impredecible no te arruine."
+     }
+    },
+    {
+     "id": "eh410",
+     "type": "short",
+     "diff": 3,
+     "q": {
+      "en": "Why does an emergency fund reduce the need for high-interest debt?",
+      "es": "¿Por qué un fondo de emergencia reduce la necesidad de deuda de alto interés?"
+     },
+     "keys": [
+      "cash",
+      "savings",
+      "cover",
+      "unexpected",
+      "avoid",
+      "borrow",
+      "interest",
+      "efectivo",
+      "ahorro",
+      "cubrir",
+      "imprevist",
+      "evita",
+      "interés",
+      "interes"
+     ],
+     "why": {
+      "en": "Savings cover surprise costs, so you do not have to borrow at high interest.",
+      "es": "El ahorro cubre gastos imprevistos, así que no tienes que endeudarte a alto interés."
+     }
+    }
+   ]
+  }
+ ]
+}

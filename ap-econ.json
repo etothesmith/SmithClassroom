@@ -1,0 +1,1571 @@
+{
+ "id": "ap-econ",
+ "color": "#4DE0B1",
+ "name": {
+  "en": "AP Economics",
+  "es": "Economía AP"
+ },
+ "units": [
+  {
+   "id": "ap-m1",
+   "title": {
+    "en": "Macro Unit 1 · Basic Economic Concepts",
+    "es": "Macro Unidad 1 · Conceptos económicos básicos"
+   },
+   "brief": {
+    "en": "Scarcity forces choice, and every choice has an opportunity cost: the value of the next-best option given up. The production possibilities curve shows the maximum combinations an economy can produce; interior points are inefficient, exterior points are unattainable today. A bowed-out curve reflects increasing opportunity cost because resources are not equally suited to both goods. Comparative advantage — the lower opportunity cost, not the larger output — determines who should specialize, and trade between two parties benefits both when the terms of trade fall between their opportunity costs. Growth shifts the whole curve outward through more resources, better technology, or more capital.",
+    "es": "La escasez obliga a elegir y toda elección tiene un costo de oportunidad: el valor de la mejor alternativa sacrificada. La curva de posibilidades de producción muestra las combinaciones máximas que una economía puede producir; los puntos interiores son ineficientes y los exteriores son inalcanzables hoy. Una curva cóncava refleja costos de oportunidad crecientes porque los recursos no sirven igual para ambos bienes. La ventaja comparativa —el menor costo de oportunidad, no la mayor producción— determina quién debe especializarse, y el comercio beneficia a ambas partes cuando los términos de intercambio quedan entre sus costos de oportunidad. El crecimiento desplaza toda la curva hacia afuera con más recursos, mejor tecnología o más capital."
+   },
+   "items": [
+    {
+     "id": "apm101",
+     "type": "mcq",
+     "diff": 1,
+     "q": {
+      "en": "A point inside the production possibilities curve means the economy is:",
+      "es": "Un punto dentro de la curva de posibilidades de producción significa que la economía está:"
+     },
+     "c": {
+      "en": [
+       "Using its resources inefficiently",
+       "Growing rapidly",
+       "Producing an unattainable combination",
+       "At maximum efficiency"
+      ],
+      "es": [
+       "Usando sus recursos de forma ineficiente",
+       "Creciendo rápidamente",
+       "Produciendo una combinación inalcanzable",
+       "En eficiencia máxima"
+      ]
+     },
+     "a": 0,
+     "why": {
+      "en": "Interior points leave resources idle or misused, so more of both goods could be produced.",
+      "es": "Los puntos interiores dejan recursos ociosos o mal usados, así que se podría producir más de ambos bienes."
+     }
+    },
+    {
+     "id": "apm102",
+     "type": "mcq",
+     "diff": 2,
+     "q": {
+      "en": "A production possibilities curve bows outward from the origin because:",
+      "es": "Una curva de posibilidades de producción es cóncava respecto al origen porque:"
+     },
+     "c": {
+      "en": [
+       "Resources are not equally productive in both uses",
+       "Technology never changes",
+       "Money is neutral in the long run",
+       "Trade is restricted"
+      ],
+      "es": [
+       "Los recursos no son igual de productivos en ambos usos",
+       "La tecnología nunca cambia",
+       "El dinero es neutral a largo plazo",
+       "El comercio está restringido"
+      ]
+     },
+     "a": 0,
+     "why": {
+      "en": "Moving specialized resources into their weaker use raises opportunity cost as output expands.",
+      "es": "Trasladar recursos especializados a su uso menos apto eleva el costo de oportunidad al aumentar la producción."
+     }
+    },
+    {
+     "id": "apm103",
+     "type": "numeric",
+     "diff": 2,
+     "q": {
+      "en": "A country can produce 10 tractors or 40 tons of wheat. What is the opportunity cost of one tractor, in tons of wheat?",
+      "es": "Un país puede producir 10 tractores o 40 toneladas de trigo. ¿Cuál es el costo de oportunidad de un tractor, en toneladas de trigo?"
+     },
+     "a": 4,
+     "tol": 0,
+     "why": {
+      "en": "40 ÷ 10 = 4 tons of wheat given up per tractor.",
+      "es": "40 ÷ 10 = 4 toneladas de trigo sacrificadas por tractor."
+     }
+    },
+    {
+     "id": "apm104",
+     "type": "mcq",
+     "diff": 2,
+     "q": {
+      "en": "Nation A gives up 4 tons of wheat per tractor; Nation B gives up 2 tons per tractor. Who should specialize in tractors?",
+      "es": "La nación A sacrifica 4 toneladas de trigo por tractor; la nación B sacrifica 2. ¿Quién debe especializarse en tractores?"
+     },
+     "c": {
+      "en": [
+       "Nation B, which has the lower opportunity cost",
+       "Nation A, which has the higher opportunity cost",
+       "Both equally",
+       "Neither should specialize"
+      ],
+      "es": [
+       "La nación B, con menor costo de oportunidad",
+       "La nación A, con mayor costo de oportunidad",
+       "Ambas por igual",
+       "Ninguna debe especializarse"
+      ]
+     },
+     "a": 0,
+     "why": {
+      "en": "Comparative advantage belongs to the producer with the lower opportunity cost.",
+      "es": "La ventaja comparativa es del productor con el menor costo de oportunidad."
+     }
+    },
+    {
+     "id": "apm105",
+     "type": "mcq",
+     "diff": 1,
+     "q": {
+      "en": "Which event shifts the entire production possibilities curve outward?",
+      "es": "¿Qué evento desplaza toda la curva de posibilidades de producción hacia afuera?"
+     },
+     "c": {
+      "en": [
+       "A permanent improvement in technology",
+       "A change in consumer taste",
+       "A rise in cyclical unemployment",
+       "Producing a different mix of the same two goods"
+      ],
+      "es": [
+       "Una mejora permanente de la tecnología",
+       "Un cambio en los gustos del consumidor",
+       "Un aumento del desempleo cíclico",
+       "Producir otra combinación de los mismos bienes"
+      ]
+     },
+     "a": 0,
+     "why": {
+      "en": "Growth requires more or better resources, capital, or technology, not movement along the curve.",
+      "es": "El crecimiento requiere más o mejores recursos, capital o tecnología, no moverse sobre la curva."
+     }
+    },
+    {
+     "id": "apm106",
+     "type": "short",
+     "diff": 2,
+     "q": {
+      "en": "Define opportunity cost in one sentence.",
+      "es": "Define el costo de oportunidad en una oración."
+     },
+     "keys": [
+      "next best",
+      "next-best",
+      "forgone",
+      "foregone",
+      "given up",
+      "sacrific",
+      "alternativa",
+      "renunc"
+     ],
+     "why": {
+      "en": "Opportunity cost is the value of the next-best alternative given up when a choice is made.",
+      "es": "El costo de oportunidad es el valor de la mejor alternativa a la que se renuncia al elegir."
+     }
+    },
+    {
+     "id": "apm107",
+     "type": "multi",
+     "diff": 3,
+     "q": {
+      "en": "Select every situation that puts an economy INSIDE its production possibilities curve.",
+      "es": "Selecciona cada situación que sitúa a una economía DENTRO de su curva de posibilidades de producción."
+     },
+     "c": {
+      "en": [
+       "A deep recession with idle factories",
+       "High cyclical unemployment",
+       "A new technology raising output",
+       "Full employment with efficient production"
+      ],
+      "es": [
+       "Una recesión profunda con fábricas ociosas",
+       "Alto desempleo cíclico",
+       "Una nueva tecnología que eleva la producción",
+       "Pleno empleo con producción eficiente"
+      ]
+     },
+     "a": [
+      0,
+      1
+     ],
+     "why": {
+      "en": "Idle resources place the economy inside the curve; new technology moves the curve itself.",
+      "es": "Los recursos ociosos sitúan la economía dentro de la curva; la nueva tecnología desplaza la curva."
+     }
+    },
+    {
+     "id": "apm108",
+     "type": "mcq",
+     "diff": 3,
+     "q": {
+      "en": "An economy shifts resources from consumer goods toward capital goods this year. The most likely long-run result is:",
+      "es": "Una economía traslada recursos de bienes de consumo a bienes de capital este año. El resultado más probable a largo plazo es:"
+     },
+     "c": {
+      "en": [
+       "Faster future growth with less consumption now",
+       "Slower future growth with more consumption now",
+       "No change in future output",
+       "An immediate inward shift of the curve"
+      ],
+      "es": [
+       "Mayor crecimiento futuro con menos consumo ahora",
+       "Menor crecimiento futuro con más consumo ahora",
+       "Ningún cambio en la producción futura",
+       "Un desplazamiento inmediato hacia adentro"
+      ]
+     },
+     "a": 0,
+     "why": {
+      "en": "Capital investment trades present consumption for a larger future production capacity.",
+      "es": "La inversión en capital cambia consumo presente por mayor capacidad productiva futura."
+     }
+    },
+    {
+     "id": "apm109",
+     "type": "mcq",
+     "diff": 2,
+     "q": {
+      "en": "Which of these is a factor of production classified as 'capital'?",
+      "es": "¿Cuál de estos es un factor de producción clasificado como 'capital'?"
+     },
+     "c": {
+      "en": [
+       "A delivery truck owned by a bakery",
+       "A bakery's cash in the bank",
+       "A baker's wages",
+       "Flour purchased for resale"
+      ],
+      "es": [
+       "Un camión de reparto de una panadería",
+       "El efectivo de la panadería en el banco",
+       "El salario del panadero",
+       "Harina comprada para reventa"
+      ]
+     },
+     "a": 0,
+     "why": {
+      "en": "Economic capital means physical tools and equipment used to produce, not money.",
+      "es": "El capital económico son las herramientas y equipos físicos usados para producir, no el dinero."
+     }
+    },
+    {
+     "id": "apm110",
+     "type": "numeric",
+     "diff": 3,
+     "q": {
+      "en": "Nation A gives up 4 wheat per tractor, Nation B gives up 2 wheat per tractor. Which terms of trade, in wheat per tractor, would both accept: 1, 3, or 5? Enter the number.",
+      "es": "La nación A sacrifica 4 de trigo por tractor y la B sacrifica 2. ¿Qué términos de intercambio, en trigo por tractor, aceptarían ambas: 1, 3 o 5? Escribe el número."
+     },
+     "a": 3,
+     "tol": 0,
+     "why": {
+      "en": "Mutually beneficial terms sit between the two opportunity costs, so between 2 and 4.",
+      "es": "Los términos mutuamente beneficiosos están entre ambos costos de oportunidad, o sea entre 2 y 4."
+     }
+    }
+   ]
+  },
+  {
+   "id": "ap-m2",
+   "title": {
+    "en": "Macro Unit 2 · Indicators and the Business Cycle",
+    "es": "Macro Unidad 2 · Indicadores y ciclo económico"
+   },
+   "brief": {
+    "en": "GDP is the market value of final goods and services produced inside a country in a year: GDP = C + I + G + (X − M). Exclude intermediate goods, used goods, transfer payments, and purely financial transactions. Nominal GDP uses current prices while real GDP holds prices constant, so only real GDP tracks output. The unemployment rate is unemployed ÷ labor force × 100, and the labor force excludes anyone not actively seeking work. Unemployment comes in frictional, structural, and cyclical forms; the natural rate includes the first two. The CPI tracks a fixed basket, and inflation is the percentage change in that index.",
+    "es": "El PIB es el valor de mercado de bienes y servicios finales producidos dentro de un país en un año: PIB = C + I + G + (X − M). Se excluyen bienes intermedios, bienes usados, transferencias y operaciones puramente financieras. El PIB nominal usa precios corrientes y el real mantiene precios constantes, por lo que solo el real mide producción. La tasa de desempleo es desempleados ÷ fuerza laboral × 100, y la fuerza laboral excluye a quien no busca trabajo activamente. El desempleo puede ser friccional, estructural o cíclico; la tasa natural incluye los dos primeros. El IPC sigue una canasta fija y la inflación es el cambio porcentual de ese índice."
+   },
+   "items": [
+    {
+     "id": "apm201",
+     "type": "mcq",
+     "diff": 1,
+     "q": {
+      "en": "Which transaction is counted in this year's GDP?",
+      "es": "¿Cuál transacción se cuenta en el PIB de este año?"
+     },
+     "c": {
+      "en": [
+       "A newly built house sold this year",
+       "A 1998 car resold this year",
+       "A Social Security payment",
+       "Shares of stock purchased online"
+      ],
+      "es": [
+       "Una casa nueva vendida este año",
+       "Un auto de 1998 revendido este año",
+       "Un pago de seguridad social",
+       "Acciones compradas en línea"
+      ]
+     },
+     "a": 0,
+     "why": {
+      "en": "Only new final production counts; resales, transfers, and financial trades do not.",
+      "es": "Solo cuenta la producción final nueva; reventas, transferencias y operaciones financieras no."
+     }
+    },
+    {
+     "id": "apm202",
+     "type": "numeric",
+     "diff": 2,
+     "q": {
+      "en": "C = 700, I = 200, G = 300, exports = 150, imports = 250. Compute GDP.",
+      "es": "C = 700, I = 200, G = 300, exportaciones = 150, importaciones = 250. Calcula el PIB."
+     },
+     "a": 1100,
+     "tol": 0,
+     "why": {
+      "en": "700 + 200 + 300 + (150 − 250) = 1,100.",
+      "es": "700 + 200 + 300 + (150 − 250) = 1,100."
+     }
+    },
+    {
+     "id": "apm203",
+     "type": "numeric",
+     "diff": 2,
+     "q": {
+      "en": "The labor force is 200 million and 12 million are unemployed. Give the unemployment rate as a percent.",
+      "es": "La fuerza laboral es de 200 millones y 12 millones están desempleados. Da la tasa de desempleo en porcentaje."
+     },
+     "a": 6,
+     "tol": 0.2,
+     "why": {
+      "en": "12 ÷ 200 = 0.06, or 6.0%.",
+      "es": "12 ÷ 200 = 0.06, o sea 6.0%."
+     }
+    },
+    {
+     "id": "apm204",
+     "type": "mcq",
+     "diff": 2,
+     "q": {
+      "en": "A discouraged worker stops looking for a job. The measured unemployment rate:",
+      "es": "Un trabajador desalentado deja de buscar empleo. La tasa de desempleo medida:"
+     },
+     "c": {
+      "en": [
+       "Falls, because the labor force shrinks",
+       "Rises, because a job was lost",
+       "Stays exactly the same",
+       "Becomes negative"
+      ],
+      "es": [
+       "Baja, porque la fuerza laboral se reduce",
+       "Sube, porque se perdió un empleo",
+       "Queda exactamente igual",
+       "Se vuelve negativa"
+      ]
+     },
+     "a": 0,
+     "why": {
+      "en": "Leaving the labor force removes the person from both the numerator and denominator.",
+      "es": "Salir de la fuerza laboral quita a la persona del numerador y del denominador."
+     }
+    },
+    {
+     "id": "apm205",
+     "type": "mcq",
+     "diff": 2,
+     "q": {
+      "en": "Nominal GDP rose 5% while the price level rose 5%. Real GDP:",
+      "es": "El PIB nominal subió 5% mientras el nivel de precios subió 5%. El PIB real:"
+     },
+     "c": {
+      "en": [
+       "Was roughly unchanged",
+       "Rose about 10%",
+       "Fell about 5%",
+       "Rose about 5%"
+      ],
+      "es": [
+       "Se mantuvo casi igual",
+       "Subió cerca de 10%",
+       "Cayó cerca de 5%",
+       "Subió cerca de 5%"
+      ]
+     },
+     "a": 0,
+     "why": {
+      "en": "The entire nominal gain came from prices, so output barely moved.",
+      "es": "Todo el aumento nominal vino de los precios, así que la producción apenas cambió."
+     }
+    },
+    {
+     "id": "apm206",
+     "type": "numeric",
+     "diff": 3,
+     "q": {
+      "en": "The CPI moved from 120 to 129. Give the inflation rate as a percent.",
+      "es": "El IPC pasó de 120 a 129. Da la tasa de inflación en porcentaje."
+     },
+     "a": 7.5,
+     "tol": 0.2,
+     "why": {
+      "en": "(129 − 120) ÷ 120 = 0.075, or 7.5%.",
+      "es": "(129 − 120) ÷ 120 = 0.075, o sea 7.5%."
+     }
+    },
+    {
+     "id": "apm207",
+     "type": "multi",
+     "diff": 3,
+     "q": {
+      "en": "Select every item EXCLUDED from GDP.",
+      "es": "Selecciona cada elemento EXCLUIDO del PIB."
+     },
+     "c": {
+      "en": [
+       "Unemployment benefits paid out",
+       "Steel sold to a carmaker",
+       "A haircut you paid for",
+       "A used textbook resold"
+      ],
+      "es": [
+       "Prestaciones de desempleo pagadas",
+       "Acero vendido a una automotriz",
+       "Un corte de pelo que pagaste",
+       "Un libro usado revendido"
+      ]
+     },
+     "a": [
+      0,
+      1,
+      3
+     ],
+     "why": {
+      "en": "Transfers, intermediate goods, and used goods are excluded; the haircut is a final service.",
+      "es": "Transferencias, bienes intermedios y bienes usados se excluyen; el corte de pelo es un servicio final."
+     }
+    },
+    {
+     "id": "apm208",
+     "type": "mcq",
+     "diff": 2,
+     "q": {
+      "en": "A factory worker is laid off because robots now do her job. This is which type of unemployment?",
+      "es": "Una obrera es despedida porque ahora los robots hacen su trabajo. ¿Qué tipo de desempleo es?"
+     },
+     "c": {
+      "en": [
+       "Structural",
+       "Cyclical",
+       "Frictional",
+       "Seasonal only"
+      ],
+      "es": [
+       "Estructural",
+       "Cíclico",
+       "Friccional",
+       "Solo estacional"
+      ]
+     },
+     "a": 0,
+     "why": {
+      "en": "Structural unemployment comes from a mismatch between skills and the jobs available.",
+      "es": "El desempleo estructural surge del desajuste entre habilidades y empleos disponibles."
+     }
+    },
+    {
+     "id": "apm209",
+     "type": "mcq",
+     "diff": 3,
+     "q": {
+      "en": "Who is most likely hurt by unexpected inflation?",
+      "es": "¿Quién resulta más perjudicado por una inflación inesperada?"
+     },
+     "c": {
+      "en": [
+       "A lender holding a fixed-rate loan",
+       "A borrower with a fixed-rate loan",
+       "A worker with a cost-of-living raise",
+       "A homeowner with rising home value"
+      ],
+      "es": [
+       "Un prestamista con un préstamo a tasa fija",
+       "Un prestatario con préstamo a tasa fija",
+       "Un trabajador con ajuste por costo de vida",
+       "Un propietario cuya casa sube de valor"
+      ]
+     },
+     "a": 0,
+     "why": {
+      "en": "Lenders are repaid in dollars worth less than expected, while borrowers gain.",
+      "es": "A los prestamistas les pagan con dinero que vale menos de lo esperado; los prestatarios ganan."
+     }
+    },
+    {
+     "id": "apm210",
+     "type": "short",
+     "diff": 2,
+     "q": {
+      "en": "Why is real GDP a better measure of living standards than nominal GDP?",
+      "es": "¿Por qué el PIB real mide mejor el nivel de vida que el PIB nominal?"
+     },
+     "keys": [
+      "inflation",
+      "price",
+      "constant",
+      "adjust",
+      "inflaci",
+      "precio",
+      "constante",
+      "ajust"
+     ],
+     "why": {
+      "en": "Real GDP holds prices constant, so changes reflect actual output rather than inflation.",
+      "es": "El PIB real mantiene precios constantes, así que los cambios reflejan producción y no inflación."
+     }
+    }
+   ]
+  },
+  {
+   "id": "ap-m3",
+   "title": {
+    "en": "Macro Unit 3 · AD, AS, and Fiscal Policy",
+    "es": "Macro Unidad 3 · DA, OA y política fiscal"
+   },
+   "brief": {
+    "en": "Aggregate demand slopes down and shifts with consumption, investment, government spending, or net exports. Short-run aggregate supply shifts with input prices, productivity, and expectations; long-run aggregate supply sits at full-employment output. A recessionary gap means equilibrium output is below full employment, and an inflationary gap means it is above. Expansionary fiscal policy raises spending or cuts taxes; contractionary policy does the reverse. The spending multiplier is 1 ÷ (1 − MPC), and the tax multiplier is smaller because part of a tax cut is saved.",
+    "es": "La demanda agregada tiene pendiente negativa y se desplaza con el consumo, la inversión, el gasto público o las exportaciones netas. La oferta agregada de corto plazo se desplaza con los precios de insumos, la productividad y las expectativas; la de largo plazo está en el producto de pleno empleo. Una brecha recesiva significa que el producto de equilibrio está por debajo del pleno empleo, y una brecha inflacionaria, por encima. La política fiscal expansiva aumenta el gasto o baja impuestos; la contractiva hace lo contrario. El multiplicador del gasto es 1 ÷ (1 − PMC), y el de impuestos es menor porque parte del recorte se ahorra."
+   },
+   "items": [
+    {
+     "id": "apm301",
+     "type": "mcq",
+     "diff": 1,
+     "q": {
+      "en": "Which change shifts aggregate demand to the right?",
+      "es": "¿Qué cambio desplaza la demanda agregada a la derecha?"
+     },
+     "c": {
+      "en": [
+       "An increase in government spending",
+       "An increase in the price level",
+       "A rise in input costs",
+       "A fall in consumer confidence"
+      ],
+      "es": [
+       "Un aumento del gasto público",
+       "Un aumento del nivel de precios",
+       "Un alza en costos de insumos",
+       "Una caída de la confianza del consumidor"
+      ]
+     },
+     "a": 0,
+     "why": {
+      "en": "Government spending is a component of AD, so more of it shifts the curve right.",
+      "es": "El gasto público es un componente de la DA, así que más gasto desplaza la curva a la derecha."
+     }
+    },
+    {
+     "id": "apm302",
+     "type": "numeric",
+     "diff": 2,
+     "q": {
+      "en": "The marginal propensity to consume is 0.8. What is the spending multiplier?",
+      "es": "La propensión marginal a consumir es 0.8. ¿Cuál es el multiplicador del gasto?"
+     },
+     "a": 5,
+     "tol": 0.05,
+     "why": {
+      "en": "1 ÷ (1 − 0.8) = 1 ÷ 0.2 = 5.",
+      "es": "1 ÷ (1 − 0.8) = 1 ÷ 0.2 = 5."
+     }
+    },
+    {
+     "id": "apm303",
+     "type": "numeric",
+     "diff": 3,
+     "q": {
+      "en": "With an MPC of 0.75, how much total change in real GDP results from $100 billion of new government spending, in billions?",
+      "es": "Con una PMC de 0.75, ¿cuánto cambia el PIB real en total por $100 mil millones de nuevo gasto público, en miles de millones?"
+     },
+     "a": 400,
+     "tol": 0,
+     "why": {
+      "en": "Multiplier = 1 ÷ 0.25 = 4, and 4 × 100 = 400.",
+      "es": "Multiplicador = 1 ÷ 0.25 = 4, y 4 × 100 = 400."
+     }
+    },
+    {
+     "id": "apm304",
+     "type": "mcq",
+     "diff": 2,
+     "q": {
+      "en": "An economy is producing below full employment. This is called a:",
+      "es": "Una economía produce por debajo del pleno empleo. Esto se llama:"
+     },
+     "c": {
+      "en": [
+       "Recessionary gap",
+       "Inflationary gap",
+       "Long-run equilibrium",
+       "Supply shock"
+      ],
+      "es": [
+       "Brecha recesiva",
+       "Brecha inflacionaria",
+       "Equilibrio de largo plazo",
+       "Choque de oferta"
+      ]
+     },
+     "a": 0,
+     "why": {
+      "en": "Output below full employment leaves unused capacity and cyclical unemployment.",
+      "es": "Producir bajo el pleno empleo deja capacidad ociosa y desempleo cíclico."
+     }
+    },
+    {
+     "id": "apm305",
+     "type": "mcq",
+     "diff": 2,
+     "q": {
+      "en": "Appropriate fiscal policy for a recessionary gap is to:",
+      "es": "La política fiscal adecuada para una brecha recesiva es:"
+     },
+     "c": {
+      "en": [
+       "Increase government spending or cut taxes",
+       "Raise taxes and cut spending",
+       "Raise the reserve requirement",
+       "Sell government bonds"
+      ],
+      "es": [
+       "Aumentar el gasto público o bajar impuestos",
+       "Subir impuestos y recortar gasto",
+       "Subir el encaje bancario",
+       "Vender bonos del gobierno"
+      ]
+     },
+     "a": 0,
+     "why": {
+      "en": "Expansionary fiscal policy shifts AD right, closing the gap toward full employment.",
+      "es": "La política fiscal expansiva desplaza la DA a la derecha y cierra la brecha hacia el pleno empleo."
+     }
+    },
+    {
+     "id": "apm306",
+     "type": "mcq",
+     "diff": 3,
+     "q": {
+      "en": "A sharp rise in oil prices most directly causes:",
+      "es": "Un alza fuerte del precio del petróleo causa más directamente:"
+     },
+     "c": {
+      "en": [
+       "SRAS to shift left, raising prices and lowering output",
+       "AD to shift right",
+       "LRAS to shift right",
+       "No change in either curve"
+      ],
+      "es": [
+       "Que la OACP se desplace a la izquierda, subiendo precios y bajando producción",
+       "Que la DA se desplace a la derecha",
+       "Que la OALP se desplace a la derecha",
+       "Ningún cambio en las curvas"
+      ]
+     },
+     "a": 0,
+     "why": {
+      "en": "Higher input costs are a negative supply shock, producing stagflation pressure.",
+      "es": "Mayores costos de insumos son un choque negativo de oferta que presiona hacia la estanflación."
+     }
+    },
+    {
+     "id": "apm307",
+     "type": "multi",
+     "diff": 3,
+     "q": {
+      "en": "Select every component of aggregate demand.",
+      "es": "Selecciona cada componente de la demanda agregada."
+     },
+     "c": {
+      "en": [
+       "Consumption",
+       "Investment",
+       "Government purchases",
+       "Net exports"
+      ],
+      "es": [
+       "Consumo",
+       "Inversión",
+       "Compras del gobierno",
+       "Exportaciones netas"
+      ]
+     },
+     "a": [
+      0,
+      1,
+      2,
+      3
+     ],
+     "why": {
+      "en": "AD is C + I + G + (X − M), the same four components as the expenditure approach.",
+      "es": "La DA es C + I + G + (X − M), los mismos cuatro componentes del enfoque del gasto."
+     }
+    },
+    {
+     "id": "apm308",
+     "type": "mcq",
+     "diff": 3,
+     "q": {
+      "en": "In the long run, an increase in aggregate demand starting from full employment mainly changes:",
+      "es": "A largo plazo, un aumento de la demanda agregada partiendo del pleno empleo cambia principalmente:"
+     },
+     "c": {
+      "en": [
+       "The price level, not real output",
+       "Real output, not the price level",
+       "Neither prices nor output",
+       "The natural rate of unemployment"
+      ],
+      "es": [
+       "El nivel de precios, no el producto real",
+       "El producto real, no el nivel de precios",
+       "Ni precios ni producción",
+       "La tasa natural de desempleo"
+      ]
+     },
+     "a": 0,
+     "why": {
+      "en": "LRAS is vertical at full-employment output, so extra demand shows up as inflation.",
+      "es": "La OALP es vertical en el producto de pleno empleo, así que la demanda extra se vuelve inflación."
+     }
+    },
+    {
+     "id": "apm309",
+     "type": "short",
+     "diff": 3,
+     "q": {
+      "en": "Explain why the tax multiplier is smaller than the spending multiplier.",
+      "es": "Explica por qué el multiplicador de impuestos es menor que el del gasto."
+     },
+     "keys": [
+      "saved",
+      "saving",
+      "save",
+      "part",
+      "some",
+      "mpc",
+      "ahorr",
+      "parte",
+      "pmc"
+     ],
+     "why": {
+      "en": "Households save part of a tax cut, so less of it enters the spending stream in the first round.",
+      "es": "Los hogares ahorran parte del recorte de impuestos, así que menos entra al gasto en la primera ronda."
+     }
+    },
+    {
+     "id": "apm310",
+     "type": "mcq",
+     "diff": 2,
+     "q": {
+      "en": "Which is an automatic stabilizer?",
+      "es": "¿Cuál es un estabilizador automático?"
+     },
+     "c": {
+      "en": [
+       "Unemployment insurance payments",
+       "A newly passed infrastructure bill",
+       "An open market bond purchase",
+       "A change in the discount rate"
+      ],
+      "es": [
+       "Los pagos del seguro de desempleo",
+       "Una nueva ley de infraestructura",
+       "Una compra de bonos en mercado abierto",
+       "Un cambio en la tasa de descuento"
+      ]
+     },
+     "a": 0,
+     "why": {
+      "en": "Automatic stabilizers rise and fall with the cycle without any new legislation.",
+      "es": "Los estabilizadores automáticos suben y bajan con el ciclo sin nueva legislación."
+     }
+    }
+   ]
+  },
+  {
+   "id": "ap-m4",
+   "title": {
+    "en": "Macro Unit 4 · Money and Monetary Policy",
+    "es": "Macro Unidad 4 · Dinero y política monetaria"
+   },
+   "brief": {
+    "en": "Money serves as a medium of exchange, unit of account, and store of value. Banks create money through lending; the simple money multiplier is 1 ÷ the reserve requirement. The Federal Reserve influences the economy through open market operations, the reserve requirement, and the interest paid on reserves. Buying bonds injects reserves, lowers interest rates, and expands the money supply; selling bonds does the opposite. Lower interest rates raise investment and consumption, shifting aggregate demand right. The real interest rate equals the nominal rate minus inflation.",
+    "es": "El dinero sirve como medio de cambio, unidad de cuenta y depósito de valor. Los bancos crean dinero al prestar; el multiplicador monetario simple es 1 ÷ el encaje bancario. La Reserva Federal influye en la economía mediante operaciones de mercado abierto, el encaje y los intereses pagados sobre reservas. Comprar bonos inyecta reservas, baja las tasas de interés y expande la oferta monetaria; vender bonos hace lo contrario. Tasas más bajas elevan la inversión y el consumo, desplazando la demanda agregada a la derecha. La tasa de interés real es la nominal menos la inflación."
+   },
+   "items": [
+    {
+     "id": "apm401",
+     "type": "numeric",
+     "diff": 2,
+     "q": {
+      "en": "The reserve requirement is 20%. What is the simple money multiplier?",
+      "es": "El encaje bancario es del 20%. ¿Cuál es el multiplicador monetario simple?"
+     },
+     "a": 5,
+     "tol": 0.05,
+     "why": {
+      "en": "1 ÷ 0.20 = 5.",
+      "es": "1 ÷ 0.20 = 5."
+     }
+    },
+    {
+     "id": "apm402",
+     "type": "numeric",
+     "diff": 3,
+     "q": {
+      "en": "With a 10% reserve requirement, a $1,000 deposit can support how many dollars of total new money at most?",
+      "es": "Con un encaje del 10%, un depósito de $1,000 puede sostener como máximo cuántos dólares de dinero nuevo total?"
+     },
+     "a": 10000,
+     "tol": 0,
+     "why": {
+      "en": "1 ÷ 0.10 = 10, and 10 × 1,000 = 10,000.",
+      "es": "1 ÷ 0.10 = 10, y 10 × 1,000 = 10,000."
+     }
+    },
+    {
+     "id": "apm403",
+     "type": "mcq",
+     "diff": 2,
+     "q": {
+      "en": "To fight high inflation, the Federal Reserve would most likely:",
+      "es": "Para combatir una inflación alta, la Reserva Federal probablemente:"
+     },
+     "c": {
+      "en": [
+       "Sell bonds to shrink the money supply",
+       "Buy bonds to expand the money supply",
+       "Lower the reserve requirement",
+       "Cut taxes"
+      ],
+      "es": [
+       "Vendería bonos para reducir la oferta monetaria",
+       "Compraría bonos para expandirla",
+       "Bajaría el encaje bancario",
+       "Recortaría impuestos"
+      ]
+     },
+     "a": 0,
+     "why": {
+      "en": "Selling bonds drains reserves, raises interest rates, and cools aggregate demand.",
+      "es": "Vender bonos drena reservas, sube las tasas y enfría la demanda agregada."
+     }
+    },
+    {
+     "id": "apm404",
+     "type": "numeric",
+     "diff": 2,
+     "q": {
+      "en": "The nominal interest rate is 7% and inflation is 3%. What is the real interest rate, in percent?",
+      "es": "La tasa nominal es 7% y la inflación 3%. ¿Cuál es la tasa de interés real, en porcentaje?"
+     },
+     "a": 4,
+     "tol": 0.1,
+     "why": {
+      "en": "Real rate ≈ nominal − inflation = 7 − 3 = 4%.",
+      "es": "Tasa real ≈ nominal − inflación = 7 − 3 = 4%."
+     }
+    },
+    {
+     "id": "apm405",
+     "type": "mcq",
+     "diff": 2,
+     "q": {
+      "en": "An increase in the money supply, holding money demand constant, causes the nominal interest rate to:",
+      "es": "Un aumento de la oferta monetaria, con demanda de dinero constante, hace que la tasa nominal:"
+     },
+     "c": {
+      "en": [
+       "Fall",
+       "Rise",
+       "Stay fixed",
+       "Become negative automatically"
+      ],
+      "es": [
+       "Baje",
+       "Suba",
+       "Se mantenga fija",
+       "Se vuelva negativa automáticamente"
+      ]
+     },
+     "a": 0,
+     "why": {
+      "en": "More money supplied at a given demand pushes the equilibrium interest rate down.",
+      "es": "Más oferta de dinero con la misma demanda empuja la tasa de equilibrio hacia abajo."
+     }
+    },
+    {
+     "id": "apm406",
+     "type": "multi",
+     "diff": 3,
+     "q": {
+      "en": "Select every tool the Federal Reserve controls directly.",
+      "es": "Selecciona cada herramienta que la Reserva Federal controla directamente."
+     },
+     "c": {
+      "en": [
+       "Open market operations",
+       "The reserve requirement",
+       "Interest paid on reserves",
+       "Federal income tax rates"
+      ],
+      "es": [
+       "Operaciones de mercado abierto",
+       "El encaje bancario",
+       "Intereses pagados sobre reservas",
+       "Las tasas del impuesto federal sobre la renta"
+      ]
+     },
+     "a": [
+      0,
+      1,
+      2
+     ],
+     "why": {
+      "en": "Tax rates are fiscal policy set by Congress, not a monetary tool.",
+      "es": "Las tasas de impuestos son política fiscal del Congreso, no una herramienta monetaria."
+     }
+    },
+    {
+     "id": "apm407",
+     "type": "mcq",
+     "diff": 1,
+     "q": {
+      "en": "Which function of money is served when a price tag reads $12.99?",
+      "es": "¿Qué función del dinero cumple una etiqueta que dice $12.99?"
+     },
+     "c": {
+      "en": [
+       "Unit of account",
+       "Store of value",
+       "Medium of exchange",
+       "Barter substitute"
+      ],
+      "es": [
+       "Unidad de cuenta",
+       "Depósito de valor",
+       "Medio de cambio",
+       "Sustituto del trueque"
+      ]
+     },
+     "a": 0,
+     "why": {
+      "en": "A unit of account is a common yardstick for quoting and comparing prices.",
+      "es": "La unidad de cuenta es una medida común para expresar y comparar precios."
+     }
+    },
+    {
+     "id": "apm408",
+     "type": "mcq",
+     "diff": 3,
+     "q": {
+      "en": "Expansionary monetary policy affects output mainly by:",
+      "es": "La política monetaria expansiva afecta la producción principalmente al:"
+     },
+     "c": {
+      "en": [
+       "Lowering interest rates and raising investment spending",
+       "Raising taxes on business",
+       "Shifting long-run aggregate supply left",
+       "Reducing the labor force"
+      ],
+      "es": [
+       "Bajar tasas de interés y aumentar la inversión",
+       "Subir impuestos a las empresas",
+       "Desplazar la oferta agregada de largo plazo a la izquierda",
+       "Reducir la fuerza laboral"
+      ]
+     },
+     "a": 0,
+     "why": {
+      "en": "Cheaper borrowing raises interest-sensitive spending, shifting AD right.",
+      "es": "Un crédito más barato eleva el gasto sensible a tasas y desplaza la DA a la derecha."
+     }
+    },
+    {
+     "id": "apm409",
+     "type": "short",
+     "diff": 3,
+     "q": {
+      "en": "Explain how a bank lending out excess reserves creates money.",
+      "es": "Explica cómo un banco crea dinero al prestar sus reservas excedentes."
+     },
+     "keys": [
+      "deposit",
+      "loan",
+      "lend",
+      "new deposit",
+      "spends",
+      "redeposit",
+      "depósit",
+      "deposit",
+      "presta",
+      "préstamo"
+     ],
+     "why": {
+      "en": "The loan becomes a new deposit at another bank, which can lend again, multiplying deposits.",
+      "es": "El préstamo se convierte en un depósito nuevo en otro banco, que vuelve a prestar y multiplica los depósitos."
+     }
+    },
+    {
+     "id": "apm410",
+     "type": "mcq",
+     "diff": 2,
+     "q": {
+      "en": "Which asset is the most liquid?",
+      "es": "¿Cuál activo es el más líquido?"
+     },
+     "c": {
+      "en": [
+       "Cash in a checking account",
+       "A house",
+       "A ten-year bond",
+       "A classic car"
+      ],
+      "es": [
+       "Efectivo en una cuenta corriente",
+       "Una casa",
+       "Un bono a diez años",
+       "Un auto clásico"
+      ]
+     },
+     "a": 0,
+     "why": {
+      "en": "Liquidity means how easily an asset converts to spendable money without losing value.",
+      "es": "La liquidez es la facilidad con que un activo se convierte en dinero sin perder valor."
+     }
+    }
+   ]
+  },
+  {
+   "id": "ap-i2",
+   "title": {
+    "en": "Micro Unit 2 · Supply, Demand, Elasticity",
+    "es": "Micro Unidad 2 · Oferta, demanda, elasticidad"
+   },
+   "brief": {
+    "en": "A change in a good's own price moves you along its curve; anything else shifts the curve. Demand shifters include income, tastes, prices of substitutes and complements, expectations, and the number of buyers. Supply shifters include input costs, technology, taxes and subsidies, and the number of sellers. Equilibrium is where quantity supplied equals quantity demanded; a binding price ceiling causes shortage and a binding price floor causes surplus. Price elasticity of demand is %ΔQ ÷ %ΔP in absolute value: elastic demand means a price cut raises total revenue, inelastic means a price increase raises it.",
+    "es": "Un cambio en el precio propio de un bien mueve a lo largo de su curva; cualquier otra cosa la desplaza. Desplazan la demanda: ingreso, gustos, precios de sustitutos y complementarios, expectativas y número de compradores. Desplazan la oferta: costos de insumos, tecnología, impuestos y subsidios, y número de vendedores. El equilibrio ocurre donde la cantidad ofrecida iguala a la demandada; un precio máximo vinculante causa escasez y uno mínimo causa excedente. La elasticidad precio de la demanda es %ΔQ ÷ %ΔP en valor absoluto: si es elástica, bajar el precio sube el ingreso total; si es inelástica, subirlo lo aumenta."
+   },
+   "items": [
+    {
+     "id": "api201",
+     "type": "mcq",
+     "diff": 1,
+     "q": {
+      "en": "The price of coffee falls. In the coffee market this causes:",
+      "es": "El precio del café baja. En el mercado del café esto causa:"
+     },
+     "c": {
+      "en": [
+       "A rise in quantity demanded, with no shift in demand",
+       "A rightward shift of demand",
+       "A rightward shift of supply",
+       "A leftward shift of demand"
+      ],
+      "es": [
+       "Un aumento en la cantidad demandada, sin desplazar la demanda",
+       "Un desplazamiento de la demanda a la derecha",
+       "Un desplazamiento de la oferta a la derecha",
+       "Un desplazamiento de la demanda a la izquierda"
+      ]
+     },
+     "a": 0,
+     "why": {
+      "en": "A good's own price change is a movement along the demand curve, never a shift.",
+      "es": "Un cambio en el precio propio del bien es un movimiento sobre la curva, nunca un desplazamiento."
+     }
+    },
+    {
+     "id": "api202",
+     "type": "mcq",
+     "diff": 2,
+     "q": {
+      "en": "Tea and coffee are substitutes. The price of tea rises. In the coffee market:",
+      "es": "El té y el café son sustitutos. Sube el precio del té. En el mercado del café:"
+     },
+     "c": {
+      "en": [
+       "Demand shifts right, raising price and quantity",
+       "Demand shifts left, lowering price",
+       "Supply shifts right",
+       "Nothing changes"
+      ],
+      "es": [
+       "La demanda se desplaza a la derecha, subiendo precio y cantidad",
+       "La demanda se desplaza a la izquierda, bajando el precio",
+       "La oferta se desplaza a la derecha",
+       "Nada cambia"
+      ]
+     },
+     "a": 0,
+     "why": {
+      "en": "Buyers move away from the pricier substitute toward coffee, raising demand for coffee.",
+      "es": "Los compradores dejan el sustituto más caro y prefieren café, elevando su demanda."
+     }
+    },
+    {
+     "id": "api203",
+     "type": "mcq",
+     "diff": 2,
+     "q": {
+      "en": "A binding price ceiling on apartments causes:",
+      "es": "Un precio máximo vinculante en apartamentos causa:"
+     },
+     "c": {
+      "en": [
+       "A shortage of apartments",
+       "A surplus of apartments",
+       "Immediate equilibrium",
+       "Higher rents than before"
+      ],
+      "es": [
+       "Escasez de apartamentos",
+       "Excedente de apartamentos",
+       "Equilibrio inmediato",
+       "Rentas más altas que antes"
+      ]
+     },
+     "a": 0,
+     "why": {
+      "en": "Set below equilibrium, quantity demanded exceeds quantity supplied.",
+      "es": "Fijado bajo el equilibrio, la cantidad demandada supera a la ofrecida."
+     }
+    },
+    {
+     "id": "api204",
+     "type": "numeric",
+     "diff": 3,
+     "q": {
+      "en": "Qd = 100 − 2P and Qs = 40 + P. Find the equilibrium price.",
+      "es": "Qd = 100 − 2P y Qs = 40 + P. Halla el precio de equilibrio."
+     },
+     "a": 20,
+     "tol": 0,
+     "why": {
+      "en": "100 − 2P = 40 + P gives 60 = 3P, so P = 20.",
+      "es": "100 − 2P = 40 + P da 60 = 3P, así que P = 20."
+     }
+    },
+    {
+     "id": "api205",
+     "type": "numeric",
+     "diff": 3,
+     "q": {
+      "en": "Using Qd = 100 − 2P and Qs = 40 + P, find the equilibrium quantity.",
+      "es": "Con Qd = 100 − 2P y Qs = 40 + P, halla la cantidad de equilibrio."
+     },
+     "a": 60,
+     "tol": 0,
+     "why": {
+      "en": "At P = 20, Qs = 40 + 20 = 60 and Qd = 100 − 40 = 60.",
+      "es": "En P = 20, Qs = 40 + 20 = 60 y Qd = 100 − 40 = 60."
+     }
+    },
+    {
+     "id": "api206",
+     "type": "multi",
+     "diff": 3,
+     "q": {
+      "en": "Select every change that shifts the DEMAND curve for pizza to the right.",
+      "es": "Selecciona cada cambio que desplaza la curva de DEMANDA de pizza a la derecha."
+     },
+     "c": {
+      "en": [
+       "Buyer incomes rise and pizza is a normal good",
+       "The price of burgers rises",
+       "The price of pizza falls",
+       "More families move into town"
+      ],
+      "es": [
+       "Sube el ingreso y la pizza es un bien normal",
+       "Sube el precio de las hamburguesas",
+       "Baja el precio de la pizza",
+       "Llegan más familias a la ciudad"
+      ]
+     },
+     "a": [
+      0,
+      1,
+      3
+     ],
+     "why": {
+      "en": "Income, substitute prices, and the number of buyers shift demand; pizza's own price does not.",
+      "es": "Ingreso, precio de sustitutos y número de compradores desplazan la demanda; el precio propio no."
+     }
+    },
+    {
+     "id": "api207",
+     "type": "numeric",
+     "diff": 2,
+     "q": {
+      "en": "Price rises 10% and quantity demanded falls 20%. Give the price elasticity of demand as an absolute value.",
+      "es": "El precio sube 10% y la cantidad demandada cae 20%. Da la elasticidad precio de la demanda en valor absoluto."
+     },
+     "a": 2,
+     "tol": 0.05,
+     "why": {
+      "en": "20 ÷ 10 = 2, so demand is elastic.",
+      "es": "20 ÷ 10 = 2, así que la demanda es elástica."
+     }
+    },
+    {
+     "id": "api208",
+     "type": "mcq",
+     "diff": 2,
+     "q": {
+      "en": "Demand for a life-saving medicine is highly inelastic. To raise total revenue, the seller should:",
+      "es": "La demanda de un medicamento vital es muy inelástica. Para aumentar el ingreso total, el vendedor debe:"
+     },
+     "c": {
+      "en": [
+       "Raise the price",
+       "Lower the price",
+       "Hold price constant forever",
+       "Stop producing"
+      ],
+      "es": [
+       "Subir el precio",
+       "Bajar el precio",
+       "Mantener el precio para siempre",
+       "Dejar de producir"
+      ]
+     },
+     "a": 0,
+     "why": {
+      "en": "With inelastic demand quantity barely falls, so a higher price raises revenue.",
+      "es": "Con demanda inelástica la cantidad apenas cae, así que un precio mayor eleva el ingreso."
+     }
+    },
+    {
+     "id": "api209",
+     "type": "multi",
+     "diff": 3,
+     "q": {
+      "en": "Select every factor that makes demand MORE elastic.",
+      "es": "Selecciona cada factor que hace la demanda MÁS elástica."
+     },
+     "c": {
+      "en": [
+       "Many close substitutes exist",
+       "The good takes a large share of income",
+       "Buyers have a long time to adjust",
+       "The good is a medical necessity"
+      ],
+      "es": [
+       "Existen muchos sustitutos cercanos",
+       "El bien ocupa gran parte del ingreso",
+       "Los compradores tienen mucho tiempo para ajustarse",
+       "El bien es una necesidad médica"
+      ]
+     },
+     "a": [
+      0,
+      1,
+      2
+     ],
+     "why": {
+      "en": "Substitutes, budget share, and time raise elasticity; necessity lowers it.",
+      "es": "Sustitutos, peso presupuestario y tiempo elevan la elasticidad; la necesidad la reduce."
+     }
+    },
+    {
+     "id": "api210",
+     "type": "mcq",
+     "diff": 3,
+     "q": {
+      "en": "Supply shifts right while demand shifts left. Equilibrium price and quantity:",
+      "es": "La oferta se desplaza a la derecha y la demanda a la izquierda. El precio y la cantidad de equilibrio:"
+     },
+     "c": {
+      "en": [
+       "Price falls; quantity is indeterminate",
+       "Both certainly rise",
+       "Both certainly fall",
+       "Price rises; quantity falls"
+      ],
+      "es": [
+       "El precio baja; la cantidad es indeterminada",
+       "Ambos suben con certeza",
+       "Ambos bajan con certeza",
+       "El precio sube; la cantidad baja"
+      ]
+     },
+     "a": 0,
+     "why": {
+      "en": "Both shifts push price down but pull quantity in opposite directions.",
+      "es": "Ambos desplazamientos bajan el precio pero mueven la cantidad en direcciones opuestas."
+     }
+    }
+   ]
+  },
+  {
+   "id": "ap-i3",
+   "title": {
+    "en": "Micro Unit 3 · Costs, Competition, Market Power",
+    "es": "Micro Unidad 3 · Costos, competencia, poder de mercado"
+   },
+   "brief": {
+    "en": "Fixed costs do not change with output; variable costs do. Marginal cost is the cost of one more unit, and average total cost is total cost divided by quantity. Marginal cost crosses average total cost at its minimum. Every firm maximizes profit where marginal revenue equals marginal cost. In perfect competition firms are price takers, so price equals marginal revenue, and long-run economic profit is driven to zero by entry. A monopoly faces the whole market demand curve, so its marginal revenue lies below price, and it produces less at a higher price, creating deadweight loss.",
+    "es": "Los costos fijos no cambian con la producción; los variables sí. El costo marginal es el de una unidad más y el costo total medio es el costo total dividido entre la cantidad. El costo marginal corta al costo total medio en su mínimo. Toda empresa maximiza beneficio donde el ingreso marginal iguala al costo marginal. En competencia perfecta las empresas son tomadoras de precio, por lo que el precio iguala al ingreso marginal y la entrada lleva el beneficio económico de largo plazo a cero. Un monopolio enfrenta toda la demanda del mercado, así que su ingreso marginal está por debajo del precio, produce menos a un precio mayor y genera pérdida de eficiencia."
+   },
+   "items": [
+    {
+     "id": "api301",
+     "type": "mcq",
+     "diff": 1,
+     "q": {
+      "en": "Which cost is fixed in the short run?",
+      "es": "¿Cuál costo es fijo en el corto plazo?"
+     },
+     "c": {
+      "en": [
+       "Monthly factory rent",
+       "Wages for extra shifts",
+       "Raw materials",
+       "Shipping per order"
+      ],
+      "es": [
+       "La renta mensual de la fábrica",
+       "Salarios de turnos extra",
+       "Materias primas",
+       "Envío por pedido"
+      ]
+     },
+     "a": 0,
+     "why": {
+      "en": "Rent is owed whether output is zero or at capacity.",
+      "es": "La renta se paga tanto si la producción es cero como si está a tope."
+     }
+    },
+    {
+     "id": "api302",
+     "type": "numeric",
+     "diff": 2,
+     "q": {
+      "en": "Total cost is 500 at 20 units and 560 at 21 units. What is the marginal cost of the 21st unit?",
+      "es": "El costo total es 500 con 20 unidades y 560 con 21. ¿Cuál es el costo marginal de la unidad 21?"
+     },
+     "a": 60,
+     "tol": 0,
+     "why": {
+      "en": "560 − 500 = 60.",
+      "es": "560 − 500 = 60."
+     }
+    },
+    {
+     "id": "api303",
+     "type": "numeric",
+     "diff": 2,
+     "q": {
+      "en": "Total cost is 900 for 30 units. What is average total cost?",
+      "es": "El costo total es 900 para 30 unidades. ¿Cuál es el costo total medio?"
+     },
+     "a": 30,
+     "tol": 0,
+     "why": {
+      "en": "900 ÷ 30 = 30.",
+      "es": "900 ÷ 30 = 30."
+     }
+    },
+    {
+     "id": "api304",
+     "type": "mcq",
+     "diff": 3,
+     "q": {
+      "en": "When marginal cost is below average total cost, average total cost is:",
+      "es": "Cuando el costo marginal está por debajo del costo total medio, este:"
+     },
+     "c": {
+      "en": [
+       "Falling",
+       "Rising",
+       "At its maximum",
+       "Constant"
+      ],
+      "es": [
+       "Está bajando",
+       "Está subiendo",
+       "Está en su máximo",
+       "Es constante"
+      ]
+     },
+     "a": 0,
+     "why": {
+      "en": "An extra unit cheaper than the current average pulls the average down.",
+      "es": "Una unidad extra más barata que el promedio actual arrastra el promedio hacia abajo."
+     }
+    },
+    {
+     "id": "api305",
+     "type": "mcq",
+     "diff": 2,
+     "q": {
+      "en": "A perfectly competitive firm maximizes profit by producing where:",
+      "es": "Una empresa en competencia perfecta maximiza beneficio produciendo donde:"
+     },
+     "c": {
+      "en": [
+       "Price equals marginal cost",
+       "Price equals average total cost",
+       "Total revenue is highest",
+       "Average cost is lowest"
+      ],
+      "es": [
+       "El precio iguala al costo marginal",
+       "El precio iguala al costo total medio",
+       "El ingreso total es máximo",
+       "El costo medio es mínimo"
+      ]
+     },
+     "a": 0,
+     "why": {
+      "en": "Price equals marginal revenue for a price taker, so MR = MC becomes P = MC.",
+      "es": "Para una tomadora de precios el precio iguala al ingreso marginal, así que IMg = CMg es P = CMg."
+     }
+    },
+    {
+     "id": "api306",
+     "type": "numeric",
+     "diff": 3,
+     "q": {
+      "en": "A competitive firm sells at $12. Marginal cost of the next unit is $9. By how many dollars does producing that unit change profit?",
+      "es": "Una empresa competitiva vende a $12. El costo marginal de la siguiente unidad es $9. ¿En cuántos dólares cambia el beneficio al producirla?"
+     },
+     "a": 3,
+     "tol": 0,
+     "why": {
+      "en": "12 − 9 = 3, so the unit adds $3 of profit and should be produced.",
+      "es": "12 − 9 = 3, así que la unidad suma $3 de beneficio y debe producirse."
+     }
+    },
+    {
+     "id": "api307",
+     "type": "mcq",
+     "diff": 3,
+     "q": {
+      "en": "In long-run equilibrium, perfectly competitive firms earn:",
+      "es": "En equilibrio de largo plazo, las empresas en competencia perfecta obtienen:"
+     },
+     "c": {
+      "en": [
+       "Zero economic profit",
+       "Large economic profit",
+       "Persistent economic losses",
+       "Profit equal to fixed cost"
+      ],
+      "es": [
+       "Beneficio económico cero",
+       "Un gran beneficio económico",
+       "Pérdidas económicas persistentes",
+       "Beneficio igual al costo fijo"
+      ]
+     },
+     "a": 0,
+     "why": {
+      "en": "Entry competes profit away until price equals minimum average total cost.",
+      "es": "La entrada elimina el beneficio hasta que el precio iguala el costo total medio mínimo."
+     }
+    },
+    {
+     "id": "api308",
+     "type": "mcq",
+     "diff": 3,
+     "q": {
+      "en": "Compared with perfect competition, a single-price monopoly produces:",
+      "es": "Comparado con la competencia perfecta, un monopolio de precio único produce:"
+     },
+     "c": {
+      "en": [
+       "Less output at a higher price",
+       "More output at a lower price",
+       "The same output and price",
+       "Output where price equals marginal cost"
+      ],
+      "es": [
+       "Menos producción a un precio mayor",
+       "Más producción a un precio menor",
+       "La misma producción y precio",
+       "Producción donde el precio iguala al costo marginal"
+      ]
+     },
+     "a": 0,
+     "why": {
+      "en": "Marginal revenue lies below price, so the profit-maximizing quantity is smaller and price is higher.",
+      "es": "El ingreso marginal está bajo el precio, así que la cantidad óptima es menor y el precio mayor."
+     }
+    },
+    {
+     "id": "api309",
+     "type": "multi",
+     "diff": 3,
+     "q": {
+      "en": "Select every characteristic of a perfectly competitive market.",
+      "es": "Selecciona cada característica de un mercado de competencia perfecta."
+     },
+     "c": {
+      "en": [
+       "Many small buyers and sellers",
+       "An identical, standardized product",
+       "Easy entry and exit",
+       "One firm setting the market price"
+      ],
+      "es": [
+       "Muchos compradores y vendedores pequeños",
+       "Un producto idéntico y estandarizado",
+       "Entrada y salida fáciles",
+       "Una empresa que fija el precio"
+      ]
+     },
+     "a": [
+      0,
+      1,
+      2
+     ],
+     "why": {
+      "en": "A single price-setting firm describes monopoly, the opposite of perfect competition.",
+      "es": "Una sola empresa que fija el precio describe al monopolio, lo opuesto a la competencia perfecta."
+     }
+    },
+    {
+     "id": "api310",
+     "type": "short",
+     "diff": 3,
+     "q": {
+      "en": "A firm sells 100 units at $8 with marginal cost $5. Should it produce more? Use MR and MC in your answer.",
+      "es": "Una empresa vende 100 unidades a $8 con costo marginal $5. ¿Debe producir más? Usa IMg y CMg en tu respuesta."
+     },
+     "keys": [
+      "yes",
+      "more",
+      "expand",
+      "exceed",
+      "greater",
+      "above",
+      "mr",
+      "marginal revenue",
+      "sí",
+      "si",
+      "mayor",
+      "supera",
+      "ingreso marginal"
+     ],
+     "why": {
+      "en": "Marginal revenue above marginal cost means each extra unit adds profit, so expand until MR = MC.",
+      "es": "Un ingreso marginal mayor que el costo marginal significa que cada unidad extra suma beneficio; expande hasta IMg = CMg."
+     }
+    }
+   ]
+  }
+ ]
+}

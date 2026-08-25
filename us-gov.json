@@ -1,0 +1,2312 @@
+{
+ "id": "us-gov",
+ "color": "#F2B441",
+ "name": {
+  "en": "U.S. Government Honors",
+  "es": "Gobierno de EE. UU. Honores"
+ },
+ "units": [
+  {
+   "id": "gov-u1",
+   "title": {
+    "en": "Unit 1 · Founding Principles (SS.912.CG.1.1–1.4)",
+    "es": "Unidad 1 · Principios fundacionales (SS.912.CG.1.1–1.4)"
+   },
+   "brief": {
+    "en": "The Founders drew on natural rights philosophy from John Locke, separation of powers from Montesquieu, and the social contract idea that government exists by consent of the governed. The Declaration of Independence states that people hold unalienable rights and may alter a government that destroys them. The Articles of Confederation failed because Congress could not tax, regulate trade, or enforce laws, and Shays' Rebellion exposed that weakness. The Federalist Papers argued for ratification: Federalist 10 on controlling faction through a large republic, Federalist 51 on checks and balances. Anti-Federalists demanded a Bill of Rights as the price of ratification.",
+    "es": "Los fundadores tomaron la filosofía de los derechos naturales de John Locke, la separación de poderes de Montesquieu y la idea del contrato social: el gobierno existe por consentimiento de los gobernados. La Declaración de Independencia afirma que las personas tienen derechos inalienables y pueden cambiar un gobierno que los destruya. Los Artículos de la Confederación fracasaron porque el Congreso no podía cobrar impuestos, regular el comercio ni hacer cumplir las leyes, y la Rebelión de Shays expuso esa debilidad. Los Papeles Federalistas defendieron la ratificación: el 10 sobre controlar las facciones mediante una república grande y el 51 sobre pesos y contrapesos. Los antifederalistas exigieron una Carta de Derechos como condición."
+   },
+   "items": [
+    {
+     "id": "gov101",
+     "type": "mcq",
+     "diff": 1,
+     "q": {
+      "en": "The idea that government power comes from the consent of the governed is called:",
+      "es": "La idea de que el poder del gobierno proviene del consentimiento de los gobernados se llama:"
+     },
+     "c": {
+      "en": [
+       "Popular sovereignty",
+       "Judicial review",
+       "Federalism",
+       "Eminent domain"
+      ],
+      "es": [
+       "Soberanía popular",
+       "Revisión judicial",
+       "Federalismo",
+       "Dominio eminente"
+      ]
+     },
+     "a": 0,
+     "why": {
+      "en": "Popular sovereignty places ultimate authority with the people, expressed through elections.",
+      "es": "La soberanía popular sitúa la autoridad última en el pueblo, expresada mediante elecciones."
+     }
+    },
+    {
+     "id": "gov102",
+     "type": "mcq",
+     "diff": 2,
+     "q": {
+      "en": "Which philosopher's natural rights argument most directly shaped the Declaration of Independence?",
+      "es": "¿El argumento de derechos naturales de qué filósofo influyó más directamente en la Declaración de Independencia?"
+     },
+     "c": {
+      "en": [
+       "John Locke",
+       "Karl Marx",
+       "Thomas Hobbes",
+       "Niccolò Machiavelli"
+      ],
+      "es": [
+       "John Locke",
+       "Karl Marx",
+       "Thomas Hobbes",
+       "Nicolás Maquiavelo"
+      ]
+     },
+     "a": 0,
+     "why": {
+      "en": "Locke argued people possess life, liberty, and property rights that government must protect.",
+      "es": "Locke sostuvo que las personas tienen derechos a la vida, la libertad y la propiedad que el gobierno debe proteger."
+     }
+    },
+    {
+     "id": "gov103",
+     "type": "multi",
+     "diff": 2,
+     "q": {
+      "en": "Select every weakness of the Articles of Confederation.",
+      "es": "Selecciona cada debilidad de los Artículos de la Confederación."
+     },
+     "c": {
+      "en": [
+       "Congress could not levy taxes",
+       "Congress could not regulate interstate trade",
+       "There was no national executive to enforce laws",
+       "The federal courts could overturn state laws"
+      ],
+      "es": [
+       "El Congreso no podía cobrar impuestos",
+       "El Congreso no podía regular el comercio entre estados",
+       "No había un ejecutivo nacional que hiciera cumplir las leyes",
+       "Los tribunales federales podían anular leyes estatales"
+      ]
+     },
+     "a": [
+      0,
+      1,
+      2
+     ],
+     "why": {
+      "en": "There was no strong national judiciary under the Articles; that came with the Constitution.",
+      "es": "Bajo los Artículos no existía un poder judicial nacional fuerte; eso llegó con la Constitución."
+     }
+    },
+    {
+     "id": "gov104",
+     "type": "mcq",
+     "diff": 2,
+     "q": {
+      "en": "Federalist 10 argues that the danger of faction is best controlled by:",
+      "es": "El Federalista 10 sostiene que el peligro de las facciones se controla mejor mediante:"
+     },
+     "c": {
+      "en": [
+       "A large republic with many competing interests",
+       "Abolishing political parties by law",
+       "Direct democracy in every state",
+       "Giving states a veto over federal law"
+      ],
+      "es": [
+       "Una república grande con muchos intereses en competencia",
+       "Prohibir los partidos políticos por ley",
+       "Democracia directa en cada estado",
+       "Dar a los estados veto sobre la ley federal"
+      ]
+     },
+     "a": 0,
+     "why": {
+      "en": "Madison argued a large republic makes it hard for any one faction to form a lasting majority.",
+      "es": "Madison sostuvo que en una república grande es difícil que una facción forme una mayoría duradera."
+     }
+    },
+    {
+     "id": "gov105",
+     "type": "mcq",
+     "diff": 2,
+     "q": {
+      "en": "Which document declared that people may alter or abolish a government that destroys their rights?",
+      "es": "¿Qué documento declaró que el pueblo puede cambiar o abolir un gobierno que destruya sus derechos?"
+     },
+     "c": {
+      "en": [
+       "The Declaration of Independence",
+       "The Mayflower Compact",
+       "The Northwest Ordinance",
+       "The Emancipation Proclamation"
+      ],
+      "es": [
+       "La Declaración de Independencia",
+       "El Pacto del Mayflower",
+       "La Ordenanza del Noroeste",
+       "La Proclamación de Emancipación"
+      ]
+     },
+     "a": 0,
+     "why": {
+      "en": "The Declaration lists unalienable rights and the right of the people to change a destructive government.",
+      "es": "La Declaración enumera derechos inalienables y el derecho del pueblo a cambiar un gobierno destructivo."
+     }
+    },
+    {
+     "id": "gov106",
+     "type": "mcq",
+     "diff": 3,
+     "q": {
+      "en": "Anti-Federalists agreed to ratification largely in exchange for:",
+      "es": "Los antifederalistas aceptaron la ratificación en gran medida a cambio de:"
+     },
+     "c": {
+      "en": [
+       "A promised Bill of Rights",
+       "An immediate end to slavery",
+       "Direct election of senators",
+       "A single-term presidency"
+      ],
+      "es": [
+       "La promesa de una Carta de Derechos",
+       "El fin inmediato de la esclavitud",
+       "La elección directa de senadores",
+       "Una presidencia de un solo mandato"
+      ]
+     },
+     "a": 0,
+     "why": {
+      "en": "They feared a strong central government would trample individual liberties without written protections.",
+      "es": "Temían que un gobierno central fuerte pisoteara las libertades individuales sin protecciones escritas."
+     }
+    },
+    {
+     "id": "gov107",
+     "type": "mcq",
+     "diff": 2,
+     "q": {
+      "en": "The Great Compromise at the Constitutional Convention resolved a dispute over:",
+      "es": "El Gran Compromiso en la Convención Constitucional resolvió una disputa sobre:"
+     },
+     "c": {
+      "en": [
+       "Representation in Congress",
+       "Presidential term limits",
+       "The location of the capital",
+       "Freedom of the press"
+      ],
+      "es": [
+       "La representación en el Congreso",
+       "Los límites del mandato presidencial",
+       "La ubicación de la capital",
+       "La libertad de prensa"
+      ]
+     },
+     "a": 0,
+     "why": {
+      "en": "It created a House based on population and a Senate with equal state representation.",
+      "es": "Creó una Cámara según la población y un Senado con representación igual por estado."
+     }
+    },
+    {
+     "id": "gov108",
+     "type": "mcq",
+     "diff": 3,
+     "q": {
+      "en": "A constitutional republic differs from a pure democracy because:",
+      "es": "Una república constitucional se diferencia de una democracia pura porque:"
+     },
+     "c": {
+      "en": [
+       "Citizens elect representatives who govern under written limits",
+       "All citizens vote directly on every law",
+       "Only judges make policy",
+       "The military selects leaders"
+      ],
+      "es": [
+       "Los ciudadanos eligen representantes que gobiernan bajo límites escritos",
+       "Todos votan directamente cada ley",
+       "Solo los jueces hacen política",
+       "Los militares eligen a los líderes"
+      ]
+     },
+     "a": 0,
+     "why": {
+      "en": "A republic filters public will through elected representatives bound by a constitution.",
+      "es": "Una república canaliza la voluntad pública mediante representantes electos limitados por una constitución."
+     }
+    },
+    {
+     "id": "gov109",
+     "type": "short",
+     "diff": 3,
+     "q": {
+      "en": "In one sentence, explain the social contract as the Founders understood it.",
+      "es": "En una oración, explica el contrato social tal como lo entendían los fundadores."
+     },
+     "keys": [
+      "consent",
+      "people",
+      "give up",
+      "protect",
+      "rights",
+      "agreement",
+      "govern",
+      "consentimiento",
+      "derechos",
+      "proteger",
+      "acuerdo"
+     ],
+     "why": {
+      "en": "People consent to be governed in exchange for government protection of their natural rights.",
+      "es": "Las personas consienten ser gobernadas a cambio de que el gobierno proteja sus derechos naturales."
+     }
+    },
+    {
+     "id": "gov110",
+     "type": "mcq",
+     "diff": 2,
+     "q": {
+      "en": "Separation of powers, as described by Montesquieu, means:",
+      "es": "La separación de poderes, según Montesquieu, significa:"
+     },
+     "c": {
+      "en": [
+       "Dividing government into legislative, executive, and judicial branches",
+       "Splitting power between two political parties",
+       "Giving each state its own army",
+       "Electing judges by popular vote"
+      ],
+      "es": [
+       "Dividir el gobierno en poderes legislativo, ejecutivo y judicial",
+       "Repartir el poder entre dos partidos",
+       "Dar a cada estado su propio ejército",
+       "Elegir jueces por voto popular"
+      ]
+     },
+     "a": 0,
+     "why": {
+      "en": "Splitting functions among branches prevents any one from accumulating unchecked power.",
+      "es": "Dividir funciones entre poderes evita que uno acumule poder sin control."
+     }
+    }
+   ]
+  },
+  {
+   "id": "gov-u2",
+   "title": {
+    "en": "Unit 2 · The Constitution and Federalism (SS.912.CG.1.5–1.9)",
+    "es": "Unidad 2 · La Constitución y el federalismo (SS.912.CG.1.5–1.9)"
+   },
+   "brief": {
+    "en": "The Constitution opens with the Preamble, then Articles I, II, and III creating the legislative, executive, and judicial branches. Article IV covers relations among states, Article V the amendment process, and Article VI the Supremacy Clause. Federalism divides power: delegated powers belong to the national government, reserved powers to the states under the Tenth Amendment, and concurrent powers to both. Checks and balances let each branch limit the others through vetoes, overrides, confirmations, and judicial review. Amendments require two-thirds of both chambers of Congress and ratification by three-fourths of the states.",
+    "es": "La Constitución abre con el Preámbulo y luego los Artículos I, II y III crean los poderes legislativo, ejecutivo y judicial. El Artículo IV trata las relaciones entre estados, el V el proceso de enmienda y el VI la Cláusula de Supremacía. El federalismo divide el poder: los poderes delegados son del gobierno nacional, los reservados de los estados según la Décima Enmienda, y los concurrentes de ambos. Los pesos y contrapesos permiten que cada poder limite a los otros mediante vetos, anulaciones, confirmaciones y revisión judicial. Las enmiendas requieren dos tercios de ambas cámaras del Congreso y la ratificación de tres cuartas partes de los estados."
+   },
+   "items": [
+    {
+     "id": "gov201",
+     "type": "mcq",
+     "diff": 1,
+     "q": {
+      "en": "Which article of the Constitution creates the legislative branch?",
+      "es": "¿Qué artículo de la Constitución crea el poder legislativo?"
+     },
+     "c": {
+      "en": [
+       "Article I",
+       "Article II",
+       "Article III",
+       "Article V"
+      ],
+      "es": [
+       "Artículo I",
+       "Artículo II",
+       "Artículo III",
+       "Artículo V"
+      ]
+     },
+     "a": 0,
+     "why": {
+      "en": "Article I establishes Congress and lists its enumerated powers.",
+      "es": "El Artículo I establece el Congreso y enumera sus poderes."
+     }
+    },
+    {
+     "id": "gov202",
+     "type": "mcq",
+     "diff": 2,
+     "q": {
+      "en": "The Supremacy Clause establishes that:",
+      "es": "La Cláusula de Supremacía establece que:"
+     },
+     "c": {
+      "en": [
+       "Federal law prevails when it conflicts with state law",
+       "States may nullify federal law",
+       "The president outranks Congress",
+       "Treaties are unconstitutional"
+      ],
+      "es": [
+       "La ley federal prevalece cuando entra en conflicto con la estatal",
+       "Los estados pueden anular la ley federal",
+       "El presidente está por encima del Congreso",
+       "Los tratados son inconstitucionales"
+      ]
+     },
+     "a": 0,
+     "why": {
+      "en": "Article VI makes the Constitution and federal law the supreme law of the land.",
+      "es": "El Artículo VI hace de la Constitución y la ley federal la ley suprema del país."
+     }
+    },
+    {
+     "id": "gov203",
+     "type": "multi",
+     "diff": 3,
+     "q": {
+      "en": "Select every power reserved primarily to the states.",
+      "es": "Selecciona cada poder reservado principalmente a los estados."
+     },
+     "c": {
+      "en": [
+       "Running elections",
+       "Licensing doctors and teachers",
+       "Establishing local school systems",
+       "Coining money"
+      ],
+      "es": [
+       "Organizar elecciones",
+       "Otorgar licencias a médicos y maestros",
+       "Establecer sistemas escolares locales",
+       "Acuñar moneda"
+      ]
+     },
+     "a": [
+      0,
+      1,
+      2
+     ],
+     "why": {
+      "en": "Coining money is delegated exclusively to the national government.",
+      "es": "Acuñar moneda es un poder delegado exclusivamente al gobierno nacional."
+     }
+    },
+    {
+     "id": "gov204",
+     "type": "mcq",
+     "diff": 2,
+     "q": {
+      "en": "Congress can override a presidential veto with:",
+      "es": "El Congreso puede anular un veto presidencial con:"
+     },
+     "c": {
+      "en": [
+       "A two-thirds vote in both chambers",
+       "A simple majority in the House",
+       "A ruling from the Supreme Court",
+       "Approval of three-fourths of the states"
+      ],
+      "es": [
+       "Dos tercios de los votos en ambas cámaras",
+       "Mayoría simple en la Cámara",
+       "Un fallo de la Corte Suprema",
+       "La aprobación de tres cuartos de los estados"
+      ]
+     },
+     "a": 0,
+     "why": {
+      "en": "The two-thirds override is one of Congress's core checks on the executive.",
+      "es": "La anulación por dos tercios es uno de los controles clave del Congreso sobre el ejecutivo."
+     }
+    },
+    {
+     "id": "gov205",
+     "type": "mcq",
+     "diff": 2,
+     "q": {
+      "en": "Which is a concurrent power?",
+      "es": "¿Cuál es un poder concurrente?"
+     },
+     "c": {
+      "en": [
+       "Levying taxes",
+       "Declaring war",
+       "Printing currency",
+       "Ratifying treaties"
+      ],
+      "es": [
+       "Cobrar impuestos",
+       "Declarar la guerra",
+       "Imprimir moneda",
+       "Ratificar tratados"
+      ]
+     },
+     "a": 0,
+     "why": {
+      "en": "Both national and state governments may tax; the other powers are federal only.",
+      "es": "Tanto el gobierno nacional como los estatales pueden cobrar impuestos; los demás son solo federales."
+     }
+    },
+    {
+     "id": "gov206",
+     "type": "mcq",
+     "diff": 3,
+     "q": {
+      "en": "An amendment is proposed by two-thirds of Congress. Ratification then requires approval by:",
+      "es": "Una enmienda es propuesta por dos tercios del Congreso. La ratificación requiere después la aprobación de:"
+     },
+     "c": {
+      "en": [
+       "Three-fourths of the states",
+       "A majority of voters nationwide",
+       "The Supreme Court",
+       "The president alone"
+      ],
+      "es": [
+       "Tres cuartas partes de los estados",
+       "Una mayoría de votantes a nivel nacional",
+       "La Corte Suprema",
+       "El presidente por sí solo"
+      ]
+     },
+     "a": 0,
+     "why": {
+      "en": "Article V requires ratification by 38 of the 50 state legislatures or conventions.",
+      "es": "El Artículo V exige la ratificación de 38 de las 50 legislaturas o convenciones estatales."
+     }
+    },
+    {
+     "id": "gov207",
+     "type": "mcq",
+     "diff": 2,
+     "q": {
+      "en": "The Necessary and Proper Clause is significant because it:",
+      "es": "La Cláusula de lo Necesario y Adecuado es importante porque:"
+     },
+     "c": {
+      "en": [
+       "Lets Congress pass laws to carry out its enumerated powers",
+       "Gives states veto power",
+       "Limits Congress to only listed powers",
+       "Creates the federal courts"
+      ],
+      "es": [
+       "Permite al Congreso aprobar leyes para ejercer sus poderes enumerados",
+       "Da a los estados poder de veto",
+       "Limita al Congreso solo a los poderes listados",
+       "Crea los tribunales federales"
+      ]
+     },
+     "a": 0,
+     "why": {
+      "en": "Also called the elastic clause, it is the basis for implied powers.",
+      "es": "También llamada cláusula elástica, es la base de los poderes implícitos."
+     }
+    },
+    {
+     "id": "gov208",
+     "type": "multi",
+     "diff": 3,
+     "q": {
+      "en": "Select every example of a check on the judicial branch.",
+      "es": "Selecciona cada ejemplo de control sobre el poder judicial."
+     },
+     "c": {
+      "en": [
+       "The president nominates federal judges",
+       "The Senate confirms or rejects nominees",
+       "Congress can impeach and remove judges",
+       "The Court can veto a bill"
+      ],
+      "es": [
+       "El presidente nomina jueces federales",
+       "El Senado confirma o rechaza a los nominados",
+       "El Congreso puede acusar y destituir jueces",
+       "La Corte puede vetar un proyecto de ley"
+      ]
+     },
+     "a": [
+      0,
+      1,
+      2
+     ],
+     "why": {
+      "en": "Courts do not veto bills; the veto belongs to the president.",
+      "es": "Los tribunales no vetan leyes; el veto corresponde al presidente."
+     }
+    },
+    {
+     "id": "gov209",
+     "type": "short",
+     "diff": 3,
+     "q": {
+      "en": "Explain federalism in one sentence.",
+      "es": "Explica el federalismo en una oración."
+     },
+     "keys": [
+      "divide",
+      "shared",
+      "between",
+      "national",
+      "state",
+      "levels",
+      "divid",
+      "compart",
+      "estatal",
+      "nacional",
+      "niveles"
+     ],
+     "why": {
+      "en": "Federalism divides governing power between a national government and the states.",
+      "es": "El federalismo divide el poder de gobierno entre un gobierno nacional y los estados."
+     }
+    },
+    {
+     "id": "gov210",
+     "type": "mcq",
+     "diff": 2,
+     "q": {
+      "en": "The Preamble's phrase 'We the People' signals that authority rests with:",
+      "es": "La frase del Preámbulo 'Nosotros el Pueblo' señala que la autoridad reside en:"
+     },
+     "c": {
+      "en": [
+       "The citizens of the nation",
+       "The state legislatures",
+       "The Congress",
+       "The president"
+      ],
+      "es": [
+       "Los ciudadanos de la nación",
+       "Las legislaturas estatales",
+       "El Congreso",
+       "El presidente"
+      ]
+     },
+     "a": 0,
+     "why": {
+      "en": "The opening words assert that the people, not the states or a ruler, establish the government.",
+      "es": "Las palabras iniciales afirman que el pueblo, no los estados ni un gobernante, establece el gobierno."
+     }
+    }
+   ]
+  },
+  {
+   "id": "gov-u3",
+   "title": {
+    "en": "Unit 3 · The Three Branches at Work",
+    "es": "Unidad 3 · Los tres poderes en acción"
+   },
+   "brief": {
+    "en": "Congress has two chambers: the House with 435 members serving two-year terms and the Senate with 100 members serving six-year terms. A bill must pass both chambers in identical form before going to the president, who signs or vetoes it. The president serves as chief executive, commander in chief, and chief diplomat, and issues executive orders that carry the force of law without congressional approval. The federal courts interpret law, and Marbury v. Madison established judicial review, the power to strike down unconstitutional acts. The Senate confirms appointments and ratifies treaties by a two-thirds vote.",
+    "es": "El Congreso tiene dos cámaras: la Cámara de Representantes con 435 miembros por dos años y el Senado con 100 miembros por seis. Un proyecto debe aprobarse en ambas cámaras con el mismo texto antes de pasar al presidente, que lo firma o lo veta. El presidente es jefe del ejecutivo, comandante en jefe y jefe diplomático, y emite órdenes ejecutivas con fuerza de ley sin aprobación del Congreso. Los tribunales federales interpretan la ley, y Marbury contra Madison estableció la revisión judicial, el poder de anular actos inconstitucionales. El Senado confirma nombramientos y ratifica tratados por dos tercios de los votos."
+   },
+   "items": [
+    {
+     "id": "gov301",
+     "type": "numeric",
+     "diff": 1,
+     "q": {
+      "en": "How many voting members serve in the U.S. House of Representatives?",
+      "es": "¿Cuántos miembros con voto tiene la Cámara de Representantes de EE. UU.?"
+     },
+     "a": 435,
+     "tol": 0,
+     "why": {
+      "en": "The House has been fixed at 435 voting members since 1929.",
+      "es": "La Cámara está fijada en 435 miembros con voto desde 1929."
+     }
+    },
+    {
+     "id": "gov302",
+     "type": "numeric",
+     "diff": 1,
+     "q": {
+      "en": "How many years are in a U.S. senator's term?",
+      "es": "¿Cuántos años dura el mandato de un senador de EE. UU.?"
+     },
+     "a": 6,
+     "tol": 0,
+     "why": {
+      "en": "Senators serve six-year terms, with about a third of seats up every two years.",
+      "es": "Los senadores sirven seis años, y cerca de un tercio de los escaños se renueva cada dos."
+     }
+    },
+    {
+     "id": "gov303",
+     "type": "mcq",
+     "diff": 2,
+     "q": {
+      "en": "Marbury v. Madison established the principle of:",
+      "es": "Marbury contra Madison estableció el principio de:"
+     },
+     "c": {
+      "en": [
+       "Judicial review",
+       "Executive privilege",
+       "Federal supremacy over trade",
+       "One person, one vote"
+      ],
+      "es": [
+       "Revisión judicial",
+       "Privilegio ejecutivo",
+       "Supremacía federal sobre el comercio",
+       "Una persona, un voto"
+      ]
+     },
+     "a": 0,
+     "why": {
+      "en": "The Court claimed the power to declare acts of Congress unconstitutional.",
+      "es": "La Corte se atribuyó el poder de declarar inconstitucionales las leyes del Congreso."
+     }
+    },
+    {
+     "id": "gov304",
+     "type": "mcq",
+     "diff": 2,
+     "q": {
+      "en": "An executive order is best described as:",
+      "es": "Una orden ejecutiva se describe mejor como:"
+     },
+     "c": {
+      "en": [
+       "A presidential directive with the force of law that Congress did not pass",
+       "A law passed by both chambers",
+       "A Supreme Court ruling",
+       "A state governor's proclamation"
+      ],
+      "es": [
+       "Una directiva presidencial con fuerza de ley que el Congreso no aprobó",
+       "Una ley aprobada por ambas cámaras",
+       "Un fallo de la Corte Suprema",
+       "Una proclamación de un gobernador"
+      ]
+     },
+     "a": 0,
+     "why": {
+      "en": "Executive orders direct the executive branch and can be reversed by later presidents or courts.",
+      "es": "Las órdenes ejecutivas dirigen al poder ejecutivo y pueden revertirlas presidentes posteriores o los tribunales."
+     }
+    },
+    {
+     "id": "gov305",
+     "type": "mcq",
+     "diff": 3,
+     "q": {
+      "en": "Which chamber holds the sole power to impeach a federal official?",
+      "es": "¿Qué cámara tiene el poder exclusivo de acusar (impeach) a un funcionario federal?"
+     },
+     "c": {
+      "en": [
+       "The House of Representatives",
+       "The Senate",
+       "The Supreme Court",
+       "The Electoral College"
+      ],
+      "es": [
+       "La Cámara de Representantes",
+       "El Senado",
+       "La Corte Suprema",
+       "El Colegio Electoral"
+      ]
+     },
+     "a": 0,
+     "why": {
+      "en": "The House impeaches by majority vote; the Senate then holds the trial.",
+      "es": "La Cámara acusa por mayoría simple; el Senado luego celebra el juicio."
+     }
+    },
+    {
+     "id": "gov306",
+     "type": "mcq",
+     "diff": 3,
+     "q": {
+      "en": "Conviction and removal after impeachment requires:",
+      "es": "La condena y destitución tras el impeachment requiere:"
+     },
+     "c": {
+      "en": [
+       "A two-thirds vote of the Senate",
+       "A simple majority of the Senate",
+       "A unanimous Supreme Court",
+       "Approval by the states"
+      ],
+      "es": [
+       "Dos tercios de los votos del Senado",
+       "Mayoría simple del Senado",
+       "Unanimidad de la Corte Suprema",
+       "La aprobación de los estados"
+      ]
+     },
+     "a": 0,
+     "why": {
+      "en": "The Constitution sets a deliberately high bar of two-thirds for removal.",
+      "es": "La Constitución fija deliberadamente un umbral alto de dos tercios para destituir."
+     }
+    },
+    {
+     "id": "gov307",
+     "type": "multi",
+     "diff": 2,
+     "q": {
+      "en": "Select every formal role of the president.",
+      "es": "Selecciona cada función formal del presidente."
+     },
+     "c": {
+      "en": [
+       "Commander in chief",
+       "Chief diplomat",
+       "Chief executive",
+       "Chief justice"
+      ],
+      "es": [
+       "Comandante en jefe",
+       "Jefe diplomático",
+       "Jefe del ejecutivo",
+       "Presidente de la Corte Suprema"
+      ]
+     },
+     "a": [
+      0,
+      1,
+      2
+     ],
+     "why": {
+      "en": "The chief justice heads the Supreme Court, a separate branch.",
+      "es": "El presidente de la Corte Suprema encabeza el poder judicial, un poder separado."
+     }
+    },
+    {
+     "id": "gov308",
+     "type": "mcq",
+     "diff": 3,
+     "q": {
+      "en": "A bill passes the House but is changed in the Senate. What must happen next?",
+      "es": "Un proyecto pasa la Cámara pero se modifica en el Senado. ¿Qué debe ocurrir después?"
+     },
+     "c": {
+      "en": [
+       "The chambers must agree on identical text before it reaches the president",
+       "It goes straight to the president",
+       "The Supreme Court decides the wording",
+       "It becomes law automatically"
+      ],
+      "es": [
+       "Las cámaras deben acordar un texto idéntico antes de llegar al presidente",
+       "Va directo al presidente",
+       "La Corte Suprema decide la redacción",
+       "Se convierte en ley automáticamente"
+      ]
+     },
+     "a": 0,
+     "why": {
+      "en": "Differences are resolved, often in conference committee, before final passage.",
+      "es": "Las diferencias se resuelven, a menudo en comité de conferencia, antes de la aprobación final."
+     }
+    },
+    {
+     "id": "gov309",
+     "type": "mcq",
+     "diff": 2,
+     "q": {
+      "en": "Treaties negotiated by the president take effect only after:",
+      "es": "Los tratados negociados por el presidente entran en vigor solo después de:"
+     },
+     "c": {
+      "en": [
+       "The Senate ratifies them by a two-thirds vote",
+       "The House votes to fund them",
+       "A national referendum",
+       "A Supreme Court review"
+      ],
+      "es": [
+       "Que el Senado los ratifique por dos tercios",
+       "Que la Cámara vote su financiamiento",
+       "Un referéndum nacional",
+       "Una revisión de la Corte Suprema"
+      ]
+     },
+     "a": 0,
+     "why": {
+      "en": "Senate ratification is a check on presidential control of foreign policy.",
+      "es": "La ratificación del Senado es un control sobre el manejo presidencial de la política exterior."
+     }
+    },
+    {
+     "id": "gov310",
+     "type": "short",
+     "diff": 3,
+     "q": {
+      "en": "Explain one way the judicial branch checks the legislative branch.",
+      "es": "Explica una forma en que el poder judicial controla al legislativo."
+     },
+     "keys": [
+      "unconstitutional",
+      "strike",
+      "judicial review",
+      "overturn",
+      "invalid",
+      "inconstitucional",
+      "anular",
+      "revisión judicial",
+      "invalid"
+     ],
+     "why": {
+      "en": "Through judicial review the courts can strike down a law as unconstitutional.",
+      "es": "Mediante la revisión judicial los tribunales pueden anular una ley por inconstitucional."
+     }
+    }
+   ]
+  },
+  {
+   "id": "gov-u4",
+   "title": {
+    "en": "Unit 4 · Citizenship, Elections, Participation (SS.912.CG.2)",
+    "es": "Unidad 4 · Ciudadanía, elecciones y participación (SS.912.CG.2)"
+   },
+   "brief": {
+    "en": "Citizenship comes by birth or through naturalization, which requires lawful residency, an English and civics exam, and an oath of allegiance. Citizens hold both rights and responsibilities: voting, serving on juries, paying taxes, obeying the law, and registering for selective service. Primary elections narrow the field within a party; general elections decide the office. The Electoral College awards 538 votes based on congressional representation, and 270 are needed to win the presidency. Interest groups, political parties, and the media shape opinion, while citizens influence policy by contacting officials, petitioning, and running for office.",
+    "es": "La ciudadanía se obtiene por nacimiento o por naturalización, que exige residencia legal, un examen de inglés y civismo y un juramento de lealtad. Los ciudadanos tienen derechos y responsabilidades: votar, servir en jurados, pagar impuestos, obedecer la ley e inscribirse en el servicio selectivo. Las elecciones primarias reducen los candidatos dentro de un partido; las generales deciden el cargo. El Colegio Electoral reparte 538 votos según la representación en el Congreso, y se necesitan 270 para ganar la presidencia. Los grupos de interés, los partidos y los medios moldean la opinión, mientras los ciudadanos influyen contactando a funcionarios, firmando peticiones y postulándose."
+   },
+   "items": [
+    {
+     "id": "gov401",
+     "type": "numeric",
+     "diff": 2,
+     "q": {
+      "en": "How many electoral votes are needed to win the presidency?",
+      "es": "¿Cuántos votos electorales se necesitan para ganar la presidencia?"
+     },
+     "a": 270,
+     "tol": 0,
+     "why": {
+      "en": "A majority of the 538 electoral votes is 270.",
+      "es": "La mayoría de los 538 votos electorales es 270."
+     }
+    },
+    {
+     "id": "gov402",
+     "type": "mcq",
+     "diff": 1,
+     "q": {
+      "en": "Which is a responsibility of citizenship rather than a right?",
+      "es": "¿Cuál es una responsabilidad de la ciudadanía y no un derecho?"
+     },
+     "c": {
+      "en": [
+       "Serving on a jury when called",
+       "Speaking freely",
+       "Practicing a religion",
+       "Petitioning the government"
+      ],
+      "es": [
+       "Servir en un jurado cuando se le convoca",
+       "Hablar libremente",
+       "Practicar una religión",
+       "Peticionar al gobierno"
+      ]
+     },
+     "a": 0,
+     "why": {
+      "en": "Jury duty is an obligation citizens owe the system that protects their rights.",
+      "es": "El deber de jurado es una obligación que los ciudadanos deben al sistema que protege sus derechos."
+     }
+    },
+    {
+     "id": "gov403",
+     "type": "mcq",
+     "diff": 2,
+     "q": {
+      "en": "The main purpose of a primary election is to:",
+      "es": "El propósito principal de una elección primaria es:"
+     },
+     "c": {
+      "en": [
+       "Choose a party's nominee for the general election",
+       "Fill the office immediately",
+       "Amend the state constitution",
+       "Select judges by lottery"
+      ],
+      "es": [
+       "Elegir al candidato de un partido para la elección general",
+       "Ocupar el cargo de inmediato",
+       "Enmendar la constitución estatal",
+       "Elegir jueces por sorteo"
+      ]
+     },
+     "a": 0,
+     "why": {
+      "en": "Primaries narrow each party's field before voters decide the office in November.",
+      "es": "Las primarias reducen los aspirantes de cada partido antes de la elección general."
+     }
+    },
+    {
+     "id": "gov404",
+     "type": "multi",
+     "diff": 2,
+     "q": {
+      "en": "Select every requirement for naturalization as a U.S. citizen.",
+      "es": "Selecciona cada requisito para naturalizarse como ciudadano de EE. UU."
+     },
+     "c": {
+      "en": [
+       "A period of lawful permanent residency",
+       "Passing an English and civics test",
+       "Taking an oath of allegiance",
+       "Owning property"
+      ],
+      "es": [
+       "Un período de residencia permanente legal",
+       "Aprobar un examen de inglés y civismo",
+       "Prestar juramento de lealtad",
+       "Ser propietario de bienes"
+      ]
+     },
+     "a": [
+      0,
+      1,
+      2
+     ],
+     "why": {
+      "en": "Property ownership has never been a requirement for naturalization.",
+      "es": "Ser propietario nunca ha sido requisito para la naturalización."
+     }
+    },
+    {
+     "id": "gov405",
+     "type": "mcq",
+     "diff": 2,
+     "q": {
+      "en": "The Twenty-Sixth Amendment lowered the voting age to:",
+      "es": "La Vigesimosexta Enmienda bajó la edad para votar a:"
+     },
+     "c": {
+      "en": [
+       "18",
+       "21",
+       "16",
+       "25"
+      ],
+      "es": [
+       "18",
+       "21",
+       "16",
+       "25"
+      ]
+     },
+     "a": 0,
+     "why": {
+      "en": "Ratified in 1971, it set the national voting age at eighteen.",
+      "es": "Ratificada en 1971, fijó la edad nacional para votar en dieciocho años."
+     }
+    },
+    {
+     "id": "gov406",
+     "type": "mcq",
+     "diff": 3,
+     "q": {
+      "en": "A state gains population in the census. The most direct effect is:",
+      "es": "Un estado gana población en el censo. El efecto más directo es:"
+     },
+     "c": {
+      "en": [
+       "It may gain House seats and electoral votes",
+       "It gains extra senators",
+       "Its governor gains veto power",
+       "Its courts gain jurisdiction"
+      ],
+      "es": [
+       "Puede ganar escaños en la Cámara y votos electorales",
+       "Gana senadores adicionales",
+       "Su gobernador gana poder de veto",
+       "Sus tribunales ganan jurisdicción"
+      ]
+     },
+     "a": 0,
+     "why": {
+      "en": "House seats are apportioned by population, and electoral votes follow congressional totals.",
+      "es": "Los escaños de la Cámara se reparten por población y los votos electorales siguen esa suma."
+     }
+    },
+    {
+     "id": "gov407",
+     "type": "mcq",
+     "diff": 3,
+     "q": {
+      "en": "Interest groups most commonly influence policy by:",
+      "es": "Los grupos de interés influyen en la política más comúnmente al:"
+     },
+     "c": {
+      "en": [
+       "Lobbying officials and funding campaigns",
+       "Writing court opinions",
+       "Appointing cabinet members",
+       "Certifying election results"
+      ],
+      "es": [
+       "Presionar a funcionarios y financiar campañas",
+       "Redactar fallos judiciales",
+       "Nombrar miembros del gabinete",
+       "Certificar resultados electorales"
+      ]
+     },
+     "a": 0,
+     "why": {
+      "en": "Lobbying and campaign support are their main legal channels of influence.",
+      "es": "El cabildeo y el apoyo a campañas son sus principales vías legales de influencia."
+     }
+    },
+    {
+     "id": "gov408",
+     "type": "mcq",
+     "diff": 2,
+     "q": {
+      "en": "Which action is an example of direct civic participation at the local level?",
+      "es": "¿Qué acción es un ejemplo de participación cívica directa a nivel local?"
+     },
+     "c": {
+      "en": [
+       "Speaking at a city council meeting",
+       "Reading a national newspaper",
+       "Watching a debate on television",
+       "Following a senator online"
+      ],
+      "es": [
+       "Hablar en una reunión del concejo municipal",
+       "Leer un periódico nacional",
+       "Ver un debate en televisión",
+       "Seguir a un senador en línea"
+      ]
+     },
+     "a": 0,
+     "why": {
+      "en": "Direct participation means acting to influence a decision, not just consuming information.",
+      "es": "La participación directa implica actuar para influir en una decisión, no solo informarse."
+     }
+    },
+    {
+     "id": "gov409",
+     "type": "short",
+     "diff": 3,
+     "q": {
+      "en": "Give one argument critics make against the Electoral College.",
+      "es": "Da un argumento que los críticos hacen contra el Colegio Electoral."
+     },
+     "keys": [
+      "popular vote",
+      "lose",
+      "swing",
+      "small states",
+      "overrepresent",
+      "equal",
+      "voto popular",
+      "estados pequeños",
+      "sobrerrepresent",
+      "igual"
+     ],
+     "why": {
+      "en": "A candidate can win the presidency without winning the national popular vote.",
+      "es": "Un candidato puede ganar la presidencia sin ganar el voto popular nacional."
+     }
+    },
+    {
+     "id": "gov410",
+     "type": "mcq",
+     "diff": 2,
+     "q": {
+      "en": "Political parties primarily serve to:",
+      "es": "Los partidos políticos sirven principalmente para:"
+     },
+     "c": {
+      "en": [
+       "Organize voters and nominate candidates",
+       "Write Supreme Court rulings",
+       "Run the census",
+       "Certify naturalization"
+      ],
+      "es": [
+       "Organizar a los votantes y nominar candidatos",
+       "Redactar fallos de la Corte Suprema",
+       "Administrar el censo",
+       "Certificar la naturalización"
+      ]
+     },
+     "a": 0,
+     "why": {
+      "en": "Parties recruit candidates, organize campaigns, and simplify choices for voters.",
+      "es": "Los partidos reclutan candidatos, organizan campañas y simplifican las opciones del votante."
+     }
+    }
+   ]
+  },
+  {
+   "id": "gov-u5",
+   "title": {
+    "en": "Unit 5 · Rights, Landmark Cases, World Systems (SS.912.CG.3–4)",
+    "es": "Unidad 5 · Derechos, casos históricos y sistemas mundiales (SS.912.CG.3–4)"
+   },
+   "brief": {
+    "en": "The Bill of Rights protects speech, religion, press, assembly, and petition in the First Amendment, due process in the Fifth, and a fair trial in the Sixth. The Fourteenth Amendment applies most of these protections to the states through incorporation. Landmark rulings define the limits: Brown v. Board ended school segregation, Gideon v. Wainwright guaranteed counsel, Tinker v. Des Moines protected student speech that does not disrupt school, and Miranda v. Arizona required warnings before custodial questioning. Compared with a constitutional republic, an authoritarian or communist system concentrates power, restricts speech, and eliminates competitive elections.",
+    "es": "La Carta de Derechos protege la expresión, la religión, la prensa, la reunión y la petición en la Primera Enmienda, el debido proceso en la Quinta y un juicio justo en la Sexta. La Decimocuarta Enmienda aplica la mayoría de estas protecciones a los estados mediante la incorporación. Fallos históricos definen los límites: Brown contra el Consejo terminó la segregación escolar, Gideon contra Wainwright garantizó abogado, Tinker contra Des Moines protegió la expresión estudiantil que no interrumpe la escuela y Miranda contra Arizona exigió advertencias antes del interrogatorio bajo custodia. Frente a una república constitucional, un sistema autoritario o comunista concentra el poder, restringe la expresión y elimina las elecciones competitivas."
+   },
+   "items": [
+    {
+     "id": "gov501",
+     "type": "multi",
+     "diff": 1,
+     "q": {
+      "en": "Select every freedom protected by the First Amendment.",
+      "es": "Selecciona cada libertad protegida por la Primera Enmienda."
+     },
+     "c": {
+      "en": [
+       "Speech",
+       "Religion",
+       "Assembly",
+       "Trial by jury"
+      ],
+      "es": [
+       "Expresión",
+       "Religión",
+       "Reunión",
+       "Juicio por jurado"
+      ]
+     },
+     "a": [
+      0,
+      1,
+      2
+     ],
+     "why": {
+      "en": "Trial by jury is protected by the Sixth and Seventh Amendments.",
+      "es": "El juicio por jurado está protegido por las Enmiendas Sexta y Séptima."
+     }
+    },
+    {
+     "id": "gov502",
+     "type": "mcq",
+     "diff": 2,
+     "q": {
+      "en": "Brown v. Board of Education (1954) held that:",
+      "es": "Brown contra el Consejo de Educación (1954) sostuvo que:"
+     },
+     "c": {
+      "en": [
+       "Segregated public schools are inherently unequal",
+       "Students may not protest at school",
+       "Police must give warnings",
+       "States may ban interstate trade"
+      ],
+      "es": [
+       "Las escuelas públicas segregadas son intrínsecamente desiguales",
+       "Los estudiantes no pueden protestar en la escuela",
+       "La policía debe dar advertencias",
+       "Los estados pueden prohibir el comercio interestatal"
+      ]
+     },
+     "a": 0,
+     "why": {
+      "en": "The ruling overturned the separate-but-equal doctrine in public education.",
+      "es": "El fallo revocó la doctrina de 'separados pero iguales' en la educación pública."
+     }
+    },
+    {
+     "id": "gov503",
+     "type": "mcq",
+     "diff": 2,
+     "q": {
+      "en": "Gideon v. Wainwright guaranteed that defendants who cannot afford a lawyer:",
+      "es": "Gideon contra Wainwright garantizó que los acusados que no pueden pagar un abogado:"
+     },
+     "c": {
+      "en": [
+       "Must be provided one by the state",
+       "Must represent themselves",
+       "Receive a reduced sentence",
+       "Are released immediately"
+      ],
+      "es": [
+       "Deben recibir uno del estado",
+       "Deben representarse a sí mismos",
+       "Reciben una sentencia reducida",
+       "Son liberados de inmediato"
+      ]
+     },
+     "a": 0,
+     "why": {
+      "en": "The Sixth Amendment right to counsel applies to state felony trials.",
+      "es": "El derecho a un abogado de la Sexta Enmienda aplica a los juicios estatales por delitos graves."
+     }
+    },
+    {
+     "id": "gov504",
+     "type": "mcq",
+     "diff": 3,
+     "q": {
+      "en": "Tinker v. Des Moines protected student expression as long as it:",
+      "es": "Tinker contra Des Moines protegió la expresión estudiantil siempre que:"
+     },
+     "c": {
+      "en": [
+       "Does not substantially disrupt school operations",
+       "Is approved by the principal",
+       "Happens off campus only",
+       "Concerns school policy only"
+      ],
+      "es": [
+       "No interrumpa sustancialmente el funcionamiento escolar",
+       "Sea aprobada por el director",
+       "Ocurra solo fuera del campus",
+       "Trate solo de política escolar"
+      ]
+     },
+     "a": 0,
+     "why": {
+      "en": "The Court said students do not shed their rights at the schoolhouse gate.",
+      "es": "La Corte dijo que los estudiantes no pierden sus derechos en la puerta de la escuela."
+     }
+    },
+    {
+     "id": "gov505",
+     "type": "mcq",
+     "diff": 2,
+     "q": {
+      "en": "Miranda v. Arizona requires police to:",
+      "es": "Miranda contra Arizona exige que la policía:"
+     },
+     "c": {
+      "en": [
+       "Inform suspects of their rights before custodial questioning",
+       "Obtain a warrant for every arrest",
+       "Provide a jury within 24 hours",
+       "Record all traffic stops"
+      ],
+      "es": [
+       "Informe a los sospechosos de sus derechos antes del interrogatorio bajo custodia",
+       "Obtenga una orden para cada arresto",
+       "Provea un jurado en 24 horas",
+       "Grabe todas las paradas de tráfico"
+      ]
+     },
+     "a": 0,
+     "why": {
+      "en": "The warning protects the Fifth Amendment right against self-incrimination.",
+      "es": "La advertencia protege el derecho de la Quinta Enmienda a no autoincriminarse."
+     }
+    },
+    {
+     "id": "gov506",
+     "type": "mcq",
+     "diff": 3,
+     "q": {
+      "en": "Incorporation through the Fourteenth Amendment means that:",
+      "es": "La incorporación mediante la Decimocuarta Enmienda significa que:"
+     },
+     "c": {
+      "en": [
+       "Most Bill of Rights protections apply to state governments",
+       "Only Congress is limited by the Bill of Rights",
+       "States may write their own bills of rights instead",
+       "Federal law no longer applies in states"
+      ],
+      "es": [
+       "La mayoría de las protecciones de la Carta de Derechos aplican a los estados",
+       "Solo el Congreso está limitado por la Carta de Derechos",
+       "Los estados pueden escribir su propia carta en su lugar",
+       "La ley federal ya no aplica en los estados"
+      ]
+     },
+     "a": 0,
+     "why": {
+      "en": "Due process incorporation extended federal protections against state action.",
+      "es": "La incorporación por debido proceso extendió las protecciones federales frente a los estados."
+     }
+    },
+    {
+     "id": "gov507",
+     "type": "mcq",
+     "diff": 2,
+     "q": {
+      "en": "Which feature distinguishes a constitutional republic from an authoritarian regime?",
+      "es": "¿Qué rasgo distingue a una república constitucional de un régimen autoritario?"
+     },
+     "c": {
+      "en": [
+       "Competitive elections and protected dissent",
+       "A written flag code",
+       "A national anthem",
+       "A single capital city"
+      ],
+      "es": [
+       "Elecciones competitivas y disenso protegido",
+       "Un código de bandera escrito",
+       "Un himno nacional",
+       "Una sola ciudad capital"
+      ]
+     },
+     "a": 0,
+     "why": {
+      "en": "Authoritarian systems concentrate power and suppress opposition and free speech.",
+      "es": "Los sistemas autoritarios concentran el poder y suprimen la oposición y la libre expresión."
+     }
+    },
+    {
+     "id": "gov508",
+     "type": "mcq",
+     "diff": 3,
+     "q": {
+      "en": "In a command economy under a communist system, most production decisions are made by:",
+      "es": "En una economía centralizada bajo un sistema comunista, la mayoría de las decisiones de producción las toma:"
+     },
+     "c": {
+      "en": [
+       "Central government planners",
+       "Individual consumers",
+       "Independent private firms",
+       "Local stock exchanges"
+      ],
+      "es": [
+       "Los planificadores del gobierno central",
+       "Los consumidores individuales",
+       "Empresas privadas independientes",
+       "Las bolsas de valores locales"
+      ]
+     },
+     "a": 0,
+     "why": {
+      "en": "Central planning replaces market prices with state allocation of resources.",
+      "es": "La planificación central sustituye los precios de mercado por la asignación estatal de recursos."
+     }
+    },
+    {
+     "id": "gov509",
+     "type": "mcq",
+     "diff": 2,
+     "q": {
+      "en": "A primary goal of U.S. foreign policy is to:",
+      "es": "Un objetivo principal de la política exterior de EE. UU. es:"
+     },
+     "c": {
+      "en": [
+       "Protect national security and economic interests",
+       "Set state property tax rates",
+       "Certify local elections",
+       "License in-state businesses"
+      ],
+      "es": [
+       "Proteger la seguridad nacional y los intereses económicos",
+       "Fijar impuestos estatales a la propiedad",
+       "Certificar elecciones locales",
+       "Otorgar licencias a negocios estatales"
+      ]
+     },
+     "a": 0,
+     "why": {
+      "en": "Foreign policy deals with relations abroad, not domestic administration.",
+      "es": "La política exterior trata las relaciones con el exterior, no la administración interna."
+     }
+    },
+    {
+     "id": "gov510",
+     "type": "short",
+     "diff": 3,
+     "q": {
+      "en": "Name one limit the Supreme Court has placed on free speech, and why.",
+      "es": "Nombra un límite que la Corte Suprema ha puesto a la libertad de expresión, y por qué."
+     },
+     "keys": [
+      "threat",
+      "incit",
+      "danger",
+      "disrupt",
+      "defam",
+      "libel",
+      "violence",
+      "harm",
+      "amenaza",
+      "incit",
+      "peligro",
+      "interrump",
+      "difam",
+      "violencia",
+      "daño"
+     ],
+     "why": {
+      "en": "Speech that incites imminent lawless action or substantially disrupts school can be limited.",
+      "es": "Se puede limitar la expresión que incita a la violencia inminente o interrumpe sustancialmente la escuela."
+     }
+    }
+   ]
+  },
+  {
+   "id": "gov-u6",
+   "title": {
+    "en": "Unit 6 · Smith Island Scenarios",
+    "es": "Unidad 6 · Escenarios de la Isla Smith"
+   },
+   "brief": {
+    "en": "You have been hired to build a government for Smith Island, and Coach Smith wants to run it his way. Every scenario here puts a real constitutional principle into that story: limits on power from the Magna Carta forward, the failure of the Articles of Confederation, how a bill survives a veto, how districts get drawn, what the Bill of Rights stops a ruler from doing, and how courts, voters, interest groups, and the media check whoever is in charge. Answer as the island's constitutional adviser: the correct answer is always the one that keeps power divided and rights protected.",
+    "es": "Te contrataron para construir un gobierno en la Isla Smith, y Coach Smith quiere dirigirlo a su manera. Cada escenario aquí pone un principio constitucional real dentro de esa historia: los límites al poder desde la Carta Magna, el fracaso de los Artículos de la Confederación, cómo un proyecto sobrevive a un veto, cómo se trazan los distritos, qué le impide hacer al gobernante la Carta de Derechos y cómo los tribunales, los votantes, los grupos de interés y los medios controlan a quien manda. Responde como asesor constitucional de la isla: la respuesta correcta siempre es la que mantiene el poder dividido y los derechos protegidos."
+   },
+   "items": [
+    {
+     "id": "si01",
+     "type": "mcq",
+     "diff": 2,
+     "q": {
+      "en": "Islanders hand Coach Smith a document forcing him to follow the law, the way King John was forced to limit his own power in 1215. What is the model?",
+      "es": "Los isleños entregan a Coach Smith un documento que lo obliga a cumplir la ley, como se obligó al rey Juan a limitar su poder en 1215. ¿Cuál es el modelo?"
+     },
+     "c": {
+      "en": [
+       "The Magna Carta",
+       "The Mayflower Compact",
+       "Common Sense",
+       "The Northwest Ordinance"
+      ],
+      "es": [
+       "La Carta Magna",
+       "El Pacto del Mayflower",
+       "El Sentido Común",
+       "La Ordenanza del Noroeste"
+      ]
+     },
+     "a": 0,
+     "why": {
+      "en": "The Magna Carta established that even a ruler is bound by law.",
+      "es": "La Carta Magna estableció que incluso el gobernante está sujeto a la ley."
+     }
+    },
+    {
+     "id": "si02",
+     "type": "mcq",
+     "diff": 2,
+     "q": {
+      "en": "Coach Smith reads a pamphlet that convinces the island to break from the mainland. Who wrote 'Common Sense'?",
+      "es": "Coach Smith lee un panfleto que convence a la isla de separarse del continente. ¿Quién escribió 'El Sentido Común'?"
+     },
+     "c": {
+      "en": [
+       "Thomas Paine",
+       "Thomas Jefferson",
+       "Alexander Hamilton",
+       "James Madison"
+      ],
+      "es": [
+       "Thomas Paine",
+       "Thomas Jefferson",
+       "Alexander Hamilton",
+       "James Madison"
+      ]
+     },
+     "a": 0,
+     "why": {
+      "en": "Paine's 1776 pamphlet pushed ordinary colonists toward independence.",
+      "es": "El panfleto de Paine de 1776 empujó a los colonos comunes hacia la independencia."
+     }
+    },
+    {
+     "id": "si03",
+     "type": "mcq",
+     "diff": 2,
+     "q": {
+      "en": "Citizens insist their rights to life, liberty, and property are unalienable; Coach Smith says he grants those rights. Who is right, per the Declaration?",
+      "es": "Los ciudadanos insisten en que sus derechos a la vida, la libertad y la propiedad son inalienables; Coach Smith dice que él los concede. Según la Declaración, ¿quién tiene razón?"
+     },
+     "c": {
+      "en": [
+       "The citizens — rights are not given by rulers",
+       "Coach Smith — government grants all rights",
+       "Neither — rights are earned by paying taxes",
+       "Both share ownership of rights"
+      ],
+      "es": [
+       "Los ciudadanos: los derechos no los otorga el gobernante",
+       "Coach Smith: el gobierno concede todos los derechos",
+       "Ninguno: los derechos se ganan pagando impuestos",
+       "Ambos comparten los derechos"
+      ]
+     },
+     "a": 0,
+     "why": {
+      "en": "The Declaration treats rights as inherent, which is why government may not remove them.",
+      "es": "La Declaración considera los derechos como inherentes, por eso el gobierno no puede quitarlos."
+     }
+    },
+    {
+     "id": "si04",
+     "type": "mcq",
+     "diff": 2,
+     "q": {
+      "en": "Your first island charter leaves Coach Smith unable to collect taxes or enforce laws. Which failed U.S. framework does it copy?",
+      "es": "Tu primera carta isleña deja a Coach Smith sin poder cobrar impuestos ni hacer cumplir leyes. ¿Qué marco estadounidense fallido copia?"
+     },
+     "c": {
+      "en": [
+       "The Articles of Confederation",
+       "The Bill of Rights",
+       "The Federalist Papers",
+       "The Virginia Declaration"
+      ],
+      "es": [
+       "Los Artículos de la Confederación",
+       "La Carta de Derechos",
+       "Los Papeles Federalistas",
+       "La Declaración de Virginia"
+      ]
+     },
+     "a": 0,
+     "why": {
+      "en": "Under the Articles the national government had no taxing or enforcement power.",
+      "es": "Bajo los Artículos el gobierno nacional no tenía poder de recaudar ni de hacer cumplir."
+     }
+    },
+    {
+     "id": "si05",
+     "type": "mcq",
+     "diff": 3,
+     "q": {
+      "en": "Coach Smith creates an island bank even though the charter never mentions banks, citing the Necessary and Proper Clause. These powers are:",
+      "es": "Coach Smith crea un banco isleño aunque la carta no menciona bancos, citando la Cláusula de lo Necesario y Adecuado. Esos poderes son:"
+     },
+     "c": {
+      "en": [
+       "Implied powers",
+       "Expressed powers",
+       "Reserved powers",
+       "Inherent powers"
+      ],
+      "es": [
+       "Poderes implícitos",
+       "Poderes expresos",
+       "Poderes reservados",
+       "Poderes inherentes"
+      ]
+     },
+     "a": 0,
+     "why": {
+      "en": "Implied powers are not listed but are reasonably needed to carry out listed ones.",
+      "es": "Los poderes implícitos no están listados pero son necesarios para ejercer los que sí lo están."
+     }
+    },
+    {
+     "id": "si06",
+     "type": "mcq",
+     "diff": 3,
+     "q": {
+      "en": "Which case upheld exactly that reasoning when a state tried to tax the national bank?",
+      "es": "¿Qué caso confirmó ese razonamiento cuando un estado intentó gravar al banco nacional?"
+     },
+     "c": {
+      "en": [
+       "McCulloch v. Maryland",
+       "Marbury v. Madison",
+       "Gibbons v. Ogden",
+       "Plessy v. Ferguson"
+      ],
+      "es": [
+       "McCulloch contra Maryland",
+       "Marbury contra Madison",
+       "Gibbons contra Ogden",
+       "Plessy contra Ferguson"
+      ]
+     },
+     "a": 0,
+     "why": {
+      "en": "McCulloch confirmed implied powers and federal supremacy over conflicting state taxes.",
+      "es": "McCulloch confirmó los poderes implícitos y la supremacía federal sobre impuestos estatales contrarios."
+     }
+    },
+    {
+     "id": "si07",
+     "type": "mcq",
+     "diff": 2,
+     "q": {
+      "en": "The island legislature passes a budget Coach Smith hates and he refuses to sign it. This power is a:",
+      "es": "La legislatura isleña aprueba un presupuesto que Coach Smith detesta y se niega a firmarlo. Ese poder es un:"
+     },
+     "c": {
+      "en": [
+       "Veto",
+       "Filibuster",
+       "Pardon",
+       "Writ"
+      ],
+      "es": [
+       "Veto",
+       "Obstruccionismo",
+       "Indulto",
+       "Auto judicial"
+      ]
+     },
+     "a": 0,
+     "why": {
+      "en": "A veto rejects a bill and sends it back to the legislature.",
+      "es": "El veto rechaza un proyecto y lo devuelve a la legislatura."
+     }
+    },
+    {
+     "id": "si08",
+     "type": "mcq",
+     "diff": 3,
+     "q": {
+      "en": "A senator on the island talks for fourteen straight hours to stall a vote. This delay tactic is a:",
+      "es": "Un senador de la isla habla catorce horas seguidas para retrasar una votación. Esa táctica es un:"
+     },
+     "c": {
+      "en": [
+       "Filibuster",
+       "Cloture",
+       "Quorum call",
+       "Pocket veto"
+      ],
+      "es": [
+       "Obstruccionismo (filibuster)",
+       "Clausura",
+       "Llamado a quórum",
+       "Veto de bolsillo"
+      ]
+     },
+     "a": 0,
+     "why": {
+      "en": "A filibuster stalls debate; cloture is the vote that ends one.",
+      "es": "El filibuster retrasa el debate; la clausura es el voto que lo termina."
+     }
+    },
+    {
+     "id": "si09",
+     "type": "mcq",
+     "diff": 3,
+     "q": {
+      "en": "Coach Smith redraws island voting districts so his party is guaranteed to win. This practice is:",
+      "es": "Coach Smith redibuja los distritos de la isla para que su partido gane siempre. Esa práctica es:"
+     },
+     "c": {
+      "en": [
+       "Gerrymandering",
+       "Reapportionment",
+       "Cloture",
+       "Logrolling"
+      ],
+      "es": [
+       "Manipulación de distritos (gerrymandering)",
+       "Reasignación",
+       "Clausura",
+       "Intercambio de favores"
+      ]
+     },
+     "a": 0,
+     "why": {
+      "en": "Gerrymandering draws boundaries to favor one party rather than to reflect voters fairly.",
+      "es": "El gerrymandering traza límites para favorecer a un partido en vez de reflejar al electorado."
+     }
+    },
+    {
+     "id": "si10",
+     "type": "mcq",
+     "diff": 1,
+     "q": {
+      "en": "The island congress has a chamber based on population and a chamber with equal representation. This structure is:",
+      "es": "El congreso isleño tiene una cámara por población y otra con representación igual. Esa estructura es:"
+     },
+     "c": {
+      "en": [
+       "Bicameral",
+       "Unicameral",
+       "Parliamentary",
+       "Confederal"
+      ],
+      "es": [
+       "Bicameral",
+       "Unicameral",
+       "Parlamentaria",
+       "Confederal"
+      ]
+     },
+     "a": 0,
+     "why": {
+      "en": "Two chambers with different bases of representation is the Great Compromise design.",
+      "es": "Dos cámaras con bases distintas de representación es el diseño del Gran Compromiso."
+     }
+    },
+    {
+     "id": "si11",
+     "type": "mcq",
+     "diff": 2,
+     "q": {
+      "en": "A hurricane hits. Rather than wait for the legislature, Coach Smith issues a directive with the force of law. That is an:",
+      "es": "Llega un huracán. En vez de esperar a la legislatura, Coach Smith emite una directiva con fuerza de ley. Eso es una:"
+     },
+     "c": {
+      "en": [
+       "Executive order",
+       "Executive privilege",
+       "Amnesty",
+       "Impeachment"
+      ],
+      "es": [
+       "Orden ejecutiva",
+       "Privilegio ejecutivo",
+       "Amnistía",
+       "Acusación (impeachment)"
+      ]
+     },
+     "a": 0,
+     "why": {
+      "en": "Executive orders direct the executive branch and can be undone by courts or a later leader.",
+      "es": "Las órdenes ejecutivas dirigen al ejecutivo y pueden anularlas los tribunales o un sucesor."
+     }
+    },
+    {
+     "id": "si12",
+     "type": "mcq",
+     "diff": 2,
+     "q": {
+      "en": "Coach Smith appoints an island judge, but the senate must approve. That senate power is:",
+      "es": "Coach Smith nombra a un juez isleño, pero el senado debe aprobarlo. Ese poder del senado es:"
+     },
+     "c": {
+      "en": [
+       "Advice and consent",
+       "Judicial review",
+       "Cloture",
+       "Executive privilege"
+      ],
+      "es": [
+       "Consejo y consentimiento",
+       "Revisión judicial",
+       "Clausura",
+       "Privilegio ejecutivo"
+      ]
+     },
+     "a": 0,
+     "why": {
+      "en": "Confirmation is the legislature's check on executive appointments.",
+      "es": "La confirmación es el control del legislativo sobre los nombramientos del ejecutivo."
+     }
+    },
+    {
+     "id": "si13",
+     "type": "mcq",
+     "diff": 3,
+     "q": {
+      "en": "Coach Smith hides recordings of his own corruption, claiming executive privilege. Which case forced a president to hand such tapes over?",
+      "es": "Coach Smith esconde grabaciones de su corrupción alegando privilegio ejecutivo. ¿Qué caso obligó a un presidente a entregar esas cintas?"
+     },
+     "c": {
+      "en": [
+       "United States v. Nixon",
+       "Citizens United v. FEC",
+       "Korematsu v. United States",
+       "Baker v. Carr"
+      ],
+      "es": [
+       "Estados Unidos contra Nixon",
+       "Citizens United contra FEC",
+       "Korematsu contra Estados Unidos",
+       "Baker contra Carr"
+      ]
+     },
+     "a": 0,
+     "why": {
+      "en": "The Court held that executive privilege is not absolute in a criminal investigation.",
+      "es": "La Corte sostuvo que el privilegio ejecutivo no es absoluto en una investigación penal."
+     }
+    },
+    {
+     "id": "si14",
+     "type": "mcq",
+     "diff": 2,
+     "q": {
+      "en": "Coach Smith orders the island newspaper shut down for criticizing him. Which First Amendment freedom is violated?",
+      "es": "Coach Smith ordena cerrar el periódico isleño por criticarlo. ¿Qué libertad de la Primera Enmienda se viola?"
+     },
+     "c": {
+      "en": [
+       "Freedom of the press",
+       "Freedom of assembly",
+       "Free exercise of religion",
+       "Right to petition"
+      ],
+      "es": [
+       "Libertad de prensa",
+       "Libertad de reunión",
+       "Libre ejercicio de la religión",
+       "Derecho de petición"
+      ]
+     },
+     "a": 0,
+     "why": {
+      "en": "Shutting down a publication for its content is prior restraint on the press.",
+      "es": "Cerrar una publicación por su contenido es censura previa contra la prensa."
+     }
+    },
+    {
+     "id": "si15",
+     "type": "mcq",
+     "diff": 2,
+     "q": {
+      "en": "Island police search a home with no warrant and no probable cause. Which amendment does that violate?",
+      "es": "La policía isleña registra una casa sin orden ni causa probable. ¿Qué enmienda viola?"
+     },
+     "c": {
+      "en": [
+       "Fourth",
+       "Second",
+       "Third",
+       "Eighth"
+      ],
+      "es": [
+       "Cuarta",
+       "Segunda",
+       "Tercera",
+       "Octava"
+      ]
+     },
+     "a": 0,
+     "why": {
+      "en": "The Fourth Amendment bars unreasonable searches and seizures.",
+      "es": "La Cuarta Enmienda prohíbe registros e incautaciones irrazonables."
+     }
+    },
+    {
+     "id": "si16",
+     "type": "mcq",
+     "diff": 2,
+     "q": {
+      "en": "On trial, an islander refuses to testify against himself. He is invoking the:",
+      "es": "En juicio, un isleño se niega a declarar contra sí mismo. Está invocando la:"
+     },
+     "c": {
+      "en": [
+       "Fifth Amendment",
+       "First Amendment",
+       "Sixth Amendment",
+       "Tenth Amendment"
+      ],
+      "es": [
+       "Quinta Enmienda",
+       "Primera Enmienda",
+       "Sexta Enmienda",
+       "Décima Enmienda"
+      ]
+     },
+     "a": 0,
+     "why": {
+      "en": "The Fifth Amendment protects against compelled self-incrimination.",
+      "es": "La Quinta Enmienda protege contra la autoincriminación forzada."
+     }
+    },
+    {
+     "id": "si17",
+     "type": "mcq",
+     "diff": 3,
+     "q": {
+      "en": "After an acquittal, Coach Smith tries the same islander again for the identical crime. This is barred as:",
+      "es": "Tras una absolución, Coach Smith juzga otra vez al mismo isleño por el mismo delito. Esto se prohíbe como:"
+     },
+     "c": {
+      "en": [
+       "Double jeopardy",
+       "Ex post facto",
+       "Eminent domain",
+       "Prior restraint"
+      ],
+      "es": [
+       "Doble enjuiciamiento",
+       "Ley ex post facto",
+       "Dominio eminente",
+       "Censura previa"
+      ]
+     },
+     "a": 0,
+     "why": {
+      "en": "The Fifth Amendment forbids a second prosecution for the same offense after acquittal.",
+      "es": "La Quinta Enmienda prohíbe un segundo proceso por el mismo delito tras la absolución."
+     }
+    },
+    {
+     "id": "si18",
+     "type": "mcq",
+     "diff": 2,
+     "q": {
+      "en": "Coach Smith sentences a student to forty years of hard labor for chewing gum. This violates the Eighth Amendment ban on:",
+      "es": "Coach Smith condena a un estudiante a cuarenta años de trabajos forzados por mascar chicle. Esto viola la prohibición de la Octava Enmienda de:"
+     },
+     "c": {
+      "en": [
+       "Cruel and unusual punishment",
+       "Unreasonable searches",
+       "Self-incrimination",
+       "Excessive taxation"
+      ],
+      "es": [
+       "Castigos crueles e inusuales",
+       "Registros irrazonables",
+       "Autoincriminación",
+       "Impuestos excesivos"
+      ]
+     },
+     "a": 0,
+     "why": {
+      "en": "Punishment grossly out of proportion to the offense is unconstitutional.",
+      "es": "Un castigo muy desproporcionado frente al delito es inconstitucional."
+     }
+    },
+    {
+     "id": "si19",
+     "type": "mcq",
+     "diff": 3,
+     "q": {
+      "en": "The island builds a highway through a citizen's land and pays fair market value. This power is:",
+      "es": "La isla construye una carretera sobre el terreno de un ciudadano y paga su valor justo. Ese poder es:"
+     },
+     "c": {
+      "en": [
+       "Eminent domain",
+       "Gerrymandering",
+       "Incorporation",
+       "Due process"
+      ],
+      "es": [
+       "Dominio eminente",
+       "Gerrymandering",
+       "Incorporación",
+       "Debido proceso"
+      ]
+     },
+     "a": 0,
+     "why": {
+      "en": "Government may take property for public use, but only with just compensation.",
+      "es": "El gobierno puede tomar propiedad para uso público, pero solo con compensación justa."
+     }
+    },
+    {
+     "id": "si20",
+     "type": "mcq",
+     "diff": 2,
+     "q": {
+      "en": "Coach Smith rules that only blue-eyed islanders get free public school. This violates the Fourteenth Amendment's:",
+      "es": "Coach Smith decreta que solo los isleños de ojos azules tienen escuela pública gratis. Esto viola de la Decimocuarta Enmienda la:"
+     },
+     "c": {
+      "en": [
+       "Equal Protection Clause",
+       "Establishment Clause",
+       "Free Exercise Clause",
+       "Commerce Clause"
+      ],
+      "es": [
+       "Cláusula de Igual Protección",
+       "Cláusula de Establecimiento",
+       "Cláusula de Libre Ejercicio",
+       "Cláusula de Comercio"
+      ]
+     },
+     "a": 0,
+     "why": {
+      "en": "Equal protection forbids arbitrary classifications that deny a public benefit.",
+      "es": "La igual protección prohíbe clasificaciones arbitrarias que nieguen un beneficio público."
+     }
+    },
+    {
+     "id": "si21",
+     "type": "mcq",
+     "diff": 3,
+     "q": {
+      "en": "The process of applying Bill of Rights protections to state and local government is called:",
+      "es": "El proceso de aplicar las protecciones de la Carta de Derechos a los gobiernos estatales y locales se llama:"
+     },
+     "c": {
+      "en": [
+       "Selective incorporation",
+       "Suffrage",
+       "Reapportionment",
+       "Devolution"
+      ],
+      "es": [
+       "Incorporación selectiva",
+       "Sufragio",
+       "Reasignación",
+       "Devolución"
+      ]
+     },
+     "a": 0,
+     "why": {
+      "en": "Courts incorporated rights one at a time through the Fourteenth Amendment's due process clause.",
+      "es": "Los tribunales incorporaron derechos uno a uno mediante la cláusula del debido proceso de la Decimocuarta."
+     }
+    },
+    {
+     "id": "si22",
+     "type": "mcq",
+     "diff": 2,
+     "q": {
+      "en": "To become a naturalized citizen of the island, an applicant must do all of these EXCEPT:",
+      "es": "Para naturalizarse en la isla, un solicitante debe hacer todo esto EXCEPTO:"
+     },
+     "c": {
+      "en": [
+       "Be related to Coach Smith",
+       "Be at least 18 years old",
+       "Pass a civics test",
+       "Swear an oath of allegiance"
+      ],
+      "es": [
+       "Ser pariente de Coach Smith",
+       "Tener al menos 18 años",
+       "Aprobar un examen de civismo",
+       "Prestar juramento de lealtad"
+      ]
+     },
+     "a": 0,
+     "why": {
+      "en": "Citizenship rules cannot depend on personal connection to whoever holds power.",
+      "es": "Las reglas de ciudadanía no pueden depender de la relación personal con quien gobierna."
+     }
+    },
+    {
+     "id": "si23",
+     "type": "mcq",
+     "diff": 2,
+     "q": {
+      "en": "An island group hires people to meet legislators and push for favorable laws. They are:",
+      "es": "Un grupo isleño contrata personas para reunirse con legisladores y presionar por leyes favorables. Son:"
+     },
+     "c": {
+      "en": [
+       "Lobbyists",
+       "Bureaucrats",
+       "Electors",
+       "Justices"
+      ],
+      "es": [
+       "Cabilderos",
+       "Burócratas",
+       "Electores",
+       "Jueces"
+      ]
+     },
+     "a": 0,
+     "why": {
+      "en": "Lobbying is legal advocacy aimed directly at lawmakers.",
+      "es": "El cabildeo es la defensa legal de intereses dirigida a los legisladores."
+     }
+    },
+    {
+     "id": "si24",
+     "type": "mcq",
+     "diff": 3,
+     "q": {
+      "en": "Supporters form an organization whose only job is raising money for Coach Smith's campaign ads. That is a:",
+      "es": "Sus partidarios forman una organización cuya única función es recaudar dinero para los anuncios de campaña de Coach Smith. Eso es un:"
+     },
+     "c": {
+      "en": [
+       "Political action committee",
+       "Regulatory agency",
+       "Third party",
+       "Cabinet department"
+      ],
+      "es": [
+       "Comité de acción política (PAC)",
+       "Agencia reguladora",
+       "Tercer partido",
+       "Departamento del gabinete"
+      ]
+     },
+     "a": 0,
+     "why": {
+      "en": "PACs collect and spend money to influence elections.",
+      "es": "Los PAC recaudan y gastan dinero para influir en las elecciones."
+     }
+    },
+    {
+     "id": "si25",
+     "type": "mcq",
+     "diff": 3,
+     "q": {
+      "en": "An island news station runs nightly stories on crumbling roads until officials act. The press is acting as a:",
+      "es": "Una estación isleña transmite cada noche reportajes sobre carreteras destruidas hasta que las autoridades actúan. La prensa actúa como:"
+     },
+     "c": {
+      "en": [
+       "Watchdog and agenda setter",
+       "Lobbyist",
+       "Regulator",
+       "Party organizer"
+      ],
+      "es": [
+       "Vigilante y fijadora de agenda",
+       "Cabildera",
+       "Reguladora",
+       "Organizadora de partido"
+      ]
+     },
+     "a": 0,
+     "why": {
+      "en": "Sustained coverage pressures officials and pushes an issue up the public agenda.",
+      "es": "La cobertura sostenida presiona a las autoridades y eleva un tema en la agenda pública."
+     }
+    },
+    {
+     "id": "si26",
+     "type": "mcq",
+     "diff": 3,
+     "q": {
+      "en": "Coach Smith reads only sources that already agree with him and dismisses the rest. This voter behavior is:",
+      "es": "Coach Smith solo lee fuentes que ya coinciden con él y descarta el resto. Ese comportamiento del votante es:"
+     },
+     "c": {
+      "en": [
+       "Confirmation bias",
+       "Retrospective voting",
+       "Rational choice",
+       "Split-ticket voting"
+      ],
+      "es": [
+       "Sesgo de confirmación",
+       "Voto retrospectivo",
+       "Elección racional",
+       "Voto dividido"
+      ]
+     },
+     "a": 0,
+     "why": {
+      "en": "Confirmation bias filters information to protect what a person already believes.",
+      "es": "El sesgo de confirmación filtra la información para proteger lo que la persona ya cree."
+     }
+    },
+    {
+     "id": "si27",
+     "type": "multi",
+     "diff": 3,
+     "q": {
+      "en": "Coach Smith wants to govern alone. Select every structure that stops him.",
+      "es": "Coach Smith quiere gobernar solo. Selecciona cada estructura que se lo impide."
+     },
+     "c": {
+      "en": [
+       "A legislature that can override his veto",
+       "Courts with judicial review",
+       "Regular competitive elections",
+       "A press office that reports only his statements"
+      ],
+      "es": [
+       "Una legislatura que puede anular su veto",
+       "Tribunales con revisión judicial",
+       "Elecciones competitivas periódicas",
+       "Una oficina de prensa que solo difunde sus declaraciones"
+      ]
+     },
+     "a": [
+      0,
+      1,
+      2
+     ],
+     "why": {
+      "en": "A state-controlled press protects a ruler; the other three constrain one.",
+      "es": "Una prensa controlada por el Estado protege al gobernante; las otras tres lo limitan."
+     }
+    },
+    {
+     "id": "si28",
+     "type": "multi",
+     "diff": 3,
+     "q": {
+      "en": "Select every power the island's national government would hold exclusively.",
+      "es": "Selecciona cada poder que el gobierno nacional de la isla tendría en exclusiva."
+     },
+     "c": {
+      "en": [
+       "Coining money",
+       "Declaring war",
+       "Making treaties",
+       "Issuing teaching licenses"
+      ],
+      "es": [
+       "Acuñar moneda",
+       "Declarar la guerra",
+       "Firmar tratados",
+       "Otorgar licencias docentes"
+      ]
+     },
+     "a": [
+      0,
+      1,
+      2
+     ],
+     "why": {
+      "en": "Professional licensing is a reserved power of the states.",
+      "es": "Otorgar licencias profesionales es un poder reservado a los estados."
+     }
+    },
+    {
+     "id": "si29",
+     "type": "short",
+     "diff": 3,
+     "q": {
+      "en": "Coach Smith says a ruler should not be limited during an emergency. Give one constitutional reason he is wrong.",
+      "es": "Coach Smith dice que un gobernante no debe tener límites durante una emergencia. Da una razón constitucional de por qué se equivoca."
+     },
+     "keys": [
+      "rights",
+      "abuse",
+      "permanent",
+      "power",
+      "court",
+      "check",
+      "law",
+      "derechos",
+      "abuso",
+      "poder",
+      "tribunal",
+      "control",
+      "ley"
+     ],
+     "why": {
+      "en": "Emergency powers without limits let rights be suspended permanently, which is why courts and the legislature keep checking the executive.",
+      "es": "Los poderes de emergencia sin límites permiten suspender derechos de forma permanente; por eso los tribunales y la legislatura siguen controlando al ejecutivo."
+     }
+    },
+    {
+     "id": "si30",
+     "type": "short",
+     "diff": 3,
+     "q": {
+      "en": "The island must choose between a direct democracy and a constitutional republic. Give one advantage of the republic.",
+      "es": "La isla debe elegir entre democracia directa y república constitucional. Da una ventaja de la república."
+     },
+     "keys": [
+      "representative",
+      "minority",
+      "protect",
+      "practical",
+      "size",
+      "expert",
+      "deliberat",
+      "representante",
+      "minoría",
+      "proteg",
+      "práctic",
+      "tamaño",
+      "deliber"
+     ],
+     "why": {
+      "en": "Representation scales to a large population and written limits protect minorities from a temporary majority.",
+      "es": "La representación funciona en poblaciones grandes y los límites escritos protegen a las minorías de una mayoría temporal."
+     }
+    }
+   ]
+  }
+ ]
+}
