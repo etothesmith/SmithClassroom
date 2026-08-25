@@ -1,0 +1,1491 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0B0F1F">
+<title>Smith's Classroom — Rebuild Preview</title>
+<style>
+:root{
+  --void:#0B0F1F; --cab:#1A1430; --cab2:#251C44;
+  --gold:#F2B441; --robe:#2F6BD8; --crt:#4DE0B1; --hot:#FF4D9D;
+  --ink:#EFEAFB; --dim:#9B92BE; --line:rgba(255,255,255,.10);
+  --disp:"Trebuchet MS","Segoe UI",system-ui,sans-serif;
+  --body:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  --mono:"Courier New",ui-monospace,monospace;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;padding:0}
+body{background:var(--void);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.5}
+h1,h2,h3{font-family:var(--disp);margin:0;letter-spacing:.02em}
+button{font:inherit;color:inherit;cursor:pointer;border:none;background:none}
+:focus-visible{outline:3px solid var(--gold);outline-offset:2px;border-radius:6px}
+.wrap{max-width:900px;margin:0 auto;padding:0 16px 80px}
+
+.marquee{position:sticky;top:0;z-index:10;background:linear-gradient(180deg,#2B2150,#150F2B);
+  border-bottom:2px solid var(--gold);padding:10px 16px;display:flex;align-items:center;gap:12px}
+.logo{font-family:var(--disp);font-weight:800;font-size:14px;letter-spacing:.16em;text-transform:uppercase;
+  color:var(--gold);text-shadow:0 0 14px rgba(242,180,65,.45)}
+.logo small{display:block;font-size:9px;letter-spacing:.28em;color:var(--dim);text-shadow:none}
+.marquee .spacer{flex:1}
+.tabs{display:flex;border:1px solid var(--line);border-radius:999px;overflow:hidden}
+.tabs button{padding:6px 14px;font-size:12px;font-family:var(--mono);color:var(--dim)}
+.tabs button[aria-pressed="true"]{background:var(--gold);color:#2A1D00;font-weight:700}
+
+.panel{background:var(--cab);border:1px solid var(--line);border-radius:14px;padding:18px;margin:14px 0}
+.panel.raised{background:var(--cab2)}
+.eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--dim)}
+.big{font-size:clamp(24px,6vw,34px);font-weight:800;line-height:1.05;text-transform:uppercase}
+.muted{color:var(--dim)}
+.row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.spread{justify-content:space-between}
+
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;background:var(--cab2);
+  border:1px solid var(--line);border-radius:10px;padding:12px 16px;font-weight:600;min-height:46px;
+  transition:transform .12s,border-color .12s}
+.btn:hover{border-color:var(--dim)}
+.btn:active{transform:translateY(1px)}
+.btn.primary{background:linear-gradient(180deg,#FFD273,var(--gold));color:#2A1D00;border-color:#8A6512;font-weight:800}
+.btn.ghost{background:transparent}
+.btn.wide{width:100%}
+.btn[disabled]{opacity:.45;cursor:not-allowed;transform:none}
+
+.chip{display:inline-block;font-family:var(--mono);font-size:11px;padding:3px 8px;border:1px solid var(--line);
+  border-radius:999px;color:var(--dim)}
+.chip.on{color:var(--crt);border-color:rgba(77,224,177,.5)}
+.chip.warn{color:var(--gold);border-color:rgba(242,180,65,.5)}
+.chip.bad{color:var(--hot);border-color:rgba(255,77,157,.5)}
+
+.meter{height:9px;background:#0D0920;border-radius:99px;overflow:hidden;border:1px solid var(--line)}
+.meter i{display:block;height:100%;background:linear-gradient(90deg,var(--crt),var(--gold));transition:width .4s}
+
+/* ---------- arcade ---------- */
+#stage{position:relative;width:100%;aspect-ratio:16/10;background:#000;border-radius:12px;overflow:hidden;
+  border:1px solid var(--line)}
+#gameCanvas{position:absolute;inset:0;width:100%;height:100%;display:block;touch-action:none}
+.hud{position:absolute;top:0;left:0;right:0;display:flex;gap:10px;padding:10px 12px;
+  font-family:var(--mono);font-size:13px;pointer-events:none;
+  text-shadow:0 2px 6px #000;align-items:center}
+.hud .spacer{flex:1}
+.perf{position:absolute;bottom:8px;left:12px;font-family:var(--mono);font-size:11px;color:var(--crt);
+  text-shadow:0 2px 6px #000;pointer-events:none;opacity:.85}
+.overlay{position:absolute;inset:0;display:grid;place-items:center;background:rgba(6,4,14,.82);
+  text-align:center;padding:20px}
+.overlay.hidden{display:none}
+
+/* ---------- challenge ---------- */
+.opt{display:block;width:100%;text-align:left;background:var(--cab2);border:1px solid var(--line);
+  border-radius:12px;padding:14px;margin:8px 0;min-height:52px;transition:border-color .12s}
+.opt:hover:not([disabled]){border-color:var(--dim)}
+.opt.sel{border-color:var(--gold)}
+.opt.right{border-color:var(--crt);background:rgba(77,224,177,.10)}
+.opt.wrong{border-color:var(--hot);background:rgba(255,77,157,.10)}
+.opt[disabled]{cursor:default}
+.why{border-left:3px solid var(--crt);padding:10px 12px;margin-top:12px;background:rgba(255,255,255,.03);
+  border-radius:0 8px 8px 0;font-size:14px}
+.why.bad{border-left-color:var(--hot)}
+.qtext{font-size:18px;font-weight:600;margin:6px 0 14px}
+.stage-dots{display:flex;gap:6px}
+.dot{width:8px;height:8px;border-radius:50%;background:#2B2150;border:1px solid var(--line)}
+.dot.on{background:var(--gold);border-color:var(--gold)}
+.dot.done{background:var(--crt);border-color:var(--crt)}
+.hidden{display:none!important}
+.note{font-size:14px;line-height:1.65}
+.note b{color:var(--gold)}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+
+<header class="marquee">
+  <div class="logo">Smith's Classroom<small>study · challenge · arcade</small></div>
+  <div class="spacer"></div>
+  <div class="tabs" role="group" aria-label="Preview section">
+    <button id="tab_study" aria-pressed="true">STUDY</button><button id="tab_challenge" aria-pressed="false">CHALLENGE</button><button id="tab_arcade" aria-pressed="false">ARCADE</button>
+  </div>
+</header>
+
+<main class="wrap" id="view"></main>
+
+<script>
+/* ============================================================================
+   0. ENGINE — the actual fix for "choppy"
+   ----------------------------------------------------------------------------
+   Three problems in the original loop, all independent of language:
+
+   1. Physics was tied to frame rate. `p.vx += accel` once per rAF means the
+      game runs 2.4x faster on a 144Hz gaming monitor than on a 60Hz school
+      Chromebook, and stutters whenever a frame is late. Fixed here with an
+      accumulator: physics always steps at exactly 120Hz, rendering happens
+      as often as the display allows, and the gap is interpolated.
+
+   2. Draw calls. The kart drew one fillRect per scanline — 1,155 per frame.
+      Rebuilt below as ~120 trapezoid polygons.
+
+   3. Frame spikes. Switching tabs produced a multi-second dt, which teleported
+      the player through walls. dt is now clamped and the loop pauses when the
+      page is hidden.
+   ========================================================================== */
+const STEP = 1/120;          // fixed physics step, seconds
+const MAX_FRAME = 0.25;      // clamp: never simulate more than 250ms at once
+const MAX_STEPS = 8;         // spiral-of-death guard
+
+function Engine(canvas, opts){
+  const self = {
+    canvas, ctx:canvas.getContext("2d", {alpha:false}),
+    w:0, h:0, dpr:1, raf:0, running:false, acc:0, last:0,
+    fps:0, _fa:0, _ft:0, steps:0
+  };
+
+  // DPR-aware sizing, capped at 2. Uncapped DPR on a 3x phone means 9x the
+  // pixels for no visible gain — a common cause of phone stutter.
+  self.resize = function(){
+    const r = canvas.getBoundingClientRect();
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    const w = Math.max(1, Math.round(r.width * dpr));
+    const h = Math.max(1, Math.round(r.height * dpr));
+    if (canvas.width !== w || canvas.height !== h){
+      canvas.width = w; canvas.height = h;
+    }
+    self.w = w; self.h = h; self.dpr = dpr;
+    if (opts.onResize) opts.onResize(self);
+  };
+
+  function frame(now){
+    if (!self.running) return;
+    self.raf = requestAnimationFrame(frame);
+
+    let dt = (now - self.last) / 1000;
+    self.last = now;
+    if (!isFinite(dt) || dt < 0) dt = 0;
+    if (dt > MAX_FRAME) dt = MAX_FRAME;
+
+    self.acc += dt;
+    let steps = 0;
+    while (self.acc >= STEP && steps < MAX_STEPS){
+      opts.update(STEP, self);
+      self.acc -= STEP;
+      steps++;
+    }
+    if (steps === MAX_STEPS) self.acc = 0;  // fell behind; drop the backlog
+    self.steps = steps;
+
+    opts.render(self.acc / STEP, self);     // alpha for interpolation
+
+    self._fa++; self._ft += dt;
+    if (self._ft >= 0.5){ self.fps = Math.round(self._fa / self._ft); self._fa = 0; self._ft = 0; }
+  }
+
+  self.start = function(){
+    if (self.running) return;
+    self.resize();
+    self.running = true;
+    self.last = performance.now();
+    self.acc = 0;
+    self.raf = requestAnimationFrame(frame);
+  };
+  self.stop = function(){
+    self.running = false;
+    cancelAnimationFrame(self.raf);
+  };
+
+  // Pause on hidden tab so we never accumulate a huge dt behind the scenes.
+  self._vis = function(){
+    if (document.hidden) self.stop();
+    else if (opts.autoResume !== false) self.start();
+  };
+  document.addEventListener("visibilitychange", self._vis);
+  window.addEventListener("resize", self.resize);
+
+  self.destroy = function(){
+    self.stop();
+    document.removeEventListener("visibilitychange", self._vis);
+    window.removeEventListener("resize", self.resize);
+  };
+  return self;
+}
+
+/* Reusable helpers ---------------------------------------------------------*/
+const lerp  = (a,b,t) => a + (b-a)*t;
+const clamp = (v,a,b) => v < a ? a : v > b ? b : v;
+const rnd   = (a,b) => a + Math.random()*(b-a);
+
+/* In-place compaction. `arr = arr.filter(...)` every frame allocates a new
+   array 60x/second and feeds the garbage collector, which is a real source of
+   micro-stutter in long sessions. This mutates instead. */
+function compact(arr, keep){
+  let w = 0;
+  for (let i = 0; i < arr.length; i++) if (keep(arr[i])) arr[w++] = arr[i];
+  arr.length = w;
+}
+
+/* ============================================================================
+   1. CAMPUS KART — rebuilt as a segment renderer
+   ----------------------------------------------------------------------------
+   The road is now a list of segments with real curve AND hill data, projected
+   through a proper camera and drawn as trapezoids from far to near with
+   occlusion clipping. This is both ~10x cheaper and visibly better: hills
+   crest and hide the road behind them, curves bank, the horizon moves.
+   ========================================================================== */
+const SEG_LEN   = 200;      // world units per segment
+const RUMBLE    = 3;        // segments per rumble stripe
+const ROAD_W    = 2200;     // half-width of road in world units
+const CAM_H     = 1200;     // camera height above road
+const DRAW_SEG  = 260;      // segments drawn ahead
+const FOV       = 100;
+const CAM_DEPTH = 1 / Math.tan((FOV/2) * Math.PI/180);
+
+const KART_COL = {
+  sky:"#150F2B", skyGlow:"#2B2150",
+  grassLight:"#251C44", grassDark:"#1A1430",
+  roadLight:"#3A3357", roadDark:"#332C4E",
+  rumbleLight:"#F2B441", rumbleDark:"#8A6512",
+  lane:"#EFEAFB", hazard:"#FF4D9D"
+};
+
+function buildRoad(lvl){
+  const segs = [];
+  let y = 0;
+
+  function addSeg(curve, hill){
+    const n = segs.length;
+    segs.push({
+      index:n,
+      p1:{world:{y:y, z:n*SEG_LEN},     camera:{}, screen:{}},
+      p2:{world:{y:hill, z:(n+1)*SEG_LEN}, camera:{}, screen:{}},
+      curve:curve,
+      color:(Math.floor(n/RUMBLE) % 2) ? "dark" : "light",
+      sprites:[]
+    });
+    y = hill;
+  }
+  // Ease the hill so crests are smooth rather than kinked.
+  function addStretch(count, curve, hillDelta){
+    const start = y, end = y + hillDelta;
+    for (let i = 0; i < count; i++){
+      const t = (1 - Math.cos((i+1)/count * Math.PI)) / 2;   // ease in-out
+      addSeg(curve, start + (end-start)*t);
+    }
+  }
+
+  // Difficulty shapes the track: higher level = tighter curves, steeper hills.
+  // The track is long enough that a three-minute run is five or six laps rather
+  // than twenty — short loops get memorised and stop being a game.
+  const K = 1 + lvl*0.25;
+  const straight = () => addStretch(60 + Math.random()*60, 0, rnd(-600,600));
+  const bend     = () => addStretch(50 + Math.random()*70,
+                                    rnd(1.2,3.4)*K*(Math.random()<0.5?-1:1), rnd(-1400,1400));
+  const crest    = () => addStretch(70 + Math.random()*50,
+                                    rnd(-1,1)*K, rnd(1200,2600)*(Math.random()<0.5?-1:1));
+
+  addStretch(80, 0, 0);                       // calm opening straight
+  for (let s = 0; s < 7; s++){ bend(); straight(); crest(); bend(); }
+  addStretch(60, 0, 0);
+  addStretch(80, 0, -y);                      // close the loop back to y=0
+
+  // --- sprite placement -----------------------------------------------------
+  // Spacing is reasoned in SECONDS at top speed, not in segments, so hazards
+  // stay reactable as the level (and therefore the speed) rises.
+  const maxSpeed   = SEG_LEN * 55 * (1 + lvl*0.06);
+  const segsPerSec = maxSpeed / SEG_LEN;
+  const minGap     = Math.ceil(segsPerSec * clamp(2.6 - lvl*0.12, 1.4, 2.6));
+  const hazardShare= clamp(0.30 + lvl*0.03, 0.30, 0.6);
+
+  let i = 100, lastHazard = -Infinity;
+  while (i < segs.length - 40){
+    if (Math.random() < hazardShare && (i - lastHazard) >= minGap){
+      segs[i].sprites.push({ x: rnd(-0.8,0.8), type:"hazard", live:true });
+      lastHazard = i;
+      i += minGap;
+    } else {
+      // Coin arcs drift across the road, so there's a line to follow rather
+      // than a scatter to hoover up.
+      const n = 5 + Math.floor(Math.random()*6);
+      const from = rnd(-0.7,0.7), to = clamp(from + rnd(-0.6,0.6), -0.8, 0.8);
+      for (let k = 0; k < n; k++){
+        segs[i+k].sprites.push({ x: lerp(from, to, k/(n-1)), type:"coin", live:true });
+      }
+      i += n + Math.floor(segsPerSec * rnd(0.4, 1.1));
+    }
+  }
+  return segs;
+}
+
+function project(p, camX, camY, camZ, width, height){
+  p.camera.x = (p.world.x || 0) - camX;
+  p.camera.y = (p.world.y || 0) - camY;
+  p.camera.z = (p.world.z || 0) - camZ;
+  if (p.camera.z < 1) p.camera.z = 1;
+  p.screen.scale = CAM_DEPTH / p.camera.z;
+  p.screen.x = (width/2)  + (p.screen.scale * p.camera.x * width/2);
+  p.screen.y = (height/2) - (p.screen.scale * p.camera.y * height/2);
+  p.screen.w =              (p.screen.scale * ROAD_W  * width/2);
+}
+
+function trapezoid(x, x1, y1, w1, x2, y2, w2, color){
+  x.fillStyle = color;
+  x.beginPath();
+  x.moveTo(x1-w1, y1); x.lineTo(x2-w2, y2);
+  x.lineTo(x2+w2, y2); x.lineTo(x1+w1, y1);
+  x.closePath(); x.fill();
+}
+
+function gameKart(canvas, hud, lvl, onEnd){
+  const segs = buildRoad(lvl);
+  const trackLen = segs.length * SEG_LEN;
+
+  const MAX_SPEED = SEG_LEN * 55 * (1 + lvl*0.06);
+  const ACCEL = MAX_SPEED/4, BRAKE = -MAX_SPEED, DECEL = -MAX_SPEED/5;
+  const OFF_DECEL = -MAX_SPEED/2.2, CENTRIFUGAL = 0.32;
+
+  // Two states: `st` is current, `prev` is last physics step. Rendering
+  // interpolates between them, which is what removes the last of the judder.
+  const st   = { pos:0, speed:0, playerX:0, hp:3, score:0, coins:0, invuln:0, timeLeft:180 };
+  const prev = { pos:0, playerX:0, speed:0 };
+  let over = false, won = false, shakeT = 0;
+
+  const keys = { left:false, right:false, up:false, down:false };
+  const kd = e => {
+    if (e.code==="ArrowLeft"||e.code==="KeyA") keys.left = true;
+    if (e.code==="ArrowRight"||e.code==="KeyD") keys.right = true;
+    if (e.code==="ArrowUp"||e.code==="KeyW") keys.up = true;
+    if (e.code==="ArrowDown"||e.code==="KeyS"||e.code==="Space") keys.down = true;
+    if (["ArrowLeft","ArrowRight","ArrowUp","ArrowDown","Space"].includes(e.code)) e.preventDefault();
+  };
+  const ku = e => {
+    if (e.code==="ArrowLeft"||e.code==="KeyA") keys.left = false;
+    if (e.code==="ArrowRight"||e.code==="KeyD") keys.right = false;
+    if (e.code==="ArrowUp"||e.code==="KeyW") keys.up = false;
+    if (e.code==="ArrowDown"||e.code==="KeyS"||e.code==="Space") keys.down = false;
+  };
+  window.addEventListener("keydown", kd);
+  window.addEventListener("keyup", ku);
+
+  // Touch: steering follows the finger's x position across the canvas, which
+  // beats left/right zones because you can hold a shallow line through a curve.
+  let touchX = null;
+  const tset = e => { const r = canvas.getBoundingClientRect();
+                      touchX = (e.touches[0].clientX - r.left) / r.width; e.preventDefault(); };
+  const tend = e => { touchX = null; e.preventDefault(); };
+  canvas.addEventListener("touchstart", tset, {passive:false});
+  canvas.addEventListener("touchmove",  tset, {passive:false});
+  canvas.addEventListener("touchend",   tend, {passive:false});
+  canvas.addEventListener("touchcancel",tend, {passive:false});
+
+  const findSeg = pos => segs[Math.floor(pos/SEG_LEN) % segs.length];
+
+  function update(dt){
+    if (over) return;
+    st.timeLeft -= dt;
+    if (st.timeLeft <= 0){ st.timeLeft = 0; won = true; over = true; onEnd(st.score, true); return; }
+
+    prev.pos = st.pos; prev.playerX = st.playerX; prev.speed = st.speed;
+    if (st.invuln > 0) st.invuln -= dt;
+    if (shakeT > 0) shakeT -= dt;
+
+    const seg = findSeg(st.pos);
+    const speedPct = st.speed / MAX_SPEED;
+    const dx = dt * 2.2 * speedPct;
+
+    let steer = 0;
+    if (keys.left) steer = -1;
+    else if (keys.right) steer = 1;
+    if (touchX !== null){
+      const off = (touchX - 0.5) * 2.4;            // dead zone near centre
+      steer = clamp(off, -1, 1);
+      if (Math.abs(off) < 0.12) steer = 0;
+    }
+    st.playerX += steer * dx;
+
+    // Centrifugal push: you slide outward through a curve unless you fight it.
+    st.playerX -= dx * speedPct * seg.curve * CENTRIFUGAL;
+
+    if (keys.up || touchX !== null)  st.speed += ACCEL * dt;
+    else if (keys.down)              st.speed += BRAKE * dt;
+    else                             st.speed += DECEL * dt;
+
+    // Off-road: you keep going but you bleed speed and the screen rattles.
+    if ((st.playerX < -1 || st.playerX > 1) && st.speed > MAX_SPEED/4){
+      st.speed += OFF_DECEL * dt;
+      shakeT = 0.1;
+    }
+    st.playerX = clamp(st.playerX, -2.2, 2.2);
+    st.speed   = clamp(st.speed, 0, MAX_SPEED);
+    st.pos     = (st.pos + st.speed * dt) % trackLen;
+    st.score  += st.speed * dt * 0.004;
+
+    // Collisions: only the segment you're standing on, so this stays O(1).
+    for (const sp of seg.sprites){
+      if (!sp.live) continue;
+      if (Math.abs(sp.x - st.playerX) > 0.34) continue;
+      if (sp.type === "coin"){
+        sp.live = false; st.coins++; st.score += 25;
+      } else if (st.invuln <= 0){
+        sp.live = false; st.hp--; st.speed *= 0.25; st.invuln = 1.2; shakeT = 0.28;
+        if (st.hp <= 0){ over = true; onEnd(Math.floor(st.score), false); return; }
+      }
+    }
+  }
+
+  function render(alpha, eng){
+    const x = eng.ctx, W = eng.w, H = eng.h;
+    const pos     = lerp(prev.pos,     st.pos,     alpha);
+    const playerX = lerp(prev.playerX, st.playerX, alpha);
+    const speed   = lerp(prev.speed,   st.speed,   alpha);
+
+    const base = findSeg(pos);
+    const pct  = (pos % SEG_LEN) / SEG_LEN;
+    const camY = CAM_H + lerp(base.p1.world.y, base.p2.world.y, pct);
+
+    // Sky: darker at the top, glow at the horizon.
+    const g = x.createLinearGradient(0,0,0,H*0.62);
+    g.addColorStop(0, KART_COL.sky); g.addColorStop(1, KART_COL.skyGlow);
+    x.fillStyle = g; x.fillRect(0,0,W,H);
+
+    x.save();
+    if (shakeT > 0){
+      const s = shakeT * 26 * eng.dpr;
+      x.translate(rnd(-s,s), rnd(-s,s));
+    }
+
+    let maxy = H, dx = 0, cx = 0;
+    // Far-to-near pass computing curve accumulation, then near-to-far draw
+    // with `maxy` clipping so hills correctly hide what's behind them.
+    const draw = [];
+    for (let n = 0; n < DRAW_SEG; n++){
+      const seg = segs[(base.index + n) % segs.length];
+      // Segments whose index has wrapped past the end of the array are ahead
+      // of us on the next lap, so the camera must be offset back by one full
+      // track length or they project behind the viewer and pop.
+      const camZ = pos - (seg.index < base.index ? trackLen : 0);
+      project(seg.p1, (playerX * ROAD_W) - cx,      camY, camZ, W, H);
+      cx += dx; dx += seg.curve;
+      project(seg.p2, (playerX * ROAD_W) - cx,      camY, camZ, W, H);
+      draw.push(seg);
+    }
+    for (let n = draw.length - 1; n >= 0; n--){
+      const seg = draw[n];
+      if (seg.p1.camera.z <= CAM_DEPTH) continue;
+      if (seg.p2.screen.y >= maxy) continue;
+      if (seg.p1.screen.y <= seg.p2.screen.y) continue;
+
+      const dark = seg.color === "dark";
+      const y1 = seg.p1.screen.y, y2 = seg.p2.screen.y;
+      const x1 = seg.p1.screen.x, x2 = seg.p2.screen.x;
+      const w1 = seg.p1.screen.w, w2 = seg.p2.screen.w;
+
+      x.fillStyle = dark ? KART_COL.grassDark : KART_COL.grassLight;
+      x.fillRect(0, y2, W, y1-y2+1);
+      trapezoid(x, x1, y1, w1*1.16, x2, y2, w2*1.16, dark ? KART_COL.rumbleDark : KART_COL.rumbleLight);
+      trapezoid(x, x1, y1, w1,      x2, y2, w2,      dark ? KART_COL.roadDark   : KART_COL.roadLight);
+      if (!dark){
+        const lw1 = w1*0.02, lw2 = w2*0.02;
+        for (const l of [-0.34, 0.34]){
+          trapezoid(x, x1 + w1*l, y1, lw1, x2 + w2*l, y2, lw2, KART_COL.lane);
+        }
+      }
+      maxy = y2;
+    }
+    // Sprites near-to-far so closer ones overlap correctly.
+    for (let n = draw.length - 1; n >= 0; n--){
+      const seg = draw[n];
+      for (const sp of seg.sprites){
+        if (!sp.live) continue;
+        const sc = seg.p1.screen.scale;
+        const sx = seg.p1.screen.x + (sc * sp.x * ROAD_W * W/2);
+        const sy = seg.p1.screen.y;
+        const size = sc * 1700 * W/2;
+        if (size < 1 || sy > H + size || sy < 0) continue;
+        if (sp.type === "coin"){
+          x.fillStyle = KART_COL.rumbleLight;
+          x.beginPath();
+          x.ellipse(sx, sy - size*0.5, size*0.22, size*0.34, 0, 0, 7);
+          x.fill();
+        } else {
+          x.fillStyle = KART_COL.hazard;
+          x.beginPath();
+          x.moveTo(sx, sy - size*0.9);
+          x.lineTo(sx - size*0.42, sy);
+          x.lineTo(sx + size*0.42, sy);
+          x.closePath(); x.fill();
+        }
+      }
+    }
+
+    // Player kart, leaning into the turn.
+    if (st.invuln <= 0 || Math.floor(st.invuln*14) % 2 === 0){
+      const kw = W*0.13, kh = kw*0.62, kx = W/2, ky = H*0.88;
+      const lean = clamp((st.playerX - prev.playerX) * 90, -0.32, 0.32);
+      x.save(); x.translate(kx, ky); x.rotate(lean);
+      x.fillStyle = "#0B0F1F"; x.fillRect(-kw/2, -kh*0.2, kw, kh*0.42);
+      x.fillStyle = "#2F6BD8"; x.fillRect(-kw/2, -kh, kw, kh*0.86);
+      x.fillStyle = "#F2B441"; x.fillRect(-kw/2, -kh, kw, kh*0.2);
+      x.restore();
+    }
+    x.restore();
+
+    hud.score.textContent = Math.floor(st.score);
+    hud.coins.textContent = "◎ " + st.coins;
+    hud.hp.textContent    = "♥".repeat(Math.max(0,st.hp));
+    hud.speed.textContent = Math.round((speed/MAX_SPEED)*100) + "%";
+    const m = Math.floor(st.timeLeft/60), s = Math.floor(st.timeLeft%60);
+    hud.timer.textContent = m + ":" + String(s).padStart(2,"0");
+    hud.perf.textContent  = eng.fps + " fps · " + eng.steps + " steps · " +
+                            draw.length + " segs · " + eng.w + "×" + eng.h;
+  }
+
+  return {
+    update, render,
+    destroy(){
+      window.removeEventListener("keydown", kd);
+      window.removeEventListener("keyup", ku);
+      canvas.removeEventListener("touchstart", tset);
+      canvas.removeEventListener("touchmove",  tset);
+      canvas.removeEventListener("touchend",   tend);
+      canvas.removeEventListener("touchcancel",tend);
+    }
+  };
+}
+
+/* ============================================================================
+   2. VIEWS
+   ========================================================================== */
+let TAB = "arcade", engine = null, game = null;
+const V = () => document.getElementById("view");
+
+function teardown(){
+  if (engine){ engine.destroy(); engine = null; }
+  if (game){ game.destroy(); game = null; }
+}
+
+function viewArcade(){
+  teardown();
+  V().innerHTML = `
+  <h1 class="big" style="margin:18px 0 4px">Campus Kart</h1>
+  <p class="muted" style="margin:0 0 14px">
+    Same game, rebuilt. Hold <b>↑</b> or the screen to accelerate, <b>← →</b> or drag to steer.
+    Off the tarmac you keep moving but bleed speed.</p>
+
+  <div id="stage">
+    <canvas id="gameCanvas"></canvas>
+    <div class="hud">
+      <span id="hHp" style="color:var(--hot)">♥♥♥</span>
+      <span id="hCoins" style="color:var(--gold)">◎ 0</span>
+      <span class="spacer"></span>
+      <span id="hSpeed" style="color:var(--crt)">0%</span>
+      <span id="hScore">0</span>
+      <span id="hTimer" style="color:var(--gold)">3:00</span>
+    </div>
+    <div class="perf" id="hPerf">—</div>
+    <div class="overlay" id="ovl">
+      <div>
+        <div class="eyebrow">Level ${KART_LEVEL}</div>
+        <h2 class="big" style="color:var(--gold);margin:6px 0 10px">Campus Kart</h2>
+        <p class="muted" style="max-width:340px;margin:0 auto 16px">
+          Three minutes. Collect coins, miss the cones, keep your speed up through the curves.</p>
+        <button class="btn primary" id="btnStart">Start</button>
+      </div>
+    </div>
+  </div>
+
+  <section class="panel raised" style="margin-top:16px">
+    <div class="eyebrow">What changed</div>
+    <ul class="note muted" style="margin:8px 0 0;padding-left:18px">
+      <li><b>Fixed timestep.</b> Physics runs at exactly 120Hz regardless of display refresh, so the game
+          plays identically on a 60Hz Chromebook and a 144Hz monitor. Rendering interpolates between
+          steps — that's what kills the judder.</li>
+      <li><b>Segment renderer.</b> The road was 1,155 <code>fillRect</code> calls per frame (one per
+          scanline). It's now ~120 trapezoids with real hills and occlusion. Watch the segment count
+          in the corner.</li>
+      <li><b>Frame-spike clamp.</b> Switch tabs mid-race and come back — you resume where you were
+          instead of being teleported into a cone.</li>
+      <li><b>Capped pixel ratio.</b> Rendering at 3x on a phone cost 9x the fill for no visible gain.</li>
+    </ul>
+  </section>`;
+
+  const canvas = document.getElementById("gameCanvas");
+  const hud = {
+    hp:document.getElementById("hHp"), coins:document.getElementById("hCoins"),
+    score:document.getElementById("hScore"), speed:document.getElementById("hSpeed"),
+    timer:document.getElementById("hTimer"), perf:document.getElementById("hPerf")
+  };
+  const ovl = document.getElementById("ovl");
+
+  function launch(){
+    ovl.classList.add("hidden");
+    teardown();
+    game = gameKart(canvas, hud, KART_LEVEL, (score, won) => {
+      engine.stop();
+      ovl.classList.remove("hidden");
+      ovl.innerHTML = `<div>
+        <div class="eyebrow">${won ? "Time" : "Wrecked"}</div>
+        <h2 class="big" style="color:${won?'var(--crt)':'var(--hot)'};margin:6px 0 4px">
+          ${won ? "You made the bell" : "Run over"}</h2>
+        <p style="font-family:var(--mono);font-size:30px;margin:6px 0">${score}</p>
+        <button class="btn primary" id="btnAgain">Race again</button>
+      </div>`;
+      document.getElementById("btnAgain").onclick = launch;
+    });
+    engine = Engine(canvas, { update:game.update, render:game.render });
+    engine.start();
+  }
+  document.getElementById("btnStart").onclick = launch;
+}
+const KART_LEVEL = 3;
+
+/* ============================================================================
+
+/* ============================================================================
+   FREE-TEXT GRADER — grades ideas, not strings
+   ----------------------------------------------------------------------------
+   The old matcher was `keys.some(k => text.includes(k))`. That fails two ways
+   at once: a single keyword hit passes the whole answer, and any typo, plural,
+   hyphen or synonym fails it outright. "oportunity cost" missed. "sacrificed"
+   missed when the key was "give up". "next-best" missed when the key was
+   "next best".
+
+   This grades an answer against IDEAS. Each idea lists many surface forms, and
+   each form is matched with normalisation, light stemming and typo tolerance.
+   An item passes when every required idea is present. When it isn't, the
+   feedback names the missing idea in plain language instead of saying "wrong".
+   ========================================================================== */
+
+/* --- normalisation -------------------------------------------------------- */
+const CONTRACTIONS = {
+  "dont":"do not","doesnt":"does not","didnt":"did not","isnt":"is not",
+  "arent":"are not","wasnt":"was not","wont":"will not","cant":"can not",
+  "couldnt":"could not","wouldnt":"would not","shouldnt":"should not",
+  "its":"it is","thats":"that is","theres":"there is","youre":"you are",
+  "theyre":"they are","whats":"what is","hes":"he is","shes":"she is"
+};
+
+function normalise(s){
+  return String(s || "")
+    .toLowerCase()
+    .replace(/[\u2018\u2019\u02bc]/g, "'")      // smart apostrophes
+    .replace(/[\u201c\u201d]/g, '"')
+    .replace(/[\u2010-\u2015]/g, " ")           // every dash variant -> space
+    .replace(/[^a-z0-9'\s.\/]/g, " ")           // keep digits, . and / for maths
+    .replace(/'/g, "")                          // dont -> dont, then expanded
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+function tokenise(s){
+  const raw = normalise(s).split(" ").filter(Boolean);
+  const out = [];
+  for (let w of raw){
+    // Keep "." and "/" only when they sit between digits (0.25, 40/10).
+    // Otherwise they're sentence punctuation and would stop "up." matching "up".
+    if (!/\d[./]\d/.test(w)) w = w.replace(/^[./]+|[./]+$/g, "");
+    if (!w) continue;
+    if (CONTRACTIONS[w]) out.push(...CONTRACTIONS[w].split(" "));
+    else out.push(w);
+  }
+  return out;
+}
+
+/* Light stemmer. Deliberately conservative — aggressive stemming creates false
+   matches ("costly" -> "cost") which are worse than a miss here. A handful of
+   irregular participles get mapped explicitly because no suffix rule reaches
+   them and they're common in student writing. */
+const IRREGULAR = {
+  chosen:"choose", chose:"choose", taken:"take", took:"take", given:"give",
+  gave:"give", lost:"lose", made:"make", paid:"pay", spent:"spend",
+  forgone:"forgo", foregone:"forgo", forewent:"forgo", forwent:"forgo",
+  bought:"buy", sold:"sell", left:"leave", kept:"keep", got:"get"
+};
+
+function stem(w){
+  if (IRREGULAR[w]) return IRREGULAR[w];
+  if (w.length <= 3) return w;
+  if (/(sses|shes|ches|xes)$/.test(w)) return w.slice(0,-2);
+  if (/ies$/.test(w)) return w.slice(0,-3) + "y";
+  if (/([^s])s$/.test(w)) return w.slice(0,-1);
+  if (/ing$/.test(w) && w.length > 5) return w.slice(0,-3);
+  if (/ed$/.test(w)  && w.length > 4) return w.slice(0,-2);
+  return w;
+}
+
+/* --- typo tolerance ------------------------------------------------------- */
+/* Bounded Levenshtein: bails out as soon as the best possible score exceeds
+   `max`, so this stays cheap even on long answers. */
+function editDistance(a, b, max){
+  if (a === b) return 0;
+  if (Math.abs(a.length - b.length) > max) return max + 1;
+  const m = a.length, n = b.length;
+  let prev = new Array(n + 1), cur = new Array(n + 1);
+  for (let j = 0; j <= n; j++) prev[j] = j;
+  for (let i = 1; i <= m; i++){
+    cur[0] = i;
+    let rowMin = cur[0];
+    for (let j = 1; j <= n; j++){
+      const cost = a[i-1] === b[j-1] ? 0 : 1;
+      cur[j] = Math.min(prev[j] + 1, cur[j-1] + 1, prev[j-1] + cost);
+      if (cur[j] < rowMin) rowMin = cur[j];
+    }
+    if (rowMin > max) return max + 1;
+    const t = prev; prev = cur; cur = t;
+  }
+  return prev[n];
+}
+
+/* Short words get no slack — one edit turns "cost" into "cast" or "most",
+   and a false positive here means telling a student they understood something
+   they didn't. */
+function tolerance(w){
+  if (w.length <= 4) return 0;
+  if (w.length <= 7) return 1;
+  return 2;
+}
+
+function wordMatches(studentWord, targetWord){
+  const a = stem(studentWord), b = stem(targetWord);
+  if (a === b) return true;
+  if (a.startsWith(b) && b.length >= 5) return true;   // "sacrificing" ~ "sacrific"
+  if (b.startsWith(a) && a.length >= 5) return true;
+  const tol = tolerance(b);
+  return tol > 0 && editDistance(a, b, tol) <= tol;
+}
+
+/* --- phrase matching ------------------------------------------------------ */
+/* Finds a phrase in the token stream, allowing up to `slack` filler words
+   between phrase words so "give it all up" still matches "give up", and
+   "the next, best alternative" still matches "next best alternative". */
+const FILLER = new Set(["the","a","an","of","to","is","are","was","were","that",
+  "this","it","you","your","we","they","he","she","would","will","can","could",
+  "in","on","for","up","and","or","be","been","being","get","got","have","has",
+  "had","do","does","did","by","as","at","so","then","than","its","their"]);
+
+function findPhrase(tokens, phraseWords, slack){
+  outer:
+  for (let i = 0; i < tokens.length; i++){
+    let ti = i, used = 0;
+    for (let p = 0; p < phraseWords.length; p++){
+      let matched = false;
+      while (ti < tokens.length){
+        if (wordMatches(tokens[ti], phraseWords[p])){ matched = true; ti++; break; }
+        // Skip a filler word without spending slack; skip a real word at a cost.
+        if (FILLER.has(tokens[ti])) { ti++; continue; }
+        if (used < slack){ used++; ti++; continue; }
+        continue outer;
+      }
+      if (!matched) continue outer;
+    }
+    return { start:i, end:ti };
+  }
+  return null;
+}
+
+/* --- negation guard ------------------------------------------------------- */
+const NEGATORS = new Set(["not","no","never","isnt","arent","cant","cannot",
+  "doesnt","dont","wasnt","wouldnt","shouldnt","neither","nor","without","except"]);
+
+/* Words that end the clause a negator belongs to. Without these,
+   "I don't know but maybe it's the next best alternative you give up" reads as
+   negated, because the "not" attached to "know" sits inside the lookback
+   window. Hedging is not the same as denying, and students hedge constantly. */
+const CLAUSE_BREAK = new Set(["but","however","so","because","since","although",
+  "though","maybe","perhaps","actually","unless","while","whereas","yet",
+  "know","sure","think","guess","remember","understand"]);
+
+function isNegated(tokens, span){
+  for (let i = span.start - 1; i >= Math.max(0, span.start - 4); i--){
+    if (CLAUSE_BREAK.has(tokens[i])) return false;   // negator belongs elsewhere
+    if (NEGATORS.has(tokens[i])) return true;
+  }
+  return false;
+}
+
+/* --- numeric answers ------------------------------------------------------ */
+/* Pulls numbers out so "4 tons", "four tons", "40/10 = 4" all resolve. */
+const WORD_NUM = { zero:0, one:1, two:2, three:3, four:4, five:5, six:6, seven:7,
+  eight:8, nine:9, ten:10, eleven:11, twelve:12, fifteen:15, twenty:20,
+  twentyfive:25, forty:40, fifty:50, hundred:100, quarter:0.25, half:0.5 };
+
+function numbersIn(text){
+  const t = normalise(text);
+  const out = [];
+
+  // Division written out in words or symbols. A student who writes
+  // "divide 40 by 10" has produced the answer even without typing "4", and
+  // "40/10 = 4" has shown the method even without typing "divide".
+  for (const m of t.matchAll(/(\d+(?:\.\d+)?)\s*(?:\/|divided by|divide by|over|per)\s*(\d+(?:\.\d+)?)/g)){
+    const a = Number(m[1]), b = Number(m[2]);
+    if (b) out.push(a/b);
+    out.push(a, b);
+  }
+  for (const m of t.matchAll(/divide\s+(\d+(?:\.\d+)?)\s+by\s+(\d+(?:\.\d+)?)/g)){
+    const a = Number(m[1]), b = Number(m[2]);
+    if (b) out.push(a/b);
+  }
+
+  for (const m of t.matchAll(/\d+(?:\.\d+)?/g)) out.push(Number(m[0]));
+  for (const w of t.split(" ")) if (w in WORD_NUM) out.push(WORD_NUM[w]);
+  return out;
+}
+
+/* True when the text expresses a division at all, symbolically or in words. */
+function showsDivision(text){
+  const t = normalise(text);
+  return /\d\s*\/\s*\d/.test(t) || /divid|ratio|\bper\b|\bover\b|÷/.test(t);
+}
+
+function hasNumber(text, target, tol){
+  return numbersIn(text).some(n => Math.abs(n - target) <= (tol ?? 0.001));
+}
+
+/* --- the grader ----------------------------------------------------------- */
+/*  spec = {
+      ideas: [ { id, label, any:[ "phrase", ... ] }, ... ]   // all required
+      optional: [ same shape ]                               // adds polish only
+      number: { value, tol, label }                          // optional
+      minWords: 3
+      reject: [ { any:[...], why:"..." } ]                   // known wrong turns
+    }                                                                          */
+function gradeText(answer, spec){
+  const tokens = tokenise(answer);
+  const result = {
+    pass:false, found:[], missing:[], negated:[], rejected:null,
+    score:0, tooShort:false, numberOk:null
+  };
+
+  // Numeric check runs first. "40/10 = 4" is two tokens and would trip any
+  // sensible length gate, but it is a complete answer to a computation.
+  if (spec.number){
+    result.numberOk = hasNumber(answer, spec.number.value, spec.number.tol);
+  }
+  const hasMaths = /\d/.test(answer);
+
+  // Length gate uses raw tokens, not content words. "what you give up" is a
+  // real attempt worth precise feedback — telling that student to "say more"
+  // wastes the one moment they're actually listening. Skipped entirely when
+  // the answer contains figures.
+  if (!hasMaths && tokens.length < (spec.minWords ?? 3)){
+    result.tooShort = true;
+    result.missing = (spec.ideas || []).map(i => i.label);
+    return result;
+  }
+
+  // Known misconceptions get their own message rather than a generic miss.
+  for (const r of spec.reject || []){
+    for (const form of r.any){
+      const span = findPhrase(tokens, form.split(" "), 1);
+      if (span && !isNegated(tokens, span)){ result.rejected = r.why; }
+    }
+  }
+
+  const norm = normalise(answer);
+  const checkIdea = idea => {
+    // A pattern lets an idea be shown symbolically rather than named — "40/10"
+    // demonstrates dividing just as well as the word "divide".
+    if (idea.pattern && idea.pattern.test(norm)) return "found";
+    for (const form of idea.any || []){
+      const span = findPhrase(tokens, form.split(" "), form.split(" ").length > 1 ? 2 : 0);
+      if (!span) continue;
+      if (isNegated(tokens, span)){ return "negated"; }
+      return "found";
+    }
+    return "missing";
+  };
+
+  for (const idea of spec.ideas || []){
+    const r = checkIdea(idea);
+    if (r === "found") result.found.push(idea.label);
+    else if (r === "negated") result.negated.push(idea.label);
+    else result.missing.push(idea.label);
+  }
+  for (const idea of spec.optional || []){
+    if (checkIdea(idea) === "found") result.found.push(idea.label);
+  }
+
+  if (spec.number && !result.numberOk) result.missing.push(spec.number.label);
+
+  const required = (spec.ideas || []).length + (spec.number ? 1 : 0);
+  const got = required - result.missing.length - result.negated.length;
+  result.score = required ? got / required : 0;
+  result.pass = result.missing.length === 0 && result.negated.length === 0 && !result.rejected;
+  return result;
+}
+
+/* Turns a result into something worth reading. */
+function gradeFeedback(res, spec){
+  if (res.tooShort) return "Say a bit more — a sentence explaining your thinking.";
+  if (res.rejected) return res.rejected;
+  if (res.negated.length) return "You've got the right vocabulary, but check the direction of what you wrote about " + res.negated[0].toLowerCase() + ".";
+  if (res.pass) return spec.onPass || "That's the idea.";
+  if (res.missing.length === 1) return "You haven't mentioned " + res.missing[0].toLowerCase() + " yet.";
+  return "Your answer needs to cover " + res.missing.map(m=>m.toLowerCase()).join(", and ") + ".";
+}
+
+/* ============================================================================
+   3. STUDY TRACKER — engaged minutes, not elapsed minutes
+   ----------------------------------------------------------------------------
+   A plain countdown is trivially defeated: open the tab, go to lunch, come back
+   unlocked. This only accrues time while the student is demonstrably present.
+   Time stops when the tab is hidden, when there's been no input for a while,
+   and it will not accrue past a section the student hasn't scrolled through.
+
+   It is not tamper-proof — nothing running in a browser tab is, and a
+   determined student can nudge the mouse. It is honest enough that idling is
+   more effort than reading, which is the realistic bar.
+   ========================================================================== */
+const IDLE_AFTER = 25;        // seconds of no input before the clock pauses
+
+function StudyTracker(onTick){
+  const t = {
+    engaged:0,           // seconds actually accrued
+    idle:false, hidden:false, lastInput:Date.now()/1000, timer:0,
+    sections:{}          // id -> true once scrolled to the end
+  };
+  const mark = () => { t.lastInput = Date.now()/1000; if (t.idle){ t.idle = false; } };
+  const evs = ["pointerdown","pointermove","keydown","wheel","touchstart","scroll"];
+  evs.forEach(e => window.addEventListener(e, mark, {passive:true}));
+
+  const vis = () => { t.hidden = document.hidden; };
+  document.addEventListener("visibilitychange", vis);
+
+  t.timer = setInterval(() => {
+    const now = Date.now()/1000;
+    t.idle = (now - t.lastInput) > IDLE_AFTER;
+    if (!t.idle && !t.hidden) t.engaged += 1;
+    if (onTick) onTick(t);
+  }, 1000);
+
+  t.destroy = () => {
+    clearInterval(t.timer);
+    evs.forEach(e => window.removeEventListener(e, mark));
+    document.removeEventListener("visibilitychange", vis);
+  };
+  return t;
+}
+
+/* ============================================================================
+   4. CONTENT — one unit, with study sections and typed items
+   ========================================================================== */
+const UNIT = {
+  id:"u1",
+  title:"Scarcity and Choice",
+  requiredStudySec: 8 * 60,     // engaged minutes before the challenge opens
+  sections:[
+    { id:"s1", title:"Why choice has a cost",
+      body:`<p>Every economy runs into the same wall: <b>wants are unlimited, resources are not</b>.
+        That's scarcity, and it forces choice.</p>
+        <p>Once you choose, you've given something up. Economists don't measure that loss in dollars —
+        they measure it as the <b>next-best alternative you passed on</b>. That's opportunity cost.</p>
+        <p>Two traps live here. The first is thinking opportunity cost means the money you spent; it
+        doesn't, and a choice can have an opportunity cost even when nothing is paid. The second is
+        thinking it means <i>everything</i> you gave up. It doesn't — only the single best thing you
+        turned down.</p>
+        <p>If you skip a shift paying $80 to attend a concert with a $50 ticket, your opportunity cost
+        isn't $50. It's the $80 you didn't earn — the best alternative use of that evening.</p>` },
+    { id:"s2", title:"Putting a number on it",
+      body:`<p>When a producer can make either of two goods, the whole tradeoff gives you the ratio.</p>
+        <p>Say a country can produce <b>10 tractors or 40 tons of wheat</b>. Giving up all the wheat
+        buys all the tractors, so:</p>
+        <p style="font-family:var(--mono);color:var(--gold);margin:10px 0">
+          40 wheat ÷ 10 tractors = <b>4 tons of wheat per tractor</b></p>
+        <p>Flip it for the other direction: 10 ÷ 40 = <b>0.25 tractors per ton of wheat</b>. Notice the
+        two costs are reciprocals. If one good gets cheaper to produce, the other necessarily gets
+        dearer.</p>
+        <p>Always divide <b>what you give up</b> by <b>what you get</b>. Getting that division backwards
+        is the single most common error on this topic.</p>` },
+    { id:"s3", title:"Who should specialise",
+      body:`<p><b>Absolute advantage</b> means producing more of something. <b>Comparative advantage</b>
+        means producing it at a lower opportunity cost. Only the second one determines who should
+        specialise, and this is where most marks are lost.</p>
+        <p>A country can be worse at making everything in absolute terms and still hold comparative
+        advantage in one of them, because comparative advantage is about what you sacrifice, not what
+        you produce.</p>
+        <p>If Nation A gives up 4 wheat per tractor and Nation B gives up 2, B is the cheaper tractor
+        producer — even if A out-produces B on both goods. B should build tractors, A should grow wheat,
+        and both end up with more than they could alone.</p>
+        <p>Trade benefits both sides when the terms of trade land <b>between</b> the two opportunity
+        costs. Outside that range, one side would rather do it themselves.</p>` }
+  ],
+  concepts:[
+    {
+      id:"oc", title:"Opportunity cost", section:"s1",
+      items:[{
+        q:"A country can produce 10 tractors or 40 tons of wheat. What is the opportunity cost of one tractor?",
+        c:["4 tons of wheat","0.25 tons of wheat","40 tons of wheat","10 tons of wheat"], a:0,
+        why:"Give up all 40 wheat to gain all 10 tractors, so each tractor costs 40 ÷ 10 = 4 tons.",
+        explain:{
+          prompt:"In your own words, what does 'opportunity cost' mean? Write a sentence.",
+          hint:"Two things have to appear: what you give up, and which alternative specifically.",
+          spec:{
+            minWords:3,
+            ideas:[
+              { id:"forgone", label:"what you give up",
+                any:["give up","gave up","given up","sacrifice","forgo","lose","lost","miss out",
+                     "pass up","not chosen","not choose","not taken","not take","not pick",
+                     "forfeit","surrender","passed on","let go"] },
+              { id:"nextbest", label:"the next-best alternative specifically",
+                any:["next best","second best","best alternative","best option","best choice",
+                     "most valuable alternative","highest valued alternative","next highest",
+                     "next most valuable","other best","better option"] }
+            ],
+            reject:[
+              { any:["money you spend","money spent","price you pay","how much it costs","cash you spend","dollar amount"],
+                why:"Careful — opportunity cost isn't the money spent. A choice can cost you something even when you pay nothing. It's the alternative you turned down." },
+              { any:["everything you give up","all the things you give up","all alternatives","every alternative","everything else"],
+                why:"Close, but it's only the <i>next-best</i> alternative — not everything you passed on." }
+            ],
+            onPass:"That's it — the value of the next-best alternative you gave up."
+          }
+        }
+      },{
+        variant:true,
+        q:"A firm can produce 25 desks or 100 chairs. What is the opportunity cost of one desk?",
+        c:["4 chairs","0.25 chairs","100 chairs","25 chairs"], a:0,
+        why:"100 chairs given up ÷ 25 desks gained = 4 chairs per desk.",
+        explain:{
+          prompt:"Show how you got there. What did you divide by what, and what did you get?",
+          hint:"Name the division and the number it produces.",
+          spec:{
+            minWords:3,
+            number:{ value:4, tol:0.01, label:"the number it comes to" },
+            ideas:[
+              { id:"divide", label:"dividing the two totals",
+                any:["divide","divided","dividing","division","ratio","split","over"],
+                pattern:/\d\s*\/\s*\d|\bper\b/ }
+            ],
+            onPass:"Right — 100 chairs ÷ 25 desks = 4 chairs per desk."
+          }
+        }
+      }]
+    },
+    {
+      id:"ca", title:"Comparative advantage", section:"s3",
+      items:[{
+        q:"Nation A gives up 4 wheat per tractor. Nation B gives up 2 wheat per tractor. Nation A produces more of both goods overall. Who should specialise in tractors?",
+        c:["Nation B, which has the lower opportunity cost",
+           "Nation A, because it produces more of both",
+           "Neither — trade would make both worse off",
+           "Nation A, because it has the higher opportunity cost"], a:0,
+        why:"B sacrifices only 2 wheat per tractor against A's 4, so B is the cheaper tractor producer.",
+        explain:{
+          prompt:"Why doesn't Nation A's larger output settle the question? Explain in a sentence or two.",
+          hint:"Name the distinction between the two kinds of advantage.",
+          spec:{
+            minWords:4,
+            ideas:[
+              { id:"lowercost", label:"the lower opportunity cost deciding it",
+                any:["lower opportunity cost","lower cost","less opportunity cost","gives up less",
+                     "give up less","sacrifice less","cheaper","lower ratio","smaller cost",
+                     "loses less","lose less","costs less"] },
+              { id:"notabsolute", label:"why producing more isn't what matters",
+                any:["absolute advantage","producing more","produce more","makes more","make more",
+                     "output","total production","bigger producer","more of both","not about how much"] }
+            ],
+            reject:[
+              { any:["produces more so it should","more output so it should","bigger so it should"],
+                why:"That's absolute advantage. Producing more doesn't decide who specialises — sacrificing less does." }
+            ],
+            onPass:"Exactly — absolute advantage is about output, comparative advantage is about what you sacrifice."
+          }
+        }
+      },{
+        variant:true,
+        q:"Nation C gives up 6 bushels per machine. Nation D gives up 9 bushels per machine. Nation D has more workers and more land. Who should specialise in machines?",
+        c:["Nation C, which has the lower opportunity cost",
+           "Nation D, because it has more resources",
+           "Both should produce machines equally",
+           "Nation D, because it has the higher opportunity cost"], a:0,
+        why:"C gives up 6 bushels per machine, D gives up 9 — C is cheaper at the margin.",
+        explain:{
+          prompt:"What makes Nation C the cheaper machine producer? Use the numbers.",
+          hint:"Compare the two sacrifices directly.",
+          spec:{
+            minWords:3,
+            ideas:[
+              { id:"compare", label:"comparing the two sacrifices",
+                any:["6 is less than 9","less than","fewer","lower","gives up less","give up less",
+                     "sacrifice less","cheaper","smaller","costs less"],
+                pattern:/\b6\b[\s\S]{0,24}\b9\b/ }
+            ],
+            onPass:"Right — 6 bushels beats 9, so C sacrifices less per machine."
+          }
+        }
+      }]
+    }
+  ]
+};
+
+/* ============================================================================
+   5. STUDY MODE
+   ========================================================================== */
+let study = null;
+const SS = { read:{}, engaged:0 };     // section id -> read, plus engaged seconds
+
+function studyUnlocked(){
+  const allRead = UNIT.sections.every(s => SS.read[s.id]);
+  return allRead && SS.engaged >= UNIT.requiredStudySec;
+}
+
+function fmtMin(sec){
+  const m = Math.floor(sec/60), s = Math.floor(sec%60);
+  return m + ":" + String(s).padStart(2,"0");
+}
+
+function viewStudy(){
+  teardown();
+  if (!study) study = StudyTracker(t => { SS.engaged = t.engaged; paintStudyMeter(t); });
+
+  V().innerHTML = `
+  <h1 class="big" style="margin:18px 0 4px">${esc(UNIT.title)}</h1>
+  <p class="muted" style="margin:0 0 14px">Study mode. The challenge opens once you've worked through
+    every section and put in ${Math.round(UNIT.requiredStudySec/60)} minutes of real reading.</p>
+
+  <section class="panel raised" id="meterPanel">
+    <div class="row spread">
+      <span class="eyebrow">Study time</span>
+      <span class="chip" id="studyState">counting</span>
+    </div>
+    <p style="font-family:var(--mono);font-size:26px;margin:6px 0 8px" id="studyClock">0:00</p>
+    <div class="meter"><i id="studyBar" style="width:0%"></i></div>
+    <p class="muted" style="font-size:13px;margin:10px 0 0" id="studyNote">
+      The clock pauses if you switch tabs or stop reading.</p>
+  </section>
+
+  ${UNIT.sections.map((s,i) => `
+    <section class="panel">
+      <div class="row spread" style="margin-bottom:6px">
+        <span class="eyebrow">${esc(s.title)}</span>
+        <span class="chip ${SS.read[s.id]?'on':''}" id="chip_${s.id}">
+          ${SS.read[s.id] ? "read" : "unread"}</span>
+      </div>
+      <div class="note" id="sec_${s.id}" style="max-height:230px;overflow-y:auto;padding-right:8px">
+        ${s.body}
+      </div>
+      <button class="btn ghost wide" style="margin-top:10px" id="done_${s.id}"
+        ${SS.read[s.id]?"disabled":""}>
+        ${SS.read[s.id] ? "Marked as read" : "Scroll to the end to mark this read"}</button>
+    </section>`).join("")}
+
+  <section class="panel raised" id="gatePanel"></section>`;
+
+  // A section only counts once it's been scrolled to the bottom. Short of
+  // eye-tracking this is the closest signal we get that the words went past.
+  UNIT.sections.forEach(s => {
+    const box = document.getElementById("sec_" + s.id);
+    const btn = document.getElementById("done_" + s.id);
+    if (SS.read[s.id]) return;
+    const check = () => {
+      const atEnd = box.scrollTop + box.clientHeight >= box.scrollHeight - 12;
+      const fits  = box.scrollHeight <= box.clientHeight + 12;
+      if (atEnd || fits){ btn.disabled = false; btn.textContent = "Mark as read"; }
+    };
+    box.addEventListener("scroll", check);
+    check();
+    btn.onclick = () => {
+      SS.read[s.id] = true;
+      btn.disabled = true; btn.textContent = "Marked as read";
+      const chip = document.getElementById("chip_" + s.id);
+      chip.textContent = "read"; chip.classList.add("on");
+      paintGate();
+    };
+  });
+  paintGate();
+  paintStudyMeter(study);
+}
+
+function paintStudyMeter(t){
+  const clock = document.getElementById("studyClock");
+  if (!clock) return;
+  clock.textContent = fmtMin(SS.engaged);
+  const pct = Math.min(100, SS.engaged / UNIT.requiredStudySec * 100);
+  document.getElementById("studyBar").style.width = pct + "%";
+  const state = document.getElementById("studyState");
+  const note  = document.getElementById("studyNote");
+  if (t && t.hidden){
+    state.textContent = "paused — tab hidden"; state.className = "chip bad";
+    note.textContent = "Come back to this tab to keep the clock running.";
+  } else if (t && t.idle){
+    state.textContent = "paused — idle"; state.className = "chip warn";
+    note.textContent = "The clock stopped. Scroll or click to start it again.";
+  } else {
+    state.textContent = "counting"; state.className = "chip on";
+    note.textContent = "The clock pauses if you switch tabs or stop reading.";
+  }
+  paintGate();
+}
+
+function paintGate(){
+  const g = document.getElementById("gatePanel");
+  if (!g) return;
+  const unread = UNIT.sections.filter(s => !SS.read[s.id]).length;
+  const short  = Math.max(0, UNIT.requiredStudySec - SS.engaged);
+  if (studyUnlocked()){
+    g.innerHTML = `<div class="eyebrow" style="color:var(--crt)">Unlocked</div>
+      <h3 style="margin:6px 0 10px">You're ready for the challenge</h3>
+      <button class="btn primary wide" onclick="go('challenge')">Start the challenge</button>`;
+  } else {
+    g.innerHTML = `<div class="eyebrow">Challenge locked</div>
+      <p class="note muted" style="margin:8px 0 0">
+        ${unread ? unread + " section" + (unread>1?"s":"") + " still to read" : "All sections read"}
+        ${short ? " · " + fmtMin(short) + " of study time to go" : " · study time complete"}.</p>`;
+  }
+}
+
+/* ============================================================================
+   6. CHALLENGE — MCQ, then explain it in your own words
+   ========================================================================== */
+const CH = {
+  ci:0, ii:0, stage:"intro", mastery:0, firstTry:0, attempts:0, clean:0,
+  picked:null, checked:false, repairing:false, dirty:false, lastMiss:null, typed:""
+};
+const CONCEPTS = UNIT.concepts;
+function totalConcepts(){ return CONCEPTS.length; }
+
+function viewChallenge(){
+  teardown();
+  CH.ci=0; CH.ii=0; CH.stage="intro"; CH.mastery=0; CH.firstTry=0;
+  CH.attempts=0; CH.clean=0; CH.repairing=false; CH.dirty=false; CH.typed="";
+  drawChallenge();
+}
+
+function drawChallenge(){
+  if (!studyUnlocked()){
+    const short = Math.max(0, UNIT.requiredStudySec - SS.engaged);
+    const unread = UNIT.sections.filter(s => !SS.read[s.id]).length;
+    V().innerHTML = `
+    <section class="panel raised" style="text-align:center;margin-top:24px">
+      <div class="eyebrow">Locked</div>
+      <h1 class="big" style="margin:6px 0 10px">Study first</h1>
+      <p class="note muted" style="max-width:400px;margin:0 auto 16px">
+        This challenge opens after you've read all ${UNIT.sections.length} sections and put in
+        ${Math.round(UNIT.requiredStudySec/60)} minutes of study.
+        ${unread ? "<br>" + unread + " section" + (unread>1?"s":"") + " left to read." : ""}
+        ${short ? "<br>" + fmtMin(short) + " of study time to go." : ""}
+      </p>
+      <button class="btn primary" onclick="go('study')">Go to study mode</button>
+    </section>`;
+    return;
+  }
+
+  const c = CONCEPTS[CH.ci];
+
+  if (CH.stage === "intro"){
+    V().innerHTML = `
+    <h1 class="big" style="margin:18px 0 4px">${esc(UNIT.title)}</h1>
+    <p class="muted">Challenge</p>
+    <section class="panel raised">
+      <div class="eyebrow">How this works</div>
+      <p class="note" style="margin:8px 0 12px">
+        There's no countdown. Each concept asks you to pick an answer, then to
+        <b>explain it in your own words</b> by typing. Miss either half and you'll get a short
+        reteach and a fresh version with different numbers.</p>
+      <p class="note muted" style="margin:0 0 14px">
+        The typed answers are marked on ideas, not exact wording. Spelling and phrasing won't
+        fail you — leaving out a key idea will, and you'll be told which one.</p>
+      <button class="btn primary wide" onclick="CH.stage='answer';drawChallenge()">Begin</button>
+    </section>`;
+    return;
+  }
+
+  if (CH.stage === "done"){
+    const total = totalConcepts();
+    const pct = Math.round(CH.firstTry / total * 100);
+    const band = CH.firstTry === total ? "Distinction"
+               : CH.firstTry >= total/2 ? "Solid" : "Complete";
+    V().innerHTML = `
+    <section class="panel raised" style="text-align:center;margin-top:24px">
+      <div class="eyebrow">${band}</div>
+      <h1 class="big" style="color:var(--crt);margin:6px 0">${esc(UNIT.title)} complete</h1>
+      <p style="font-family:var(--mono);font-size:32px;margin:6px 0">${CH.firstTry}/${total}</p>
+      <p class="muted">concepts cleared first try · ${CH.clean} of ${CH.attempts} stages clean
+        · ${fmtMin(SS.engaged)} studied</p>
+      <div class="meter" style="margin:14px 0"><i style="width:${pct}%"></i></div>
+      <button class="btn primary wide">Download certificate</button>
+      <button class="btn ghost wide" style="margin-top:8px" onclick="viewChallenge()">Run it again</button>
+    </section>`;
+    return;
+  }
+
+  const item = c.items[CH.ii];
+
+  if (CH.stage === "repair"){
+    const sec = UNIT.sections.find(s => s.id === c.section);
+    V().innerHTML = `
+    ${progressBar()}
+    <section class="panel raised" style="border-color:rgba(242,180,65,.4)">
+      <div class="eyebrow" style="color:var(--gold)">Reteach · ${esc(c.title)}</div>
+      <p class="note" style="margin:10px 0 0">${(CH.lastMiss && CH.lastMiss.why) || item.why}</p>
+      ${sec ? `<details style="margin-top:12px">
+        <summary class="muted" style="cursor:pointer;font-size:14px">Re-read "${esc(sec.title)}"</summary>
+        <div class="note" style="margin-top:10px">${sec.body}</div></details>` : ""}
+    </section>
+    <p class="muted" style="font-size:14px">Now the same idea with different numbers.</p>
+    <button class="btn primary wide" id="repGo">Try the variant</button>`;
+    document.getElementById("repGo").onclick = () => {
+      CH.ii = 1; CH.repairing = true; CH.stage = "answer";
+      CH.picked = null; CH.checked = false; CH.typed = ""; drawChallenge();
+    };
+    return;
+  }
+
+  if (CH.stage === "explain") return drawExplain(c, item);
+
+  // ---- MCQ stage ----
+  V().innerHTML = `
+  ${progressBar()}
+  <section class="panel raised">
+    <div class="row spread" style="margin-bottom:4px">
+      <span class="eyebrow">${esc(c.title)}${CH.repairing?" · variant":""}</span>
+      <span class="chip">Stage 1 · answer</span>
+    </div>
+    <p class="qtext">${esc(item.q)}</p>
+    <div id="opts">
+      ${item.c.map((t,i)=>`<button class="opt" data-i="${i}">${esc(t)}</button>`).join("")}
+    </div>
+    <div id="fb"></div>
+    <button class="btn primary wide" id="go" style="margin-top:14px" disabled>Check</button>
+  </section>`;
+
+  const optWrap = document.getElementById("opts");
+  const goBtn   = document.getElementById("go");
+  optWrap.onclick = e => {
+    const b = e.target.closest(".opt");
+    if (!b || CH.checked) return;
+    CH.picked = +b.dataset.i;
+    [...optWrap.children].forEach(el => el.classList.toggle("sel", el === b));
+    goBtn.disabled = false;
+  };
+  goBtn.onclick = () => {
+    if (!CH.checked){
+      CH.checked = true; CH.attempts++;
+      const ok = CH.picked === item.a;
+      if (ok) CH.clean++;
+      [...optWrap.children].forEach((el,i) => {
+        el.disabled = true; el.classList.remove("sel");
+        if (i === item.a) el.classList.add("right");
+        else if (i === CH.picked) el.classList.add("wrong");
+      });
+      document.getElementById("fb").innerHTML =
+        `<div class="why ${ok?'':'bad'}"><b>${ok?"Correct.":"Not quite."}</b> ${esc(item.why)}</div>`;
+      CH.lastMiss = ok ? null : { why: item.why };
+      goBtn.textContent = ok ? "Now explain it" : "Review and retry";
+      return;
+    }
+    Object.assign(CH, nextState(CH, CH.picked === item.a, false, CONCEPTS.length));
+    drawChallenge();
+  };
+}
+
+/* ---- typed explanation stage ---- */
+function drawExplain(c, item){
+  const ex = item.explain;
+  V().innerHTML = `
+  ${progressBar()}
+  <section class="panel raised">
+    <div class="row spread" style="margin-bottom:4px">
+      <span class="eyebrow">${esc(c.title)}${CH.repairing?" · variant":""}</span>
+      <span class="chip warn">Stage 2 · explain</span>
+    </div>
+    <p class="qtext">${esc(ex.prompt)}</p>
+    <textarea id="ans" rows="4" placeholder="Type your answer…"
+      style="width:100%;background:#0D0920;border:1px solid var(--line);color:var(--ink);
+             border-radius:10px;padding:12px;font:inherit;font-size:15px;resize:vertical"></textarea>
+    <p class="muted" style="font-size:13px;margin:8px 0 0">${esc(ex.hint)}</p>
+    <div id="fb"></div>
+    <button class="btn primary wide" id="go" style="margin-top:14px" disabled>Check my answer</button>
+  </section>`;
+
+  const ta = document.getElementById("ans");
+  const goBtn = document.getElementById("go");
+  ta.value = CH.typed || "";
+  const sync = () => { CH.typed = ta.value; goBtn.disabled = ta.value.trim().length === 0; };
+  ta.addEventListener("input", sync);
+  sync();
+  ta.focus();
+
+  goBtn.onclick = () => {
+    if (!CH.checked){
+      CH.checked = true; CH.attempts++;
+      const res = gradeText(ta.value, ex.spec);
+      CH.lastRes = res;
+      if (res.pass) CH.clean++;
+      ta.disabled = true;
+      const msg = gradeFeedback(res, ex.spec);
+      const bits = res.found.length
+        ? `<div class="row" style="margin-top:10px">${res.found.map(f=>
+            `<span class="chip on">✓ ${esc(f)}</span>`).join("")}
+           ${res.missing.map(m=>`<span class="chip bad">missing: ${esc(m)}</span>`).join("")}</div>`
+        : "";
+      document.getElementById("fb").innerHTML =
+        `<div class="why ${res.pass?'':'bad'}"><b>${res.pass?"Good.":"Not yet."}</b> ${msg}</div>${bits}`;
+      CH.lastMiss = res.pass ? null : { why: msg };
+      goBtn.textContent = res.pass ? "Next concept" : "Review and retry";
+      return;
+    }
+    const ok = CH.lastRes && CH.lastRes.pass;
+    CH.typed = "";
+    Object.assign(CH, nextState(CH, ok, true, CONCEPTS.length));
+    drawChallenge();
+  };
+}
+
+/* Pure state transition — no DOM, no side effects, so it can be tested.
+
+   Rules:
+     - miss on either stage, first time through  -> REPAIR (reteach + variant)
+     - miss again on the variant                 -> back to the start of the concept
+     - clear the MCQ                             -> EXPLAIN
+     - clear MCQ and EXPLAIN back to back        -> concept done, move on
+
+   Mastery advances on any clean *consecutive* pass, not only the first attempt.
+   The gate is already strict — you cannot leave a concept without answering and
+   justifying it in one unbroken run — and refusing credit forever after a single
+   early slip would make the certificate unreachable, which punishes the students
+   who most need to keep going. `firstTry` is tracked separately as the stretch
+   number, so the report still distinguishes "knew it" from "got there".        */
+function nextState(s, correct, isExplain, conceptCount){
+  const out = { picked:null, checked:false, typed:"" };
+  if (!correct){
+    out.dirty = true;
+    if (s.repairing){ out.repairing = false; out.ii = 0; out.stage = "answer"; }
+    else            { out.stage = "repair"; }
+    return out;
+  }
+  if (!isExplain){ out.stage = "explain"; return out; }
+
+  out.mastery   = s.mastery + 1;
+  out.firstTry  = s.firstTry + (s.dirty ? 0 : 1);
+  out.ci        = s.ci + 1;
+  out.ii        = 0;
+  out.repairing = false;
+  out.dirty     = false;
+  out.stage     = (s.ci + 1) >= conceptCount ? "done" : "answer";
+  return out;
+}
+
+function progressBar(){
+  const dots = CONCEPTS.map((c,i) =>
+    `<span class="dot ${i<CH.ci?'done':i===CH.ci?'on':''}" title="${esc(c.title)}"></span>`).join("");
+  return `<div class="row spread" style="margin:18px 0 10px">
+    <span class="stage-dots">${dots}</span>
+    <span class="chip ${CH.mastery?'on':''}">Done ${CH.mastery}/${totalConcepts()}</span>
+  </div>`;
+}
+
+function esc(s){ return String(s).replace(/[&<>"]/g, ch => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[ch])); }
+
+/* ============================================================================
+   7. BOOT
+   ========================================================================== */
+function go(tab){
+  TAB = tab;
+  ["arcade","study","challenge"].forEach(t =>
+    document.getElementById("tab_"+t).setAttribute("aria-pressed", String(t===tab)));
+  window.scrollTo(0,0);
+  if (tab === "arcade") viewArcade();
+  else if (tab === "study") viewStudy();
+  else viewChallenge();
+}
+["arcade","study","challenge"].forEach(t =>
+  document.getElementById("tab_"+t).onclick = () => go(t));
+go("study");
+</script>
+</body>
+</html>
