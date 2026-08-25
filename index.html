@@ -195,9 +195,46 @@ ul.ctrl li{margin:4px 0;color:var(--ink)}
   .langsw button{padding:4px 7px}
   .wrap{padding-left:12px;padding-right:12px}
 }
+
+/* ---------- language picker (first run) ---------- */
+#langpick{position:fixed;inset:0;z-index:60;display:grid;place-items:center;
+  background:radial-gradient(circle at 50% 30%,#2B2150,#0B0F1F 70%);padding:24px;text-align:center}
+#langpick .lp{max-width:420px;width:100%}
+#langpick .flag{font-size:30px;line-height:1}
+#langpick .lpbtn{display:flex;align-items:center;gap:14px;width:100%;margin:10px 0;padding:16px 18px;
+  border:2px solid var(--line);border-radius:14px;background:rgba(12,9,26,.7);text-align:left;
+  font-family:var(--disp);font-weight:800;letter-spacing:.08em;text-transform:uppercase;font-size:18px}
+#langpick .lpbtn:hover,#langpick .lpbtn:focus-visible{border-color:var(--gold);color:var(--gold)}
+#langpick .lpbtn small{display:block;font-family:var(--body);font-weight:400;font-size:12px;
+  letter-spacing:.02em;text-transform:none;color:var(--dim)}
+#langpick img{height:150px;width:auto;margin-bottom:6px;
+  filter:drop-shadow(0 10px 20px rgba(0,0,0,.6))}
+
+/* ---------- study gate ---------- */
+.readbox{max-height:270px;overflow-y:auto;padding-right:10px;font-size:16px;line-height:1.7;
+  border:1px solid var(--line);border-radius:10px;background:#0D0920;padding:14px}
+.readbox::-webkit-scrollbar{width:8px}
+.readbox::-webkit-scrollbar-thumb{background:#33265C;border-radius:99px}
+.clock{font-family:var(--mono);font-size:28px;margin:6px 0 8px}
+.gate{border:1px dashed var(--line);border-radius:12px;padding:14px;margin-top:14px;background:#150F2B}
+.gate.open{border-style:solid;border-color:var(--crt)}
+.coach.small img{width:64px}
+
+/* ---------- test review ---------- */
+.revrow{border:1px solid var(--line);border-radius:10px;padding:12px;margin:10px 0;background:var(--cab2)}
+.revrow.ok{border-left:4px solid var(--crt)}
+.revrow.no{border-left:4px solid var(--hot)}
+.revrow .qn{font-family:var(--mono);font-size:11px;color:var(--dim);letter-spacing:.1em}
+.revrow p{margin:6px 0}
+.revrow .ya{color:var(--hot)}
+.revrow .ca{color:var(--crt)}
+.scorering{font-family:var(--mono);font-size:44px;margin:4px 0}
+.stage{position:relative;width:100%;background:#07050F;border-radius:12px;overflow:hidden;border:1px solid var(--line)}
+.stage canvas{display:block;width:100%;height:100%;touch-action:none}
 </style>
 </head>
 <body>
+<div id="langpick" class="hidden"></div>
 <div id="title" class="hidden"></div>
 <header class="marquee">
   <button class="logo" id="logoBtn">Smith's Classroom<small id="tagline">study · earn · play</small></button>
@@ -5278,7 +5315,69 @@ const T = {
     bankSearch:"Search by keyword or question ID…",answer:"Answer",keywords:"Accepted keywords",
     howTo:"How to play",controls:"Controls",start:"Start",playAgain:"Play again",
     backToArcade:"Back to arcade",youWon:"You made it to the bell!",youLost:"Run over",
-    rider:"Rider"
+    rider:"Rider",
+    /* --- language choice --- */
+    chooseLang:"Choose your language",
+    chooseLangSub:"You can change this any time from the top of the screen.",
+    langEn:"English",langEnSub:"Study, challenges and tests in English",
+    langEs:"Spanish",langEsSub:"Estudia, retos y examenes en espanol",
+    language:"Language",
+    /* --- study gate --- */
+    studyMode:"Study mode",
+    studyTime:"Study time",
+    studyGateHelp:"Read every section, then put in the study minutes. The challenge and the test review open after that.",
+    counting:"counting",
+    pausedTab:"paused — tab hidden",
+    pausedIdle:"paused — idle",
+    pausedTabNote:"Come back to this tab to start the clock again.",
+    pausedIdleNote:"The clock stopped. Scroll or tap to start it again.",
+    countingNote:"The clock pauses if you switch tabs or stop reading.",
+    scrollToEnd:"Scroll to the end to mark this read",
+    markRead:"Mark as read",
+    markedRead:"Marked as read",
+    unread:"unread",
+    readChip:"read",
+    unlocked:"Unlocked",
+    readyNow:"You're ready. Pick a challenge or the test review.",
+    stillToRead:"still to read",
+    timeToGo:"of study time to go",
+    lockedTitle:"Study first",
+    lockedBody:"This opens after you've read the notes and put in the study time.",
+    goStudy:"Go to study mode",
+    teacherBypass:"Teacher mode — gate bypassed",
+    /* --- test review --- */
+    testReview:"Test review",
+    startExam:"Start the test review",
+    examIntro:"A full unit test. No clock — take your time, then read the answer to every question.",
+    examPassLine:"Score 70% or higher to earn the certificate.",
+    examOf:"question test",
+    reviewEvery:"Review every question",
+    notAnswered:"No answer",
+    backToUnit:"Back to the unit",
+    retryExam:"Take it again",
+    tfPrompt:"True or false:",
+    tfTrue:"True",tfFalse:"False",
+    tfWhyTrue:"That statement is correct.",
+    tfWhyFalse:"The correct answer is:",
+    mixedNote:"Mixed question styles, drawn from this unit.",
+    coachExam:"Answer everything, then read the review. The explanation matters more than the score.",
+    coachStudy:"Read it properly first. The test review pulls straight from these notes.",
+    /* --- teacher --- */
+    examSettings:"Test review settings",
+    examQs:"Questions per test",
+    passMark:"Pass mark (%)",
+    studyMin:"Study minutes before unlock",
+    authored:"Written",
+    generated:"Auto-built",
+    unitCoverage:"Per-unit test coverage",
+    unitCoverageHelp:"Each unit needs enough written questions to fill a test. Anything short is topped up with auto-built true/false items drawn from your own questions.",
+    fullyWritten:"Fully written",
+    gradeShort:"Say a bit more — a sentence explaining your thinking.",
+    gradeFlip:"You've got the right vocabulary, but check the direction of what you wrote about",
+    gradePass:"That's the idea.",
+    gradeMiss1:"You haven't mentioned",
+    gradeMissN:"Your answer needs to cover",
+    gradeIdea:"the key idea from the notes"
   },
   es:{
     home:"Inicio",study:"Estudiar",challenge:"Reto",arcade:"Arcade",teacher:"Docente",
@@ -5335,15 +5434,79 @@ const T = {
     bankSearch:"Buscar por palabra clave o ID de pregunta…",answer:"Respuesta",keywords:"Palabras clave aceptadas",
     howTo:"Cómo jugar",controls:"Controles",start:"Comenzar",playAgain:"Jugar otra vez",
     backToArcade:"Volver al arcade",youWon:"¡Llegaste al timbre!",youLost:"Fin de la partida",
-    rider:"Pasajero"
+    rider:"Pasajero",
+    /* --- eleccion de idioma --- */
+    chooseLang:"Elige tu idioma",
+    chooseLangSub:"Puedes cambiarlo cuando quieras desde la parte superior.",
+    langEn:"Ingles",langEnSub:"Study, challenges and tests in English",
+    langEs:"Espanol",langEsSub:"Estudia, retos y examenes en espanol",
+    language:"Idioma",
+    /* --- estudio obligatorio --- */
+    studyMode:"Modo de estudio",
+    studyTime:"Tiempo de estudio",
+    studyGateHelp:"Lee cada seccion y cumple los minutos de estudio. Despues se abren el reto y el repaso.",
+    counting:"contando",
+    pausedTab:"en pausa — pestana oculta",
+    pausedIdle:"en pausa — sin actividad",
+    pausedTabNote:"Vuelve a esta pestana para que el reloj siga.",
+    pausedIdleNote:"El reloj se detuvo. Desplaza o toca para reanudarlo.",
+    countingNote:"El reloj se pausa si cambias de pestana o dejas de leer.",
+    scrollToEnd:"Desplazate hasta el final para marcarlo como leido",
+    markRead:"Marcar como leido",
+    markedRead:"Marcado como leido",
+    unread:"sin leer",
+    readChip:"leido",
+    unlocked:"Desbloqueado",
+    readyNow:"Ya puedes elegir el reto o el repaso del examen.",
+    stillToRead:"por leer",
+    timeToGo:"de tiempo de estudio",
+    lockedTitle:"Primero estudia",
+    lockedBody:"Esto se abre cuando leas los apuntes y cumplas el tiempo de estudio.",
+    goStudy:"Ir al modo de estudio",
+    teacherBypass:"Modo docente — sin bloqueo",
+    /* --- repaso del examen --- */
+    testReview:"Repaso del examen",
+    startExam:"Iniciar el repaso del examen",
+    examIntro:"Un examen completo de la unidad. Sin reloj: responde con calma y luego lee cada respuesta.",
+    examPassLine:"Obten 70% o mas para ganar el certificado.",
+    examOf:"preguntas",
+    reviewEvery:"Revisa cada pregunta",
+    notAnswered:"Sin respuesta",
+    backToUnit:"Volver a la unidad",
+    retryExam:"Hacerlo de nuevo",
+    tfPrompt:"Verdadero o falso:",
+    tfTrue:"Verdadero",tfFalse:"Falso",
+    tfWhyTrue:"Esa afirmacion es correcta.",
+    tfWhyFalse:"La respuesta correcta es:",
+    mixedNote:"Estilos de pregunta variados, tomados de esta unidad.",
+    coachExam:"Responde todo y luego lee el repaso. La explicacion importa mas que el puntaje.",
+    coachStudy:"Lee bien primero. El repaso sale directo de estos apuntes.",
+    /* --- docente --- */
+    examSettings:"Ajustes del repaso",
+    examQs:"Preguntas por examen",
+    passMark:"Nota para aprobar (%)",
+    studyMin:"Minutos de estudio para desbloquear",
+    authored:"Escritas",
+    generated:"Generadas",
+    unitCoverage:"Cobertura por unidad",
+    unitCoverageHelp:"Cada unidad necesita suficientes preguntas escritas para llenar un examen. Lo que falte se completa con preguntas de verdadero o falso creadas a partir de las tuyas.",
+    fullyWritten:"Completa",
+    gradeShort:"Escribe un poco mas: una oracion que explique tu razonamiento.",
+    gradeFlip:"Usas el vocabulario correcto, pero revisa el sentido de lo que escribiste sobre",
+    gradePass:"Esa es la idea.",
+    gradeMiss1:"Todavia no mencionas",
+    gradeMissN:"Tu respuesta debe incluir",
+    gradeIdea:"la idea clave de los apuntes"
   }
 };
 /* ============================================================================
    3. STATE  —  survives reloads, moves between devices, tolerates new versions
    ========================================================================== */
 const KEY="smiths.save", KEY_ART="smiths.art", KEY_OLD="tokenhall.save";
-const blank=()=>({v:SCHEMA,name:"",lang:"en",tokens:0,xp:0,streak:0,lastDay:"",
-  prog:{},certs:[],best:{},session:null,extraPacks:[],skin:"smith",pin:"",zone:{},arcade:{},cfg:{classes:3,weeks:18,perWeek:3,perChallenge:15}});
+const blank=()=>({v:SCHEMA,name:"",lang:"en",langChosen:false,tokens:0,xp:0,streak:0,lastDay:"",
+  prog:{},certs:[],best:{},session:null,extraPacks:[],skin:"smith",pin:"",zone:{},arcade:{},
+  studied:{},   /* unitId -> {sec:engagedSeconds, read:{sectionIndex:true}} */
+  cfg:{classes:3,weeks:18,perWeek:3,perChallenge:15,examQs:25,examPass:70,studyMin:8}});
 let S=blank(), T_=T.en;
 
 function load(){
@@ -5354,7 +5517,8 @@ function load(){
 function save(){ try{localStorage.setItem(KEY,JSON.stringify(S));}catch(e){} }
 /* Old saves keep working: fill in anything a newer version added. */
 function upgrade(o){ const b=blank(); const out={...b,...o,cfg:{...b.cfg,...(o.cfg||{})}};
-  out.prog=o.prog||{}; out.certs=o.certs||[]; out.best=o.best||{}; out.extraPacks=o.extraPacks||[]; out.zone=o.zone||{}; out.arcade=o.arcade||{}; out.v=SCHEMA; return out; }
+  out.prog=o.prog||{}; out.certs=o.certs||[]; out.best=o.best||{}; out.extraPacks=o.extraPacks||[];
+  out.zone=o.zone||{}; out.arcade=o.arcade||{}; out.studied=o.studied||{}; out.v=SCHEMA; return out; }
 /* Merge instead of overwrite, so loading a save never destroys newer work. */
 function merge(inc){
   const a=upgrade(inc);
@@ -5363,6 +5527,9 @@ function merge(inc){
   for(const k in a.prog){const m=S.prog[k]||{seen:0,right:0}; const n=a.prog[k];
     S.prog[k]={seen:Math.max(m.seen,n.seen||0),right:Math.max(m.right,n.right||0),last:n.last||m.last};}
   for(const g in a.best) S.best[g]=Math.max(S.best[g]||0,a.best[g]);
+  S.studied=S.studied||{};
+  for(const uid in (a.studied||{})){ const m=S.studied[uid]||{sec:0,read:{}}, n=a.studied[uid]||{};
+    S.studied[uid]={sec:Math.max(m.sec||0,n.sec||0),read:{...(m.read||{}),...(n.read||{})}}; }
   S.arcade=S.arcade||{}; for(const g in (a.arcade||{})) S.arcade[g]=Math.max(S.arcade[g]||1,a.arcade[g]);
   const ids=new Set(S.certs.map(c=>c.code)); a.certs.forEach(c=>{if(!ids.has(c.code))S.certs.push(c);});
   a.extraPacks.forEach(p=>{ if(!S.extraPacks.some(x=>x.id===p.id)) S.extraPacks.push(p); });
@@ -5402,12 +5569,14 @@ const SKINS=[
  {k:"hat",  label:{en:"Coach Smith · sun hat",es:"Coach Smith · sombrero"}},
  {k:"tie",  label:{en:"Coach Smith · cap and tie",es:"Coach Smith · gorra y corbata"}}
 ];
-const POSES=["idle","cheer","hmm","run","walk"];
+const POSES=["idle","cheer","hmm","run","walk","point"];
 const ART_SLOTS=[
  {k:"idle", label:{en:"Character · standing",es:"Personaje · de pie"}},
  {k:"cheer",label:{en:"Character · celebrating",es:"Personaje · celebrando"}},
  {k:"hmm",  label:{en:"Character · reacting",es:"Personaje · reaccionando"}},
  {k:"run",  label:{en:"Character · running (arcade)",es:"Personaje · corriendo (arcade)"}},
+ {k:"walk", label:{en:"Character · walking (title, arcade)",es:"Personaje · caminando (título, arcade)"}},
+ {k:"point",label:{en:"Character · pointing (study, test)",es:"Personaje · señalando (estudio, examen)"}},
  {k:"kart_player",label:{en:"Cart (arcade)",es:"Carrito (arcade)"}},
  {k:"title",label:{en:"Title screen picture",es:"Imagen de la pantalla de título"}}
 ];
@@ -5442,6 +5611,48 @@ function setSkin(k){ S.skin=k; save(); render(); }
 function spriteOf(k){ const u=art(k); if(!u) return null; const im=new Image(); im.src=u; return im; }
 const drawable=im=>!!(im&&im.complete&&im.naturalWidth>0);
 
+/* Every zone falls back to one of the three ground tiles that ship inside this
+   file, so a zone still shows real pixel art when the optional bg_*.jpg from
+   the asset zip is not sitting next to index.html. */
+const _tiles={};
+function zoneTile(z){ const k=(z&&z.tile)||"tile_campus";
+  if(!_tiles[k]) _tiles[k]=spriteOf(k); return _tiles[k]; }
+/* The zone strip repeats a thumbnail 20 times per game. Inlining a base64 tile
+   into every one of those <img> tags would push a megabyte of markup through
+   innerHTML on each render, so the three tiles go in as CSS classes once. */
+function installTileStyles(){
+  if(document.getElementById("tilecss")) return;
+  const el=document.createElement("style"); el.id="tilecss";
+  el.textContent=["tile_campus","tile_volcanic","tile_cosmic"].map(k=>
+    `.tz-${k.slice(5)}{background-image:url(${art(k)});background-size:cover;image-rendering:pixelated}`
+  ).join("\n")+"\n.zthumb{display:block;width:100%;height:62px}";
+  document.head.appendChild(el);
+}
+const zoneClass=z=>"tz-"+(((z&&z.tile)||"tile_campus").slice(5));
+
+/* ============================================================================
+   3c. LANGUAGE  —  asked once, in both languages, before anything else.
+   A student who reads Spanish should not have to find a two-letter toggle in
+   an English header first. The header toggle stays for changing it later, and
+   the title screen keeps a way back to this screen.
+   ========================================================================== */
+function showLangPick(){
+  const el=document.getElementById("langpick");
+  el.classList.remove("hidden");
+  el.innerHTML=`<div class="lp">
+    <img src="${art("point")}" alt="" onerror="this.remove()">
+    <div class="wordmark" style="font-size:clamp(22px,6.5vw,34px);margin-bottom:2px">${T.en.chooseLang}</div>
+    <div class="subtitle" style="margin-bottom:18px">${T.es.chooseLang}</div>
+    <button class="lpbtn" onclick="pickLang('en')">
+      <span class="flag">◎</span><span>English<small>${T.en.langEnSub}</small></span></button>
+    <button class="lpbtn" onclick="pickLang('es')">
+      <span class="flag">◎</span><span>Español<small>${T.es.langEsSub}</small></span></button>
+    <p class="muted" style="font-size:12px;margin-top:14px">${T.en.chooseLangSub}<br>${T.es.chooseLangSub}</p>
+  </div>`;
+}
+function hideLangPick(){ document.getElementById("langpick").classList.add("hidden"); }
+function pickLang(l){ S.langChosen=true; setLang(l); hideLangPick(); showTitle(); }
+
 /* ---------- title screen ---------- */
 function showTitle(){
   if(TEACHER_OK){ TEACHER_OK=false; TAB="home"; }
@@ -5449,7 +5660,7 @@ function showTitle(){
   t.innerHTML=`<canvas id="titleCanvas" width="1200" height="800"></canvas>
     <img id="titleArt" src="${art("title")}" alt="" onerror="this.remove()">
     <div class="veil"></div>
-    ${artTag("idle","hero")}
+    <img id="titleHero" class="hero" src="${art("idle")}" alt="" onerror="this.remove()">
     <div class="top">
       <div class="wordmark">Smith's<span>Classroom</span></div>
       <div class="subtitle">${T_.titleSub}</div>
@@ -5458,11 +5669,20 @@ function showTitle(){
       <button class="go" id="startBtn" onclick="hideTitle()">▶ ${T_.pressStart}</button>
       <button onclick="hideTitle();go('home')">${T_.options}</button>
       <button onclick="hideTitle();go('art')">${T_.art}</button>
+      <button onclick="showLangPick()">${T_.language} · Language</button>
       <button class="tiny" onclick="teacherSignIn()">${T_.teacherSignIn}</button>
     </div></div>`;
   paintTitleScene(document.getElementById("titleCanvas"));
+  /* Two-frame idle: Coach Smith shifts his weight rather than standing frozen.
+     Uses the walk pose, which the app otherwise never drew. */
+  clearInterval(titleAnim);
+  const hero=document.getElementById("titleHero");
+  if(hero){ let alt=false;
+    titleAnim=setInterval(()=>{ alt=!alt; hero.src=art(alt?"walk":"idle"); },760); }
 }
-function hideTitle(){ document.getElementById("title").classList.add("hidden"); }
+let titleAnim=null;
+function hideTitle(){ clearInterval(titleAnim); titleAnim=null;
+  document.getElementById("title").classList.add("hidden"); }
 /* Built-in scene, in the spirit of the Smith's World art: sunset, gate, castle,
    and one floating island — drawn so the app still looks right with no files. */
 function paintTitleScene(cv){
@@ -5519,7 +5739,7 @@ function setLang(l){ S.lang=l; T_=T[l]; document.documentElement.lang=l; save();
   document.getElementById("tagline").textContent=T_.tagline;
   if(!document.getElementById("title").classList.contains("hidden")) showTitle();
   render(); }
-function go(tab){ TAB=tab; stopGame(); render(); window.scrollTo(0,0); }
+function go(tab){ TAB=tab; stopGame(); studyStop(); render(); window.scrollTo(0,0); }
 let TEACHER_OK=false;
 /* ---------- secret teacher unlock: type the phrase anywhere ---------- */
 const TEACHER_CODE="coachsmiththegoat";
@@ -5623,27 +5843,368 @@ function viewStudy(){
         <div class="meter" style="margin:8px 0"><i style="width:${s.mastery}%"></i></div>
         <div class="row"><span class="chip">${s.mastery}% ${T_.mastery}</span><span class="chip">${s.total} ${T_.items}</span></div>
         <div class="row" style="margin-top:10px">
-          <button class="btn" onclick="viewBrief('${u.id}')">${T_.readBrief}</button>
+          <button class="btn primary" onclick="viewBrief('${u.id}')">${T_.studyMode}</button>
           <button class="btn" onclick="startPractice('${u.id}')">${T_.practice}</button>
-          <button class="btn primary" onclick="startChallenge('${u.id}')">${T_.startChallenge}</button>
+          ${studyUnlocked(u)?`<button class="btn" onclick="startExam('${u.id}')">${T_.testReview}</button>`:`<span class="chip warn">${T_.lockedTitle}</span>`}
         </div>
       </div>`;}).join("")}
   </section>`).join("")}`;
 }
 function viewBrief(id){
-  const u=findUnit(id); const missing=S.lang==="es"&&!(u.brief&&u.brief.es);
-  V().innerHTML=`<button class="btn ghost" style="margin:14px 0" onclick="go('study')">← ${T_.back}</button>
-  <section class="panel raised"><div class="eyebrow">${esc(L(u.pack.name))}</div>
-  <h1 style="font-size:24px;margin:6px 0 12px">${esc(L(u.title))}</h1>
-  ${missing?`<div class="chip bad">${T_.langNote}</div>`:""}
-  <p style="font-size:16px;line-height:1.65">${esc(L(u.brief))}</p>
-  <button class="btn primary wide" style="margin-top:16px" onclick="startPractice('${id}')">${T_.practice}</button>
-  </section>`;
+  const u=findUnit(id); if(!u) return go("study");
+  const rec=studyRec(u.id), parts=briefParts(u);
+  const missing=S.lang==="es"&&!(u.brief&&u.brief.es);
+  V().innerHTML=`
+  <button class="btn ghost" style="margin:14px 0" onclick="go('study')">← ${T_.back}</button>
+  <section class="panel raised">
+    <div class="eyebrow">${esc(L(u.pack.name))} · ${T_.studyMode}</div>
+    <h1 style="font-size:24px;margin:6px 0 10px">${esc(L(u.title))}</h1>
+    ${missing?`<div class="chip bad" style="margin-bottom:8px">${T_.langNote}</div>`:""}
+    <p class="muted" style="margin:0 0 12px">${T_.studyGateHelp}</p>
+    <div class="coach small">${artTag("point")}<div class="bubble">${T_.coachStudy}</div></div>
+  </section>
+
+  <section class="panel raised">
+    <div class="row" style="justify-content:space-between">
+      <span class="eyebrow">${T_.studyTime}</span>
+      <span class="chip on" id="stState">${T_.counting}</span>
+    </div>
+    <p class="clock" id="stClock">${fmtMin(rec.sec)}</p>
+    <div class="meter"><i id="stBar" style="width:0%"></i></div>
+    <p class="muted" style="font-size:13px;margin:10px 0 0" id="stNote">${T_.countingNote}</p>
+  </section>
+
+  ${parts.map((txt,i)=>`
+    <section class="panel">
+      <div class="row" style="justify-content:space-between;margin-bottom:8px">
+        <span class="eyebrow">${T_.readBrief} ${i+1} / ${parts.length}</span>
+        <span class="chip ${rec.read[i]?"on":""}" id="rchip${i}">${rec.read[i]?T_.readChip:T_.unread}</span>
+      </div>
+      <div class="readbox" id="rbox${i}">${esc(txt)}</div>
+      <button class="btn ghost wide" style="margin-top:10px" id="rbtn${i}" ${rec.read[i]?"disabled":""}>
+        ${rec.read[i]?T_.markedRead:T_.scrollToEnd}</button>
+    </section>`).join("")}
+
+  <section class="gate" id="gate"></section>`;
+
+  parts.forEach((_,i)=>{
+    const box=document.getElementById("rbox"+i), btn=document.getElementById("rbtn"+i);
+    if(!box||!btn||rec.read[i]) return;
+    const check=()=>{
+      const atEnd=box.scrollTop+box.clientHeight>=box.scrollHeight-12;
+      const fits=box.scrollHeight<=box.clientHeight+12;
+      if(atEnd||fits){ btn.disabled=false; btn.textContent=T_.markRead; }
+    };
+    box.addEventListener("scroll",check); check();
+    btn.onclick=()=>{
+      rec.read[i]=true; save();
+      btn.disabled=true; btn.textContent=T_.markedRead;
+      const c=document.getElementById("rchip"+i);
+      if(c){ c.textContent=T_.readChip; c.classList.add("on"); }
+      paintGate(u);
+    };
+  });
+
+  studyStart(u.id,(t)=>paintStudyMeter(u,t));
+  paintStudyMeter(u,null);
   window.scrollTo(0,0);
 }
 
+function paintStudyMeter(u,t){
+  const rec=studyRec(u.id);
+  const clock=document.getElementById("stClock"); if(!clock) return;
+  clock.textContent=fmtMin(rec.sec);
+  const need=studyNeed();
+  const bar=document.getElementById("stBar");
+  if(bar) bar.style.width=(need?Math.min(100,rec.sec/need*100):100)+"%";
+  const st=document.getElementById("stState"), note=document.getElementById("stNote");
+  if(st&&note){
+    if(t&&t.hidden){ st.textContent=T_.pausedTab; st.className="chip bad"; note.textContent=T_.pausedTabNote; }
+    else if(t&&t.idle){ st.textContent=T_.pausedIdle; st.className="chip warn"; note.textContent=T_.pausedIdleNote; }
+    else { st.textContent=T_.counting; st.className="chip on"; note.textContent=T_.countingNote; }
+  }
+  paintGate(u);
+}
+
+function paintGate(u){
+  const g=document.getElementById("gate"); if(!g) return;
+  const rec=studyRec(u.id), parts=briefParts(u);
+  const unread=parts.filter((_,i)=>!rec.read[i]).length;
+  const short=Math.max(0,studyNeed()-rec.sec);
+  const open=studyUnlocked(u);
+  g.className="gate"+(open?" open":"");
+  if(open){
+    g.innerHTML=`<div class="eyebrow" style="color:var(--crt)">${TEACHER_OK?T_.teacherBypass:T_.unlocked}</div>
+      <h3 style="margin:6px 0 12px">${T_.readyNow}</h3>
+      <button class="btn wide" onclick="startPractice('${u.id}')">${T_.practice}</button>
+      <button class="btn primary wide" style="margin-top:8px" onclick="startExam('${u.id}')">${T_.startExam}</button>
+      <button class="btn ghost wide" style="margin-top:8px" onclick="startChallenge('${u.id}')">${T_.startChallenge}</button>`;
+  } else {
+    g.innerHTML=`<div class="eyebrow">${T_.lockedTitle}</div>
+      <p class="muted" style="margin:8px 0 12px">
+        ${unread?unread+" · "+T_.stillToRead:""}${unread&&short?" · ":""}${short?fmtMin(short)+" "+T_.timeToGo:""}</p>
+      <button class="btn wide" onclick="startPractice('${u.id}')">${T_.practice}</button>`;
+  }
+}
+
 /* ============================================================================
-   7. QUESTION ENGINE — one renderer for practice and timed challenge
+   6b. TYPED ANSWERS — graded on ideas, not on string matching
+   ----------------------------------------------------------------------------
+   The old check was keys.some(k => text.includes(k)). That fails in both
+   directions: one keyword anywhere passed the whole answer, and any typo,
+   plural, hyphen or synonym failed it outright. "oportunity cost" missed.
+   "sacrificed" missed when the key was "give up".
+
+   Every keyword a unit already carries is treated here as one more accepted
+   surface form of the same idea, then matched with normalisation, light
+   stemming and bounded typo tolerance. No existing question needs rewriting.
+   A unit can opt into stricter marking by giving an item its own `spec` with
+   several ideas, all of which must appear.
+   ========================================================================== */
+const CONTRACTIONS={dont:"do not",doesnt:"does not",didnt:"did not",isnt:"is not",
+  arent:"are not",wasnt:"was not",wont:"will not",cant:"can not",couldnt:"could not",
+  wouldnt:"would not",shouldnt:"should not",its:"it is",thats:"that is",theres:"there is",
+  youre:"you are",theyre:"they are",whats:"what is",hes:"he is",shes:"she is"};
+
+function normalise(v){
+  return String(v||"").toLowerCase()
+    .replace(/[\u2018\u2019\u02bc]/g,"'").replace(/[\u201c\u201d]/g,'"')
+    .replace(/[\u2010-\u2015]/g," ")               /* every dash variant -> space */
+    .replace(/[^a-z0-9'\s.\/]/g," ")               /* keep . and / for arithmetic */
+    .replace(/'/g,"").replace(/\s+/g," ").trim();
+}
+function tokenise(v){
+  const raw=normalise(v).split(" ").filter(Boolean), out=[];
+  for(let w of raw){
+    if(!/\d[.\/]\d/.test(w)) w=w.replace(/^[.\/]+|[.\/]+$/g,"");
+    if(!w) continue;
+    if(CONTRACTIONS[w]) out.push.apply(out,CONTRACTIONS[w].split(" ")); else out.push(w);
+  }
+  return out;
+}
+/* Deliberately conservative. Aggressive stemming turns "costly" into "cost",
+   and a false pass tells a student they understood something they did not. */
+const IRREGULAR={chosen:"choose",chose:"choose",taken:"take",took:"take",given:"give",
+  gave:"give",lost:"lose",made:"make",paid:"pay",spent:"spend",forgone:"forgo",
+  foregone:"forgo",forwent:"forgo",bought:"buy",sold:"sell",kept:"keep",got:"get",
+  rose:"rise",risen:"rise",fell:"fall",fallen:"fall",grew:"grow",grown:"grow"};
+function stem(w){
+  if(IRREGULAR[w]) return IRREGULAR[w];
+  if(w.length<=3) return w;
+  if(/(sses|shes|ches|xes)$/.test(w)) return w.slice(0,-2);
+  if(/ies$/.test(w)) return w.slice(0,-3)+"y";
+  if(/([^s])s$/.test(w)) return w.slice(0,-1);
+  if(/ing$/.test(w)&&w.length>5) return w.slice(0,-3);
+  if(/ed$/.test(w)&&w.length>4) return w.slice(0,-2);
+  return w;
+}
+/* Bounded Levenshtein: bails out as soon as the best possible score passes max. */
+function editDistance(a,b,max){
+  if(a===b) return 0;
+  if(Math.abs(a.length-b.length)>max) return max+1;
+  const m=a.length,n=b.length;
+  let prev=new Array(n+1),cur=new Array(n+1);
+  for(let j=0;j<=n;j++) prev[j]=j;
+  for(let i2=1;i2<=m;i2++){
+    cur[0]=i2; let rowMin=cur[0];
+    for(let j=1;j<=n;j++){
+      const cost=a[i2-1]===b[j-1]?0:1;
+      cur[j]=Math.min(prev[j]+1,cur[j-1]+1,prev[j-1]+cost);
+      if(cur[j]<rowMin) rowMin=cur[j];
+    }
+    if(rowMin>max) return max+1;
+    const t=prev; prev=cur; cur=t;
+  }
+  return prev[n];
+}
+/* Short words get no slack: one edit turns "cost" into "cast" or "most". */
+function tolerance(w){ return w.length<=4?0:w.length<=7?1:2; }
+function wordMatches(a0,b0){
+  const a=stem(a0),b=stem(b0);
+  if(a===b) return true;
+  if(a.indexOf(b)===0&&b.length>=5) return true;
+  if(b.indexOf(a)===0&&a.length>=5) return true;
+  const tol=tolerance(b);
+  return tol>0&&editDistance(a,b,tol)<=tol;
+}
+const FILLER=new Set(["the","a","an","of","to","is","are","was","were","that","this","it",
+  "you","your","we","they","he","she","would","will","can","could","in","on","for","up",
+  "and","or","be","been","being","get","got","have","has","had","do","does","did","by",
+  "as","at","so","then","than","its","their"]);
+/* Allows filler between the words of a phrase, so "give it all up" still
+   matches "give up" and "the next, best alternative" matches "next best". */
+function findPhrase(tokens,words,slack){
+  outer:
+  for(let i2=0;i2<tokens.length;i2++){
+    let ti=i2,used=0,first=-1;
+    for(let q=0;q<words.length;q++){
+      let matched=false;
+      while(ti<tokens.length){
+        if(wordMatches(tokens[ti],words[q])){ if(first<0) first=ti; matched=true; ti++; break; }
+        if(FILLER.has(tokens[ti])){ ti++; continue; }
+        if(used<slack){ used++; ti++; continue; }
+        continue outer;
+      }
+      if(!matched) continue outer;
+    }
+    return {start:i2,first:first<0?i2:first,end:ti};
+  }
+  return null;
+}
+const NEGATORS=new Set(["not","no","never","isnt","arent","cant","cannot","doesnt","dont",
+  "wasnt","wouldnt","shouldnt","neither","nor","without","except"]);
+/* Hedging is not denying, and students hedge constantly. Without these breaks,
+   "I don't know but maybe it's the next best option" reads as a negation. */
+const CLAUSE_BREAK=new Set(["but","however","so","because","since","although","though",
+  "maybe","perhaps","actually","unless","while","whereas","yet","know","sure","think",
+  "guess","remember","understand"]);
+function isNegated(tokens,span){
+  const from=(span.first==null?span.start:span.first);
+  /* "it is not what you give up" matches the phrase "give up" starting at token
+     zero, because everything before it is filler or slack. The negator then sat
+     inside the match rather than before it and was missed entirely, so a student
+     writing the exact opposite of the right answer was marked correct. */
+  for(let i2=from;i2<span.end;i2++) if(NEGATORS.has(tokens[i2])) return true;
+  for(let i2=from-1;i2>=Math.max(0,from-4);i2--){
+    if(CLAUSE_BREAK.has(tokens[i2])) return false;
+    if(NEGATORS.has(tokens[i2])) return true;
+  }
+  return false;
+}
+const WORD_NUM={zero:0,one:1,two:2,three:3,four:4,five:5,six:6,seven:7,eight:8,nine:9,
+  ten:10,eleven:11,twelve:12,fifteen:15,twenty:20,forty:40,fifty:50,hundred:100,
+  quarter:0.25,half:0.5};
+function numbersIn(text){
+  const t=normalise(text),out=[];
+  const div=/(\d+(?:\.\d+)?)\s*(?:\/|divided by|divide by|over|per)\s*(\d+(?:\.\d+)?)/g;
+  let m;
+  while((m=div.exec(t))!==null){ const a=Number(m[1]),b=Number(m[2]);
+    if(b) out.push(a/b); out.push(a,b); }
+  const num=/\d+(?:\.\d+)?/g;
+  while((m=num.exec(t))!==null) out.push(Number(m[0]));
+  t.split(" ").forEach(w=>{ if(w in WORD_NUM) out.push(WORD_NUM[w]); });
+  return out;
+}
+function hasNumber(text,target,tol){
+  return numbersIn(text).some(n=>Math.abs(n-target)<=(tol==null?0.001:tol));
+}
+/* spec = { ideas:[{label, any:[...], pattern}], number:{value,tol,label},
+            reject:[{any:[...],why}], minWords, onPass }                     */
+function gradeText(answer,spec){
+  const tokens=tokenise(answer);
+  const res={pass:false,found:[],missing:[],negated:[],rejected:null,tooShort:false};
+  if(spec.number) res.numberOk=hasNumber(answer,spec.number.value,spec.number.tol);
+  const hasMaths=/\d/.test(answer);
+  if(!hasMaths&&tokens.length<(spec.minWords==null?3:spec.minWords)){
+    res.tooShort=true; res.missing=(spec.ideas||[]).map(i2=>i2.label); return res;
+  }
+  (spec.reject||[]).forEach(r=>{
+    (r.any||[]).forEach(form=>{
+      const sp=findPhrase(tokens,form.split(" "),1);
+      if(sp&&!isNegated(tokens,sp)) res.rejected=r.why;
+    });
+  });
+  const norm=normalise(answer);
+  const check=idea=>{
+    if(idea.pattern&&idea.pattern.test(norm)) return "found";
+    for(const form of (idea.any||[])){
+      const words=String(form).toLowerCase().split(/\s+/).filter(Boolean);
+      if(!words.length) continue;
+      const sp=findPhrase(tokens,words,words.length>1?2:0);
+      if(!sp) continue;
+      return isNegated(tokens,sp)?"negated":"found";
+    }
+    return "missing";
+  };
+  (spec.ideas||[]).forEach(idea=>{
+    const r=check(idea);
+    if(r==="found") res.found.push(idea.label);
+    else if(r==="negated") res.negated.push(idea.label);
+    else res.missing.push(idea.label);
+  });
+  (spec.optional||[]).forEach(idea=>{ if(check(idea)==="found") res.found.push(idea.label); });
+  if(spec.number&&!res.numberOk) res.missing.push(spec.number.label);
+  res.pass=!res.missing.length&&!res.negated.length&&!res.rejected;
+  return res;
+}
+function gradeFeedback(res,spec){
+  if(res.tooShort) return T_.gradeShort;
+  if(res.rejected) return res.rejected;
+  if(res.negated.length) return T_.gradeFlip+" "+res.negated[0].toLowerCase()+".";
+  if(res.pass) return spec.onPass||T_.gradePass;
+  if(res.missing.length===1) return T_.gradeMiss1+" "+res.missing[0].toLowerCase()+".";
+  return T_.gradeMissN+" "+res.missing.map(m=>m.toLowerCase()).join(", ")+".";
+}
+/* A unit written before this existed carries only `keys`. Each key becomes one
+   more accepted wording of a single required idea, which is exactly the old
+   behaviour plus tolerance for how students actually type. */
+function specFor(it){
+  if(it.spec) return it.spec;
+  const keys=(it.keys||[]).map(k=>String(k).toLowerCase()).filter(Boolean);
+  if(!keys.length) return {ideas:[],minWords:1};
+  return {minWords:3,ideas:[{label:L(it.ideaLabel)||T_.gradeIdea,any:keys}]};
+}
+
+/* ============================================================================
+   6c. STUDY TIME — engaged minutes, not elapsed minutes
+   ----------------------------------------------------------------------------
+   A plain countdown is beaten by opening the tab and going to lunch. This only
+   accrues while the student is demonstrably present: the clock stops when the
+   tab is hidden and when there has been no input for a while, and a unit does
+   not unlock until every part of the notes has been scrolled through.
+
+   It is not tamper-proof. Nothing in a browser tab is, and a determined student
+   can nudge a mouse. It is honest enough that idling costs more effort than
+   reading, which is the realistic bar.
+   ========================================================================== */
+const IDLE_AFTER=25;
+let ST=null;
+function studyRec(uid){ S.studied=S.studied||{};
+  if(!S.studied[uid]) S.studied[uid]={sec:0,read:{}};
+  const r=S.studied[uid]; r.read=r.read||{}; r.sec=r.sec||0; return r; }
+function studyNeed(){ return Math.max(0,(S.cfg.studyMin==null?8:S.cfg.studyMin))*60; }
+function studyStop(){ if(ST){ ST.destroy(); ST=null; } }
+function studyStart(uid,onTick){
+  studyStop();
+  const rec=studyRec(uid);
+  const t={idle:false,hidden:false,last:Date.now()/1000,n:0};
+  const mark=()=>{ t.last=Date.now()/1000; t.idle=false; };
+  const evs=["pointerdown","pointermove","keydown","wheel","touchstart","scroll"];
+  evs.forEach(e=>window.addEventListener(e,mark,{passive:true}));
+  const vis=()=>{ t.hidden=document.hidden; };
+  document.addEventListener("visibilitychange",vis);
+  t.timer=setInterval(()=>{
+    const now=Date.now()/1000;
+    t.idle=(now-t.last)>IDLE_AFTER;
+    if(!t.idle&&!t.hidden){ rec.sec++; t.n++; if(t.n%10===0) save(); }
+    if(onTick) onTick(t,rec);
+  },1000);
+  t.destroy=()=>{ clearInterval(t.timer);
+    evs.forEach(e=>window.removeEventListener(e,mark));
+    document.removeEventListener("visibilitychange",vis); save(); };
+  ST=t; return t;
+}
+/* The notes are one block of prose. Splitting them into a few parts is what
+   makes "scrolled to the end" mean anything, and it gives a student somewhere
+   to stop rather than one intimidating wall of text. */
+function briefParts(u){
+  const txt=L(u.brief)||"";
+  const sent=txt.match(/[^.!?]+[.!?]+["')\]]*\s*/g)||[txt];
+  const want=Math.min(3,Math.max(1,Math.ceil(sent.length/3)));
+  const per=Math.ceil(sent.length/want), out=[];
+  for(let i2=0;i2<sent.length;i2+=per) out.push(sent.slice(i2,i2+per).join("").trim());
+  return out.filter(Boolean);
+}
+function studyUnlocked(u){
+  if(TEACHER_OK) return true;
+  const rec=studyRec(u.id), parts=briefParts(u);
+  return parts.every((_,i2)=>rec.read[i2]) && rec.sec>=studyNeed();
+}
+function fmtMin(sec){ const m=Math.floor(sec/60),x=Math.floor(sec%60);
+  return m+":"+String(x).padStart(2,"0"); }
+
+/* ============================================================================
+   7. QUESTION ENGINE — one renderer for practice, challenge and test review
    ========================================================================== */
 let Q={list:[],idx:0,answers:[],mode:"practice",unit:null,endsAt:0,picked:null,checked:false};
 
@@ -5656,18 +6217,155 @@ function pickItems(u,n){
   while(out.length<n && u.items.length) out.push(u.items[out.length%u.items.length]); // bank too small: repeat
   return out;
 }
-function startPractice(id){ const u=findUnit(id); Q={list:pickItems(u,Math.min(10,u.items.length)),idx:0,answers:[],mode:"practice",unit:u,endsAt:0,picked:null,checked:false}; drawQ(); }
+function startPractice(id){ const u=findUnit(id); studyStop();
+  Q={list:pickItems(u,Math.min(10,u.items.length)),idx:0,answers:[],picks:[],mode:"practice",unit:u,endsAt:0,picked:null,checked:false}; drawQ(); }
+
+/* ============================================================================
+   7b. TEST REVIEW  —  a full unit test, untimed, 25 questions by default,
+   70% to earn the certificate.
+   ----------------------------------------------------------------------------
+   Most units carry ten written questions, and a twenty-five question test has
+   to come from somewhere. Rather than repeating the same ten items two and a
+   half times, the shortfall is filled with true/false statements built out of
+   the teacher's own multiple-choice items: the stem is joined to one of its
+   options, and the answer is whether that pairing is the right one. A
+   distractor the teacher already wrote is a claim they already judged false,
+   so nothing here invents content — it re-asks what is already on file, in a
+   second format, which is the point of a review.
+
+   Generation is round-robin across source questions, so a test never opens
+   with four true/false items torn from the same question. The teacher tab
+   reports exactly how many items in each unit are written versus auto-built.
+   ========================================================================== */
+function L2(o,lang){ if(o==null) return ""; if(typeof o==="string") return o;
+  return o[lang]||o.en||Object.values(o)[0]||""; }
+
+function tfItem(it,ci,isTrue,tag){
+  const line=lang=>{
+    const ch=(it.c&&(it.c[lang]||it.c.en))||[];
+    const stem=String(L2(it.q,lang)).trim().replace(/\s*[:：]\s*$/,"");
+    return (T[lang]||T.en).tfPrompt+" "+stem+" — "+(ch[ci]||"");
+  };
+  const keyText=lang=>{
+    const ch=(it.c&&(it.c[lang]||it.c.en))||[];
+    const rights=Array.isArray(it.a)?it.a:[it.a];
+    return rights.map(r=>ch[r]||"").filter(Boolean).join("; ");
+  };
+  const why=lang=>{
+    const P=T[lang]||T.en, base=L2(it.why,lang);
+    return isTrue ? (P.tfWhyTrue+" "+base)
+                  : (P.tfWhyFalse+" “"+keyText(lang)+"”. "+base);
+  };
+  return {id:it.id+"~"+tag, synth:true, type:"mcq", diff:1,
+    q:{en:line("en"),es:line("es")},
+    c:{en:[T.en.tfTrue,T.en.tfFalse],es:[T.es.tfTrue,T.es.tfFalse]},
+    a:isTrue?0:1,
+    why:{en:why("en"),es:why("es")}};
+}
+
+/* One bucket of candidate true/false items per source question. */
+function tfBuckets(u){
+  const buckets=[];
+  u.items.forEach(it=>{
+    if(it.type!=="mcq"&&it.type!=="multi") return;
+    const ch=(it.c&&it.c.en)||[];
+    if(ch.length<2) return;
+    const rights=Array.isArray(it.a)?it.a:[it.a];
+    const b=[];
+    rights.forEach(r=>{ if(ch[r]) b.push(tfItem(it,r,true,"t"+r)); });
+    ch.forEach((_,ci)=>{ if(rights.indexOf(ci)<0) b.push(tfItem(it,ci,false,"f"+ci)); });
+    for(let i=b.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); const t=b[i]; b[i]=b[j]; b[j]=t; }
+    if(b.length) buckets.push(b);
+  });
+  return buckets;
+}
+function shuffled(arr){
+  const a=arr.slice();
+  for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); const t=a[i]; a[i]=a[j]; a[j]=t; }
+  return a;
+}
+function buildExam(u,n){
+  const out=pickItems(u,Math.min(n,u.items.length)).slice();
+  if(out.length<n){
+    const buckets=shuffled(tfBuckets(u));
+    let pass=0;
+    while(out.length<n){
+      let took=0;
+      for(const b of buckets){ if(out.length>=n) break;
+        if(b.length>pass){ out.push(b[pass]); took++; } }
+      if(!took) break;
+      pass++;
+    }
+  }
+  while(out.length<n&&u.items.length) out.push(u.items[out.length%u.items.length]);
+  return shuffled(out);
+}
+function examSize(){ return Math.max(5,S.cfg.examQs||25); }
+function examPass(){ return Math.max(1,Math.min(100,S.cfg.examPass||70)); }
+function examMix(u){
+  const n=examSize(), written=Math.min(n,u.items.length);
+  const pool=tfBuckets(u).reduce((a,b)=>a+b.length,0);
+  const gen=Math.min(Math.max(0,n-written),pool);
+  return {n,written,gen,repeat:Math.max(0,n-written-gen),pool};
+}
+
+function lockedScreen(u){
+  const rec=studyRec(u.id), parts=briefParts(u);
+  const unread=parts.filter((_,i)=>!rec.read[i]).length;
+  const short=Math.max(0,studyNeed()-rec.sec);
+  V().innerHTML=`<section class="panel raised" style="text-align:center;margin-top:22px">
+    <div class="eyebrow">${T_.lockedTitle}</div>
+    <h1 class="big" style="margin:6px 0 10px">${esc(L(u.title))}</h1>
+    <p class="muted" style="max-width:420px;margin:0 auto 8px">${T_.lockedBody}</p>
+    <p class="muted" style="margin:0 0 16px">
+      ${unread?unread+" · "+T_.stillToRead:""}${unread&&short?" · ":""}${short?fmtMin(short)+" "+T_.timeToGo:""}</p>
+    <button class="btn primary wide" onclick="viewBrief('${u.id}')">${T_.goStudy}</button>
+  </section>`;
+  window.scrollTo(0,0);
+}
+
+function startExam(id){
+  const u=findUnit(id); if(!u) return go("study");
+  if(!studyUnlocked(u)) return lockedScreen(u);
+  studyStop();
+  const m=examMix(u);
+  V().innerHTML=`<section class="panel raised" style="margin-top:18px">
+    <div class="eyebrow">${esc(L(u.pack.name))} · ${T_.testReview}</div>
+    <h1 class="big" style="margin:6px 0 8px">${esc(L(u.title))}</h1>
+    <div class="row" style="margin-bottom:10px">
+      <span class="chip warn">${m.n} ${T_.examOf}</span>
+      <span class="chip on">${examPass()}%</span>
+      <span class="chip">${T_.mixedNote}</span></div>
+    <p class="muted" style="margin:0 0 6px">${T_.examIntro}</p>
+    <p class="muted" style="margin:0 0 14px">${T_.examPassLine}</p>
+    <div class="coach small" style="margin-bottom:14px">${artTag("point")}
+      <div class="bubble">${T_.coachExam}</div></div>
+    <button class="btn primary wide" onclick="beginExam('${u.id}')">${T_.startExam}</button>
+    <button class="btn ghost wide" style="margin-top:8px" onclick="viewBrief('${u.id}')">${T_.backToUnit}</button>
+  </section>`;
+  window.scrollTo(0,0);
+}
+function beginExam(id){
+  const u=findUnit(id);
+  Q={list:buildExam(u,examSize()),idx:0,answers:[],picks:[],mode:"exam",unit:u,
+     endsAt:Infinity,picked:null,checked:false};
+  drawQ();
+}
+
 function startChallenge(id){
-  const u=findUnit(id); const n=S.cfg.perChallenge||15;
+  const u=findUnit(id); if(!u) return go("study");
+  if(!studyUnlocked(u)) return lockedScreen(u);
+  studyStop();
+  const n=S.cfg.perChallenge||15;
   const untimed=TEACHER_OK;
-  Q={list:pickItems(u,n),idx:0,answers:[],mode:"timed",unit:u,endsAt:untimed?Infinity:Date.now()+25*60000,picked:null,checked:false};
+  Q={list:pickItems(u,n),idx:0,answers:[],picks:[],mode:"timed",unit:u,endsAt:untimed?Infinity:Date.now()+25*60000,picked:null,checked:false};
   if(!untimed){ S.session={unit:u.id,ids:Q.list.map(i=>i.id),endsAt:Q.endsAt,answers:[],idx:0}; save(); }
   drawQ();
 }
 function resumeSession(){
   const s=S.session,u=findUnit(s.unit); if(!u){S.session=null;save();return render();}
   const map={}; allUnits().forEach(x=>x.items.forEach(i=>map[i.id]=i));
-  Q={list:s.ids.map(i=>map[i]).filter(Boolean),idx:s.idx||0,answers:s.answers||[],mode:"timed",unit:u,endsAt:s.endsAt,picked:null,checked:false};
+  Q={list:s.ids.map(i=>map[i]).filter(Boolean),idx:s.idx||0,answers:s.answers||[],picks:[],mode:"timed",unit:u,endsAt:s.endsAt,picked:null,checked:false};
   drawQ();
 }
 function fmt(ms){const t=Math.max(0,Math.round(ms/1000));return String(Math.floor(t/60)).padStart(2,"0")+":"+String(t%60).padStart(2,"0");}
@@ -5692,6 +6390,7 @@ function drawQ(){
     <button class="btn ghost" style="padding:8px 12px;min-height:0" onclick="leaveSet()">${T_.exit}</button>
     <span class="spacer" style="flex:1"></span>
     ${timed?`<span class="timer" id="clk">${fmt(Q.endsAt-Date.now())}</span>`:""}
+    ${Q.mode==="exam"?`<span class="chip warn">${T_.testReview}</span>`:""}
     <span class="chip">${T_.question} ${Q.idx+1} ${T_.of} ${Q.list.length}</span>
   </div>
   <div class="meter"><i style="width:${Q.idx/Q.list.length*100}%"></i></div>
@@ -5703,7 +6402,7 @@ function drawQ(){
     <div id="fb"></div>
     <button class="btn primary wide" id="go" style="margin-top:14px" onclick="checkQ()">${T_.check}</button>
   </section>`;
-  Q.picked=(it.type==="multi")?[]:null; Q.checked=false;
+  Q.picked=(it.type==="multi")?[]:null; Q.checked=false; Q.grade=null; Q.gradeSpec=null;
   if(timed){ tick=setInterval(()=>{const el=document.getElementById("clk"); if(!el)return clearInterval(tick);
     const left=Q.endsAt-Date.now(); el.textContent=fmt(left); el.classList.toggle("low",left<120000);
     if(left<=0){clearInterval(tick); finishSet(true);} },500); }
@@ -5715,18 +6414,31 @@ function pick(i){
     document.getElementById("o"+i).classList.toggle("sel",k<0); }
   else { Q.picked=i; Q.list[Q.idx].c[S.lang in it.c?S.lang:"en"].forEach((_,j)=>document.getElementById("o"+j).classList.toggle("sel",j===i)); }
 }
+function capturePick(it){
+  if(it.type==="mcq") return Q.picked;
+  if(it.type==="multi") return (Q.picked||[]).slice();
+  const el=document.getElementById("ans");
+  return el?el.value:"";
+}
 function judge(it){
   if(it.type==="mcq") return Q.picked===it.a;
   if(it.type==="multi"){ const a=[...it.a].sort().join(","); return [...(Q.picked||[])].sort().join(",")===a; }
   if(it.type==="numeric"){ const v=parseFloat((document.getElementById("ans")||{}).value); return isFinite(v)&&Math.abs(v-it.a)<=(it.tol||0); }
-  const txt=((document.getElementById("ans")||{}).value||"").toLowerCase();
-  return (it.keys||[]).some(k=>txt.includes(k.toLowerCase()));
+  const txt=((document.getElementById("ans")||{}).value||"");
+  const spec=specFor(it);
+  if(!(spec.ideas||[]).length&&!spec.number) return txt.trim().length>0;
+  Q.grade=gradeText(txt,spec); Q.gradeSpec=spec;
+  return Q.grade.pass;
 }
 function checkQ(){
   const it=Q.list[Q.idx];
   if(!Q.checked){
     const ok=judge(it); Q.checked=true; Q.answers[Q.idx]=ok;
-    const p=S.prog[it.id]||{seen:0,right:0}; p.seen++; if(ok)p.right=1; p.last=today(); S.prog[it.id]=p;
+    Q.picks=Q.picks||[]; Q.picks[Q.idx]=capturePick(it);
+    /* Auto-built review items carry a synthetic id. They must not write to the
+       mastery record or they would inflate it against questions nobody wrote. */
+    if(!it.synth){ const p=S.prog[it.id]||{seen:0,right:0};
+      p.seen++; if(ok)p.right=1; p.last=today(); S.prog[it.id]=p; }
     if(S.session){S.session.answers=Q.answers;S.session.idx=Q.idx;} save();
     if(it.type==="mcq"||it.type==="multi"){
       const arr=(it.type==="multi")?it.a:[it.a];
@@ -5734,8 +6446,17 @@ function checkQ(){
         if(arr.includes(j)) el.classList.add("right");
         else if((it.type==="multi"?(Q.picked||[]):[Q.picked]).includes(j)) el.classList.add("wrong"); });
     }
+    let extra="";
+    if(it.type==="short"&&Q.grade){
+      const g=Q.grade;
+      extra=`<p style="margin:8px 0 0;font-size:14px">${esc(gradeFeedback(g,Q.gradeSpec))}</p>`;
+      if(g.found.length||g.missing.length)
+        extra+=`<div class="row" style="margin-top:8px">
+          ${g.found.map(t2=>`<span class="chip on">✓ ${esc(t2)}</span>`).join("")}
+          ${g.missing.map(t2=>`<span class="chip bad">✗ ${esc(t2)}</span>`).join("")}</div>`;
+    }
     document.getElementById("fb").innerHTML=
-      `<div class="why" style="border-color:${ok?'var(--crt)':'var(--hot)'}"><b>${ok?T_.correctMsg:T_.wrongMsg}.</b> ${esc(L(it.why))}</div>
+      `<div class="why" style="border-color:${ok?'var(--crt)':'var(--hot)'}"><b>${ok?T_.correctMsg:T_.wrongMsg}.</b> ${esc(L(it.why))}${extra}</div>
        <div class="coach" style="margin-top:10px">${artTag(ok?"cheer":"hmm")}
        <div class="bubble">${ok?T_.coachRight:T_.coachWrong}</div></div>`;
     if(ok&&Q.mode==="practice") award(10,0);
@@ -5743,10 +6464,70 @@ function checkQ(){
   } else { Q.idx++; drawQ(); }
 }
 function leaveSet(){ clearInterval(tick); if(Q.mode==="timed"&&S.session){toast(T_.resumeSession);} go(Q.mode==="timed"?"challenge":"study"); }
+function answerText(it,pick){
+  const ch=(it.c&&(it.c[S.lang]||it.c.en))||[];
+  if(it.type==="mcq") return (pick==null)?T_.notAnswered:esc(String(ch[pick]||""));
+  if(it.type==="multi"){ const a=pick||[];
+    return a.length?a.map(i=>esc(String(ch[i]||""))).join(", "):T_.notAnswered; }
+  const v=String(pick==null?"":pick).trim();
+  return v?esc(v):T_.notAnswered;
+}
+function correctText(it){
+  const ch=(it.c&&(it.c[S.lang]||it.c.en))||[];
+  if(it.type==="mcq") return esc(String(ch[it.a]||""));
+  if(it.type==="multi") return (Array.isArray(it.a)?it.a:[it.a]).map(i=>esc(String(ch[i]||""))).join(", ");
+  if(it.type==="numeric") return esc(String(it.a));
+  return esc((it.keys||[]).join(" · "))||"—";
+}
+function examReview(){
+  return Q.list.map((it,i)=>{
+    const ok=!!Q.answers[i];
+    return `<div class="revrow ${ok?"ok":"no"}">
+      <div class="qn">${T_.question} ${i+1}${it.synth?" · "+T_.generated:""}</div>
+      <p><b>${esc(L(it.q))}</b></p>
+      <p class="${ok?"ca":"ya"}">${T_.yourAnswer}: ${answerText(it,(Q.picks||[])[i])}</p>
+      ${ok?"":`<p class="ca">${T_.correctAnswer}: ${correctText(it)}</p>`}
+      <p class="muted" style="font-size:14px">${esc(L(it.why))}</p>
+    </div>`;
+  }).join("");
+}
 function finishSet(timeUp){
   clearInterval(tick);
   const right=Q.answers.filter(Boolean).length, total=Q.list.length;
   const pct=Math.round(right/total*100), pass=pct>=80;
+  if(Q.mode==="exam"){
+    const need=examPass(), won=pct>=need;
+    const tok=won?4:1;
+    award(right*10+(won?120:0),tok);
+    if(won){
+      const code=certCode(S.name||"student",Q.unit.id+"-test",pct);
+      if(!S.certs.some(c=>c.code===code))
+        S.certs.push({code,name:S.name||"Student",unit:L(Q.unit.title),
+          course:L(Q.unit.pack.name),score:pct,date:today(),kind:"exam"});
+      save();
+    }
+    V().innerHTML=`<section class="panel raised" style="text-align:center;margin-top:20px">
+      <div class="eyebrow">${T_.testReview}</div>
+      <h1 class="big" style="color:${won?'var(--crt)':'var(--hot)'}">${won?T_.passed:T_.failed}</h1>
+      <p class="scorering">${pct}%</p>
+      <p class="muted">${right}/${total} ${T_.correct} · ${T_.earned} ${tok} ${T_.tokensEarned}</p>
+      <div class="meter" style="margin:14px 0"><i style="width:${pct}%"></i></div>
+      <div class="coach small" style="justify-content:center">${artTag(won?"cheer":"hmm")}
+        <div class="bubble">${won?T_.coachRight:T_.examPassLine}</div></div>
+      ${won?`<button class="btn primary wide" style="margin-top:14px" onclick="makeCert('${Q.unit.id}',${pct},false,'exam')">${T_.getCert}</button>
+        <button class="btn wide" style="margin-top:8px" onclick="makeCert('${Q.unit.id}',${pct},true,'exam')">${T_.printCert}</button>`
+       :`<p class="muted" style="margin-top:12px">${T_.examPassLine}</p>
+         <button class="btn primary wide" onclick="startExam('${Q.unit.id}')">${T_.retryExam}</button>`}
+      <button class="btn ghost wide" style="margin-top:8px" onclick="viewBrief('${Q.unit.id}')">${T_.backToUnit}</button>
+    </section>
+    <section class="panel">
+      <div class="eyebrow">${T_.reviewEvery}</div>
+      <p class="muted" style="margin:4px 0 10px">${T_.review}</p>
+      ${examReview()}
+    </section>`;
+    window.scrollTo(0,0);
+    return;
+  }
   if(Q.mode==="timed"){
     S.session=null;
     const tok=pass?3:1; award(right*15+(pass?100:0),tok);
@@ -5780,11 +6561,18 @@ function viewChallengePicker(){
     <div class="row" style="margin-top:10px"><button class="btn primary" onclick="resumeSession()">${T_.resumeSession}</button>
     <button class="btn ghost" onclick="S.session=null;save();render()">${T_.abandon}</button></div></section>`:""}
   ${allUnits().map(u=>{const s2=unitStats(u); const low=u.items.length<(S.cfg.perChallenge||15);
+    const open=studyUnlocked(u); const rec=studyRec(u.id);
+    const short=Math.max(0,studyNeed()-rec.sec);
     return `<section class="panel"><div class="eyebrow">${esc(L(u.pack.name))}</div>
     <h3 style="font-size:17px;margin:4px 0">${esc(L(u.title))}</h3>
     <div class="row"><span class="chip">${u.items.length} ${T_.items}</span><span class="chip">${s2.mastery}% ${T_.mastery}</span>
+    ${open?`<span class="chip on">${T_.unlocked}</span>`
+          :`<span class="chip warn">${T_.lockedTitle}${short?" · "+fmtMin(short):""}</span>`}
     ${low?`<span class="chip warn">${T_.lowBank}</span>`:""}</div>
-    <button class="btn primary wide" style="margin-top:10px" onclick="startChallenge('${u.id}')">${T_.startChallenge}</button></section>`;}).join("")}`;
+    ${open?`<button class="btn primary wide" style="margin-top:10px" onclick="startExam('${u.id}')">${T_.startExam}</button>
+      <button class="btn wide" style="margin-top:8px" onclick="startChallenge('${u.id}')">${T_.startChallenge}</button>`
+      :`<button class="btn primary wide" style="margin-top:10px" onclick="viewBrief('${u.id}')">${T_.goStudy}</button>`}
+    </section>`;}).join("")}`;
 }
 
 /* ============================================================================
@@ -5794,10 +6582,11 @@ function certCode(name,unit,score){ const s=name+"|"+unit+"|"+score+"|"+today();
   let h=0; for(let i=0;i<s.length;i++){h=(h*31+s.charCodeAt(i))>>>0;}
   return "SC-"+h.toString(36).toUpperCase().padStart(7,"0").slice(0,7); }
 function certFromRecord(code){ const c=S.certs.find(x=>x.code===code); if(c) drawCert(c); }
-function makeCert(unitId,score,print){
+function makeCert(unitId,score,print,kind){
   const u=findUnit(unitId);
-  const rec=S.certs.slice().reverse().find(c=>c.unit===L(u.title))||
-    {code:certCode(S.name||"student",unitId,score),name:S.name||"Student",unit:L(u.title),course:L(u.pack.name),score,date:today()};
+  const rec=S.certs.slice().reverse().find(c=>c.unit===L(u.title)&&(kind?c.kind===kind:true))||
+    {code:certCode(S.name||"student",unitId+(kind==="exam"?"-test":""),score),
+     name:S.name||"Student",unit:L(u.title),course:L(u.pack.name),score,date:today(),kind:kind||"challenge"};
   drawCert(rec,print);
 }
 function drawCert(c,print){
@@ -5820,7 +6609,7 @@ function paintCert(c,print,mascot){
   x.font="600 38px system-ui,sans-serif";x.fillStyle="#2E2550";
   x.fillText(c.course+" — "+c.unit,W/2,530);
   x.font="400 26px system-ui,sans-serif";x.fillStyle="#4A4166";
-  x.fillText(T_.certOn+" "+c.date,W/2,585);
+  x.fillText((c.kind==="exam"?T_.testReview+" · ":"")+T_.certOn+" "+c.date,W/2,585);
   /* score token — the arcade motif carried onto paper */
   x.beginPath();x.arc(W/2,730,92,0,7);x.fillStyle="#F2B441";x.fill();
   x.lineWidth=8;x.strokeStyle="#8A6512";x.stroke();
@@ -5848,26 +6637,26 @@ function paintCert(c,print,mascot){
      - difficulty level per game, banked in the save, +1 each time you survive
    ========================================================================== */
 const ZONES=[
- {k:"campus",  bg:"tile_campus",  sky:"#14213A", name:{en:"Campus",es:"Campus"}},
- {k:"chasm",   bg:"bg_chasm",     sky:"#231A2E", name:{en:"Miner's Chasm",es:"Sima del minero"}},
- {k:"port",    bg:"bg_port",      sky:"#1D3A57", name:{en:"Pirate's Port",es:"Puerto pirata"}},
- {k:"cyber",   bg:"bg_cyber",     sky:"#0B1430", name:{en:"Cyber Circuit",es:"Circuito cíber"}},
- {k:"bamboo",  bg:"bg_bamboo",    sky:"#1B2A18", name:{en:"Bamboo Grove",es:"Bosque de bambú"}},
- {k:"swamp",   bg:"bg_swamp",     sky:"#16241F", name:{en:"Reptile Swamp",es:"Pantano reptil"}},
- {k:"factory", bg:"bg_factory",   sky:"#242A31", name:{en:"Robo Factory",es:"Fábrica robot"}},
- {k:"gumdrop", bg:"bg_gumdrop",   sky:"#2A2540", name:{en:"Gumdrop Kingdom",es:"Reino de gomitas"}},
- {k:"valley",  bg:"bg_valley",    sky:"#3A2018", name:{en:"Saurian Valley",es:"Valle sauriano"}},
- {k:"manor",   bg:"bg_manor",     sky:"#1A1220", name:{en:"Spector's Manor",es:"Mansión espectral"}},
- {k:"pyramid", bg:"bg_pyramid",   sky:"#3A2A12", name:{en:"Ancient Desert",es:"Desierto antiguo"}},
- {k:"outpost", bg:"bg_doutpost",  sky:"#3A2A18", name:{en:"Desert Outpost",es:"Puesto del desierto"}},
- {k:"mining",  bg:"bg_dmining",   sky:"#33261A", name:{en:"Old Mining Town",es:"Pueblo minero"}},
- {k:"canyon",  bg:"bg_dcanyon",   sky:"#3A2418", name:{en:"Sun-Baked Canyon",es:"Cañón ardiente"}},
- {k:"dunes",   bg:"bg_ddunes",    sky:"#3E3018", name:{en:"Scorpion Dunes",es:"Dunas del escorpión"}},
- {k:"mine",    bg:"bg_dmine",     sky:"#12100E", name:{en:"Subterranean Mine",es:"Mina subterránea"}},
- {k:"fort",    bg:"bg_dfort",     sky:"#3A2C18", name:{en:"Sandstone Fort",es:"Fuerte de arenisca"}},
- {k:"oasis",   bg:"bg_doasis",    sky:"#20301C", name:{en:"Oasis Village",es:"Aldea del oasis"}},
- {k:"steam",   bg:"bg_dsteampunk",sky:"#26221C", name:{en:"Steampunk Factory",es:"Fábrica steampunk"}},
- {k:"hq",      bg:"bg_dhq",       sky:"#241820", name:{en:"Rebel HQ",es:"Cuartel rebelde"}}
+ {k:"campus",  bg:"tile_campus",  tile:"tile_campus",  props:["prop_hut","prop_deck"],     sky:"#14213A", name:{en:"Campus",es:"Campus"}},
+ {k:"chasm",   bg:"bg_chasm",     tile:"tile_volcanic",props:["prop_volcano","prop_hut"],  sky:"#231A2E", name:{en:"Miner's Chasm",es:"Sima del minero"}},
+ {k:"port",    bg:"bg_port",      tile:"tile_campus",  props:["prop_deck","prop_hut"],     sky:"#1D3A57", name:{en:"Pirate's Port",es:"Puerto pirata"}},
+ {k:"cyber",   bg:"bg_cyber",     tile:"tile_cosmic",  props:["prop_deck"],                sky:"#0B1430", name:{en:"Cyber Circuit",es:"Circuito cíber"}},
+ {k:"bamboo",  bg:"bg_bamboo",    tile:"tile_campus",  props:["prop_hut"],                 sky:"#1B2A18", name:{en:"Bamboo Grove",es:"Bosque de bambú"}},
+ {k:"swamp",   bg:"bg_swamp",     tile:"tile_campus",  props:["prop_hut","prop_deck"],     sky:"#16241F", name:{en:"Reptile Swamp",es:"Pantano reptil"}},
+ {k:"factory", bg:"bg_factory",   tile:"tile_cosmic",  props:["prop_deck","prop_volcano"], sky:"#242A31", name:{en:"Robo Factory",es:"Fábrica robot"}},
+ {k:"gumdrop", bg:"bg_gumdrop",   tile:"tile_campus",  props:["prop_hut"],                 sky:"#2A2540", name:{en:"Gumdrop Kingdom",es:"Reino de gomitas"}},
+ {k:"valley",  bg:"bg_valley",    tile:"tile_volcanic",props:["prop_volcano"],             sky:"#3A2018", name:{en:"Saurian Valley",es:"Valle sauriano"}},
+ {k:"manor",   bg:"bg_manor",     tile:"tile_cosmic",  props:["prop_hut"],                 sky:"#1A1220", name:{en:"Spector's Manor",es:"Mansión espectral"}},
+ {k:"pyramid", bg:"bg_pyramid",   tile:"tile_volcanic",props:["prop_volcano","prop_hut"],  sky:"#3A2A12", name:{en:"Ancient Desert",es:"Desierto antiguo"}},
+ {k:"outpost", bg:"bg_doutpost",  tile:"tile_volcanic",props:["prop_hut"],                 sky:"#3A2A18", name:{en:"Desert Outpost",es:"Puesto del desierto"}},
+ {k:"mining",  bg:"bg_dmining",   tile:"tile_volcanic",props:["prop_hut","prop_deck"],     sky:"#33261A", name:{en:"Old Mining Town",es:"Pueblo minero"}},
+ {k:"canyon",  bg:"bg_dcanyon",   tile:"tile_volcanic",props:["prop_volcano"],             sky:"#3A2418", name:{en:"Sun-Baked Canyon",es:"Cañón ardiente"}},
+ {k:"dunes",   bg:"bg_ddunes",    tile:"tile_volcanic",props:["prop_hut"],                 sky:"#3E3018", name:{en:"Scorpion Dunes",es:"Dunas del escorpión"}},
+ {k:"mine",    bg:"bg_dmine",     tile:"tile_volcanic",props:["prop_volcano","prop_deck"], sky:"#12100E", name:{en:"Subterranean Mine",es:"Mina subterránea"}},
+ {k:"fort",    bg:"bg_dfort",     tile:"tile_volcanic",props:["prop_hut"],                 sky:"#3A2C18", name:{en:"Sandstone Fort",es:"Fuerte de arenisca"}},
+ {k:"oasis",   bg:"bg_doasis",    tile:"tile_campus",  props:["prop_hut","prop_deck"],     sky:"#20301C", name:{en:"Oasis Village",es:"Aldea del oasis"}},
+ {k:"steam",   bg:"bg_dsteampunk",tile:"tile_cosmic",  props:["prop_deck","prop_volcano"], sky:"#26221C", name:{en:"Steampunk Factory",es:"Fábrica steampunk"}},
+ {k:"hq",      bg:"bg_dhq",       tile:"tile_cosmic",  props:["prop_deck"],                sky:"#241820", name:{en:"Rebel HQ",es:"Cuartel rebelde"}}
 ];
 const FOES=["foe_gourd","foe_monkey","foe_warlock","foe_enforcer","foe_phantom"];
 const TRAFFIC=["racer_miner","racer_robo","racer_lizard","racer_pirate","racer_ghost","racer_alien","racer_panda",
@@ -5925,8 +6714,42 @@ const GAMES=[
 ];
 
 let RAF=null, cleanupInput=null, GAME_OVER=false;
+
+/* --------------------------------------------------------------------------
+   Every game used to advance one step per animation frame. That ties the
+   speed of the game to the refresh rate of the screen: the same run is 2.4x
+   faster on a 144Hz monitor than on a 60Hz school Chromebook, and any late
+   frame shows up as a stutter. startLoop keeps a time accumulator instead and
+   runs the step function at a fixed 60Hz on every machine.
+
+   dt within 10% of one step is snapped to exactly one step, so a normal 60Hz
+   display runs one step per frame with no beat-frequency judder. A long gap
+   (switching tabs, a slow page) is clamped rather than simulated, so nobody
+   comes back to find themselves teleported into a hazard.
+   -------------------------------------------------------------------------- */
+const LOOP_STEP=1000/60;
+let LOOP={acc:0,last:0,vis:null};
+function startLoop(step){
+  LOOP.acc=0; LOOP.last=performance.now();
+  if(LOOP.vis) document.removeEventListener("visibilitychange",LOOP.vis);
+  LOOP.vis=()=>{ LOOP.last=performance.now(); LOOP.acc=0; };
+  document.addEventListener("visibilitychange",LOOP.vis);
+  (function frame(now){
+    RAF=requestAnimationFrame(frame);
+    if(document.hidden){ LOOP.last=now; LOOP.acc=0; return; }
+    let dt=now-LOOP.last; LOOP.last=now;
+    if(!isFinite(dt)||dt<0) dt=0;
+    if(dt>250) dt=250;                                  /* clamp a frame spike */
+    if(dt>LOOP_STEP*0.9&&dt<LOOP_STEP*1.1) dt=LOOP_STEP; /* snap plain 60Hz    */
+    LOOP.acc+=dt;
+    let n=0;
+    while(LOOP.acc>=LOOP_STEP&&n<4){ step(); LOOP.acc-=LOOP_STEP; n++; }
+    if(n>=4) LOOP.acc=0;                                /* fell behind: drop it */
+  })(performance.now());
+}
 function stopGame(){
   if(RAF) cancelAnimationFrame(RAF); RAF=null;
+  if(LOOP.vis){ document.removeEventListener("visibilitychange",LOOP.vis); LOOP.vis=null; }
   if(cleanupInput){ try{ cleanupInput(); }catch(e){} cleanupInput=null; }
 }
 function zoneOf(g){ return ZONES.find(z=>z.k===(S.zone&&S.zone[g]))||ZONES[0]; }
@@ -5949,7 +6772,7 @@ function viewArcade(){
     <div class="zonestrip">${ZONES.map(z=>
       `<button class="zone ${zoneOf(g.id).k===z.k?"on":""}" title="${esc(L(z.name))}"
         onclick="setZone('${g.id}','${z.k}')">
-        <img src="${art(z.bg)}" alt="" loading="lazy" onerror="this.remove()">
+        <span class="zthumb ${zoneClass(z)}"></span>
         <span>${esc(L(z.name))}</span></button>`).join("")}</div>
     <div class="row"><span class="chip">${T_.level} ${lvlOf(g.id)}</span>
       <span class="chip">${T_.bestScore} ${S.best[g.id]||0}</span>
@@ -6031,6 +6854,7 @@ function canvasPoint(cv,touch){
 }
 function drawBack(x,img,zone,W,H,off){
   x.fillStyle=zone.sky; x.fillRect(0,0,W,H);
+  if(!drawable(img)) img=zoneTile(zone);         /* optional .jpg missing -> built-in tile */
   if(!drawable(img)) return;
   if(img.naturalWidth<200){                      /* a tile, not a scene */
     const pat=tilePattern(x,img);
@@ -6058,7 +6882,7 @@ function gameSprint(cv,id,lvl,zone){
   let p={x:100,y:H/2,vx:0,vy:0,w:44,h:74,invuln:0,roll:false,grounded:false};
   let camX=0,chunks=[{x:-500,y:H-140,w:2000}],items=[],nextChunkX=1500;
   const back=spriteOf(zone.bg), tile=spriteOf("tile_campus"), coin=spriteOf("item_coin");
-  const hero=spriteOf("run")||spriteOf("idle"), foes=FOES.map(spriteOf);
+  const hero=spriteOf("run")||spriteOf("idle"), heroWalk=spriteOf("walk")||hero, foes=FOES.map(spriteOf);
 
   const keys={ArrowUp:false,ArrowDown:false,ArrowLeft:false,ArrowRight:false};
   const kd=e=>{ if(keys[e.code]!==undefined){ keys[e.code]=true; e.preventDefault(); } };
@@ -6072,8 +6896,8 @@ function gameSprint(cv,id,lvl,zone){
   cleanupInput=()=>{ window.removeEventListener("keydown",kd); window.removeEventListener("keyup",ku);
     cv.removeEventListener("touchstart",ts); cv.removeEventListener("touchend",te); };
 
-  (function loop(){
-    RAF=requestAnimationFrame(loop); f++;
+  startLoop(function(){
+    f++;
     if(!over){
       framesLeft--;
       if(framesLeft<=0){ over=true; endGame(id,sc,true); }
@@ -6165,7 +6989,7 @@ function gameSprint(cv,id,lvl,zone){
       }
     }
     setHUD(hp,tokens,framesLeft,sc);
-  })();
+  });
 }
 
 /* ============================================================================
@@ -6199,8 +7023,8 @@ function gameShuttle(cv,id,lvl,zone){
   cleanupInput=()=>{ window.removeEventListener("keydown",kd); window.removeEventListener("keyup",ku);
     cv.removeEventListener("touchstart",ts); cv.removeEventListener("touchmove",tm); cv.removeEventListener("touchend",te); };
 
-  (function loop(){
-    RAF=requestAnimationFrame(loop); f++;
+  startLoop(function(){
+    f++;
     if(!over){
       framesLeft--;
       if(framesLeft<=0){ over=true; endGame(id,sc,true); }
@@ -6271,7 +7095,7 @@ function gameShuttle(cv,id,lvl,zone){
     x.fillText(Math.round(speed*8)+" km/h",16,30);
     if(hasPass){ x.fillStyle="#4DE0B1"; x.fillText(T_.rider+" "+Math.ceil(passTimer/60)+"s",16,56); }
     setHUD(hp,null,framesLeft,sc);
-  })();
+  });
 }
 
 /* ============================================================================
@@ -6279,114 +7103,233 @@ function gameShuttle(cv,id,lvl,zone){
    ========================================================================== */
 function gameKart(cv,id,lvl,zone){
   const x=cv.getContext("2d"),W=cv.width,H=cv.height;
-  let f=0,sc=0,over=false,framesLeft=GAMES[2].dur*60,hp=3;
-  let speed=0,dist=0,playerX=0,curveOff=0,items=[],nextItemZ=2000,invuln=0;
-  const MAX_SPEED=120+(lvl*15);
-  /* slope kept under ~0.27 so the road never leaves the viewport */
-  const getTrackX=z=>Math.sin(z/2600)*400+Math.sin(z/1100)*120;
-  const back=spriteOf(zone.bg), kart=spriteOf("kart_player"), coin=spriteOf("item_coin");
-  const foes=FOES.map(spriteOf);
 
-  const keys={left:false,right:false};
-  const kd=e=>{ if(e.code==="ArrowLeft"){keys.left=true;e.preventDefault();}
-                if(e.code==="ArrowRight"){keys.right=true;e.preventDefault();} };
-  const ku=e=>{ if(e.code==="ArrowLeft")keys.left=false; if(e.code==="ArrowRight")keys.right=false; };
+  /* ------------------------------------------------------------------------
+     The road used to be drawn one fillRect per scanline — 460 fill calls a
+     frame on this canvas — over a flat sine curve with no elevation. It is now
+     a list of segments carrying both curve and hill data, projected through a
+     camera and filled as ~140 trapezoids from far to near. Crests genuinely
+     hide the road behind them, and the whole thing costs about a tenth as much
+     to draw, which is what the older Chromebooks were choking on.
+     ---------------------------------------------------------------------- */
+  const SEG=200, ROAD_W=2000, CAM_H=1300, DRAW=140, RUMBLE=3;
+  const CAM_D=1/Math.tan((100/2)*Math.PI/180);
+
+  const segs=[]; let hy=0;
+  function stretch(count,curve,rise){
+    const from=hy,to=hy+rise;
+    for(let i=0;i<count;i++){
+      const t=(1-Math.cos((i+1)/count*Math.PI))/2;        /* ease, so crests are round */
+      const n=segs.length, y2=from+(to-from)*t;
+      segs.push({index:n,curve:curve,
+        p1:{w:{y:hy,z:n*SEG},c:{},s:{}}, p2:{w:{y:y2,z:(n+1)*SEG},c:{},s:{}},
+        dark:(Math.floor(n/RUMBLE)%2)===1, items:[]});
+      hy=y2;
+    }
+  }
+  const R=(a,b)=>a+Math.random()*(b-a);
+  const K=1+lvl*0.22;
+  stretch(70,0,0);
+  for(let i=0;i<6;i++){
+    stretch(44+Math.random()*40, R(1.1,3.0)*K*(Math.random()<0.5?-1:1), R(-1300,1300));
+    stretch(50+Math.random()*40, 0, R(-500,500));
+    stretch(60+Math.random()*40, R(-1,1)*K, R(1100,2400)*(Math.random()<0.5?-1:1));
+  }
+  stretch(60,0,0);
+  stretch(80,0,-hy);                                       /* close the loop back to level */
+  const TRACK=segs.length*SEG;
+
+  /* ---- populate the track ------------------------------------------------
+     Gaps are reasoned in seconds at top speed rather than in segments, so a
+     hazard stays reactable when a higher level raises the speed.            */
+  const MAX_SPEED=SEG*52*(1+lvl*0.06);
+  const perSec=MAX_SPEED/SEG;
+  const minGap=Math.ceil(perSec*Math.max(1.4,2.6-lvl*0.12));
+  const props=(zone.props&&zone.props.length)?zone.props:["prop_hut"];
+  let i=90,last=-1e9;
+  while(i<segs.length-50){
+    if(Math.random()<Math.min(0.6,0.3+lvl*0.03) && (i-last)>=minGap){
+      segs[i].items.push({x:R(-0.8,0.8),type:"foe",k:Math.floor(Math.random()*FOES.length),live:true});
+      last=i; i+=minGap;
+    } else if(Math.random()<0.18){
+      segs[i].items.push({x:R(-0.85,0.85),type:"rival",k:Math.floor(Math.random()*TRAFFIC.length),live:true});
+      i+=minGap;
+    } else {
+      const n=5+Math.floor(Math.random()*6);               /* coins arc across the road */
+      const a=R(-0.7,0.7), b=Math.max(-0.8,Math.min(0.8,a+R(-0.6,0.6)));
+      for(let k=0;k<n&&i+k<segs.length;k++)
+        segs[i+k].items.push({x:a+(b-a)*(k/Math.max(1,n-1)),type:"coin",live:true});
+      i+=n+Math.floor(perSec*R(0.4,1.1));
+    }
+  }
+  for(let j=40;j<segs.length;j+=Math.floor(R(9,22)))       /* roadside scenery, both shoulders */
+    segs[j].items.push({x:(Math.random()<0.5?-1:1)*R(1.6,3.1),
+      type:"prop",p:props[Math.floor(Math.random()*props.length)],live:true});
+
+  /* ---- art --------------------------------------------------------------- */
+  const back=spriteOf(zone.bg), kart=spriteOf("kart_player"), coin=spriteOf("item_coin");
+  const foes=FOES.map(spriteOf), rivals=TRAFFIC.map(spriteOf);
+  const propImgs={}; props.forEach(k=>propImgs[k]=spriteOf(k));
+
+  /* ---- state ------------------------------------------------------------- */
+  let f=0,sc=0,hp=3,over=false,framesLeft=GAMES[2].dur*60;
+  let pos=0,speed=0,playerX=0,invuln=0,shake=0,lean=0,skyOff=0;
+  const DT=1/60;
+  const ACCEL=MAX_SPEED/3.4, DECEL=-MAX_SPEED/5, OFF=-MAX_SPEED/2.2, CENT=0.34;
+
+  const keys={left:false,right:false,brake:false};
+  const kd=e=>{ if(e.code==="ArrowLeft"||e.code==="KeyA"){keys.left=true;e.preventDefault();}
+                if(e.code==="ArrowRight"||e.code==="KeyD"){keys.right=true;e.preventDefault();}
+                if(e.code==="ArrowDown"||e.code==="Space"){keys.brake=true;e.preventDefault();} };
+  const ku=e=>{ if(e.code==="ArrowLeft"||e.code==="KeyA")keys.left=false;
+                if(e.code==="ArrowRight"||e.code==="KeyD")keys.right=false;
+                if(e.code==="ArrowDown"||e.code==="Space")keys.brake=false; };
   window.addEventListener("keydown",kd); window.addEventListener("keyup",ku);
-  let tActive=false,tfrac=0.5;
-  const th=e=>{ tActive=e.touches.length>0;
-    if(tActive) tfrac=canvasPoint(cv,e.touches[0]).x; e.preventDefault(); };
+
+  /* Steering follows the finger across the canvas rather than using left and
+     right zones, so a shallow line can be held through a long curve. */
+  let touchX=null;
+  const th=e=>{ touchX=e.touches.length?canvasPoint(cv,e.touches[0]).x:null; e.preventDefault(); };
+  const tOff=e=>{ touchX=null; e.preventDefault(); };
   cv.addEventListener("touchstart",th,{passive:false});
   cv.addEventListener("touchmove",th,{passive:false});
-  cv.addEventListener("touchend",th,{passive:false});
+  cv.addEventListener("touchend",tOff,{passive:false});
+  cv.addEventListener("touchcancel",tOff,{passive:false});
   cleanupInput=()=>{ window.removeEventListener("keydown",kd); window.removeEventListener("keyup",ku);
-    cv.removeEventListener("touchstart",th); cv.removeEventListener("touchmove",th); cv.removeEventListener("touchend",th); };
+    cv.removeEventListener("touchstart",th); cv.removeEventListener("touchmove",th);
+    cv.removeEventListener("touchend",tOff); cv.removeEventListener("touchcancel",tOff); };
 
-  (function loop(){
-    RAF=requestAnimationFrame(loop); f++;
+  const segAt=z=>segs[Math.floor(z/SEG)%segs.length];
+
+  function project(p,camX,camY,camZ){
+    p.c.x=(p.w.x||0)-camX; p.c.y=(p.w.y||0)-camY; p.c.z=Math.max(1,(p.w.z||0)-camZ);
+    p.s.k=CAM_D/p.c.z;
+    p.s.x=W/2+(p.s.k*p.c.x*W/2);
+    p.s.y=H/2-(p.s.k*p.c.y*H/2);
+    p.s.w=p.s.k*ROAD_W*W/2;
+  }
+  function trap(x1,y1,w1,x2,y2,w2,col){
+    x.fillStyle=col; x.beginPath();
+    x.moveTo(x1-w1,y1); x.lineTo(x2-w2,y2); x.lineTo(x2+w2,y2); x.lineTo(x1+w1,y1);
+    x.closePath(); x.fill();
+  }
+
+  startLoop(function(){
+    f++;
     if(!over){
       framesLeft--;
-      if(framesLeft<=0){ over=true; endGame(id,sc,true); }
+      if(framesLeft<=0){ over=true; endGame(id,Math.round(sc),true); }
       if(invuln>0) invuln--;
-      speed=Math.min(speed+2,MAX_SPEED);
+      if(shake>0) shake--;
+
+      const seg=segAt(pos), pct=speed/MAX_SPEED, dx=DT*2.4*pct;
       let steer=0;
-      if(keys.left) steer=-0.04;
-      if(keys.right) steer=0.04;
-      if(tActive) steer=(tfrac>0.6)?0.04:(tfrac<0.4)?-0.04:0;
-      playerX=Math.max(-1.3,Math.min(1.3,playerX+steer));
-      if(Math.abs(playerX)>1.05) speed=Math.max(speed*0.97,MAX_SPEED*0.35); /* off-road drag */
-      dist+=speed;
-      while(nextItemZ<dist+15000){
-        if(Math.random()>0.4)
-          items.push({z:nextItemZ,x:(Math.random()*2-1),
-            type:Math.random()>(0.7-lvl*0.02)?"hazard":"token",active:true,
-            k:Math.floor(Math.random()*foes.length)});
-        nextItemZ+=500+Math.random()*500;
-      }
-      items.forEach(i=>{
-        if(i.active&&i.z<dist+300&&i.z>dist-100&&Math.abs(i.x-playerX)<0.35){
-          i.active=false;
-          if(i.type==="token") sc+=10;
-          else if(invuln<=0){
-            hp--; speed*=0.2; invuln=60;
-            if(hp<=0){ over=true; endGame(id,sc,false); }
-          }
+      if(keys.left) steer=-1; else if(keys.right) steer=1;
+      if(touchX!==null){ const o=(touchX-0.5)*2.4; steer=Math.max(-1,Math.min(1,o));
+                         if(Math.abs(o)<0.12) steer=0; }
+      playerX+=steer*dx;
+      playerX-=dx*pct*seg.curve*CENT;                       /* pushed wide through a curve */
+      lean+=((steer*0.22)-lean)*0.18;
+
+      if(keys.brake) speed+=DECEL*3*DT; else speed+=ACCEL*DT;
+      if((playerX<-1||playerX>1)&&speed>MAX_SPEED/4){ speed+=OFF*DT; shake=6; }
+      playerX=Math.max(-2.4,Math.min(2.4,playerX));
+      speed=Math.max(0,Math.min(MAX_SPEED,speed));
+      pos=(pos+speed*DT)%TRACK;
+      sc+=speed*DT*0.004;
+
+      for(const it of seg.items){                            /* O(1): only this segment */
+        if(!it.live||it.type==="prop") continue;
+        if(Math.abs(it.x-playerX)>0.34) continue;
+        if(it.type==="coin"){ it.live=false; sc+=10; }
+        else if(invuln<=0){
+          it.live=false; hp--; speed*=0.22; invuln=70; shake=18;
+          if(hp<=0){ over=true; endGame(id,Math.round(sc),false); }
         }
-      });
-      items=items.filter(i=>i.z>dist-500);
+      }
     }
-    /* draw */
-    const horizon=H*0.45, focal=H*1.0, camH=1000;
-    drawBack(x,back,zone,W,horizon,curveOff*2);
-    x.fillStyle="rgba(8,5,18,.25)"; x.fillRect(0,0,W,horizon);
-    const currentCurve=(getTrackX(dist+100)-getTrackX(dist))/100;
-    curveOff+=currentCurve*(speed/MAX_SPEED)*5;
-    const camX=getTrackX(dist);
-    for(let y=Math.floor(horizon);y<H;y++){
-      const sy=y-horizon; if(sy===0) continue;
-      const z=(camH*focal)/sy, pZ=dist+z, scale=focal/z;
-      const dx=getTrackX(pZ)-camX;
-      const cx=W/2+(dx*scale)-(playerX*2000*scale);
-      const roadW=4000*scale;
-      const gCol=(Math.floor(pZ/600)%2===0)?"#2E5A34":"#26492C";
-      const rCol=(Math.floor(pZ/300)%2===0)?"#3A3A44":"#45454F";
-      const mCol=(Math.floor(pZ/300)%2===0)?"#FFFFFF":"#DA4453";
-      x.fillStyle=gCol; x.fillRect(0,y,W,1);
-      x.fillStyle=mCol; x.fillRect(cx-roadW/2-roadW*0.08,y,roadW*1.16,1);
-      x.fillStyle=rCol; x.fillRect(cx-roadW/2,y,roadW,1);
+
+    /* ---------------- draw ---------------- */
+    skyOff+=speed*DT*0.02;
+    const base=segAt(pos), frac=(pos%SEG)/SEG;
+    const camY=CAM_H+base.p1.w.y+(base.p2.w.y-base.p1.w.y)*frac;
+    const horizon=Math.round(H*0.42);
+    drawBack(x,back,zone,W,horizon,skyOff);
+    x.fillStyle="rgba(8,5,18,.28)"; x.fillRect(0,0,W,horizon);
+    x.fillStyle=zone.sky; x.fillRect(0,horizon,W,H-horizon);
+
+    x.save();
+    if(shake>0){ const m=shake*0.55; x.translate(R(-m,m),R(-m,m)); }
+
+    let cx=0,dcx=0;
+    const drawn=[];
+    for(let n=0;n<DRAW;n++){
+      const sg=segs[(base.index+n)%segs.length];
+      const camZ=pos-(sg.index<base.index?TRACK:0);
+      project(sg.p1,(playerX*ROAD_W)-cx,camY,camZ);
+      cx+=dcx; dcx+=sg.curve;
+      project(sg.p2,(playerX*ROAD_W)-cx,camY,camZ);
+      drawn.push(sg);
     }
-    const visible=items.filter(i=>i.active&&i.z>dist+400&&i.z<dist+15000).sort((a,b)=>b.z-a.z);
-    visible.forEach(i=>{
-      const z=i.z-dist, scale=focal/z, sy=(camH*focal)/z, y=horizon+sy;
-      if(y>horizon&&y<H){
-        const dx=getTrackX(i.z)-camX;
-        const cx=W/2+(dx*scale)-(playerX*2000*scale)+(i.x*2000*scale);
-        const size=Math.min(H*0.34,1100*scale);
-        if(i.type==="token"){
-          if(drawable(coin)) x.drawImage(coin,cx-size/4,y-size/2,size/2,size/2);
-          else { x.fillStyle="#F2B441"; x.beginPath(); x.ellipse(cx,y-size/2,size/3,size/2,0,0,7); x.fill(); }
+    let maxy=H;
+    for(let n=drawn.length-1;n>=0;n--){                      /* near-to-far, clipped by hills */
+      const sg=drawn[n];
+      if(sg.p1.c.z<=CAM_D) continue;
+      if(sg.p2.s.y>=maxy) continue;
+      if(sg.p1.s.y<=sg.p2.s.y) continue;
+      const d=sg.dark, y1=sg.p1.s.y, y2=sg.p2.s.y;
+      x.fillStyle=d?"#20401F":"#2A5226";
+      x.fillRect(0,y2,W,y1-y2+1);
+      trap(sg.p1.s.x,y1,sg.p1.s.w*1.16,sg.p2.s.x,y2,sg.p2.s.w*1.16,d?"#8A6512":"#F2B441");
+      trap(sg.p1.s.x,y1,sg.p1.s.w,     sg.p2.s.x,y2,sg.p2.s.w,     d?"#332C4E":"#3D3660");
+      if(!d) for(const l of [-0.34,0.34])
+        trap(sg.p1.s.x+sg.p1.s.w*l,y1,sg.p1.s.w*0.02,
+             sg.p2.s.x+sg.p2.s.w*l,y2,sg.p2.s.w*0.02,"#EFEAFB");
+      maxy=y2;
+    }
+    /* Coach Smith's own art, scaled by the same projection as the road. */
+    for(let n=drawn.length-1;n>=0;n--){
+      const sg=drawn[n];
+      for(const it of sg.items){
+        if(!it.live) continue;
+        const k=sg.p1.s.k, sx=sg.p1.s.x+(k*it.x*ROAD_W*W/2), sy=sg.p1.s.y;
+        const size=k*1500*W/2;
+        if(size<2||sy<horizon-size||sy>H+size) continue;
+        if(it.type==="coin"){
+          if(drawable(coin)) x.drawImage(coin,sx-size*0.22,sy-size*0.62,size*0.44,size*0.44);
+          else { x.fillStyle="#F2B441"; x.beginPath();
+                 x.ellipse(sx,sy-size*0.4,size*0.2,size*0.3,0,0,7); x.fill();
+                 x.strokeStyle="#8A6512"; x.lineWidth=Math.max(1,size*0.04); x.stroke(); }
+        } else if(it.type==="prop"){
+          const im=propImgs[it.p];
+          if(drawable(im)) sprite(x,im,sx,sy,size*1.5);
+        } else if(it.type==="rival"){
+          const im=rivals[it.k];
+          if(drawable(im)) sprite(x,im,sx,sy,size*0.9);
+          else { x.fillStyle="#9B7BE0"; x.fillRect(sx-size*0.3,sy-size*0.5,size*0.6,size*0.5); }
         } else {
-          const im=foes[i.k];
-          if(drawable(im)) sprite(x,im,cx,y,size);
-          else { x.fillStyle="#DA4453"; x.beginPath();
-            x.moveTo(cx,y-size); x.lineTo(cx-size/2,y); x.lineTo(cx+size/2,y); x.fill(); }
+          const im=foes[it.k];
+          if(drawable(im)) sprite(x,im,sx,sy,size);
+          else { x.fillStyle="#FF4D9D"; x.beginPath();
+                 x.moveTo(sx,sy-size*0.9); x.lineTo(sx-size*0.42,sy); x.lineTo(sx+size*0.42,sy);
+                 x.closePath(); x.fill(); }
         }
       }
-    });
-    if(invuln%10<5){
-      const kh=Math.round(H*0.20);
-      if(drawable(kart)){
-        x.save();
-        x.translate(W/2,H-kh/2-10);
-        x.rotate((keys.left?-0.08:keys.right?0.08:0));
-        x.translate(-W/2,-(H-kh/2-10));
-        sprite(x,kart,W/2,H-10,kh);
-        x.restore();
-      } else { x.fillStyle="#F2B441"; x.fillRect(W/2-50,H-120,100,100); }
     }
+    if(invuln<=0||f%10<5){
+      const kh=Math.round(H*0.22), ky=H-12;
+      x.save(); x.translate(W/2,ky); x.rotate(lean); x.translate(-W/2,-ky);
+      if(drawable(kart)) sprite(x,kart,W/2,ky,kh);
+      else { x.fillStyle="#2F6BD8"; x.fillRect(W/2-kh*0.7,ky-kh,kh*1.4,kh*0.8);
+             x.fillStyle="#F2B441"; x.fillRect(W/2-kh*0.7,ky-kh,kh*1.4,kh*0.2); }
+      x.restore();
+    }
+    x.restore();
+
     x.fillStyle="#EFEAFB"; x.font="bold 20px 'Courier New',monospace";
-    x.fillText(Math.round(speed)+" km/h",16,30);
-    setHUD(hp,null,framesLeft,sc);
-  })();
+    x.fillText(Math.round(speed/SEG*3.6*10)+" km/h",16,30);
+    setHUD(hp,null,framesLeft,Math.round(sc));
+  });
 }
 
 /* ============================================================================
@@ -6430,8 +7373,8 @@ function gameQuest(cv,id,lvl,zone){
   cleanupInput=()=>{ window.removeEventListener("keydown",kd); window.removeEventListener("keyup",ku);
     cv.removeEventListener("touchstart",ts); cv.removeEventListener("touchmove",tm); cv.removeEventListener("touchend",te); };
 
-  (function loop(){
-    RAF=requestAnimationFrame(loop); f++;
+  startLoop(function(){
+    f++;
     if(!over){
       framesLeft--;
       if(framesLeft<=0){ over=true; endGame(id,sc,true); }
@@ -6518,7 +7461,7 @@ function gameQuest(cv,id,lvl,zone){
       x.beginPath(); x.arc(sx+joyDx,sy+joyDy,22,0,7); x.fill();
     }
     setHUD(hp,tokens,framesLeft,sc);
-  })();
+  });
 }
 
 /* ============================================================================
@@ -6639,6 +7582,23 @@ function viewTeacher(){
     </div>
   </section>
   <section class="panel">
+    <div class="eyebrow">${T_.examSettings}</div>
+    <div class="grid two" style="margin-top:10px">
+      ${[["examQs",T_.examQs],["examPass",T_.passMark],["studyMin",T_.studyMin]].map(([k,l])=>
+        `<div><label for="e_${k}">${l}</label><input id="e_${k}" type="number" min="1" value="${S.cfg[k]}"
+          onchange="S.cfg.${k}=Math.max(1,+this.value||1);save();render()"></div>`).join("")}
+    </div>
+  </section>
+  <section class="panel">
+    <div class="eyebrow">${T_.unitCoverage}</div>
+    <p class="muted" style="margin:4px 0 10px">${T_.unitCoverageHelp}</p>
+    <table><thead><tr><th>${T_.units}</th><th>${T_.authored}</th><th>${T_.generated}</th><th></th></tr></thead><tbody>
+    ${allUnits().map(u=>{const m=examMix(u);
+      return `<tr><td>${esc(L(u.title))}</td><td>${m.written}</td><td>${m.gen}</td>
+      <td>${m.gen?`<span class="chip warn">${m.written}/${m.n}</span>`:`<span class="chip on">${T_.fullyWritten}</span>`}</td></tr>`;}).join("")}
+    </tbody></table>
+  </section>
+  <section class="panel">
     <div class="eyebrow">${T_.packs}</div>
     <table><thead><tr><th>${T_.course}</th><th>${T_.units}</th><th>${T_.items}</th></tr></thead><tbody>
     ${allPacks().map(p=>`<tr><td>${esc(L(p.name))}</td><td>${p.units.length}</td>
@@ -6742,8 +7702,9 @@ document.getElementById("btnEN").onclick=()=>setLang("en");
 document.getElementById("btnES").onclick=()=>setLang("es");
 load();
 document.getElementById("tagline").textContent=T_.tagline;
+installTileStyles();
 render();
-showTitle();
+if(S.langChosen) showTitle(); else showLangPick();
 window.addEventListener("beforeunload",save);
 window.addEventListener("resize",()=>{ const t=document.getElementById("title");
   if(t&&!t.classList.contains("hidden")) paintTitleScene(document.getElementById("titleCanvas")); });
