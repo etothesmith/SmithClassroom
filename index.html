@@ -266,6 +266,28 @@ ul.ctrl li{margin:4px 0;color:var(--ink)}
 .wbar i{display:block;height:100%;transition:width .18s}
 .wquiz:not(:empty){margin-top:16px;padding-top:14px;border-top:1px solid var(--line)}
 
+/* ---------- big, self-explaining action buttons ---------- */
+.bigbtns{display:grid;gap:10px;grid-template-columns:1fr}
+@media(min-width:620px){.bigbtns{grid-template-columns:1fr 1fr}}
+.bigbtn{display:flex;align-items:center;gap:14px;width:100%;text-align:left;
+  padding:14px 16px;min-height:66px;border:2px solid var(--line);border-radius:14px;
+  background:var(--cab2);transition:transform .14s,border-color .14s,background .14s}
+.bigbtn:hover:not(:disabled){transform:translateY(-2px);border-color:var(--gold);
+  background:rgba(242,180,65,.08)}
+.bigbtn:active:not(:disabled){transform:scale(.985)}
+.bigbtn.go{border-color:var(--gold);background:linear-gradient(180deg,rgba(242,180,65,.16),rgba(242,180,65,.05))}
+.bigbtn.off{opacity:.45;cursor:not-allowed}
+.bb-ico{flex:none;width:42px;height:42px;display:grid;place-items:center;border-radius:11px;
+  background:var(--gold);color:#2A1D00;font-size:19px;font-weight:800}
+.bigbtn.off .bb-ico{background:var(--line);color:var(--dim)}
+.bb-txt{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}
+.bb-txt b{font-size:15px;line-height:1.2}
+.bb-txt small{color:var(--dim);font-size:11.5px;line-height:1.35}
+.classhead{text-align:left}
+.classtitle{font-family:var(--disp);font-weight:800;text-transform:uppercase;
+  letter-spacing:.05em;font-size:clamp(20px,5.5vw,30px);color:var(--gold);
+  text-shadow:0 3px 0 #8A5A0C;margin:6px 0 0}
+
 /* ---------- study: one area per class ---------- */
 .packtabs{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
 .packtab{display:flex;flex-direction:column;gap:2px;padding:10px 14px;text-align:left;
@@ -5686,6 +5708,13 @@ const T = {
     scenes:"scenes",startShift:"Start the shift",resumeShift:"Resume the shift",
     startOver:"Start over",alsoAvailable:"Also available",
     yourClasses:"Your classes",units:"units",continueUnit:"Continue",
+    yourClass:"Your class",unit:"Unit",completeWord:"complete",
+    unitsDone:"units done",certsWord:"certificates",
+    bbLesson:"Terms, notes, questions, boss round",
+    bbPractice:"Untimed questions with instant feedback",
+    bbReview:"Flashcards, matching, blaster, solo board",
+    bbTest:"25 questions · 70% earns the certificate",
+    bbLocked:"Finish the lesson first",
     moveDeviceHelp:"Working on another device? Copy the code below and paste it there — study time, topics, certificates and tokens all travel with it.",
     pasteCodeHint:"Paste a code from your other device",
     moveDevice:"Working on another device?",
@@ -5711,7 +5740,9 @@ const T = {
     finishTopicsFirst:"Finish the topics first",
     theTerms:"The terms",termsHelp:"Read these first. Every question after this uses them.",
     onFire:"Streak",streakLost:"Streak lost",finish:"Finish",
-    runFell:"You fell",runHit:"Hit",runCleared:"Cleared",
+    runFell:"You fell",runHit:"Hit",runCleared:"Cleared",offRoad:"Off the track — steer back",
+    runZapped:"Zapped!",puAmmo:"+3 chalk",puShield:"Shield up",
+    puShieldGone:"Shield broke",puBoost:"Boost!",puMagnet:"Coin magnet",
     reviewHubHelp:"Three ways to drill the same vocabulary. Clear all three and the test unlocks a certificate and five tokens.",
     flashcards:"Flashcards",flashcardsDesc:"Term on the front, meaning on the back. Be honest with yourself.",
     matchGame:"Matching",matchDesc:"Pair every term with its meaning. Faster and cleaner scores higher.",
@@ -5944,6 +5975,13 @@ const T = {
     scenes:"escenas",startShift:"Empezar el turno",resumeShift:"Continuar el turno",
     startOver:"Empezar de nuevo",alsoAvailable:"Tambien disponible",
     yourClasses:"Tus clases",units:"unidades",continueUnit:"Continuar",
+    yourClass:"Tu clase",unit:"Unidad",completeWord:"completa",
+    unitsDone:"unidades listas",certsWord:"certificados",
+    bbLesson:"Terminos, apuntes, preguntas y jefe",
+    bbPractice:"Preguntas sin reloj con respuesta al instante",
+    bbReview:"Tarjetas, emparejar, cazapalabras y tablero",
+    bbTest:"25 preguntas · 70% gana el certificado",
+    bbLocked:"Primero termina la leccion",
     moveDeviceHelp:"Vas a usar otro dispositivo? Copia el codigo y pegalo alli: tiempo de estudio, temas, certificados y fichas viajan contigo.",
     pasteCodeHint:"Pega aqui el codigo de tu otro dispositivo",
     moveDevice:"Vas a usar otro dispositivo?",
@@ -5969,7 +6007,9 @@ const T = {
     finishTopicsFirst:"Primero termina los temas",
     theTerms:"Los terminos",termsHelp:"Lee esto primero. Todas las preguntas los usan.",
     onFire:"Racha",streakLost:"Racha perdida",finish:"Terminar",
-    runFell:"Te caiste",runHit:"Golpe",runCleared:"Superado",
+    runFell:"Te caiste",runHit:"Golpe",runCleared:"Superado",offRoad:"Fuera de la pista",
+    runZapped:"Eliminado!",puAmmo:"+3 tizas",puShield:"Escudo activo",
+    puShieldGone:"Escudo roto",puBoost:"Impulso!",puMagnet:"Iman de monedas",
     reviewHubHelp:"Tres formas de practicar el mismo vocabulario. Completa las tres y el examen da certificado y cinco fichas.",
     flashcards:"Tarjetas",flashcardsDesc:"Termino al frente, significado atras. Se honesto contigo.",
     matchGame:"Emparejar",matchDesc:"Une cada termino con su significado. Mas rapido y limpio da mas puntos.",
@@ -6298,9 +6338,25 @@ function unlockTeacherSecret(){
   render();
   toast(T_.teacherUnlocked);
 }
+/* Short label for a course, so it fits in the dock. The teacher's own titles
+   are long ("Unit 4 · Citizenship, Elections, Participation"), and a dock item
+   has room for about ten characters. */
+const PACK_TAB={ "ap-econ":{en:"AP Econ",es:"AP Econ",icon:"▤"},
+                 "us-gov":{en:"Gov",es:"Gobierno",icon:"⚖"},
+                 "econ-h":{en:"Econ H",es:"Econ H",icon:"◱"} };
+function packTabInfo(pk){
+  const t=PACK_TAB[pk.id];
+  if(t) return {label:L(t), icon:t.icon};
+  const nm=L(pk.name)||pk.id;
+  return {label:nm.length>10?nm.slice(0,9)+"…":nm, icon:"▤"};
+}
 function dock(){
-  const tabs=[["home","▣",T_.home],["study","▤",T_.study],["challenge","◷",T_.challenge],
-              ["arcade","◕",T_.arcade],["art","✎",T_.art]];
+  /* One menu item per class rather than a single "Study" tab holding all
+     three. Not every student takes all three courses, and a shared tab made
+     every one of them scroll past two classes they are not enrolled in. */
+  const tabs=[["home","▣",T_.home]];
+  allPacks().forEach(pk=>{ const ti=packTabInfo(pk); tabs.push(["pack:"+pk.id, ti.icon, ti.label]); });
+  tabs.push(["arcade","◕",T_.arcade],["art","✎",T_.art]);
   if(TEACHER_OK) tabs.push(["teacher","◈",T_.teacher]);
   document.getElementById("dock").innerHTML=tabs.map(([k,i,l])=>
     `<button onclick="go('${k}')" ${TAB===k?'aria-current="page"':''}><span class="ic">${i}</span>${l}</button>`).join("");
@@ -6316,6 +6372,7 @@ function render(){
   else if(TAB==="art") viewArt();
   else if(TAB==="teacher"&&TEACHER_OK) viewTeacher();
   else if(TAB==="gameshow"&&TEACHER_OK) viewGameShow();
+  else if(TAB&&TAB.indexOf("pack:")===0) viewPack(TAB.slice(5));
   else { TAB="home"; viewHome(); }
 }
 
@@ -6376,64 +6433,72 @@ function viewHome(){
 /* ============================================================================
    6. STUDY  — notes first, then untimed practice with instant feedback
    ========================================================================== */
-function viewStudy(){
-  /* Every course gets its own area and every unit its own card, rather than one
-     flat list of sixteen units from three different classes. A student in
-     Economics Honors should not have to scroll past AP Macro to find their
-     unit, and a teacher should be able to point at one row and say "that one". */
-  const packs = PACKS.concat(S.extraPacks||[]);
-  const open = S.openPack || packs[0].id;
-  const pack = packs.find(p=>p.id===open) || packs[0];
-  const units = pack.units.map(u=>Object.assign({}, u, {pack:pack}));
+function viewStudy(){ const p=allPacks()[0]; TAB="pack:"+p.id; viewPack(p.id); }
 
-  const unitCard = u => {
+/* One class, one screen. Everything a student in this course needs is here and
+   nothing from the other two courses is. */
+function viewPack(packId){
+  const pack = allPacks().find(p=>p.id===packId) || allPacks()[0];
+  if (!pack) return;
+  const units = pack.units.map(u=>Object.assign({}, u, {pack:pack}));
+  const done = units.filter(u=>unitChunksComplete(u.id)).length;
+
+  const unitCard = (u,i) => {
     const st = unitStats(u), prog = unitTopicProgress(u.id);
     const rec = studyRec(u.id), unlocked = studyUnlocked(u);
     const set = spriteSetFor(u);
-    return `<section class="panel unitcard ${prog.total&&prog.done===prog.total?'done':''}">
+    const complete = prog.total && prog.done===prog.total;
+    return `<section class="panel unitcard ${complete?'done':''}">
       <div class="unithead">
         <div class="unitart">${smitTag(set,"hero")}</div>
         <div class="unitmeta">
-          <div class="eyebrow">${esc(L(pack.name))}</div>
+          <div class="eyebrow">${T_.unit} ${i+1}${complete?" · "+T_.completeWord:""}</div>
           <h3>${esc(L(u.title))}</h3>
           <div class="row">
-            <span class="chip">${u.items.length} ${T_.items}</span>
             <span class="chip">${vocabOf(u.id).length} ${T_.terms}</span>
+            <span class="chip">${u.items.length} ${T_.items}</span>
             <span class="chip ${st.mastery>=70?'on':''}">${st.mastery}% ${T_.mastery}</span>
-            ${unlocked?`<span class="chip on">${T_.unlocked}</span>`
-              :`<span class="chip warn">${T_.lockedTitle}</span>`}
           </div>
         </div>
       </div>
-      ${prog.total?`<div class="meter" style="margin:10px 0 6px"><i style="width:${prog.pct}%"></i></div>
-        <p class="muted" style="font-size:12px;margin:0 0 10px">${prog.done}/${prog.total} ${T_.topicsDone}
+      ${prog.total?`<div class="meter" style="margin:12px 0 6px"><i style="width:${prog.pct}%"></i></div>
+        <p class="muted" style="font-size:12px;margin:0 0 12px">${prog.done}/${prog.total} ${T_.topicsDone}
         · ${fmtMin(rec.sec||0)} ${T_.studyTime.toLowerCase()}</p>`:""}
-      <div class="row">
-        <button class="btn primary" onclick="viewTopics('${u.id}')">${
-          prog.done?T_.continueUnit:T_.startShift}</button>
-        <button class="btn" onclick="startPractice('${u.id}')">${T_.practice}</button>
-        ${unlocked?`<button class="btn" onclick="viewReviewHub('${u.id}')">${T_.reviewArcade}</button>
-          <button class="btn ghost" onclick="startChallenge('${u.id}')">${T_.startChallenge}</button>`:""}
+      <div class="bigbtns">
+        <button class="bigbtn go" onclick="viewTopics('${u.id}')">
+          <span class="bb-ico">▶</span>
+          <span class="bb-txt"><b>${prog.done?T_.continueUnit:T_.startShift}</b>
+            <small>${T_.bbLesson}</small></span></button>
+        <button class="bigbtn" onclick="startPractice('${u.id}')">
+          <span class="bb-ico">✎</span>
+          <span class="bb-txt"><b>${T_.practice}</b><small>${T_.bbPractice}</small></span></button>
+        <button class="bigbtn ${unlocked?'':'off'}" ${unlocked?'':'disabled'}
+          onclick="viewReviewHub('${u.id}')">
+          <span class="bb-ico">◈</span>
+          <span class="bb-txt"><b>${T_.reviewArcade}</b>
+            <small>${unlocked?T_.bbReview:T_.bbLocked}</small></span></button>
+        <button class="bigbtn ${unlocked?'':'off'}" ${unlocked?'':'disabled'}
+          onclick="startExam('${u.id}')">
+          <span class="bb-ico">★</span>
+          <span class="bb-txt"><b>${T_.testReview}</b>
+            <small>${unlocked?T_.bbTest:T_.bbLocked}</small></span></button>
       </div>
     </section>`;
   };
 
   V().innerHTML = `
-  <section class="panel raised">
-    <div class="eyebrow">${T_.study}</div>
-    <h1 style="font-size:24px;margin:6px 0 8px">${T_.yourClasses}</h1>
-    <p class="muted" style="margin:0 0 12px">${T_.classHelp}</p>
-    <div class="packtabs">
-      ${packs.map(p=>`<button class="packtab ${p.id===pack.id?'on':''}"
-        onclick="S.openPack='${p.id}';save();render()">
-        <b>${esc(L(p.name))}</b>
-        <small>${p.units.length} ${T_.units}</small></button>`).join("")}
+  <section class="panel raised classhead">
+    <div class="eyebrow">${T_.yourClass}</div>
+    <h1 class="classtitle">${esc(L(pack.name))}</h1>
+    <div class="row" style="margin-top:8px">
+      <span class="chip ${done===units.length?'on':''}">${done}/${units.length} ${T_.unitsDone}</span>
+      <span class="chip">${units.reduce((a,u)=>a+vocabOf(u.id).length,0)} ${T_.terms}</span>
+      <span class="chip">${S.certs.filter(c=>c.course===L(pack.name)).length} ${T_.certsWord}</span>
     </div>
   </section>
   ${units.map(unitCard).join("")}`;
   window.scrollTo(0,0);
 }
-
 
 function viewBrief(id){
   const u=findUnit(id); if(!u) return go("study");
@@ -6443,7 +6508,7 @@ function viewBrief(id){
   const missing=S.lang==="es"&&!(u.brief&&u.brief.es);
   const ep=buildEpisode(u);
   V().innerHTML=`
-  <button class="btn ghost" style="margin:14px 0" onclick="go('study')">← ${T_.back}</button>
+  <button class="btn ghost" style="margin:14px 0" onclick="go('pack:'+findUnit('${unitId}').pack.id)">← ${T_.back}</button>
   <section class="panel raised epstage">
     <div class="epart">${smitTag(set,"hero")}</div>
     <div class="epbody">
@@ -6830,13 +6895,13 @@ function unitChunksComplete(unitId){
 
 /* ---------- topic picker for a unit ---------- */
 function viewTopics(unitId){
-  const u = findUnit(unitId); if (!u) return go("study");
+  const u = findUnit(unitId); if (!u) return go("home");
   const ts = topicsOf(unitId);
   if (!ts.length) return viewBrief(unitId);
   const set = spriteSetFor(u), frame = EPISODE_FRAME[set];
   const prog = unitTopicProgress(unitId);
   V().innerHTML = `
-  <button class="btn ghost" style="margin:14px 0" onclick="go('study')">← ${T_.back}</button>
+  <button class="btn ghost" style="margin:14px 0" onclick="go('pack:'+findUnit('${unitId}').pack.id)">← ${T_.back}</button>
   <section class="panel raised epstage">
     <div class="epart">${smitTag(set,"hero")}</div>
     <div class="epbody">
@@ -10220,18 +10285,20 @@ const GAMES=[
   name:{en:"Smith's Run",es:"La carrera de Smith"},
   tag:{en:"Six worlds, one long run. Auto-run — you jump, roll and read the road.",
        es:"Seis mundos, una carrera. Corre solo: tú saltas, ruedas y lees el camino."},
-  goal:{en:"Chain coins for a combo multiplier. Roll or stomp a hazard to clear it. Every level is a different world.",
-        es:"Encadena monedas para multiplicar. Rueda o salta sobre un peligro para eliminarlo. Cada nivel es otro mundo."},
-  keys:{en:["Running is automatic — no accelerator to hold",
-            "↑ / Space jump — hold longer to jump higher",
-            "↓ roll — faster, shorter, and clears hazards",
-            "Pink arrows on the right edge warn you before a hazard arrives"],
-        es:["Correr es automático: no hay acelerador",
-            "↑ / Espacio saltar; mantén para saltar más alto",
-            "↓ rodar: más rápido, más bajo y elimina peligros",
-            "Las flechas rosas del borde avisan antes de que llegue un peligro"]},
-  touch:{en:"Touch: tap the upper part of the screen to jump, hold the lower part to roll.",
-         es:"Táctil: toca arriba para saltar, mantén abajo para rodar."}},
+  goal:{en:"You drive the pace and you're armed. Chain coins for a combo, throw chalk at hazards, grab power-ups. Six worlds.",
+        es:"Tú marcas el ritmo y vas armado. Encadena monedas, lanza tiza a los peligros y toma potenciadores. Seis mundos."},
+  keys:{en:["↑ / W jump — hold longer to jump higher",
+            "← → set your pace: ease off or push ahead",
+            "↓ roll — low, fast, and clears a hazard you touch",
+            "Space throw chalk — takes a hazard out at range",
+            "Pick up ✦ chalk · ◈ shield · » boost · ◎ coin magnet"],
+        es:["↑ / W saltar; mantén para saltar más alto",
+            "← → marca tu ritmo: frena o empuja",
+            "↓ rodar: bajo, rápido y elimina el peligro que tocas",
+            "Espacio lanzar tiza: elimina un peligro a distancia",
+            "Recoge ✦ tiza · ◈ escudo · » impulso · ◎ imán de monedas"]},
+  touch:{en:"Touch: tap the top to jump, bottom-left to roll, bottom-right to throw chalk.",
+         es:"Táctil: arriba saltar, abajo-izquierda rodar, abajo-derecha lanzar tiza."}},
  {id:"shuttle", color:"#F2B441", dur:90,
   name:{en:"Campus Shuttle",es:"Transporte del campus"},
   tag:{en:"Lane dodger. Pick up riders, drop them off, don't crash.",
@@ -10579,7 +10646,19 @@ function gameSprint(cv,id,lvl,zone){
   let shake=0, flash=0, msg=null, msgT=0;
 
   const p={x:120, y:GROUND_Y-90, vx:runSpeed, vy:0, w:40, h:80,
-           grounded:true, coyote:0, buffer:0, roll:false, invuln:0, rot:0};
+           grounded:true, coyote:0, buffer:0, roll:false, invuln:0, rot:0,
+           ammo:3, cool:0, shield:0, boost:0, magnet:0, face:1};
+  let shots=[], sparks=[];
+  const AMMO_MAX=6;
+
+  /* Chalk shot. Limited ammo so it supplements reading the road instead of
+     replacing it, and a cooldown so it can't be spammed through a wall. */
+  function fire(){
+    if(over||p.ammo<=0||p.cool>0) return;
+    p.ammo--; p.cool=11;
+    shots.push({x:p.x+p.w, y:p.y+p.h*0.42, vx:13, life:70});
+    sparks.push({x:p.x+p.w, y:p.y+p.h*0.42, life:9, c:E.second});
+  }
 
   /* parallax layers: cheap procedural silhouettes, regenerated per env */
   const layers=[];
@@ -10600,29 +10679,41 @@ function gameSprint(cv,id,lvl,zone){
                                     l:Math.random()*26+8, t:Math.random()*2+1,
                                     a:Math.random()*0.3+0.08, s:Math.random()*0.8+0.7});
 
-  /* ---- input: run is automatic, you jump and roll ----------------------- */
-  const keys={jump:false, down:false};
+  /* ---- input -------------------------------------------------------------
+     Auto-run alone left the student with two verbs and nothing to aim. You now
+     drive the character: left and right change speed within a band, and the
+     chalk shot clears a hazard at range so a bad approach is recoverable
+     instead of just costing a life. */
+  const keys={jump:false, down:false, left:false, right:false, fire:false};
   const kd=e=>{
-    if(e.code==="ArrowUp"||e.code==="Space"||e.code==="KeyW"){
+    if(e.code==="ArrowUp"||e.code==="KeyW"){
       if(!keys.jump) p.buffer=BUFFER;               /* buffered jump          */
       keys.jump=true; e.preventDefault();
     }
     if(e.code==="ArrowDown"||e.code==="KeyS"){ keys.down=true; e.preventDefault(); }
+    if(e.code==="ArrowLeft"||e.code==="KeyA"){ keys.left=true; e.preventDefault(); }
+    if(e.code==="ArrowRight"||e.code==="KeyD"){ keys.right=true; e.preventDefault(); }
+    if(e.code==="Space"||e.code==="KeyJ"){ if(!keys.fire) fire(); keys.fire=true; e.preventDefault(); }
   };
   const ku=e=>{
-    if(e.code==="ArrowUp"||e.code==="Space"||e.code==="KeyW"){
+    if(e.code==="ArrowUp"||e.code==="KeyW"){
       keys.jump=false;
       if(p.vy<-4) p.vy=-4;                          /* variable jump height   */
       e.preventDefault();
     }
     if(e.code==="ArrowDown"||e.code==="KeyS"){ keys.down=false; e.preventDefault(); }
+    if(e.code==="ArrowLeft"||e.code==="KeyA"){ keys.left=false; e.preventDefault(); }
+    if(e.code==="ArrowRight"||e.code==="KeyD"){ keys.right=false; e.preventDefault(); }
+    if(e.code==="Space"||e.code==="KeyJ"){ keys.fire=false; e.preventDefault(); }
   };
   window.addEventListener("keydown",kd); window.addEventListener("keyup",ku);
   /* Touch: tap the upper part of the canvas to jump, hold the lower to roll.
      One finger, two verbs, no on-screen d-pad to learn. */
   const tstart=e=>{
     const t=canvasPoint(cv,e.touches[0]);
-    if(t.y<0.62){ p.buffer=BUFFER; keys.jump=true; } else keys.down=true;
+    if(t.y<0.58){ p.buffer=BUFFER; keys.jump=true; }
+    else if(t.x>0.62){ fire(); }
+    else keys.down=true;
     e.preventDefault();
   };
   const tend=e=>{
@@ -10661,6 +10752,13 @@ function gameSprint(cv,id,lvl,zone){
       const arc = Math.sin(t*Math.PI)*Math.min(90, gap*0.5);
       items.push({t:"coin", x:cx, y:Math.min(last.y,y)-56-arc, w:22, h:22});
     }
+    /* power-ups: one per platform at most, and never on the very edge where a
+       student would have to choose between the pickup and the landing */
+    if(w > 300 && Math.random() < 0.42){
+      const kinds = ["ammo","shield","boost","magnet"];
+      const k = kinds[Math.floor(Math.random()*kinds.length)];
+      items.push({t:"power", k:k, x:plat.x+120+Math.random()*(w-240), y:y-96, w:30, h:30});
+    }
     /* hazards live only in the middle of a platform, never near either edge */
     const room = w - 200;
     if(room > 120 && Math.random() < Math.min(0.72, 0.28+lvl*0.05)){
@@ -10683,6 +10781,12 @@ function gameSprint(cv,id,lvl,zone){
 
   function hurt(reason){
     if(p.invuln>0) return;
+    if(p.shield>0){                       /* the shield eats one hit */
+      p.shield=0; p.invuln=70; shake=10;
+      msg=T_.puShieldGone; msgT=40;
+      for(let k=0;k<10;k++) sparks.push({x:p.x+p.w/2, y:p.y+p.h/2, life:16, c:"#4DE0B1"});
+      return;
+    }
     hp--; p.invuln=100; combo=0; shake=16; flash=12;
     msg=reason; msgT=48;
     if(hp<=0){ over=true; endGame(id, Math.round(sc), false); }
@@ -10699,10 +10803,35 @@ function gameSprint(cv,id,lvl,zone){
       if(flash>0) flash--;
       if(msgT>0) msgT--;
 
-      /* run */
-      p.vx = runSpeed * (p.roll?1.22:1);
+      /* run: the student sets the pace inside a band, so a nervous player can
+         hang back and a confident one can push */
+      let want = runSpeed;
+      if(keys.left)  want = runSpeed*0.66;
+      if(keys.right) want = runSpeed*1.34;
+      if(p.roll) want *= 1.18;
+      if(p.boost>0){ want *= 1.5; p.boost--; }
+      p.vx += (want - p.vx)*0.14;
       p.x += p.vx;
       sc += 0.12;
+      if(p.cool>0) p.cool--;
+      if(p.shield>0) p.shield--;
+      if(p.magnet>0) p.magnet--;
+
+      /* shots */
+      for(const sh of shots){ sh.x += sh.vx; sh.life--; }
+      shots = shots.filter(sh=>sh.life>0);
+      for(const sp of sparks) sp.life--;
+      sparks = sparks.filter(sp=>sp.life>0);
+
+      /* magnet pulls nearby coins in */
+      if(p.magnet>0){
+        for(const it of items){
+          if(it.t!=="coin") continue;
+          const dx=(p.x+p.w/2)-(it.x+it.w/2), dy=(p.y+p.h/2)-(it.y+it.h/2);
+          const d=Math.hypot(dx,dy);
+          if(d<190&&d>1){ it.x += dx/d*6; it.y += dy/d*6; }
+        }
+      }
 
       /* roll: faster and shorter, but you can't jump out of it instantly */
       p.roll = keys.down && p.grounded;
@@ -10749,6 +10878,22 @@ function gameSprint(cv,id,lvl,zone){
       items = items.filter(i=>i.x > camX-600);
       props = props.filter(i=>i.x > camX-600);
 
+      /* a chalk shot clears a hazard outright */
+      for(let si=shots.length-1;si>=0;si--){
+        const sh=shots[si];
+        for(let i=items.length-1;i>=0;i--){
+          const it=items[i];
+          if(it.t!=="foe") continue;
+          if(sh.x>it.x && sh.x<it.x+it.w && sh.y>it.y && sh.y<it.y+it.h){
+            items.splice(i,1); shots.splice(si,1);
+            sc += 80; combo++; best=Math.max(best,combo);
+            for(let k=0;k<7;k++) sparks.push({x:it.x+it.w/2, y:it.y+it.h/2, life:14, c:"#FF4D9D"});
+            msg=T_.runZapped; msgT=32;
+            break;
+          }
+        }
+      }
+
       /* pickups and hits */
       for(let i=items.length-1;i>=0;i--){
         const it=items[i];
@@ -10757,6 +10902,14 @@ function gameSprint(cv,id,lvl,zone){
             items.splice(i,1); combo++; best=Math.max(best,combo);
             sc += 10 + Math.min(40, combo*2);       /* combo rewards a clean line */
             if(combo%10===0){ msg="×"+combo; msgT=40; }
+          } else if(it.t==="power"){
+            items.splice(i,1);
+            if(it.k==="ammo"){   p.ammo=Math.min(AMMO_MAX,p.ammo+3); msg=T_.puAmmo; }
+            if(it.k==="shield"){ p.shield=600;  msg=T_.puShield; }
+            if(it.k==="boost"){  p.boost=240;   msg=T_.puBoost; }
+            if(it.k==="magnet"){ p.magnet=540;  msg=T_.puMagnet; }
+            msgT=44; sc+=25;
+            for(let k=0;k<6;k++) sparks.push({x:it.x+15, y:it.y+15, life:16, c:E.coin});
           } else {
             /* rolling or stomping clears a hazard; anything else costs a life */
             if(p.roll || p.vy>6){
@@ -10865,6 +11018,19 @@ function gameSprint(cv,id,lvl,zone){
       x.fill(); x.globalAlpha=1;
     }
 
+    /* --- shots and sparks --- */
+    for(const sh of shots){
+      const sx=sh.x-camX;
+      x.fillStyle=E.second;
+      x.fillRect(sx-14, sh.y-3, 18, 6);
+      x.fillStyle="#FFF"; x.fillRect(sx-4, sh.y-2, 8, 4);
+    }
+    for(const sp of sparks){
+      x.globalAlpha=sp.life/16; x.fillStyle=sp.c||E.coin;
+      x.fillRect(sp.x-camX-2, sp.y-2, 5, 5);
+    }
+    x.globalAlpha=1;
+
     /* --- items, all outlined --- */
     for(const it of items){
       const sx=it.x-camX;
@@ -10877,6 +11043,19 @@ function gameSprint(cv,id,lvl,zone){
           x.beginPath(); x.arc(sx+it.w/2, it.y+it.h/2+bob, it.w/2, 0,7); x.fill();
           x.strokeStyle="rgba(0,0,0,.6)"; x.lineWidth=2; x.stroke();
         }
+      } else if(it.t==="power"){
+        const bob=Math.sin(f*0.1+it.x*0.03)*4;
+        const cx2=sx+15, cy2=it.y+15+bob;
+        x.globalAlpha=0.35+Math.sin(f*0.14)*0.12;
+        x.fillStyle=E.coin;
+        x.beginPath(); x.arc(cx2,cy2,20,0,7); x.fill();
+        x.globalAlpha=1;
+        x.fillStyle="#0B0F1F"; x.beginPath(); x.arc(cx2,cy2,13,0,7); x.fill();
+        x.strokeStyle=E.coin; x.lineWidth=2; x.stroke();
+        x.fillStyle=E.coin; x.font="bold 14px 'Trebuchet MS',sans-serif";
+        x.textAlign="center"; x.textBaseline="middle";
+        x.fillText({ammo:"✦",shield:"◈",boost:"»",magnet:"◎"}[it.k]||"?", cx2, cy2+1);
+        x.textAlign="left"; x.textBaseline="alphabetic";
       } else {
         const im=foes[it.k];
         /* glow ring first so a hazard pops against any backdrop */
@@ -10922,6 +11101,12 @@ function gameSprint(cv,id,lvl,zone){
       else { x.fillStyle="#EFEAFB"; x.fillRect(p.x-camX, p.y, p.w, p.h); }
       x.shadowBlur=0;
       x.restore();
+      if(p.shield>0){
+        x.globalAlpha=0.30+Math.sin(f*0.18)*0.12;
+        x.strokeStyle="#4DE0B1"; x.lineWidth=3;
+        x.beginPath(); x.arc(cx, p.y+p.h/2, p.h*0.72, 0, 7); x.stroke();
+        x.globalAlpha=1;
+      }
     }
     x.restore();
 
@@ -10933,6 +11118,24 @@ function gameSprint(cv,id,lvl,zone){
       x.textAlign="center"; x.fillText(msg, W/2, BAND_Y-30);
       x.globalAlpha=1;
     }
+    /* ammo pips and active power-ups */
+    x.fillStyle="rgba(11,15,31,.7)"; x.fillRect(10,H-34,130,26);
+    for(let i=0;i<AMMO_MAX;i++){
+      x.fillStyle = i<p.ammo ? E.second : "rgba(255,255,255,.16)";
+      x.fillRect(18+i*19, H-26, 13, 10);
+    }
+    let px=150;
+    const badge=(on,label,col)=>{ if(on<=0) return;
+      x.fillStyle="rgba(11,15,31,.7)"; x.fillRect(px,H-34,58,26);
+      x.fillStyle=col; x.font="bold 11px 'Courier New',monospace";
+      x.fillText(label, px+8, H-17);
+      x.fillStyle="rgba(255,255,255,.25)";
+      x.fillRect(px+8, H-14, Math.min(42, on/14), 3);
+      px+=64; };
+    badge(p.shield,"SHIELD","#4DE0B1");
+    badge(p.boost,"BOOST",E.coin);
+    badge(p.magnet,"MAGNET","#9B7BE0");
+
     /* combo meter */
     if(combo>2){
       x.fillStyle="rgba(11,15,31,.7)"; x.fillRect(10,10,104,26);
@@ -11340,8 +11543,11 @@ function gameKart(cv,id,lvl,zone){
       col:isYou?you.col:rivalPool[idx-1].col,
       name:isYou?you.label:rivalPool[idx-1].label,
       /* start on the grid, staggered two-by-two behind the line */
-      x:track.startX+Math.cos(track.startAngle-Math.PI)*idx*24-Math.sin(track.startAngle)*((idx%2)?18:-18),
-      y:track.startY+Math.sin(track.startAngle-Math.PI)*idx*24+Math.cos(track.startAngle)*((idx%2)?18:-18),
+      /* Two-by-two behind the line, but only 11px off the centreline: the
+         tarmac is 46px wide, so an 18px offset put the outside row's hitbox on
+         the grass before the lights even went out. */
+      x:track.startX+Math.cos(track.startAngle-Math.PI)*(20+idx*22)-Math.sin(track.startAngle)*((idx%2)?11:-11),
+      y:track.startY+Math.sin(track.startAngle-Math.PI)*(20+idx*22)+Math.cos(track.startAngle)*((idx%2)?11:-11),
       a:track.startAngle, speed:0, targetSpeed:0,
       lap:0, cp:0, cpDone:false,
       wp:0,                  /* current path waypoint (AI + progress) */
@@ -11388,7 +11594,13 @@ function gameKart(cv,id,lvl,zone){
     winRacer:null
   };
   const MAX_SPEED=1.6+lvl*0.12;         /* world units per physics tick   */
-  const ACCEL=0.028, DECEL=0.012, BRAKE=0.05, OFF_DECEL=0.03;
+  /* OFF_DECEL must stay well under ACCEL. When it was 0.03 against an ACCEL of
+     0.028, a kart that clipped the grass lost more speed each frame than it
+     could gain, so it decayed to 0 km/h and stayed there for the rest of the
+     race — the clock ran, the rank read last, and nothing the student pressed
+     did anything. Off-road is now a penalty you can drive out of. */
+  const ACCEL=0.030, DECEL=0.012, BRAKE=0.05, OFF_DECEL=0.011;
+  const OFF_CAP=0.55;                    /* grass also caps your top speed */
   const TURN=0.038;
   const AI_MAX=MAX_SPEED*(0.82+Math.min(lvl,6)*0.02);   /* keep it beatable */
 
@@ -11524,9 +11736,14 @@ function gameKart(cv,id,lvl,zone){
     const cx=Math.floor(r.x)&(TS-1), cy=Math.floor(r.y)&(TS-1);
     const onRoad=ROAD[cy*TS+cx];
     if(!onRoad){
-      const dec=(r.isYou&&you.k==="saucer")?OFF_DECEL*0.5:OFF_DECEL;
-      r.speed=Math.max(0,r.speed-dec);
-    }
+      const soft=(r.isYou&&you.k==="saucer")?0.5:1;
+      r.speed=Math.max(0,r.speed-OFF_DECEL*soft);
+      /* cap rather than drain: you keep moving, just slowly, so you can always
+         steer back onto the tarmac */
+      const cap=MAX_SPEED*(OFF_CAP+(1-OFF_CAP)*(soft===0.5?0.5:0));
+      if(r.speed>cap) r.speed=cap;
+      r.offRoad=true;
+    } else r.offRoad=false;
 
     /* traps: any kart driving over gum spins out */
     for(const t of st.traps){
@@ -11909,6 +12126,11 @@ function gameKart(cv,id,lvl,zone){
       x.fillText("!!",W/2,H-70);
     }
 
+    if(player.offRoad&&!over){
+      x.fillStyle="rgba(255,77,157,.85)"; x.font="bold 15px 'Trebuchet MS',sans-serif";
+      x.textAlign="center"; x.fillText(T_.offRoad.toUpperCase(),W/2,HORIZON+26);
+      x.textAlign="left";
+    }
     drawHUD();
   });
 }
