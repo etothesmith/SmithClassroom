@@ -418,6 +418,39 @@ ul.ctrl li{margin:4px 0;color:var(--ink)}
 .mtile.done{opacity:.25;border-color:var(--crt)}
 @media(min-width:700px){.matchgrid{grid-template-columns:repeat(3,1fr)}}
 
+/* ---------- smartboard buzzers ---------- */
+.buzzbar{display:grid;gap:8px;margin-top:10px;
+  grid-template-columns:repeat(auto-fit,minmax(120px,1fr))}
+.buzzer{display:flex;flex-direction:column;align-items:center;gap:2px;padding:16px 8px;
+  min-height:92px;border:3px solid var(--line);border-radius:16px;
+  background:linear-gradient(180deg,#2B2150,#150F2B);
+  transition:transform .1s,border-color .1s,background .1s}
+.buzzer:hover:not(:disabled){transform:translateY(-3px);border-color:var(--gold)}
+.buzzer:active:not(:disabled){transform:scale(.95)}
+.buzzer.won{border-color:var(--crt);background:linear-gradient(180deg,#0E4A3A,#04241C);
+  animation:glowPulse 1s ease infinite}
+.buzzer.out{opacity:.28}
+.bznum{width:34px;height:34px;display:grid;place-items:center;border-radius:50%;
+  background:var(--gold);color:#2A1D00;font-family:var(--mono);font-weight:800;font-size:16px}
+.buzzer.won .bznum{background:var(--crt);color:#03201A}
+.bzname{font-size:12.5px;font-weight:700;max-width:100%;overflow:hidden;
+  text-overflow:ellipsis;white-space:nowrap}
+.bzscore{font-family:var(--mono);font-size:11px;color:var(--dim)}
+.sizerow{display:flex;align-items:center;gap:12px;padding:9px 0;border-bottom:1px solid var(--line)}
+.sizename{flex:1;font-size:14px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.sizepick{display:flex;gap:5px}
+.szbtn{width:38px;height:38px;border:2px solid var(--line);border-radius:9px;
+  background:var(--cab2);font-family:var(--mono);font-weight:700}
+.szbtn.on{border-color:var(--gold);background:var(--gold);color:#2A1D00}
+.whosup{display:flex;gap:14px;align-items:center;
+  border:2px solid var(--gold);background:linear-gradient(180deg,rgba(242,180,65,.16),rgba(242,180,65,.04));
+  animation:popIn .3s ease both}
+.whosupart{flex:none;width:74px}
+.whosupart img{width:100%;height:auto;image-rendering:pixelated}
+.whosupbody{flex:1;min-width:0}
+.whosupname{font-family:var(--disp);font-weight:800;text-transform:uppercase;
+  letter-spacing:.04em;font-size:clamp(17px,4.4vw,25px);color:var(--gold);margin:4px 0 0}
+
 /* ---------- game show ---------- */
 .jeohead{text-align:left}
 .jeotitle{font-family:var(--disp);font-weight:800;text-transform:uppercase;
@@ -1601,6 +1634,7 @@ const PACKS = [
 }
 ]
 },
+{"id":"ap-i1","title":{"en":"Micro Unit 1 · Basic Economic Concepts","es":"Micro Unidad 1 · Conceptos económicos básicos"},"brief":{"en":"Microeconomics starts where macro does — with scarcity — but it looks at the single decision maker rather than the whole economy. Every choice a person or a firm makes has an opportunity cost: the value of the next-best thing given up. Rational decision makers weigh marginal benefit against marginal cost, doing one more of something only while the extra benefit is at least the extra cost. The production possibilities curve shows the combinations available with fixed resources; points inside are inefficient, points outside are unattainable for now, and the bow shape exists because resources are not equally suited to both jobs. Comparative advantage — the lower opportunity cost, not the bigger output — is what decides who should specialise, and specialisation plus trade lets both parties consume beyond their own curves. Economic systems differ in who answers the three questions: what to produce, how to produce it, and who receives it.","es":"La microeconomía empieza donde empieza la macro, con la escasez, pero mira al individuo o a la empresa y no a la economía entera. Cada elección tiene un costo de oportunidad: el valor de la mejor alternativa que se sacrifica. Quien decide racionalmente compara el beneficio marginal con el costo marginal y hace una unidad más solo mientras el beneficio extra alcance el costo extra. La curva de posibilidades de producción muestra las combinaciones disponibles con recursos fijos: los puntos interiores son ineficientes, los exteriores no se alcanzan por ahora, y la curva se arquea porque los recursos no sirven igual para ambas tareas. La ventaja comparativa, es decir el menor costo de oportunidad y no la mayor producción, decide quién debe especializarse, y especializarse y comerciar permite a ambos consumir más allá de su propia curva. Los sistemas económicos se distinguen por quién responde las tres preguntas: qué producir, cómo producirlo y quién lo recibe."},"items":[{"id":"api101","type":"mcq","diff":1,"q":{"en":"You spend Saturday at a shift that pays $60. Your other options were a concert ticket you value at $45 and studying, which you value at $20. Your opportunity cost is:","es":"Pasas el sábado en un turno que paga $60. Tus otras opciones eran un concierto que valoras en $45 y estudiar, que valoras en $20. Tu costo de oportunidad es:"},"c":{"en":["$45 — the next-best option you gave up","$65 — everything you gave up added together","$60 — what you earned instead","$20 — the cheapest thing you gave up"],"es":["$45: la mejor alternativa que sacrificaste","$65: todo lo que sacrificaste sumado","$60: lo que ganaste en su lugar","$20: lo más barato que sacrificaste"]},"a":0,"why":{"en":"Opportunity cost is the single next-best alternative, not the sum of every option and not what you gained.","es":"El costo de oportunidad es la única mejor alternativa sacrificada, no la suma de todas ni lo que ganaste."}},{"id":"api102","type":"mcq","diff":1,"q":{"en":"A point in the interior of a production possibilities curve represents:","es":"Un punto en el interior de la curva de posibilidades de producción representa:"},"c":{"en":["Production that is attainable but inefficient","Production that is impossible with current resources","The most efficient use of every resource","A point only reachable through trade"],"es":["Producción alcanzable pero ineficiente","Producción imposible con los recursos actuales","El uso más eficiente de todos los recursos","Un punto que solo se alcanza comerciando"]},"a":0,"why":{"en":"Interior points leave resources idle or badly used, so more of both goods could be produced without giving anything up.","es":"Los puntos interiores dejan recursos ociosos o mal usados, así que se podría producir más de ambos bienes sin sacrificar nada."}},{"id":"api103","type":"mcq","diff":2,"q":{"en":"Why does a production possibilities curve usually bow outward rather than being a straight line?","es":"¿Por qué la curva de posibilidades de producción suele arquearse en lugar de ser una línea recta?"},"c":{"en":["Resources are not equally suited to producing both goods","Technology improves as you produce more","Opportunity cost falls as you specialise","Because one good is always more valuable than the other"],"es":["Los recursos no sirven igual para producir ambos bienes","La tecnología mejora al producir más","El costo de oportunidad baja al especializarse","Porque un bien siempre vale más que el otro"]},"a":0,"why":{"en":"As you push toward one good you must move resources that were poorly suited to it, so each extra unit costs more of the other good.","es":"Al empujar hacia un bien debes mover recursos poco aptos para él, así que cada unidad extra cuesta más del otro bien."}},{"id":"api104","type":"mcq","diff":2,"q":{"en":"Ana can make 12 bracelets or 4 necklaces in an hour. Ben can make 6 bracelets or 3 necklaces. Who has the comparative advantage in necklaces?","es":"Ana hace 12 pulseras o 4 collares por hora. Ben hace 6 pulseras o 3 collares. ¿Quién tiene la ventaja comparativa en collares?"},"c":{"en":["Ben — a necklace costs him 2 bracelets, against Ana's 3","Ana — she makes more necklaces per hour","Ana — she makes more of both goods","Neither — their opportunity costs are the same"],"es":["Ben: un collar le cuesta 2 pulseras, frente a las 3 de Ana","Ana: hace más collares por hora","Ana: produce más de ambos bienes","Ninguno: sus costos de oportunidad son iguales"]},"a":0,"why":{"en":"Ana gives up 3 bracelets per necklace (12/4); Ben gives up 2 (6/3). Lower opportunity cost wins, even though Ana out-produces him at everything.","es":"Ana sacrifica 3 pulseras por collar (12/4); Ben sacrifica 2 (6/3). Gana el menor costo de oportunidad, aunque Ana produzca más de todo."}},{"id":"api105","type":"numeric","diff":2,"q":{"en":"A bakery can make 40 loaves or 10 cakes with the same resources. What is the opportunity cost of ONE cake, measured in loaves?","es":"Una panadería hace 40 panes o 10 pasteles con los mismos recursos. ¿Cuál es el costo de oportunidad de UN pastel, medido en panes?"},"a":4,"tol":0.01,"why":{"en":"40 loaves ÷ 10 cakes = 4 loaves given up per cake. Always divide what you give up by what you gain.","es":"40 panes ÷ 10 pasteles = 4 panes sacrificados por pastel. Divide siempre lo que sacrificas entre lo que ganas."}},{"id":"api106","type":"mcq","diff":2,"q":{"en":"A rational decision maker should produce one more unit when:","es":"Quien decide racionalmente debe producir una unidad más cuando:"},"c":{"en":["Marginal benefit is at least marginal cost","Total benefit is greater than total cost","Average cost is falling","Marginal cost is at its lowest point"],"es":["El beneficio marginal alcanza al costo marginal","El beneficio total supera al costo total","El costo medio está bajando","El costo marginal está en su punto más bajo"]},"a":0,"why":{"en":"Marginal thinking compares the extra benefit of one more against the extra cost of one more — totals and averages don't answer that question.","es":"El pensamiento marginal compara el beneficio extra de una unidad más con su costo extra; los totales y promedios no responden eso."}},{"id":"api107","type":"multi","diff":2,"q":{"en":"Select every situation that would shift a country's production possibilities curve OUTWARD.","es":"Selecciona todas las situaciones que desplazarían la curva de posibilidades hacia AFUERA."},"c":{"en":["A new technology that raises output per worker","Immigration that grows the labour force","Moving from an interior point to a point on the curve","A natural disaster that destroys factories"],"es":["Una tecnología nueva que sube la producción por trabajador","Inmigración que aumenta la fuerza laboral","Pasar de un punto interior a un punto sobre la curva","Un desastre natural que destruye fábricas"]},"a":[0,1],"why":{"en":"Growth needs more resources or better technology. Moving onto the curve is a gain in efficiency, not growth, and a disaster shifts it inward.","es":"El crecimiento requiere más recursos o mejor tecnología. Llegar a la curva es eficiencia, no crecimiento, y un desastre la desplaza hacia adentro."}},{"id":"api108","type":"mcq","diff":1,"q":{"en":"In a market economy, who primarily answers the question 'what should be produced?'","es":"En una economía de mercado, ¿quién responde principalmente a '¿qué se debe producir?'"},"c":{"en":["Buyers and sellers, through prices","A central planning authority","The largest firms only","Elected representatives by vote"],"es":["Compradores y vendedores, a través de los precios","Una autoridad central de planificación","Solo las empresas más grandes","Los representantes electos por votación"]},"a":0,"why":{"en":"Prices carry the information and the incentive: what buyers will pay signals what is worth producing.","es":"Los precios llevan la información y el incentivo: lo que los compradores pagan señala qué vale la pena producir."}},{"id":"api109","type":"short","diff":2,"q":{"en":"In one sentence, explain why a country can consume beyond its own production possibilities curve when it specialises and trades.","es":"En una oración, explica por qué un país puede consumir más allá de su propia curva de posibilidades cuando se especializa y comercia."},"keys":["trade","specializ","specialis","comparative advantage","lower opportunity cost","exchange"],"why":{"en":"Each country produces what it gives up least to make, then trades. The combined output is larger, so both can consume outside their own curve — though neither can PRODUCE outside it.","es":"Cada país produce lo que menos sacrifica y luego comercia. La producción conjunta es mayor, así que ambos consumen fuera de su curva, aunque ninguno pueda PRODUCIR fuera de ella."}},{"id":"api110","type":"mcq","diff":3,"q":{"en":"A firm has already spent $8,000 on equipment that cannot be resold. When deciding whether to continue the project, that $8,000 should be:","es":"Una empresa ya gastó $8,000 en equipo que no se puede revender. Al decidir si continuar el proyecto, esos $8,000 deben:"},"c":{"en":["Ignored — it is a sunk cost and cannot be recovered","Added to the future costs of continuing","Subtracted from the expected benefit","Treated as the opportunity cost of stopping"],"es":["Ignorarse: es un costo hundido y no se recupera","Sumarse a los costos futuros de continuar","Restarse del beneficio esperado","Tratarse como el costo de oportunidad de parar"]},"a":0,"why":{"en":"A sunk cost is gone whichever choice you make, so it cannot change which choice is better. Only future costs and benefits belong in the decision.","es":"Un costo hundido se pierde elijas lo que elijas, así que no puede cambiar qué opción es mejor. Solo los costos y beneficios futuros cuentan."}}]},
 {
 "id": "ap-i2",
 "title": {
@@ -5801,6 +5835,14 @@ const T = {
     gameShowIntro:"A team game show for the room. Two full rounds, then the top two wager it out.",
     howManyTables:"How many tables are playing?",
     buzzMode:"Buzz-in",buzzKeys:"Keyboard buzzers",buzzTap:"I'll tap who buzzed",
+    buzzBoard:"Smartboard buzzers",
+    buzzBoardHelp:"Big buzzers across the bottom of the board — one per table. First tap wins and the rest lock out. Number keys still work at the same time, so a runner at the board and a laptop both work.",
+    tapYourBuzzer:"Hit your buzzer",buzzedIn:"Buzzed in",
+    howManyEach:"How many at each table?",
+    whosUpHelp:"Tell me the headcount and I'll pick who answers each time a table buzzes in.",
+    whosUpRules:"Nobody answers twice in a row, nobody answers more than four times, and whoever has had the fewest turns goes first. The table can't just send its strongest player every time.",
+    whosUpSkip:"Skip — anyone at the table can answer",
+    whosUp:"You're up",seat:"Seat",seatTurns:"Turns so far:",
     buzzKeysHelp:"Number keys 1-9 and 0 are wired to tables 1-10. First key down wins and locks everyone else out. A USB numpad passed around the room works well.",
     buzzTapHelp:"Students shout or raise hands, you tap the table that got there first.",
     teamNames:"Name the teams",
@@ -6081,6 +6123,14 @@ const T = {
     gameShowIntro:"Un concurso por equipos. Dos rondas completas y luego los dos mejores apuestan.",
     howManyTables:"Cuantas mesas juegan?",
     buzzMode:"Timbre",buzzKeys:"Teclas como timbres",buzzTap:"Yo toco quien sono",
+    buzzBoard:"Timbres en la pizarra",
+    buzzBoardHelp:"Timbres grandes abajo en la pizarra, uno por mesa. El primer toque gana y los demas se bloquean. Las teclas numericas siguen funcionando a la vez.",
+    tapYourBuzzer:"Toca tu timbre",buzzedIn:"Timbre sonado",
+    howManyEach:"Cuantos hay en cada mesa?",
+    whosUpHelp:"Dime cuantos son y yo elijo quien responde cada vez que suene el timbre.",
+    whosUpRules:"Nadie responde dos veces seguidas, nadie mas de cuatro veces, y va primero quien menos turnos ha tenido. La mesa no puede mandar siempre al mismo.",
+    whosUpSkip:"Omitir: puede responder cualquiera",
+    whosUp:"Te toca",seat:"Asiento",seatTurns:"Turnos hasta ahora:",
     buzzKeysHelp:"Las teclas 1-9 y 0 corresponden a las mesas 1-10. La primera tecla gana y bloquea a las demas. Un teclado numerico USB que pase por las mesas funciona muy bien.",
     buzzTapHelp:"Los estudiantes gritan o levantan la mano y tu tocas la mesa que llego primero.",
     teamNames:"Nombra los equipos",
@@ -7347,6 +7397,50 @@ const VOCAB = {
      es:"Cuánto dinero total puede crear un depósito nuevo mediante préstamos."}}
 ],
 
+"ap-i1":[
+ {t:"choice", w:{en:"Opportunity cost",es:"Costo de oportunidad"},
+  d:{en:"The value of the single next-best option you gave up — not the total of everything you passed on.",
+     es:"El valor de la única mejor alternativa sacrificada, no la suma de todo lo que dejaste."}},
+ {t:"choice", w:{en:"Scarcity",es:"Escasez"},
+  d:{en:"Unlimited wants against limited resources, which is why every choice costs something.",
+     es:"Deseos ilimitados frente a recursos limitados: por eso toda eleccion cuesta algo."}},
+ {t:"choice", w:{en:"Sunk cost",es:"Costo hundido"},
+  d:{en:"Money already spent that cannot be recovered, so it should not affect what you decide next.",
+     es:"Dinero ya gastado que no se recupera, asi que no debe afectar lo que decidas ahora."}},
+ {t:"marginal", w:{en:"Marginal benefit",es:"Beneficio marginal"},
+  d:{en:"The extra benefit you get from one more unit of something.",
+     es:"El beneficio adicional que obtienes de una unidad mas."}},
+ {t:"marginal", w:{en:"Marginal cost",es:"Costo marginal"},
+  d:{en:"The extra cost of producing or consuming one more unit.",
+     es:"El costo adicional de producir o consumir una unidad mas."}},
+ {t:"marginal", w:{en:"Marginal analysis",es:"Analisis marginal"},
+  d:{en:"Deciding by comparing the extra benefit of one more against its extra cost.",
+     es:"Decidir comparando el beneficio extra de una unidad mas con su costo extra."}},
+ {t:"ppc1", w:{en:"Production possibilities curve",es:"Curva de posibilidades de produccion"},
+  d:{en:"A graph of every efficient combination of two goods a producer can manage with fixed resources.",
+     es:"Grafica de las combinaciones eficientes de dos bienes con recursos fijos."}},
+ {t:"ppc1", w:{en:"Efficiency",es:"Eficiencia"},
+  d:{en:"Producing on the curve, with nothing idle and nothing wasted.",
+     es:"Producir sobre la curva, sin nada ocioso ni desperdiciado."}},
+ {t:"ppc1", w:{en:"Economic growth",es:"Crecimiento economico"},
+  d:{en:"The whole curve moving outward, from more resources or better technology.",
+     es:"La curva entera se mueve hacia afuera por mas recursos o mejor tecnologia."}},
+ {t:"trade1", w:{en:"Comparative advantage",es:"Ventaja comparativa"},
+  d:{en:"Producing at a lower opportunity cost than someone else — this, not raw output, decides who specialises.",
+     es:"Producir con menor costo de oportunidad que otro: esto, y no la produccion total, decide quien se especializa."}},
+ {t:"trade1", w:{en:"Absolute advantage",es:"Ventaja absoluta"},
+  d:{en:"Simply producing more of a good with the same resources. It does not decide who should trade.",
+     es:"Simplemente producir mas de un bien con los mismos recursos. No decide quien debe comerciar."}},
+ {t:"trade1", w:{en:"Specialisation",es:"Especializacion"},
+  d:{en:"Concentrating on what you give up least to produce, then trading for the rest.",
+     es:"Concentrarte en lo que menos sacrificas producir y comerciar por lo demas."}},
+ {t:"systems1", w:{en:"Market economy",es:"Economia de mercado"},
+  d:{en:"Buyers and sellers answer what, how and for whom through prices.",
+     es:"Compradores y vendedores responden que, como y para quien mediante los precios."}},
+ {t:"systems1", w:{en:"Command economy",es:"Economia centralizada"},
+  d:{en:"A central authority answers the three questions instead of prices.",
+     es:"Una autoridad central responde las tres preguntas en lugar de los precios."}}
+],
 "ap-i2":[
  {t:"demand", w:{en:"Law of demand",es:"Ley de la demanda"},
   d:{en:"When price rises, quantity demanded falls, all else equal.",
@@ -7752,6 +7846,11 @@ const TOPIC_LABEL = {
  ppc:{en:"The Curve",es:"La curva"},
  advantage:{en:"Advantage & Trade",es:"Ventaja y comercio"},
  factors:{en:"Factors",es:"Factores"},
+ choice:{en:"Choice & Cost",es:"Eleccion y costo"},
+ marginal:{en:"Thinking at the Margin",es:"Pensar al margen"},
+ ppc1:{en:"The Curve",es:"La curva"},
+ trade1:{en:"Advantage & Trade",es:"Ventaja y comercio"},
+ systems1:{en:"Economic Systems",es:"Sistemas economicos"},
  output:{en:"Measuring Output",es:"Medir la producción"},
  jobs:{en:"Jobs",es:"Empleo"},
  prices:{en:"Prices",es:"Precios"},
@@ -8473,12 +8572,149 @@ function buildCategory(topicRef, perCat){
   return {topic:topicRef.t, unit:topicRef.unit, label:topicLabel(topicRef.t), clues:clues.slice(0,perCat)};
 }
 
+/* ============================================================================
+   SMARTBOARD MODE  +  WHO'S UP
+   ----------------------------------------------------------------------------
+   Two additions to the game show, both aimed at the same problem: on a
+   smartboard there is one screen and one set of hands, so participation
+   collapses onto whoever is loudest.
+
+   BUZZERS ON THE BOARD
+     Big touch targets, one per table, laid out across the bottom of the board.
+     First tap wins and every other buzzer greys out. On a smartboard a runner
+     from each table stands at the board; on a laptop the number keys still
+     work, so both input methods are live at once.
+
+   WHO'S UP
+     You tell the app how many students sit at each table. When a table buzzes
+     in, the app names the specific member who has to answer, chosen at random
+     but constrained:
+       - never the same person twice in a row at that table
+       - nobody answers more than four times in a game
+       - the pool refreshes to whoever is furthest below the average
+     That last rule is what makes it work: a quiet student and a confident one
+     end up with the same number of turns, and the table cannot volunteer its
+     strongest member every time.
+
+   Seats are numbered, not named. Typing thirty names into a smartboard before
+   a game is a tax nobody pays twice, and "Table 3, seat 2, you're up" carries
+   the same information across a classroom.
+   ========================================================================== */
+
+const WHOSUP_MAX = 4;     /* nobody answers more than this in one game */
+
+function seatInit(team, size){
+  team.size = Math.max(1, Math.min(8, size|0));
+  team.turns = new Array(team.size).fill(0);
+  team.lastSeat = -1;
+}
+/* Choose which member of a table has to answer. */
+function pickSeat(team){
+  if (!team.size) return null;
+  const turns = team.turns || (team.turns = new Array(team.size).fill(0));
+  let pool = [];
+  for (let i = 0; i < team.size; i++){
+    if (turns[i] >= WHOSUP_MAX) continue;      /* capped out for the game */
+    if (i === team.lastSeat && team.size > 1) continue;  /* no back-to-back */
+    pool.push(i);
+  }
+  /* everyone is capped or blocked: relax the cap before the no-repeat rule,
+     because being told "you again" is better than the game refusing to run */
+  if (!pool.length){
+    for (let i = 0; i < team.size; i++) if (i !== team.lastSeat || team.size === 1) pool.push(i);
+  }
+  if (!pool.length) pool = [0];
+  /* favour whoever has had the fewest turns so far */
+  const min = Math.min.apply(null, pool.map(i => turns[i]));
+  const fair = pool.filter(i => turns[i] === min);
+  const seat = fair[Math.floor(Math.random() * fair.length)];
+  return seat;
+}
+function commitSeat(team, seat){
+  if (seat == null) return;
+  team.turns[seat] = (team.turns[seat] || 0) + 1;
+  team.lastSeat = seat;
+}
+/* How evenly has this table shared its turns? Used in the wrap-up. */
+function seatSpread(team){
+  if (!team.turns || !team.turns.length) return "";
+  return team.turns.map((n,i)=>"#"+(i+1)+":"+n).join("  ");
+}
+
+/* ---- setup: table sizes ------------------------------------------------ */
+function jeoSizes(){
+  V().innerHTML = `
+  <div class="eprow"><button class="btn ghost" style="padding:8px 12px;min-height:0"
+    onclick="JEO.stage='names';viewGameShow()">← ${T_.back}</button></div>
+  <section class="panel raised jeohead">
+    <h1 class="jeotitle">${T_.howManyEach}</h1>
+    <p class="muted">${T_.whosUpHelp}</p>
+  </section>
+  <section class="panel">
+    ${JEO.teams.map((t,i)=>`
+      <div class="sizerow">
+        <span class="sizename">${esc(t.name)}</span>
+        <div class="sizepick">
+          ${[1,2,3,4,5,6].map(n=>`<button class="szbtn ${t.size===n?'on':''}"
+            onclick="jeoSetSize(${i},${n})">${n}</button>`).join("")}
+        </div>
+      </div>`).join("")}
+    <p class="muted" style="font-size:12.5px;margin-top:14px">${T_.whosUpRules}</p>
+    <button class="btn primary wide" style="margin-top:14px" onclick="JEO.stage='topics';viewGameShow()">
+      ${T_.next} →</button>
+    <button class="btn ghost wide" style="margin-top:8px" onclick="jeoSkipSizes()">${T_.whosUpSkip}</button>
+  </section>`;
+  window.scrollTo(0,0);
+}
+function jeoSetSize(i, n){ seatInit(JEO.teams[i], n); viewGameShow(); }
+function jeoSkipSizes(){
+  JEO.teams.forEach(t=>{ t.size = 0; t.turns = []; t.lastSeat = -1; });
+  JEO.whosUp = false;
+  JEO.stage = "topics"; viewGameShow();
+}
+
+/* ---- the buzzer bar drawn on the board --------------------------------- */
+function jeoBuzzerBar(){
+  const C = JEO.cur;
+  const locked = C && (C.buzzed !== null || C.revealed);
+  return `
+  <div class="buzzbar">
+    ${JEO.teams.map(t=>{
+      const isBuzzed = C && C.buzzed === t.i;
+      const out = t.lock || (locked && !isBuzzed);
+      return `<button class="buzzer ${isBuzzed?'won':''} ${out?'out':''}"
+        ${out||locked?'disabled':''} onclick="jeoBuzz(${t.i})">
+        <span class="bznum">${t.i===9?0:t.i+1}</span>
+        <span class="bzname">${esc(t.name)}</span>
+        <span class="bzscore">$${t.score}</span>
+      </button>`;}).join("")}
+  </div>`;
+}
+
+/* ---- the "you're up" card --------------------------------------------- */
+function jeoWhosUpCard(){
+  const C = JEO.cur;
+  if (!JEO.whosUp || !C || C.seat == null) return "";
+  const t = JEO.teams[C.buzzed];
+  return `
+  <section class="panel whosup">
+    <div class="whosupart">${smitTag("econ","boss_order","smit")}</div>
+    <div class="whosupbody">
+      <div class="eyebrow">${T_.whosUp}</div>
+      <h2 class="whosupname">${esc(t.name)} · ${T_.seat} ${C.seat+1}</h2>
+      <p class="muted" style="margin:6px 0 0;font-size:13px">
+        ${T_.seatTurns} ${(t.turns[C.seat]||0)}/${WHOSUP_MAX}</p>
+    </div>
+  </section>`;
+}
+
 /* ---------- setup screens ---------------------------------------------- */
 function viewGameShow(){
   if (!TEACHER_OK) return go("home");
-  JEO = JEO || {stage:"setup", tables:4, teams:[], topics:[], buzz:"keys", round:1};
+  JEO = JEO || {stage:"setup", tables:4, teams:[], topics:[], buzz:"board", round:1, whosUp:true};
   if (JEO.stage === "setup")  return jeoSetup();
   if (JEO.stage === "names")  return jeoNames();
+  if (JEO.stage === "sizes")  return jeoSizes();
   if (JEO.stage === "topics") return jeoTopics();
   if (JEO.stage === "board")  return jeoBoard();
   if (JEO.stage === "clue")   return jeoClue();
@@ -8503,11 +8739,12 @@ function jeoSetup(){
     </div>
     <div class="eyebrow" style="margin-top:16px">${T_.buzzMode}</div>
     <div class="row" style="margin-top:8px">
+      <button class="btn ${JEO.buzz==='board'?'primary':'ghost'}" onclick="JEO.buzz='board';viewGameShow()">${T_.buzzBoard}</button>
       <button class="btn ${JEO.buzz==='keys'?'primary':'ghost'}" onclick="JEO.buzz='keys';viewGameShow()">${T_.buzzKeys}</button>
       <button class="btn ${JEO.buzz==='tap'?'primary':'ghost'}" onclick="JEO.buzz='tap';viewGameShow()">${T_.buzzTap}</button>
     </div>
     <p class="muted" style="font-size:13px;margin-top:8px">${
-      JEO.buzz==='keys'?T_.buzzKeysHelp:T_.buzzTapHelp}</p>
+      JEO.buzz==='board'?T_.buzzBoardHelp:JEO.buzz==='keys'?T_.buzzKeysHelp:T_.buzzTapHelp}</p>
     <button class="btn primary wide" style="margin-top:18px" onclick="jeoGoNames()">${T_.next} →</button>
   </section>`;
   window.scrollTo(0,0);
@@ -8515,7 +8752,8 @@ function jeoSetup(){
 function jeoGoNames(){
   JEO.teams = [];
   for (let i=0;i<JEO.tables;i++)
-    JEO.teams.push({i:i, name:"", score:0, key:JEO_KEYS[i], lock:false});
+    JEO.teams.push({i:i, name:"", score:0, key:JEO_KEYS[i], lock:false,
+                    size:3, turns:[0,0,0], lastSeat:-1});
   JEO.stage = "names"; viewGameShow();
 }
 function jeoNames(){
@@ -8540,7 +8778,7 @@ function jeoSaveNames(){
     const el = document.getElementById("tn"+i);
     t.name = (el && el.value.trim()) || (T_.table + " " + (i+1));
   });
-  JEO.stage = "topics"; viewGameShow();
+  JEO.stage = "sizes"; viewGameShow();
 }
 function jeoTopics(){
   const all = allTopics();
@@ -8687,26 +8925,23 @@ function jeoClue(){
     <p class="jeoq">${esc(cl.q)}</p>
     <div class="jeoopts" id="jopts">
       ${cl.c.map((t,i)=>`<button class="jeoopt ${C.revealed?(i===cl.a?'right':(C.picked===i?'wrong':'')):''}"
-        ${C.buzzed===null&&JEO.buzz==='keys'?'disabled':''} onclick="jeoPick(${i})">
+        ${C.buzzed===null&&JEO.buzz!=='tap'?'disabled':''} onclick="jeoPick(${i})">
         <span class="jeoletter">${"ABCD"[i]}</span>${esc(t)}</button>`).join("")}
     </div>
     <div id="jstatus" class="jeostatus">${jeoStatusHTML()}</div>
   </section>
+  ${jeoWhosUpCard()}
   ${C.revealed?`<section class="panel jeowhy">
     <div class="eyebrow">${T_.whyThat}</div>
     <p>${esc(cl.why)}</p>
     <button class="btn primary wide" style="margin-top:12px" onclick="jeoBackToBoard()">${T_.board}</button>
   </section>`:`
   <section class="panel">
-    <div class="eyebrow">${JEO.buzz==='keys'?T_.waitingBuzz:T_.whoBuzzed}</div>
-    <div class="topicgrid" style="margin-top:8px">
-      ${JEO.teams.map(t=>`<button class="topicbtn ${C.buzzed===t.i?'on':''} ${t.lock?'locked':''}"
-        ${t.lock?'disabled':''} onclick="jeoBuzz(${t.i})">
-        <b>${esc(t.name)}</b><small>${JEO.buzz==='keys'?T_.key+" "+(t.i===9?0:t.i+1):"$"+t.score}</small></button>`).join("")}
-    </div>
+    <div class="eyebrow">${C.buzzed===null?T_.tapYourBuzzer:T_.buzzedIn}</div>
+    ${jeoBuzzerBar()}
     ${C.buzzed!==null?`<button class="btn ghost wide" style="margin-top:10px" onclick="jeoNoAnswer()">${T_.passIt}</button>`:""}
   </section>`}`;
-  if (JEO.buzz === "keys" && !C.revealed) jeoBind();
+  if ((JEO.buzz === "keys" || JEO.buzz === "board") && !C.revealed) jeoBind();
   window.scrollTo(0,0);
 }
 function jeoStatusHTML(){
@@ -8755,8 +8990,13 @@ function jeoBuzz(i){
   if (!C || C.buzzed !== null || C.revealed) return;
   if (JEO.teams[i].lock) return;
   C.buzzed = i;
+  /* name the specific student who has to answer */
+  if (JEO.whosUp && JEO.teams[i].size > 0){
+    C.seat = pickSeat(JEO.teams[i]);
+    commitSeat(JEO.teams[i], C.seat);
+  } else C.seat = null;
   jeoUnbind();
-  toast("🔔 " + JEO.teams[i].name);
+  toast("🔔 " + JEO.teams[i].name + (C.seat!=null ? " · " + T_.seat + " " + (C.seat+1) : ""));
   viewGameShow();
 }
 /* The dramatic pause. Four seconds of the board holding its breath before the
@@ -8764,7 +9004,7 @@ function jeoBuzz(i){
 function jeoPick(i){
   const C = JEO.cur;
   if (!C || C.revealed || C.counting) return;
-  if (JEO.buzz === "keys" && C.buzzed === null) return;
+  if ((JEO.buzz === "keys" || JEO.buzz === "board") && C.buzzed === null) return;
   if (C.buzzed === null) C.buzzed = 0;
   C.picked = i;
   C.counting = true;
@@ -8903,7 +9143,8 @@ function jeoDone(){
   </section>`:""}
   <section class="panel">
     <table><tbody>
-      ${ranked.map((t,i)=>`<tr><td>${i+1}</td><td>${esc(t.name)}</td>
+      ${ranked.map((t,i)=>`<tr><td>${i+1}</td><td>${esc(t.name)}
+        ${JEO.whosUp&&t.size?`<br><small class="muted" style="font-family:var(--mono);font-size:11px">${seatSpread(t)}</small>`:""}</td>
         <td style="text-align:right;font-family:var(--mono);color:${t.score<0?'var(--hot)':'var(--crt)'}">$${t.score}</td></tr>`).join("")}
     </tbody></table>
     <button class="btn primary wide" style="margin-top:14px" onclick="JEO=null;viewGameShow()">${T_.newGame}</button>
