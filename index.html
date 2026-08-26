@@ -266,6 +266,59 @@ ul.ctrl li{margin:4px 0;color:var(--ink)}
 .wbar i{display:block;height:100%;transition:width .18s}
 .wquiz:not(:empty){margin-top:16px;padding-top:14px;border-top:1px solid var(--line)}
 
+/* ---------- study: one area per class ---------- */
+.packtabs{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.packtab{display:flex;flex-direction:column;gap:2px;padding:10px 14px;text-align:left;
+  border:2px solid var(--line);border-radius:10px;background:var(--cab2);
+  transition:transform .15s,border-color .15s}
+.packtab small{color:var(--dim);font-size:11px}
+.packtab.on{border-color:var(--gold);background:rgba(242,180,65,.12);transform:translateY(-2px)}
+.packtab:hover{transform:translateY(-2px)}
+.unitcard{border-left:4px solid var(--line);animation:riseIn .34s ease both}
+.unitcard.done{border-left-color:var(--crt)}
+.unithead{display:flex;gap:14px;align-items:flex-start}
+.unitart{flex:none;width:74px;background:linear-gradient(180deg,#2B2150,#150F2B);
+  border:1px solid var(--line);border-radius:10px;padding:6px;display:grid;place-items:center}
+.unitart img{width:100%;height:auto;image-rendering:pixelated}
+.unitmeta{flex:1;min-width:0}
+.unitmeta h3{font-size:17px;margin:4px 0 8px;line-height:1.3}
+@media(max-width:520px){.unitart{width:56px}}
+
+/* ---------- motion ---------- */
+@keyframes riseIn{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+@keyframes popIn{from{opacity:0;transform:scale(.9)}to{opacity:1;transform:none}}
+@keyframes glowPulse{0%,100%{box-shadow:0 0 0 rgba(242,180,65,0)}50%{box-shadow:0 0 18px rgba(242,180,65,.55)}}
+@keyframes floaty{0%,100%{transform:translateY(0)}50%{transform:translateY(-7px)}}
+@keyframes shimmer{0%{background-position:-300px 0}100%{background-position:300px 0}}
+.epart img{animation:floaty 3.4s ease-in-out infinite}
+.panel{animation:riseIn .3s ease both}
+.chunkcard{transition:transform .16s,border-color .16s}
+.chunkcard:not(.locked):hover{transform:translateX(5px);border-left-color:var(--gold)}
+.chunkcard.started{border-left-color:var(--gold)}
+.revcard{transition:transform .16s}
+.revcard:hover{transform:translateX(5px)}
+.btn.primary{transition:transform .12s,filter .12s}
+.btn.primary:hover{transform:translateY(-2px);filter:brightness(1.1)}
+.btn:active{transform:scale(.97)}
+.opt,.jeoopt{transition:transform .12s,border-color .12s,background .12s}
+.opt:not(:disabled):hover,.jeoopt:not(:disabled):hover{transform:translateX(3px)}
+.opt.right,.jeoopt.right{animation:popIn .3s ease both,glowPulse 1.1s ease 1}
+.opt.wrong,.jeoopt.wrong{animation:shakeX .4s ease both}
+@keyframes shakeX{0%,100%{transform:translateX(0)}20%{transform:translateX(-7px)}
+  40%{transform:translateX(7px)}60%{transform:translateX(-4px)}80%{transform:translateX(4px)}}
+.meter i{transition:width .5s cubic-bezier(.2,.8,.2,1)}
+.chip.on{animation:popIn .28s ease both}
+.jeocell:not(.used){transition:transform .12s,box-shadow .12s}
+.jeocell:not(.used):hover{transform:scale(1.05);box-shadow:0 0 16px rgba(242,180,65,.5)}
+.jeoverdict{animation:popIn .34s ease both}
+.wordmark{background:linear-gradient(90deg,var(--gold),#FFF0C0,var(--gold));
+  background-size:300px 100%;-webkit-background-clip:text;background-clip:text;
+  animation:shimmer 3.4s linear infinite}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.001s!important;animation-iteration-count:1!important;
+    transition-duration:.001s!important}
+}
+
 /* ---------- chunk learning ---------- */
 .chunkcard{display:flex;align-items:center;gap:14px;width:100%;text-align:left;
   border-left:4px solid var(--line);cursor:pointer}
@@ -384,6 +437,25 @@ ul.ctrl li{margin:4px 0;color:var(--ink)}
   border-bottom:1px solid var(--line);font-size:14px;text-align:left}
 .creditline span{color:var(--dim)}
 
+.codebox{width:100%;min-height:74px;font-family:var(--mono);font-size:11px;line-height:1.5;
+  background:#0D0920;border:1px solid var(--line);border-radius:10px;padding:10px;
+  color:var(--ink);resize:vertical;word-break:break-all}
+
+.codebox{width:100%;min-height:74px;font-family:var(--mono);font-size:11px;line-height:1.5;
+  background:#0D0920;border:1px solid var(--line);border-radius:10px;padding:10px;
+  color:var(--ink);resize:vertical;word-break:break-all}
+
+/* ---------- certificate of review prompt ---------- */
+#certAsk{position:fixed;inset:0;z-index:65;display:grid;place-items:center;
+  background:rgba(6,4,14,.9);padding:20px;animation:popIn .3s ease both}
+.certask{display:flex;gap:16px;align-items:center;max-width:460px;width:100%;
+  background:var(--cab);border:2px solid var(--gold);border-radius:16px;padding:20px;
+  box-shadow:0 14px 44px rgba(0,0,0,.6)}
+.certaskart{flex:none;width:96px}
+.certaskart img{width:100%;height:auto;image-rendering:pixelated;animation:floaty 3s ease-in-out infinite}
+.certaskbody{flex:1;min-width:0}
+@media(max-width:520px){.certask{flex-direction:column;text-align:center}.certaskart{width:110px}}
+
 /* ---------- theme song / dance stage ---------- */
 #dance{position:fixed;inset:0;z-index:70;display:grid;place-items:center;
   background:rgba(6,4,14,.92);padding:20px}
@@ -406,6 +478,7 @@ ul.ctrl li{margin:4px 0;color:var(--ink)}
 </style>
 </head>
 <body>
+<div id="certAsk" class="hidden"></div>
 <div id="dance" class="hidden"></div>
 <div id="langpick" class="hidden"></div>
 <div id="title" class="hidden"></div>
@@ -5612,6 +5685,23 @@ const T = {
     themeMissing:"The music file isn't here yet. Add Where_the_Knowledge_Flows.mp3 next to index.html.",
     scenes:"scenes",startShift:"Start the shift",resumeShift:"Resume the shift",
     startOver:"Start over",alsoAvailable:"Also available",
+    yourClasses:"Your classes",units:"units",continueUnit:"Continue",
+    moveDeviceHelp:"Working on another device? Copy the code below and paste it there — study time, topics, certificates and tokens all travel with it.",
+    pasteCodeHint:"Paste a code from your other device",
+    moveDevice:"Working on another device?",
+    moveDeviceHelp:"Your progress lives on this device. Copy the code below, then paste it on the other one — study time, topics, certificates and tokens all travel with it.",
+    thisDeviceCode:"This device's code",copyCode:"Copy the code",
+    pasteCode:"Paste a code from another device",pasteCodeHint:"Paste here",
+    loadCode:"Load that progress",copied:"Copied",copyManual:"Select the code and copy it",
+    classHelp:"Pick a class, then a unit. Each unit has its own study area.",
+    inProgress:"In progress",
+    reviewCert:"Certificate of Review",
+    reviewCertAsk:"Want a Certificate of Review for this?",
+    reviewCertYes:"Yes — make my certificate",reviewCertNo:"Not now",
+    reviewCertLine:"Completed a review session",
+    jeoSolo:"Solo game show",
+    jeoSoloDesc:"The Jeopardy board, on your own. Pick a value, answer, keep your score.",
+    yourScore:"Your score",pickAClue:"Pick a clue",soloDone:"Board cleared",
     /* --- review arcade --- */
     reviewArcade:"Review arcade",terms:"terms",topics:"topics",
     chunkHelp:"One topic at a time. Each is about ten minutes — terms, notes, questions, then the boss.",
@@ -5853,6 +5943,23 @@ const T = {
     themeMissing:"El archivo de musica todavia no esta. Agrega Where_the_Knowledge_Flows.mp3 junto a index.html.",
     scenes:"escenas",startShift:"Empezar el turno",resumeShift:"Continuar el turno",
     startOver:"Empezar de nuevo",alsoAvailable:"Tambien disponible",
+    yourClasses:"Tus clases",units:"unidades",continueUnit:"Continuar",
+    moveDeviceHelp:"Vas a usar otro dispositivo? Copia el codigo y pegalo alli: tiempo de estudio, temas, certificados y fichas viajan contigo.",
+    pasteCodeHint:"Pega aqui el codigo de tu otro dispositivo",
+    moveDevice:"Vas a usar otro dispositivo?",
+    moveDeviceHelp:"Tu progreso vive en este dispositivo. Copia el codigo y pegalo en el otro: tiempo de estudio, temas, certificados y fichas viajan contigo.",
+    thisDeviceCode:"Codigo de este dispositivo",copyCode:"Copiar el codigo",
+    pasteCode:"Pega un codigo de otro dispositivo",pasteCodeHint:"Pega aqui",
+    loadCode:"Cargar ese progreso",copied:"Copiado",copyManual:"Selecciona el codigo y copialo",
+    classHelp:"Elige una clase y luego una unidad. Cada unidad tiene su propia area.",
+    inProgress:"En curso",
+    reviewCert:"Certificado de repaso",
+    reviewCertAsk:"Quieres un certificado de repaso por esto?",
+    reviewCertYes:"Si, dame mi certificado",reviewCertNo:"Ahora no",
+    reviewCertLine:"Completo una sesion de repaso",
+    jeoSolo:"Concurso en solitario",
+    jeoSoloDesc:"El tablero del concurso, tu solo. Elige un valor, responde y suma.",
+    yourScore:"Tu puntaje",pickAClue:"Elige una pista",soloDone:"Tablero completo",
     /* --- arcade de repaso --- */
     reviewArcade:"Arcade de repaso",terms:"terminos",topics:"temas",
     chunkHelp:"Un tema a la vez. Cada uno dura unos diez minutos: terminos, apuntes, preguntas y el jefe.",
@@ -6166,13 +6273,24 @@ function go(tab){ TAB=tab; stopGame(); studyStop(); EP=null;
   render(); window.scrollTo(0,0); }
 let TEACHER_OK=false;
 /* ---------- secret teacher unlock: type the phrase anywhere ---------- */
-const TEACHER_CODE="coachsmiththegoat";
+/* Two phrases unlock teacher mode, typed anywhere on any screen. The buffer is
+   kept as long as the longest phrase and every phrase is checked against its
+   own tail, so a shorter code still matches while a longer one is in progress.
+   This is how you get in on a borrowed laptop with no sign-in. */
+const TEACHER_CODES=["coachsmiththegoat","coachneedaccess"];
+const TEACHER_BUFMAX=Math.max.apply(null,TEACHER_CODES.map(c=>c.length));
 let teacherBuf="";
 window.addEventListener("keydown",e=>{
   if(TEACHER_OK) return;
-  if(e.key.length!==1) return;
-  teacherBuf=(teacherBuf+e.key.toLowerCase()).slice(-TEACHER_CODE.length);
-  if(teacherBuf===TEACHER_CODE){ teacherBuf=""; unlockTeacherSecret(); }
+  if(!e.key||e.key.length!==1) return;
+  /* ignore typing inside a field, or a student answering a question would
+     unlock the teacher tab by accident */
+  const t=e.target&&e.target.tagName;
+  if(t==="INPUT"||t==="TEXTAREA"||(e.target&&e.target.isContentEditable)) return;
+  teacherBuf=(teacherBuf+e.key.toLowerCase()).slice(-TEACHER_BUFMAX);
+  for(const code of TEACHER_CODES){
+    if(teacherBuf.slice(-code.length)===code){ teacherBuf=""; unlockTeacherSecret(); return; }
+  }
 });
 function unlockTeacherSecret(){
   TEACHER_OK=true;
@@ -6238,14 +6356,15 @@ function viewHome(){
   <section class="panel">
     <div class="eyebrow">${T_.saveProgress}</div>
     <p class="muted" style="margin:4px 0 10px">${T_.saveHelp}</p>
+    <p class="muted" style="margin:0 0 10px;font-size:13px">${T_.moveDeviceHelp}</p>
     <div class="row"><button class="btn" onclick="exportSave()">${T_.exportFile}</button>
       <button class="btn" onclick="document.getElementById('savef').click()">${T_.importFile}</button></div>
     <input id="savef" type="file" accept=".json" class="hidden" onchange="loadSaveFile(this)">
     <label for="code">${T_.resumeCode}</label>
-    <textarea id="code" readonly>${enc(S)}</textarea>
+    <textarea id="code" class="codebox" readonly>${enc(S)}</textarea>
     <div class="row"><button class="btn" onclick="navigator.clipboard.writeText(document.getElementById('code').value).then(()=>toast('✓'))">${T_.copyCode}</button></div>
     <label for="pcode">${T_.pasteCode}</label>
-    <textarea id="pcode" placeholder="…"></textarea>
+    <textarea id="pcode" class="codebox" placeholder="${T_.pasteCodeHint}"></textarea>
     <button class="btn primary wide" onclick="loadCode()">${T_.loadCode}</button>
   </section>
   ${S.certs.length?`<section class="panel"><div class="eyebrow">★ ${T_.certTitle}</div>
@@ -6258,23 +6377,64 @@ function viewHome(){
    6. STUDY  — notes first, then untimed practice with instant feedback
    ========================================================================== */
 function viewStudy(){
-  V().innerHTML=`<h1 class="big" style="margin:18px 0 4px">${T_.study}</h1>
-  <p class="muted">${T_.readBrief} · ${T_.practice}</p>
-  ${allPacks().map(p=>`<section class="panel" style="border-left:4px solid ${p.color||'#888'}">
-    <div class="eyebrow">${esc(L(p.name))}</div>
-    ${p.units.map(u=>{const s=unitStats(u);return `
-      <div style="padding:12px 0;border-top:1px solid var(--line);margin-top:10px">
-        <h3 style="font-size:17px">${esc(L(u.title))}</h3>
-        <div class="meter" style="margin:8px 0"><i style="width:${s.mastery}%"></i></div>
-        <div class="row"><span class="chip">${s.mastery}% ${T_.mastery}</span><span class="chip">${s.total} ${T_.items}</span></div>
-        <div class="row" style="margin-top:10px">
-          <button class="btn primary" onclick="viewTopics('${u.id}')">${T_.startShift}</button>
-          <button class="btn" onclick="startPractice('${u.id}')">${T_.practice}</button>
-          ${studyUnlocked(u)?`<button class="btn" onclick="startExam('${u.id}')">${T_.testReview}</button>`:`<span class="chip warn">${T_.lockedTitle}</span>`}
+  /* Every course gets its own area and every unit its own card, rather than one
+     flat list of sixteen units from three different classes. A student in
+     Economics Honors should not have to scroll past AP Macro to find their
+     unit, and a teacher should be able to point at one row and say "that one". */
+  const packs = PACKS.concat(S.extraPacks||[]);
+  const open = S.openPack || packs[0].id;
+  const pack = packs.find(p=>p.id===open) || packs[0];
+  const units = pack.units.map(u=>Object.assign({}, u, {pack:pack}));
+
+  const unitCard = u => {
+    const st = unitStats(u), prog = unitTopicProgress(u.id);
+    const rec = studyRec(u.id), unlocked = studyUnlocked(u);
+    const set = spriteSetFor(u);
+    return `<section class="panel unitcard ${prog.total&&prog.done===prog.total?'done':''}">
+      <div class="unithead">
+        <div class="unitart">${smitTag(set,"hero")}</div>
+        <div class="unitmeta">
+          <div class="eyebrow">${esc(L(pack.name))}</div>
+          <h3>${esc(L(u.title))}</h3>
+          <div class="row">
+            <span class="chip">${u.items.length} ${T_.items}</span>
+            <span class="chip">${vocabOf(u.id).length} ${T_.terms}</span>
+            <span class="chip ${st.mastery>=70?'on':''}">${st.mastery}% ${T_.mastery}</span>
+            ${unlocked?`<span class="chip on">${T_.unlocked}</span>`
+              :`<span class="chip warn">${T_.lockedTitle}</span>`}
+          </div>
         </div>
-      </div>`;}).join("")}
-  </section>`).join("")}`;
+      </div>
+      ${prog.total?`<div class="meter" style="margin:10px 0 6px"><i style="width:${prog.pct}%"></i></div>
+        <p class="muted" style="font-size:12px;margin:0 0 10px">${prog.done}/${prog.total} ${T_.topicsDone}
+        · ${fmtMin(rec.sec||0)} ${T_.studyTime.toLowerCase()}</p>`:""}
+      <div class="row">
+        <button class="btn primary" onclick="viewTopics('${u.id}')">${
+          prog.done?T_.continueUnit:T_.startShift}</button>
+        <button class="btn" onclick="startPractice('${u.id}')">${T_.practice}</button>
+        ${unlocked?`<button class="btn" onclick="viewReviewHub('${u.id}')">${T_.reviewArcade}</button>
+          <button class="btn ghost" onclick="startChallenge('${u.id}')">${T_.startChallenge}</button>`:""}
+      </div>
+    </section>`;
+  };
+
+  V().innerHTML = `
+  <section class="panel raised">
+    <div class="eyebrow">${T_.study}</div>
+    <h1 style="font-size:24px;margin:6px 0 8px">${T_.yourClasses}</h1>
+    <p class="muted" style="margin:0 0 12px">${T_.classHelp}</p>
+    <div class="packtabs">
+      ${packs.map(p=>`<button class="packtab ${p.id===pack.id?'on':''}"
+        onclick="S.openPack='${p.id}';save();render()">
+        <b>${esc(L(p.name))}</b>
+        <small>${p.units.length} ${T_.units}</small></button>`).join("")}
+    </div>
+  </section>
+  ${units.map(unitCard).join("")}`;
+  window.scrollTo(0,0);
 }
+
+
 function viewBrief(id){
   const u=findUnit(id); if(!u) return go("study");
   const rec=epRec(u.id);
@@ -6693,17 +6853,20 @@ function viewTopics(unitId){
   ${ts.map((t,i)=>{
     const r = topicRec(unitId,t), n = vocabByTopic(unitId,t).length;
     const q = itemsForTopic(unitId,t).length;
-    const locked = i>0 && !topicDone(unitId, ts[i-1]) && !TEACHER_OK;
-    return `<button class="panel chunkcard ${r.done?'done':''} ${locked?'locked':''}"
-      ${locked?'disabled':''} onclick="startEpisode('${unitId}',true,'${t}')">
+    /* Any topic, any order. Locking them in sequence assumed every student
+       arrives at the unit from the same starting point, which is not how a
+       class works: one is revising the bit they missed, another is ahead. */
+    const started = (r.scene||0) > 0 && !r.done;
+    return `<button class="panel chunkcard ${r.done?'done':''} ${started?'started':''}"
+      onclick="startEpisode('${unitId}',${started?"false":"true"},'${t}')">
       <span class="chunknum">${r.done?"✓":i+1}</span>
       <span class="chunkbody">
         <b>${esc(topicLabel(t))}</b>
         <small>${n} ${T_.terms} · ${q} ${T_.questionsWord} · ~10 ${T_.min}</small>
         ${r.done?`<span class="chip on">${T_.understanding} ${Math.round(r.und)}%</span>`
-                :locked?`<span class="chip warn">${T_.finishPrevious}</span>`:""}
+                :started?`<span class="chip warn">${T_.inProgress}</span>`:""}
       </span>
-      <span class="chunkgo">${r.done?T_.replay:T_.start} →</span>
+      <span class="chunkgo">${r.done?T_.replay:started?T_.resumeShift:T_.start} →</span>
     </button>`;}).join("")}
   <section class="panel">
     <div class="eyebrow">${T_.alsoAvailable}</div>
@@ -7408,6 +7571,143 @@ function vocabByTopic(unitId, topic){
 }
 
 /* ============================================================================
+   SOLO GAME SHOW  —  the Jeopardy board, one student, no teacher
+   ----------------------------------------------------------------------------
+   The classroom game show needs the teacher running it. This is the same board
+   and the same generated clues, sized for one student revising alone: five
+   values in one category column per topic, pick any clue, answer, keep score.
+   No buzzers, no wagers, no rounds — just the part that revises.
+   ========================================================================== */
+let SOLO = null;
+
+function startSolo(unitId){
+  const u = findUnit(unitId); if (!u) return go("study");
+  const topics = topicsOf(unitId);
+  if (!topics.length){ toast(T_.noVocab); return viewReviewHub(unitId); }
+  const cats = topics.slice(0,5).map(t => buildCategory({t:t, unit:unitId}, 5));
+  cats.forEach(c => c.clues.forEach((cl,i)=>{ cl.value = 100*(i+1); cl.used = false; }));
+  SOLO = {unitId, cats, score:0, left:cats.length*5, cur:null, picked:null, revealed:false};
+  drawSolo();
+}
+function drawSolo(){
+  const S2 = SOLO;
+  if (!S2) return;
+  if (S2.cur) return drawSoloClue();
+  if (S2.left <= 0) return endSolo();
+  V().innerHTML = `
+  <div class="eprow">
+    <button class="btn ghost" style="padding:8px 12px;min-height:0"
+      onclick="SOLO=null;viewReviewHub('${S2.unitId}')">← ${T_.exit}</button>
+    <span style="flex:1"></span>
+    <span class="chip">${S2.left} ${T_.cluesLeft}</span>
+    <span class="chip ${S2.score<0?'bad':'on'}">${T_.yourScore} $${S2.score}</span>
+  </div>
+  <p class="muted" style="margin:0 0 10px">${T_.pickAClue}</p>
+  <div class="jeoboard">
+    ${S2.cats.map((c,ci)=>`
+      <div class="jeocol">
+        <div class="jeocat">${esc(c.label)}</div>
+        ${c.clues.map((cl,ri)=>`
+          <button class="jeocell ${cl.used?'used':''}" ${cl.used?'disabled':''}
+            onclick="soloOpen(${ci},${ri})">${cl.used?"":"$"+cl.value}</button>`).join("")}
+      </div>`).join("")}
+  </div>`;
+  window.scrollTo(0,0);
+}
+function soloOpen(ci,ri){
+  const cl = SOLO.cats[ci].clues[ri];
+  if (cl.used) return;
+  SOLO.cur = {ci,ri,clue:cl}; SOLO.picked = null; SOLO.revealed = false;
+  drawSolo();
+}
+function drawSoloClue(){
+  const S2 = SOLO, cl = S2.cur.clue, cat = S2.cats[S2.cur.ci];
+  V().innerHTML = `
+  <div class="eprow">
+    <span class="chip">${esc(cat.label)}</span>
+    <span style="flex:1"></span>
+    <span class="chip warn">$${cl.value}</span>
+    <span class="chip ${S2.score<0?'bad':'on'}">$${S2.score}</span>
+  </div>
+  <section class="panel raised jeoclue">
+    <p class="jeoq">${esc(cl.q)}</p>
+    <div class="jeoopts" id="sopts">
+      ${cl.c.map((t,i)=>`<button class="jeoopt ${S2.revealed?(i===cl.a?'right':(S2.picked===i?'wrong':'')):''}"
+        ${S2.revealed?'disabled':''} onclick="soloPick(${i})">
+        <span class="jeoletter">${"ABCD"[i]}</span>${esc(t)}</button>`).join("")}
+    </div>
+    ${S2.revealed?`<div class="jeostatus">
+      <span class="jeoverdict ${S2.picked===cl.a?'ok':'no'}">
+        ${S2.picked===cl.a?"+$"+cl.value:"−$"+cl.value}</span></div>`:""}
+  </section>
+  ${S2.revealed?`<section class="panel jeowhy">
+    <div class="eyebrow">${T_.whyThat}</div>
+    <p>${esc(cl.why)}</p>
+    <button class="btn primary wide" style="margin-top:12px" onclick="soloBack()">${T_.board}</button>
+  </section>`:""}`;
+  window.scrollTo(0,0);
+}
+function soloPick(i){
+  const S2 = SOLO;
+  if (S2.revealed) return;
+  S2.picked = i; S2.revealed = true;
+  const cl = S2.cur.clue;
+  S2.score += (i === cl.a) ? cl.value : -cl.value;
+  cl.used = true; S2.left--;
+  drawSolo();
+}
+function soloBack(){ SOLO.cur = null; drawSolo(); }
+function endSolo(){
+  const S2 = SOLO, unitId = S2.unitId, score = S2.score;
+  revAward(unitId, "solo", Math.max(0, score));
+  V().innerHTML = `<section class="panel raised" style="text-align:center;margin-top:20px">
+    <div class="eyebrow">${T_.soloDone}</div>
+    <h1 class="big" style="color:${score>0?'var(--crt)':'var(--hot)'}">$${score}</h1>
+    <button class="btn primary wide" style="margin-top:14px" onclick="startSolo('${unitId}')">${T_.again}</button>
+    <button class="btn ghost wide" style="margin-top:8px" onclick="SOLO=null;viewReviewHub('${unitId}')">${T_.back}</button>
+  </section>`;
+  askReviewCert(unitId, T_.jeoSolo, score);
+}
+
+/* ============================================================================
+   CERTIFICATE OF REVIEW
+   ----------------------------------------------------------------------------
+   Offered after any completed review activity rather than issued silently. The
+   ask is a prompt because a certificate a student chose to make is worth more
+   to them than one that appeared on its own — and because a teacher collecting
+   these wants the ones the student meant to submit.
+   ========================================================================== */
+function askReviewCert(unitId, activity, score){
+  const box = document.getElementById("certAsk");
+  if (!box) return;
+  box.classList.remove("hidden");
+  box.innerHTML = `
+    <div class="certask">
+      <div class="certaskart">${smitTag(spriteSetFor(findUnit(unitId)),"boss_star")}</div>
+      <div class="certaskbody">
+        <div class="eyebrow">${T_.reviewCert}</div>
+        <p style="margin:6px 0 12px">${T_.reviewCertAsk}</p>
+        <button class="btn primary wide" onclick="makeReviewCert('${unitId}',${JSON.stringify(activity)},${score|0})">
+          ${T_.reviewCertYes}</button>
+        <button class="btn ghost wide" style="margin-top:8px"
+          onclick="document.getElementById('certAsk').classList.add('hidden')">${T_.reviewCertNo}</button>
+      </div>
+    </div>`;
+}
+function makeReviewCert(unitId, activity, score){
+  const u = findUnit(unitId);
+  document.getElementById("certAsk").classList.add("hidden");
+  const rec = {
+    code: certCode(S.name||"student", unitId+"-review-"+activity, score),
+    name: S.name||"Student", unit: L(u.title), course: L(u.pack.name),
+    score: Math.max(0,Math.min(100,score)), date: today(), kind:"review", activity: activity
+  };
+  if (!S.certs.some(c=>c.code===rec.code)) S.certs.push(rec);
+  save();
+  drawCert(rec, false);
+}
+
+/* ============================================================================
    TEST REVIEW ARCADE  —  four ways to revise the same vocabulary
    ----------------------------------------------------------------------------
    Reading a term list once does very little. Recalling it under three different
@@ -7427,7 +7727,7 @@ function revRec(uid){
 }
 function revComplete(uid){
   const r = revRec(uid);
-  return r.cards && r.match && r.laser;
+  return r.cards && r.match && r.laser && r.solo;
 }
 function revAward(uid, which, score){
   const r = revRec(uid);
@@ -7481,6 +7781,7 @@ function viewReviewHub(unitId){
   ${card("cards", T_.flashcards, T_.flashcardsDesc, `startCards('${unitId}')`, "▤")}
   ${card("match", T_.matchGame, T_.matchDesc,      `startMatch('${unitId}')`, "◫")}
   ${card("laser", T_.laserGame, T_.laserDesc,      `startLaser('${unitId}')`, "◎")}
+  ${card("solo",  T_.jeoSolo,   T_.jeoSoloDesc,    `startSolo('${unitId}')`,  "▦")}
   <section class="panel">
     <div class="eyebrow">${T_.theTest}</div>
     <p class="muted" style="margin:4px 0 10px">${T_.testAfterGames}</p>
@@ -7500,7 +7801,8 @@ function startCards(unitId){
 function drawCard(){
   const C = CARDS, u = findUnit(C.unitId);
   if (C.i >= C.list.length){
-    revAward(C.unitId, "cards", Math.round(C.got / C.list.length * 100));
+    const cardScore = Math.round(C.got / C.list.length * 100);
+    revAward(C.unitId, "cards", cardScore);
     V().innerHTML = `<section class="panel raised" style="text-align:center;margin-top:20px">
       <div class="eyebrow">${T_.flashcards}</div>
       <h1 class="big" style="color:var(--crt)">${C.got}/${C.list.length}</h1>
@@ -7512,6 +7814,7 @@ function drawCard(){
       <button class="btn primary wide" style="margin-top:14px" onclick="startCards('${C.unitId}')">${T_.again}</button>
       <button class="btn ghost wide" style="margin-top:8px" onclick="viewReviewHub('${C.unitId}')">${T_.back}</button>
     </section>`;
+    askReviewCert(C.unitId, T_.flashcards, cardScore);
     return;
   }
   const v = C.list[C.i];
@@ -7615,6 +7918,7 @@ function endMatch(bail){
     <button class="btn primary wide" style="margin-top:14px" onclick="startMatch('${M.unitId}')">${T_.again}</button>
     <button class="btn ghost wide" style="margin-top:8px" onclick="viewReviewHub('${M.unitId}')">${T_.back}</button>
   </section>`;
+  askReviewCert(M.unitId, T_.matchGame, Math.min(100, Math.round(score/3)));
 }
 
 /* ---------- 3. vocab laser ---------------------------------------------
@@ -7709,6 +8013,7 @@ function runLaser(cv, unitId, voc){
       <button class="btn primary wide" style="margin-top:14px" onclick="startLaser('${unitId}')">${T_.again}</button>
       <button class="btn ghost wide" style="margin-top:8px" onclick="viewReviewHub('${unitId}')">${T_.back}</button>
     </section>`;
+    askReviewCert(unitId, T_.laserGame, Math.min(100, Math.round(score/12)));
   }
 
   startLoop(function(){
@@ -8867,6 +9172,7 @@ function drawWrap(){
         :`<button class="btn primary wide" onclick="viewReviewHub('${u.id}')">${T_.reviewArcade}</button>`}
       <button class="btn ghost wide" style="margin-top:8px" onclick="viewTopics('${u.id}')">${T_.allTopics}</button>`,
       "boss_star");
+    setTimeout(()=>askReviewCert(u.id, topicLabel(EP.topic), Math.round(EP.und)), 400);
     return;
   }
   const grade = EP.und >= 80 ? T_.gradeA : EP.und >= 60 ? T_.gradeB : T_.gradeC;
@@ -9855,7 +10161,8 @@ function paintCert(c,print,mascot){
   x.font="600 38px system-ui,sans-serif";x.fillStyle="#2E2550";
   x.fillText(c.course+" — "+c.unit,W/2,530);
   x.font="400 26px system-ui,sans-serif";x.fillStyle="#4A4166";
-  x.fillText((c.kind==="exam"?T_.testReview+" · ":"")+T_.certOn+" "+c.date,W/2,585);
+  x.fillText((c.kind==="exam"?T_.testReview+" · ":c.kind==="review"?T_.reviewCert+" · ":"")
+    +T_.certOn+" "+c.date,W/2,585);
   /* score token — the arcade motif carried onto paper */
   x.beginPath();x.arc(W/2,730,92,0,7);x.fillStyle="#F2B441";x.fill();
   x.lineWidth=8;x.strokeStyle="#8A6512";x.stroke();
@@ -9910,17 +10217,21 @@ const TRAFFIC=["racer_miner","racer_robo","racer_lizard","racer_pirate","racer_g
 
 const GAMES=[
  {id:"sprint", color:"#4DE0B1", dur:90,
-  name:{en:"Smith's Sprint",es:"Carrera de Smith"},
-  tag:{en:"Momentum platformer. Build speed, roll through trouble.",
-       es:"Plataformas con impulso. Toma velocidad y rueda entre los obstáculos."},
-  goal:{en:"Survive to the bell. Coins are worth points, and a coin purse takes one hit for you.",
-        es:"Sobrevive hasta el timbre. Las monedas dan puntos y tu bolsa absorbe un golpe."},
-  keys:{en:["← → run — speed builds the longer you hold","↑ jump","↓ roll while moving fast",
-            "Roll or fall onto a foe to bounce off it for 50 points"],
-        es:["← → correr; la velocidad sube al mantener","↑ saltar","↓ rodar a alta velocidad",
-            "Rueda o cae sobre un enemigo para rebotar y ganar 50 puntos"]},
-  touch:{en:"Touch: hold anywhere to jump, hold while falling to roll.",
-         es:"Táctil: mantén pulsado para saltar; mantén al caer para rodar."}},
+  name:{en:"Smith's Run",es:"La carrera de Smith"},
+  tag:{en:"Six worlds, one long run. Auto-run — you jump, roll and read the road.",
+       es:"Seis mundos, una carrera. Corre solo: tú saltas, ruedas y lees el camino."},
+  goal:{en:"Chain coins for a combo multiplier. Roll or stomp a hazard to clear it. Every level is a different world.",
+        es:"Encadena monedas para multiplicar. Rueda o salta sobre un peligro para eliminarlo. Cada nivel es otro mundo."},
+  keys:{en:["Running is automatic — no accelerator to hold",
+            "↑ / Space jump — hold longer to jump higher",
+            "↓ roll — faster, shorter, and clears hazards",
+            "Pink arrows on the right edge warn you before a hazard arrives"],
+        es:["Correr es automático: no hay acelerador",
+            "↑ / Espacio saltar; mantén para saltar más alto",
+            "↓ rodar: más rápido, más bajo y elimina peligros",
+            "Las flechas rosas del borde avisan antes de que llegue un peligro"]},
+  touch:{en:"Touch: tap the upper part of the screen to jump, hold the lower part to roll.",
+         es:"Táctil: toca arriba para saltar, mantén abajo para rodar."}},
  {id:"shuttle", color:"#F2B441", dur:90,
   name:{en:"Campus Shuttle",es:"Transporte del campus"},
   tag:{en:"Lane dodger. Pick up riders, drop them off, don't crash.",
@@ -9935,16 +10246,22 @@ const GAMES=[
          es:"Táctil: desliza arriba o abajo para cambiar de carril; mantén la mitad derecha para acelerar."}},
  {id:"kart", color:"#FF4D9D", dur:90,
   name:{en:"Campus Kart",es:"Kart del campus"},
-  tag:{en:"Pseudo-3D racer. Hold the road, grab the coins.",
-       es:"Carrera pseudo-3D. Aguanta la curva y toma monedas."},
-  goal:{en:"The throttle is automatic. Steer through the curves, take coins, and avoid the hazards.",
-        es:"El acelerador es automático. Toma las curvas, recoge monedas y evita los obstáculos."},
-  keys:{en:["← → steer","Coins add 10 points","Hazards cost a life and kill your speed",
-            "Three hits ends the run"],
-        es:["← → girar","Cada moneda suma 10 puntos","Los obstáculos cuestan una vida y tu velocidad",
-            "Tres golpes terminan la partida"]},
-  touch:{en:"Touch: hold the left or right third of the screen to steer.",
-         es:"Táctil: mantén el tercio izquierdo o derecho para girar."}},
+  tag:{en:"Mode 7 racing. Three laps, six karts, food combat.",
+       es:"Carreras Mode 7. Tres vueltas, seis karts, combate de comida."},
+  goal:{en:"A real race, not a time trial. Pick your racer, grab item boxes, and finish in the top three.",
+        es:"Una carrera de verdad, no contrarreloj. Elige piloto, toma las cajas y termina entre los tres primeros."},
+  keys:{en:["Throttle is automatic — you steer and brake",
+            "← → steer  ·  ↓ brake into the hairpins",
+            "Space fires a pizza slice forward",
+            "Shift drops bubblegum behind you — anyone who hits it spins out",
+            "Checkpoints stop anyone cutting across the infield"],
+        es:["El acelerador es automático: tú giras y frenas",
+            "← → girar  ·  ↓ frenar en las curvas cerradas",
+            "Espacio lanza una rebanada de pizza",
+            "Shift suelta chicle detrás de ti: quien lo pise gira sin control",
+            "Los puntos de control impiden atajar por el centro"]},
+  touch:{en:"Touch: tap the sides to steer, two-finger tap fires pizza.",
+         es:"Táctil: toca los lados para girar; dos dedos lanzan pizza."}},
  {id:"quest", color:"#9B7BE0", dur:90,
   name:{en:"Smith's Quest",es:"La misión de Smith"},
   tag:{en:"Top-down survival. Swing at what chases you.",
