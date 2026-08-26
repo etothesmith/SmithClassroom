@@ -5694,6 +5694,9 @@ const T = {
     bossPass:"Signed off",bossFail:"Not yet",
     bossPassLine:"That's the standard. The unit is open.",
     bossFailLine:"Three of four or it doesn't count. Go again — fresh questions.",
+    bossMissed:"What you missed, and why",
+    bossFinishAnyway:"Finish the topic anyway",
+    bossFinishNote:"This marks the topic done but not passed. The review arcade is the place to fix it.",
     shiftOver:"Shift complete",
     gradeA:"You didn't just remember it, you used it. That's the whole job.",
     gradeB:"Solid work. A couple of ideas still need another pass.",
@@ -5971,6 +5974,9 @@ const T = {
     bossPass:"Aprobado",bossFail:"Todavia no",
     bossPassLine:"Ese es el nivel. La unidad queda abierta.",
     bossFailLine:"Tres de cuatro o no cuenta. Otra vez, con preguntas nuevas.",
+    bossMissed:"Lo que fallaste y por que",
+    bossFinishAnyway:"Terminar el tema de todos modos",
+    bossFinishNote:"Marca el tema como hecho pero no aprobado. El arcade de repaso es el lugar para arreglarlo.",
     shiftOver:"Turno completo",
     gradeA:"No solo lo recordaste, lo usaste. De eso se trata.",
     gradeB:"Buen trabajo. Un par de ideas necesitan otra pasada.",
@@ -9165,6 +9171,15 @@ function epSave(){
 }
 function epAdvance(){
   EP.i++; EP.picked = null; EP.checked = false; EP.retry = false;
+  /* Hard ceiling on episode length. Reteach scenes are inserted at runtime, so
+     a bug in that logic could in principle grow the list forever. If the list
+     ever gets implausibly long, jump to the wrap rather than trap the student
+     in a lesson with no exit. */
+  const cap = 60;
+  if (EP.scenes.length > cap){
+    EP.scenes = EP.scenes.slice(0, cap - 1).concat([{t:"wrap"}]);
+    if (EP.i >= EP.scenes.length) EP.i = EP.scenes.length - 1;
+  }
   epSave(); drawScene();
 }
 
@@ -9260,25 +9275,28 @@ function drawRead(sc){
 function drawCheck(sc){
   const it = sc.item;
   const body = questionBody(it);
+  const isRetry = !!sc.retry;          /* carried by the scene, not the run */
   V().innerHTML = epShell(`
-    <div class="eyebrow">${EP.retry ? T_.tryAgainNow : T_.quickCheck}</div>
+    <div class="eyebrow">${isRetry ? T_.tryAgainNow : T_.quickCheck}</div>
     <p class="qtext">${esc(L(it.q))}</p>
     ${body}
     <div id="fb"></div>
     <button class="btn primary wide" style="margin-top:14px" id="epGo">${T_.check}</button>`,
-    EP.retry ? "think" : (sc.art || "cook"));
+    isRetry ? "think" : (sc.art || "cook"));
   wireQuestion(it, ok => {
-    epScore(ok, !EP.retry);
+    epScore(ok, !isRetry);
     if (ok){
       document.getElementById("epGo").textContent = T_.next;
       document.getElementById("epGo").onclick = () => epAdvance();
-    } else if (!EP.retry){
+    } else if (!isRetry){
+      /* one reteach per idea, and only ever one */
       document.getElementById("epGo").textContent = T_.showMe;
       document.getElementById("epGo").onclick = () => {
         EP.scenes.splice(EP.i + 1, 0, {t:"reteach", item:it, src:sc});
         epAdvance();
       };
     } else {
+      /* already had the reteach: explain and move on, never loop */
       document.getElementById("epGo").textContent = T_.moveOn;
       document.getElementById("epGo").onclick = () => epAdvance();
     }
@@ -9305,9 +9323,12 @@ function drawReteach(sc){
     <button class="btn primary wide" style="margin-top:14px" id="epGo">${alt ? T_.tryVariant : T_.moveOn}</button>`,
     "think");
   document.getElementById("epGo").onclick = () => {
-    if (alt){
-      EP.retry = true;
-      EP.scenes.splice(EP.i + 1, 0, {t:"check", item:alt, tag:"retry"});
+    /* The retry flag lives on the scene we are about to insert. Putting it on
+       EP was the bug: epAdvance() clears EP.retry, so the retry always looked
+       like a first attempt and spawned another reteach. */
+    if (alt && !sc.spent){
+      sc.spent = true;
+      EP.scenes.splice(EP.i + 1, 0, {t:"check", item:alt, tag:"retry", retry:true});
     }
     epAdvance();
   };
@@ -9315,8 +9336,12 @@ function drawReteach(sc){
 /* A variant is any other unseen item of the same type in the unit; failing
    that, the same item asked again after the explanation. */
 function pickVariant(u, it){
+  /* prefer a different question of the same type; fall back to the same one
+     rather than skipping the retry entirely */
   const same = u.items.filter(x => x.id !== it.id && x.type === it.type);
   if (same.length) return same[Math.floor(Math.random() * same.length)];
+  const any = u.items.filter(x => x.id !== it.id);
+  if (any.length) return any[Math.floor(Math.random() * any.length)];
   return it;
 }
 
@@ -9372,14 +9397,29 @@ function drawBoss(sc){
   if (EP.bossIdx >= sc.items.length){
     const need = Math.ceil(sc.items.length * 0.75);
     const passed = EP.bossRight >= need;
+    EP.bossTries = EP.bossTries || 0;
+    if (!passed) EP.bossTries++;
+    const stuck = EP.bossTries >= 3;
+    /* what did they actually miss? Retrying with fresh questions and no review
+       teaches nothing — this is the part that has to change between attempts. */
+    const missed = (EP.bossMiss || []);
     V().innerHTML = epShell(`
       <div class="eyebrow">${T_.bossVerdict}</div>
       <h2 class="big" style="color:${passed?'var(--crt)':'var(--hot)'};margin:6px 0">
         ${passed ? T_.bossPass : T_.bossFail}</h2>
       <p class="epsay">${EP.bossRight}/${sc.items.length} ${T_.correct}. ${
         passed ? T_.bossPassLine : T_.bossFailLine}</p>
-      <button class="btn primary wide" style="margin-top:14px" onclick="${
-        passed ? "epAdvance()" : "retryBoss()"}">${passed ? T_.next : T_.retry}</button>`,
+      ${(!passed && missed.length) ? `<div class="epworked" style="text-align:left">
+        <div class="eyebrow">${T_.bossMissed}</div>
+        ${missed.map(m=>`<p style="margin:8px 0 0"><b>${esc(L(m.q))}</b><br>
+          <span style="color:var(--crt)">${correctText(m)}</span><br>
+          <span class="muted" style="font-size:13px">${esc(L(m.why))}</span></p>`).join("")}
+      </div>` : ""}
+      ${passed
+        ? `<button class="btn primary wide" style="margin-top:14px" onclick="epAdvance()">${T_.next}</button>`
+        : `<button class="btn primary wide" style="margin-top:14px" onclick="retryBoss()">${T_.retry}</button>
+           ${stuck ? `<button class="btn ghost wide" style="margin-top:8px" onclick="bossGiveUp()">${T_.bossFinishAnyway}</button>
+             <p class="muted" style="font-size:12px;margin-top:8px">${T_.bossFinishNote}</p>` : ""}`}`,
       passed ? "boss_star" : "boss_yell");
     return;
   }
@@ -9394,13 +9434,21 @@ function drawBoss(sc){
   wireQuestion(it, ok => {
     epScore(ok, true);
     if (ok) EP.bossRight++;
+    else { EP.bossMiss = EP.bossMiss || []; if (!EP.bossMiss.some(m=>m.id===it.id)) EP.bossMiss.push(it); }
     document.getElementById("epGo").textContent = T_.next;
     document.getElementById("epGo").onclick = () => { EP.bossIdx++; epSave(); drawScene(); };
   });
 }
+function bossGiveUp(){
+  /* Finish the topic without passing. Understanding is capped so the record
+     shows this was not a clean pass, and the review arcade is where they go
+     next — but the student is not trapped. */
+  EP.und = Math.min(EP.und, 45);
+  epAdvance();
+}
 function retryBoss(){
   const sc = EP.scenes[EP.i];
-  EP.bossIdx = 0; EP.bossRight = 0;
+  EP.bossIdx = 0; EP.bossRight = 0; EP.bossMiss = [];
   /* fresh questions on a retry, so a second run is not a memory test */
   const pool = pickItems(EP.unit, EP.unit.items.length);
   sc.items = pool.slice(0, sc.items.length);
