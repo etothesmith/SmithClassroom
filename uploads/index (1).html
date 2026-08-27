@@ -12,17 +12,16 @@
    sunset sky, castle stone, gold arcade lettering, robe blue.
    ============================================================ */
 :root{
-  --void:#120A2E;
-  --cab:#1C1142;
-  --cab2:#271654;
+  --void:#0B0F1F;
+  --cab:#1A1430;
+  --cab2:#251C44;
   --gold:#F2B441;
   --robe:#2F6BD8;
-  --crt:#4DE0B1;      /* stays green: this one means "correct" */
-  --hot:#FF2E86;
-  --neon:#22D8F0;     /* the cyan half of the neon pair */
-  --ink:#F1ECFF;
-  --dim:#A79CD0;
-  --line:rgba(255,255,255,.12);
+  --crt:#4DE0B1;
+  --hot:#FF4D9D;
+  --ink:#EFEAFB;
+  --dim:#9B92BE;
+  --line:rgba(255,255,255,.10);
   --r:14px;
   --disp:"Trebuchet MS","Segoe UI",system-ui,sans-serif;
   --body:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
@@ -38,14 +37,12 @@ body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:9;
 h1,h2,h3{font-family:var(--disp);margin:0;letter-spacing:.02em}
 button{font:inherit;color:inherit;cursor:pointer;border:none;background:none}
 :focus-visible{outline:3px solid var(--gold);outline-offset:2px;border-radius:6px}
-.wrap{max-width:960px;margin:0 auto;padding:0 16px 112px}
+.wrap{max-width:960px;margin:0 auto;padding:0 16px 96px}
 
 /* ---------- marquee header ---------- */
-.marquee{position:sticky;top:0;z-index:10;background:linear-gradient(180deg,#2E1A63,#180E3A);
+.marquee{position:sticky;top:0;z-index:10;background:linear-gradient(180deg,#2B2150,#150F2B);
   border-bottom:2px solid var(--gold);padding:10px 16px;padding-top:calc(10px + env(safe-area-inset-top));
   display:flex;align-items:center;gap:12px}
-.marquee::after{content:"";position:absolute;left:0;right:0;bottom:-3px;height:2px;
-  background:linear-gradient(90deg,var(--neon),var(--hot),var(--gold));opacity:.55}
 .logo{font-family:var(--disp);font-weight:800;font-size:15px;letter-spacing:.16em;text-transform:uppercase;
   color:var(--gold);text-shadow:0 0 14px rgba(242,180,65,.45);white-space:nowrap;text-align:left}
 .logo small{display:block;font-size:9px;letter-spacing:.28em;color:var(--dim);text-shadow:none}
@@ -59,14 +56,12 @@ button{font:inherit;color:inherit;cursor:pointer;border:none;background:none}
 
 /* ---------- title screen: the signature moment ---------- */
 #title{position:fixed;inset:0;z-index:40;display:flex;flex-direction:column;align-items:center;
-  justify-content:space-between;background:#12203A;
-  overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;overscroll-behavior:contain}
-#titleArt,#titleCanvas{position:fixed;inset:0;width:100%;height:100%;object-fit:cover}
-#title .veil{position:fixed;inset:0;background:linear-gradient(180deg,rgba(6,4,14,.42),rgba(6,4,14,.05) 34%,rgba(6,4,14,.86))}
+  justify-content:space-between;background:#12203A;overflow:hidden}
+#titleArt,#titleCanvas{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+#title .veil{position:absolute;inset:0;background:linear-gradient(180deg,rgba(6,4,14,.42),rgba(6,4,14,.05) 34%,rgba(6,4,14,.86))}
 #title .top{position:relative;z-index:3;text-align:center;width:100%;
   padding:calc(5vh + env(safe-area-inset-top)) 18px 0}
-#title .bottom{position:relative;z-index:3;width:100%;
-  padding:24px 18px calc(28px + env(safe-area-inset-bottom))}
+#title .bottom{position:relative;z-index:3;width:100%;padding:0 18px calc(28px + env(safe-area-inset-bottom))}
 .wordmark{font-family:var(--disp);font-weight:800;text-transform:uppercase;line-height:.92;
   font-size:clamp(34px,12vw,80px);letter-spacing:.02em;color:var(--gold);
   text-shadow:0 4px 0 #8A5A0C,0 8px 0 #4C3106,0 10px 26px rgba(0,0,0,.7);margin-bottom:6px}
@@ -80,20 +75,14 @@ button{font:inherit;color:inherit;cursor:pointer;border:none;background:none}
   background:rgba(12,9,26,.66);color:#FFF}
 .startmenu button.go{border-color:var(--gold);color:var(--gold);animation:blink 1.6s steps(1,end) infinite}
 @keyframes blink{0%,60%{opacity:1}61%,100%{opacity:.5}}
-.hero{position:fixed;left:-4%;bottom:0;height:50%;max-height:420px;z-index:2;
+.hero{position:absolute;left:-4%;bottom:0;height:50%;max-height:420px;z-index:2;
   filter:drop-shadow(0 12px 22px rgba(0,0,0,.55));pointer-events:none}
 
 /* ---------- panels ---------- */
 .panel{background:var(--cab);border:1px solid var(--line);border-radius:var(--r);padding:18px;margin:14px 0}
-.panel.raised{background:var(--cab2);border-color:rgba(34,216,240,.22)}
-.eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--neon)}
-.big{font-size:clamp(28px,7.4vw,44px);font-weight:800;line-height:1.02;text-transform:uppercase;
-  letter-spacing:.01em;
-  background:linear-gradient(96deg,var(--gold) 8%,var(--hot) 58%,var(--neon) 100%);
-  -webkit-background-clip:text;background-clip:text;color:transparent;
-  -webkit-text-fill-color:transparent}
-/* a solid-colour .big for the places that set their own colour (pass/fail) */
-.big[style*="color"]{background:none;-webkit-text-fill-color:currentColor;color:inherit}
+.panel.raised{background:var(--cab2)}
+.eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--dim)}
+.big{font-size:clamp(26px,7vw,40px);font-weight:800;line-height:1.05;text-transform:uppercase}
 .muted{color:var(--dim)}
 .row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
 .grid{display:grid;gap:12px}
@@ -115,21 +104,12 @@ button{font:inherit;color:inherit;cursor:pointer;border:none;background:none}
 .btn[disabled]{opacity:.45;cursor:not-allowed}
 
 /* ---------- nav dock ---------- */
-.dock{position:fixed;left:0;right:0;bottom:0;z-index:11;display:flex;gap:4px;
-  margin:0 auto;max-width:660px;padding:6px;
-  margin-bottom:calc(8px + env(safe-area-inset-bottom));
-  background:#1B1046;
-  border:1px solid rgba(34,216,240,.28);border-radius:16px;
-  box-shadow:0 8px 24px rgba(0,0,0,.55)}
-@media(max-width:700px){.dock{left:8px;right:8px}}
-.dock button{flex:1;min-width:0;padding:8px 4px;font-size:10px;letter-spacing:.08em;text-transform:uppercase;
-  color:var(--dim);display:flex;flex-direction:column;align-items:center;gap:3px;border-radius:11px}
-.dock button[aria-current="page"]{color:#160B2E;font-weight:800;
-  background:linear-gradient(135deg,var(--neon),var(--hot));
-  box-shadow:0 0 18px rgba(255,46,134,.4)}
+.dock{position:fixed;left:0;right:0;bottom:0;z-index:11;display:flex;background:#150F2B;
+  border-top:1px solid var(--line);padding-bottom:env(safe-area-inset-bottom)}
+.dock button{flex:1;padding:9px 4px 10px;font-size:10px;letter-spacing:.08em;text-transform:uppercase;
+  color:var(--dim);display:flex;flex-direction:column;align-items:center;gap:3px}
+.dock button[aria-current="page"]{color:var(--gold)}
 .dock .ic{font-size:19px;line-height:1}
-body.playing .dock{display:none}
-body.playing .wrap{padding-bottom:24px}
 
 /* ---------- progress + quiz ---------- */
 .meter{height:9px;background:#0D0920;border-radius:99px;overflow:hidden;border:1px solid var(--line)}
@@ -438,46 +418,6 @@ ul.ctrl li{margin:4px 0;color:var(--ink)}
 .mtile.done{opacity:.25;border-color:var(--crt)}
 @media(min-width:700px){.matchgrid{grid-template-columns:repeat(3,1fr)}}
 
-/* ---------- home course cards ---------- */
-.coursecard{display:flex;align-items:center;gap:12px;text-align:left;padding:14px;
-  border:1px solid var(--line);position:relative;overflow:hidden;
-  transition:transform .16s,border-color .16s,box-shadow .16s}
-.coursecard::before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;
-  background:linear-gradient(180deg,var(--cc),var(--hot))}
-.coursecard:hover{transform:translateY(-3px);border-color:var(--neon);
-  box-shadow:0 10px 28px rgba(0,0,0,.4),0 0 20px rgba(34,216,240,.14)}
-.ccart{flex:0 0 auto;width:58px}
-.ccart img{width:100%;display:block}
-.ccbody{display:flex;flex-direction:column;gap:4px;min-width:0;flex:1}
-.ccbody b{font-family:var(--disp);font-size:20px;line-height:1.1;text-wrap:pretty}
-.ccchips{display:flex;gap:6px;flex-wrap:wrap;margin-top:2px}
-.ccgo{flex:0 0 auto;color:var(--neon);font-size:20px}
-
-/* ---------- how it works ---------- */
-.howto{text-align:left}
-.howhead{display:flex;align-items:center;gap:14px;margin-bottom:6px}
-.howart{width:82px;flex:0 0 auto}
-.howart img{width:100%;display:block}
-.howsteps{list-style:none;margin:14px 0 0;padding:0;display:flex;flex-direction:column;gap:10px}
-.howsteps li{display:flex;gap:12px;align-items:flex-start;
-  animation:howIn .42s cubic-bezier(.2,.9,.25,1) both}
-.howsteps li:nth-child(1){animation-delay:.04s}
-.howsteps li:nth-child(2){animation-delay:.09s}
-.howsteps li:nth-child(3){animation-delay:.14s}
-.howsteps li:nth-child(4){animation-delay:.19s}
-.howsteps li:nth-child(5){animation-delay:.24s}
-.howsteps li:nth-child(6){animation-delay:.29s}
-@keyframes howIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
-.hownum{flex:0 0 auto;width:28px;height:28px;display:grid;place-items:center;border-radius:50%;
-  background:var(--gold);color:#2A1D00;font-family:var(--mono);font-weight:800;font-size:14px}
-.howicon{flex:0 0 auto;width:28px;height:28px;display:grid;place-items:center;border-radius:8px;
-  background:var(--cab2);border:1px solid var(--line);color:var(--gold);font-size:15px}
-.howbody{display:flex;flex-direction:column;gap:2px;min-width:0}
-.howbody b{font-size:15px}
-.howbody small{font-size:13px;color:var(--dim);line-height:1.45;text-wrap:pretty}
-.howextras{display:flex;flex-direction:column;gap:10px;margin-top:8px}
-.howx{display:flex;gap:12px;align-items:flex-start}
-
 /* ---------- smartboard buzzers ---------- */
 .buzzbar{display:grid;gap:8px;margin-top:10px;
   grid-template-columns:repeat(auto-fit,minmax(120px,1fr))}
@@ -512,19 +452,6 @@ ul.ctrl li{margin:4px 0;color:var(--ink)}
   letter-spacing:.04em;font-size:clamp(17px,4.4vw,25px);color:var(--gold);margin:4px 0 0}
 
 /* ---------- game show ---------- */
-.jeoctl{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:10px;
-  border-color:var(--gold)}
-.jeoctl .ctldot{width:12px;height:12px;border-radius:50%;background:var(--gold);
-  box-shadow:0 0 0 0 rgba(242,180,65,.7);animation:ctlPulse 1.6s ease-out infinite;flex:0 0 auto}
-@keyframes ctlPulse{70%{box-shadow:0 0 0 12px rgba(242,180,65,0)}100%{box-shadow:0 0 0 0 rgba(242,180,65,0)}}
-.jeoctl .ctltext{font-size:15px}
-.jeoctl .ctltext b{color:var(--gold)}
-.jeoctl .ctlrule{font-size:12px;color:var(--dim);width:100%}
-.jeoteam.hasctl{border-color:var(--gold);box-shadow:inset 0 0 0 1px var(--gold)}
-.seatbadge{display:inline-grid;place-items:center;min-width:22px;height:20px;padding:0 5px;
-  margin-left:6px;border-radius:6px;background:rgba(34,216,240,.16);border:1px solid var(--neon);
-  color:var(--neon);font-family:var(--mono);font-size:11px;font-weight:700;vertical-align:middle}
-.buzzer .seatbadge{margin:2px 0 0}
 .jeohead{text-align:left}
 .jeotitle{font-family:var(--disp);font-weight:800;text-transform:uppercase;
   letter-spacing:.06em;font-size:clamp(22px,6vw,34px);color:var(--gold);
@@ -553,7 +480,6 @@ ul.ctrl li{margin:4px 0;color:var(--ink)}
 .jeocell:hover:not(:disabled){transform:scale(1.04);border-color:var(--gold)}
 .jeocell.used{background:#0D0920;border-color:var(--line);color:transparent}
 .jeoscores{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:6px}
-.jeoscores,.buzzbar{margin-bottom:26px}
 .jeoteam{display:flex;align-items:center;gap:8px;background:var(--cab2);
   border:1px solid var(--line);border-radius:8px;padding:8px 10px}
 .jeoteam.lead{border-color:var(--gold);background:rgba(242,180,65,.1)}
@@ -612,20 +538,9 @@ ul.ctrl li{margin:4px 0;color:var(--ink)}
 @media(max-width:520px){.certask{flex-direction:column;text-align:center}.certaskart{width:110px}}
 
 /* ---------- theme song / dance stage ---------- */
-.tracklist{display:grid;gap:6px;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));margin-top:10px}
-.trackbtn{display:flex;flex-direction:column;gap:2px;align-items:flex-start;text-align:left;
-  padding:9px 12px;border:1px solid var(--line);border-radius:10px;background:var(--cab);
-  transition:border-color .16s,transform .12s}
-.trackbtn:hover{border-color:var(--neon);transform:translateY(-2px)}
-.trackbtn.on{border-color:var(--hot);background:rgba(255,46,134,.12)}
-.trackbtn b{font-size:13px}
-.trackbtn small{font-family:var(--mono);font-size:10px;letter-spacing:.14em;
-  text-transform:uppercase;color:var(--dim)}
-.trackbtn.on small{color:var(--hot)}
-#dance{position:fixed;inset:0;z-index:70;display:flex;justify-content:center;
-  align-items:safe center;overflow-y:auto;-webkit-overflow-scrolling:touch;
+#dance{position:fixed;inset:0;z-index:70;display:grid;place-items:center;
   background:rgba(6,4,14,.92);padding:20px}
-.dancewrap{width:100%;max-width:660px;text-align:center;margin:auto}
+.dancewrap{width:100%;max-width:660px;text-align:center}
 #danceCv{display:block;width:100%;height:auto;border:2px solid var(--gold);
   border-radius:14px;box-shadow:0 12px 40px rgba(0,0,0,.6)}
 .dancebar{display:flex;gap:10px;justify-content:center;margin-top:12px}
@@ -641,153 +556,6 @@ ul.ctrl li{margin:4px 0;color:var(--ink)}
 .scorering{font-family:var(--mono);font-size:44px;margin:4px 0}
 .stage{position:relative;width:100%;background:#07050F;border-radius:12px;overflow:hidden;border:1px solid var(--line)}
 .stage canvas{display:block;width:100%;height:100%;touch-action:none}
-
-/* ============================================================
-   JUICE LAYER — cabinet glow, boot-up, coin flight, dock light,
-   ripples and screen transitions. Purely additive: every rule
-   below decorates markup that already exists.
-   ============================================================ */
-
-/* --- slow cabinet glow behind everything --- */
-#fxbg{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden}
-#fxbg i{position:absolute;display:block;border-radius:50%;filter:blur(70px);opacity:.30;
-  animation:drift 28s ease-in-out infinite alternate}
-#fxbg i:nth-child(1){width:56vw;height:56vw;left:-16vw;top:-12vh;background:#2F6BD8}
-#fxbg i:nth-child(2){width:48vw;height:48vw;right:-14vw;top:22vh;background:#7A2ED8;animation-duration:36s}
-#fxbg i:nth-child(3){width:40vw;height:40vw;left:16vw;bottom:-16vh;background:#F2B441;opacity:.14;animation-duration:44s}
-@keyframes drift{from{transform:translate3d(0,0,0) scale(1)}to{transform:translate3d(7vw,5vh,0) scale(1.2)}}
-.wrap{position:relative;z-index:1}
-
-/* --- particle stage --- */
-#fxlayer{position:fixed;inset:0;z-index:35;pointer-events:none;overflow:hidden}
-.fxcoin{position:fixed;width:24px;height:24px;border-radius:50%;
-  background:radial-gradient(circle at 34% 28%,#FFF0C4,#F2B441 58%,#B37D12);
-  border:2px solid #7A5A12;box-shadow:0 0 16px rgba(242,180,65,.85);will-change:transform,opacity}
-.fxspark{position:fixed;width:9px;height:9px;border-radius:2px;will-change:transform,opacity}
-
-/* --- screen transitions --- */
-@keyframes viewIn{from{opacity:0;transform:translateY(9px)}to{opacity:1;transform:none}}
-@keyframes riseInJ{from{opacity:0;transform:translateY(18px) scale(.99)}to{opacity:1;transform:none}}
-#view.vin{animation:viewIn .3s cubic-bezier(.2,.9,.25,1) both}
-#view.vin>*{animation:riseInJ .44s cubic-bezier(.18,.9,.24,1) both}
-#view.vin>*:nth-child(1){animation-delay:.02s}
-#view.vin>*:nth-child(2){animation-delay:.07s}
-#view.vin>*:nth-child(3){animation-delay:.12s}
-#view.vin>*:nth-child(4){animation-delay:.17s}
-#view.vin>*:nth-child(5){animation-delay:.21s}
-#view.vin>*:nth-child(6){animation-delay:.25s}
-#view.vin>*:nth-child(n+7){animation-delay:.28s}
-#view.shake{animation:shakeX .34s ease both}
-
-/* --- marquee: chasing bulbs, live coin --- */
-.marquee::after{background-size:12px 3px;animation:bulbs 1.15s linear infinite}
-@keyframes bulbs{to{background-position:12px 0}}
-.tokenbar{transition:transform .18s}
-.coin{transition:transform .18s,box-shadow .18s}
-.coin.hit{animation:coinPop .52s cubic-bezier(.2,1.7,.3,1)}
-@keyframes coinPop{0%{transform:scale(1)}35%{transform:scale(1.5) rotate(-14deg);
-  box-shadow:0 0 22px rgba(242,180,65,.9)}100%{transform:scale(1)}}
-#tokenCount{font-variant-numeric:tabular-nums;min-width:1.4em;display:inline-block}
-.mutebtn{position:relative;width:30px;height:30px;flex:none;display:grid;place-items:center;
-  border:1px solid var(--line);border-radius:999px;color:var(--gold);font-size:14px;line-height:1;
-  background:rgba(255,255,255,.03);transition:transform .14s,color .14s,border-color .14s}
-.mutebtn:hover{border-color:var(--gold)}
-.mutebtn:active{transform:scale(.9)}
-.mutebtn.off{color:var(--dim)}
-.mutebtn.off::after{content:"";position:absolute;left:5px;right:5px;top:50%;height:1.5px;
-  background:var(--dim);transform:rotate(-38deg)}
-
-/* --- dock: sliding light bar --- */
-.dock button{position:relative;overflow:hidden;transition:color .18s,transform .14s}
-.dock button::before{content:"";position:absolute;inset:0;border-radius:11px;pointer-events:none;
-  background:linear-gradient(135deg,rgba(34,216,240,.18),rgba(255,46,134,.18));
-  opacity:0;transition:opacity .18s}
-@media(hover:hover){.dock button:hover:not([aria-current="page"])::before{opacity:1}}
-.dock button:active{transform:scale(.9)}
-.dock button[aria-current="page"] .ic{animation:iconPop .46s cubic-bezier(.2,1.7,.3,1) both}
-@keyframes iconPop{0%{transform:translateY(4px) scale(.78)}58%{transform:translateY(-4px) scale(1.22)}
-  100%{transform:none}}
-
-/* --- press feel + ripples --- */
-.btn,.opt,.mtile,.buzzer,.zone,.startmenu button,.chunkcard,.revcard{position:relative;overflow:hidden}
-.rip{position:absolute;border-radius:50%;pointer-events:none;
-  background:radial-gradient(circle,rgba(255,255,255,.45),rgba(255,255,255,0) 70%)}
-.btn.primary::after{content:"";position:absolute;top:-60%;bottom:-60%;left:-50%;width:32%;
-  background:linear-gradient(90deg,transparent,rgba(255,255,255,.5),transparent);
-  transform:skewX(-18deg);pointer-events:none;animation:sheen 4.2s ease-in-out infinite}
-@keyframes sheen{0%,72%{left:-50%}100%{left:135%}}
-.panel{transition:transform .18s,box-shadow .18s,border-color .18s}
-@media(hover:hover) and (min-width:700px){
-  .panel:hover{transform:translateY(-2px);box-shadow:0 12px 30px rgba(0,0,0,.35)}
-  .zone:hover{transform:translateY(-3px)}
-}
-.zone{transition:transform .16s,border-color .16s,box-shadow .16s}
-.zone.on{animation:popIn .3s ease both}
-
-/* --- answer feedback, louder --- */
-.opt.right,.jeoopt.right{animation:rightPop .46s cubic-bezier(.2,1.6,.3,1) both,glowPulse 1.1s ease 1}
-@keyframes rightPop{0%{transform:scale(1)}40%{transform:scale(1.035)}100%{transform:none}}
-.opt.wrong,.jeoopt.wrong{animation:shakeX .42s ease both;filter:saturate(1.2)}
-.why{animation:riseInJ .4s cubic-bezier(.2,.9,.25,1) both}
-
-/* --- meters: fill with a moving highlight --- */
-.meter i{position:relative;overflow:hidden;transition:width .7s cubic-bezier(.2,.85,.2,1)}
-.meter i::after{content:"";position:absolute;inset:0;
-  background:linear-gradient(90deg,transparent,rgba(255,255,255,.5),transparent);
-  background-size:140px 100%;animation:shimmer 2s linear infinite}
-
-/* --- toast: spring in, fade out --- */
-.toast{animation:toastIn .42s cubic-bezier(.2,1.7,.3,1) both,toastOut .5s ease 2.05s both}
-@keyframes toastIn{from{opacity:0;transform:translate(-50%,26px) scale(.9)}
-  to{opacity:1;transform:translate(-50%,0) scale(1)}}
-@keyframes toastOut{to{opacity:0;transform:translate(-50%,-10px) scale(.96)}}
-
-/* --- title screen: CRT boot, sweep, parallax layers --- */
-#title .crtboot{position:absolute;inset:0;z-index:9;pointer-events:none;background:#0B0F1F;
-  animation:bootFade 1s ease-out both}
-@keyframes bootFade{0%{opacity:1}55%{opacity:.55}100%{opacity:0}}
-#title .crtline{position:absolute;left:0;right:0;top:50%;height:3px;z-index:10;pointer-events:none;
-  background:#EFEAFB;box-shadow:0 0 26px 8px rgba(239,234,251,.8);animation:crtOpen .72s ease-out both}
-@keyframes crtOpen{0%{transform:scaleX(.1);opacity:0}18%{transform:scaleX(1);opacity:1}
-  100%{transform:scaleX(1) scaleY(60);opacity:0}}
-#title .sweep{position:absolute;left:0;right:0;height:34%;z-index:8;pointer-events:none;
-  background:linear-gradient(180deg,transparent,rgba(255,255,255,.07),transparent);
-  animation:sweepDown 5.5s linear infinite}
-@keyframes sweepDown{from{top:-36%}to{top:106%}}
-#titleCanvas,#titleArt{transition:transform .28s ease-out}
-#title .top{animation:titleDrop .8s cubic-bezier(.2,1.35,.3,1) .3s both;transition:transform .3s ease-out}
-@keyframes titleDrop{from{opacity:0;transform:translateY(-38px) scale(.94)}to{opacity:1;transform:none}}
-#title .hero{animation:heroIn .8s cubic-bezier(.2,1.2,.3,1) .25s both,floaty 4.2s ease-in-out 1.1s infinite}
-@keyframes heroIn{from{opacity:0;transform:translateX(-46px)}to{opacity:1;transform:none}}
-#title .startmenu button{animation:riseInJ .5s cubic-bezier(.2,.9,.25,1) both;transition:transform .14s,border-color .14s}
-#title .startmenu button:nth-child(1){animation-delay:.55s}
-#title .startmenu button:nth-child(2){animation-delay:.63s}
-#title .startmenu button:nth-child(3){animation-delay:.7s}
-#title .startmenu button:nth-child(4){animation-delay:.76s}
-#title .startmenu button:nth-child(n+5){animation-delay:.82s}
-@media(hover:hover){#title .startmenu button:hover{transform:translateY(-2px) scale(1.02);border-color:var(--gold)}}
-#title .startmenu button.go{animation:riseInJ .5s cubic-bezier(.2,.9,.25,1) .55s both,
-  blink 1.6s steps(1,end) 1.1s infinite}
-
-/* --- flashcards: real flip, springier --- */
-.fcinner{transition:transform .6s cubic-bezier(.3,1.25,.35,1)}
-.flashcard{transition:transform .16s}
-.flashcard:active{transform:scale(.99)}
-
-/* --- arcade screens read as a CRT --- */
-.stage,canvas.game{position:relative}
-.stage::after{content:"";position:absolute;inset:0;z-index:3;pointer-events:none;border-radius:12px;
-  background:repeating-linear-gradient(180deg,rgba(0,0,0,.16) 0 2px,transparent 2px 4px);
-  box-shadow:inset 0 0 70px rgba(0,0,0,.65)}
-.stage.hitshake{animation:shakeX .3s ease both}
-
-/* --- certificate prompt lands like a prize --- */
-#certAsk .certask{animation:prizeIn .55s cubic-bezier(.2,1.55,.3,1) both}
-@keyframes prizeIn{from{opacity:0;transform:translateY(26px) scale(.9)}to{opacity:1;transform:none}}
-#certAsk::before{content:"";position:absolute;inset:0;pointer-events:none;
-  background:radial-gradient(circle at 50% 50%,rgba(242,180,65,.22),transparent 62%);
-  animation:prizeGlow 2.6s ease-in-out infinite}
-@keyframes prizeGlow{0%,100%{opacity:.5}50%{opacity:1}}
 </style>
 </head>
 <body>
@@ -799,7 +567,6 @@ ul.ctrl li{margin:4px 0;color:var(--ink)}
   <button class="logo" id="logoBtn">Smith's Classroom<small id="tagline">study · earn · play</small></button>
   <div class="spacer"></div>
   <div class="tokenbar"><span class="coin">◎</span><span id="tokenCount">0</span></div>
-  <button class="mutebtn" id="muteBtn" onclick="toggleMute()" aria-label="Sound" title="Sound">♪</button>
   <span id="teacherBadge" class="chip warn hidden" style="margin-left:6px;cursor:pointer" onclick="teacherLock()">◈ TEACHER</span>
   <div class="langsw" role="group" aria-label="Language">
     <button id="btnEN" aria-pressed="true">EN</button><button id="btnES" aria-pressed="false">ES</button>
@@ -6448,10 +6215,6 @@ function touchStreak(){ const t=today(); if(S.lastDay===t) return;
   const y=new Date(Date.now()-864e5).toISOString().slice(0,10);
   S.streak=(S.lastDay===y)?S.streak+1:1; S.lastDay=t; save(); }
 function award(xp,tok){ S.xp+=xp; S.tokens+=tok; save(); paintBar(); }
-/* A certificate is worth one coin, once. Called only where a genuinely new
-   record lands in S.certs, so re-downloading an old one pays nothing. */
-function certCoin(){ award(0,1);
-  toast("★ "+(S.lang==="es"?"Certificado · +1 ficha":"Certificate earned · +1 coin")); }
 
 /* ---- transfer: file + short code (both carry the same JSON) ---- */
 const enc=o=>btoa(unescape(encodeURIComponent(JSON.stringify(o))));
@@ -6488,47 +6251,14 @@ const ART_SLOTS=[
  {k:"title",label:{en:"Title screen picture",es:"Imagen de la pantalla de título"}}
 ];
 let ARTS={};
-/* Poses extracted from Coach Smith's sprite sheets, all sitting in assets/. */
-const POSE_LIB=["idle_front","idle_3q","walk_front","walk_side","special_move","damage",
-  "idle_front_frustrated","idle_3q_tense","walk_front_confused","walk_side_bored",
-  "fail_game_over","hype_triumph","idle_suit_front","attack_kick","paced_walk",
-  "lean_idle","joy_emote","admire_reaction",
-  "sing_idle","sing_hype","sing_walk_front","sing_walk_side","sing_climax","sing_crowd"];
-/* Keys the arcade asks for that no art file ever provided. Without these the
-   games drew flat rectangles instead of characters. */
-const ART_ALIAS={
-  kart_player:"idle_3q",
-  racer_miner:"idle_front",     racer_robo:"idle_suit_front",
-  racer_lizard:"lean_idle",     racer_pirate:"idle_3q_tense",
-  racer_ghost:"walk_side_bored",racer_alien:"joy_emote",
-  racer_panda:"paced_walk",     kart_cat:"walk_front",
-  kart_saucer:"hype_triumph",   kart_steam:"walk_side",
-  kart_wizard:"admire_reaction",kart_plant:"walk_front_confused",
-  kart_pirate:"idle_3q",
-  foe_gourd:"attack_kick",      foe_monkey:"special_move",
-  foe_warlock:"damage",         foe_enforcer:"idle_front_frustrated",
-  foe_phantom:"fail_game_over"
-};
 function art(k){
   if(ARTS[k]) return ARTS[k];
   if(POSES.indexOf(k)>=0){ const s=S.skin||"smith";
     return DEFAULT_ART[s+"_"+k]||DEFAULT_ART["smith_"+k]||DEFAULT_ART["smith_idle"]; }
   if(DEFAULT_ART[k]) return DEFAULT_ART[k];
-  if(ART_ALIAS[k]&&!ARTS[ART_ALIAS[k]]) return "assets/"+ART_ALIAS[k]+".png";
-  if(ART_ALIAS[k]) return ARTS[ART_ALIAS[k]];
   return "assets/"+k+(k.indexOf("bg_")===0?".jpg":".png");   /* optional extras from the zip */
 }
 function artIsUpload(k){ return !!(ARTS[k]&&ARTS[k].indexOf("data:")===0); }
-/* Optional art: returns "" unless the key resolves to something that actually
-   exists (an upload or a built-in). art() otherwise guesses an assets/<k>.png
-   path for extras that may never have been added, and requesting a file that
-   isn't there is a console resource error even when onerror hides the tag. */
-function artOpt(k){
-  if(ARTS[k]) return ARTS[k];
-  if(DEFAULT_ART[k]) return DEFAULT_ART[k];
-  if(ART_ALIAS[k]) return art(k);
-  return "";
-}
 function saveArt(){ try{ localStorage.setItem(KEY_ART,JSON.stringify(ARTS)); return true; }catch(e){ return false; } }
 function artTag(k,cls){ const u=art(k); return u?`<img src="${u}" alt="" ${cls?`class="${cls}"`:""} onerror="this.remove()">`:""; }
 function setArt(k,file){
@@ -6597,9 +6327,8 @@ function pickLang(l){ S.langChosen=true; setLang(l); hideLangPick(); showTitle()
 function showTitle(){
   if(TEACHER_OK){ TEACHER_OK=false; TAB="home"; }
   const t=document.getElementById("title"); t.classList.remove("hidden");
-  const bgArt=artOpt("title");
   t.innerHTML=`<canvas id="titleCanvas" width="1200" height="800"></canvas>
-    ${bgArt?`<img id="titleArt" src="${bgArt}" alt="" onerror="this.remove()">`:""}
+    <img id="titleArt" src="${art("title")}" alt="" onerror="this.remove()">
     <div class="veil"></div>
     <img id="titleHero" class="hero" src="${art("idle")}" alt="" onerror="this.remove()">
     <div class="top">
@@ -6609,7 +6338,6 @@ function showTitle(){
     <div class="bottom"><div class="startmenu">
       <button class="go" id="startBtn" onclick="hideTitle()">▶ ${T_.pressStart}</button>
       <button onclick="hideTitle();go('home')">${T_.options}</button>
-      <button onclick="showInstructions()">${S.lang==="es"?"Cómo funciona":"How it works"}</button>
       <button onclick="hideTitle();go('art')">${T_.art}</button>
       <button onclick="openTheme()">♪ ${T_.theme}</button>
       <button onclick="showCredits()">${T_.credits}</button>
@@ -6626,10 +6354,7 @@ function showTitle(){
 }
 let titleAnim=null;
 function hideTitle(){ clearInterval(titleAnim); titleAnim=null;
-  const t=document.getElementById("title");
-  t.classList.add("hidden"); t.scrollTop=0;
-  window.scrollTo(0,0);
-}
+  document.getElementById("title").classList.add("hidden"); }
 /* Built-in scene, in the spirit of the Smith's World art: sunset, gate, castle,
    and one floating island — drawn so the app still looks right with no files. */
 function paintTitleScene(cv){
@@ -6687,9 +6412,7 @@ function setLang(l){ S.lang=l; T_=T[l]; document.documentElement.lang=l; save();
   if(!document.getElementById("title").classList.contains("hidden")) showTitle();
   render(); }
 function go(tab){ TAB=tab; stopGame(); studyStop(); EP=null;
-  if(tab!=="showstudy") SHOWST=null;
-  if(tab!=="gameshow"&&typeof jeoUnbind==="function"){ jeoUnbind();
-    if(typeof jeoStopClock==="function") jeoStopClock(); }
+  if(tab!=="gameshow"&&typeof jeoUnbind==="function") jeoUnbind();
   render(); window.scrollTo(0,0); }
 let TEACHER_OK=false;
 /* ---------- secret teacher unlock: type the phrase anywhere ---------- */
@@ -6749,8 +6472,6 @@ function render(){
   else if(TAB==="study") viewStudy();
   else if(TAB==="challenge") viewChallengePicker();
   else if(TAB==="arcade") viewArcade();
-  else if(TAB==="showstudy") viewShowStudy();
-  else if(TAB==="showprep") viewShowPrep();
   else if(TAB==="art") viewArt();
   else if(TAB==="teacher"&&TEACHER_OK) viewTeacher();
   else if(TAB==="gameshow"&&TEACHER_OK) viewGameShow();
@@ -6781,47 +6502,17 @@ function viewHome(){
     <div class="row" style="margin-top:8px"><span class="chip">${done}/${bank} ${T_.items}</span>
       <span class="chip warn">◎ ${S.tokens} ${T_.tokens}</span>
       <span class="chip on">${S.certs.length} ★</span></div>
-    <button class="btn ghost wide" style="margin-top:12px" onclick="showInstructions()">
-      ? ${S.lang==="es"?"Cómo funciona":"How it works"}</button>
   </section>
   <section class="panel">
     <label for="nm">${T_.namePrompt}</label>
     <input id="nm" type="text" value="${esc(S.name)}" placeholder="${T_.yourName}">
     <button class="btn primary wide" style="margin-top:10px" onclick="S.name=document.getElementById('nm').value.trim();save();toast('✓');render()">${T_.saveName}</button>
   </section>
-  <div class="grid two">${allPacks().map((p,i)=>{
+  <div class="grid two">${allPacks().map(p=>{
     const t=p.units.reduce((n,u)=>n+u.items.length,0);
-    /* Cards used to send every course to the generic study tab; each one now
-       opens its own course. */
-    return `<button class="panel coursecard" style="--cc:${p.color||'var(--neon)'}" onclick="go('pack:${p.id}')">
-      <span class="ccart">${artTag(["idle","point","cheer"][i%3])}</span>
-      <span class="ccbody">
-        <span class="eyebrow">${T_.course}</span>
-        <b>${esc(L(p.name))}</b>
-        <span class="ccchips"><span class="chip">${p.units.length} ${T_.units}</span><span class="chip">${t} ${T_.items}</span></span>
-      </span>
-      <span class="ccgo">▸</span></button>`;}).join("")}</div>
-  <button class="panel coursecard" style="--cc:var(--gold);width:100%;margin-top:14px"
-    onclick="go('showprep')">
-    <span class="ccart">${artTag("point")}</span>
-    <span class="ccbody">
-      <span class="eyebrow">${S.lang==="es"?"Reto de Smith":"Smith's Challenge"}</span>
-      <b>${S.lang==="es"?"Estudiar para el concurso":"Study for the game show"}</b>
-      <span class="ccchips">
-        <span class="chip">${S.lang==="es"?"elige tus categorías":"pick your categories"}</span>
-        <span class="chip on">${S.lang==="es"?"sin desbloquear":"no unlocking"}</span></span>
-    </span>
-    <span class="ccgo">▸</span></button>
-  ${showTopics().length?`<button class="panel coursecard" style="--cc:var(--neon);width:100%;margin-top:10px"
-    onclick="go('showstudy')">
-    <span class="ccart">${artTag("point")}</span>
-    <span class="ccbody">
-      <span class="eyebrow">${S.lang==="es"?"Reto de Smith":"Smith's Challenge"}</span>
-      <b>${S.lang==="es"?"Lo que vamos a jugar":"What we're playing"}</b>
-      <span class="ccchips"><span class="chip">${showTopics().length} ${S.lang==="es"?"categorías":"categories"}</span>
-        <span class="chip on">${S.lang==="es"?"estudio libre":"free study"}</span></span>
-    </span>
-    <span class="ccgo">▸</span></button>`:""}
+    return `<button class="panel" style="text-align:left;border-left:4px solid ${p.color||'#888'}" onclick="go('study')">
+      <div class="eyebrow">${T_.course}</div><h2 style="font-size:22px;margin:4px 0">${esc(L(p.name))}</h2>
+      <span class="chip">${p.units.length} ${T_.units}</span> <span class="chip">${t} ${T_.items}</span></button>`;}).join("")}</div>
   <section class="panel">
     <div class="eyebrow">${T_.saveProgress}</div>
     <p class="muted" style="margin:4px 0 10px">${T_.saveHelp}</p>
@@ -8204,98 +7895,9 @@ const TOPIC_LABEL = {
  global:{en:"Going Global",es:"Lo global"},
  budgeting:{en:"Budgeting",es:"Presupuesto"},
  credit:{en:"Credit",es:"Crédito"},
- saving:{en:"Saving & Investing",es:"Ahorro e inversión"},
- /* Just-for-fun categories. Nothing to unlock and nothing to revise — they sit
-    on the board to keep a long game show moving. */
- fun_pop:{en:"Pop Culture",es:"Cultura pop"},
- fun_music:{en:"Music",es:"Música"},
- fun_trivia:{en:"Random Trivia",es:"Curiosidades"},
- fun_riddle:{en:"Riddles",es:"Acertijos"}
+ saving:{en:"Saving & Investing",es:"Ahorro e inversión"}
 };
-const topicLabel = t => {
-  if (isScen(t)) return topicLabel(scenBase(t)) +
-    (S.lang === "es" ? " · Escenarios" : " Scenarios");
-  return TOPIC_LABEL[t] ? L(TOPIC_LABEL[t]) : t;
-};
-
-/* ----------------------------------------------------------------------------
-   SCENARIO CATEGORIES
-   Every academic topic gets a companion category: "Supply" and "Supply
-   Scenarios" are two separate picks, so a board can run both. A scenario clue
-   never asks what a term means. It puts a situation in front of the student and
-   asks which idea is at work, which is the harder half of knowing a term.
-
-   Rather than a second hand-written bank, the scenarios are generated from the
-   same vocabulary in three forms:
-     SPOT    given the term, pick the situation that shows it
-     NAME    given a situation, name the idea
-     APPLIED the unit's own multiple-choice bank, which is already applied work
-   Distractors are drawn from sibling terms in the same topic, so a wrong answer
-   is always plausibly close rather than obviously silly.
-   -------------------------------------------------------------------------- */
-const SCEN = "__sc";
-const isScen = t => typeof t === "string" && t.slice(-SCEN.length) === SCEN;
-const scenBase = t => isScen(t) ? t.slice(0, -SCEN.length) : t;
-/* Situation framings. {d} is the definition, lower-cased at the seam. */
-const SCEN_FRAME = [
-  {en:"In class you overhear this: “{d}”", es:"En clase escuchas esto: «{d}»"},
-  {en:"A shop owner on Main Street describes it this way: “{d}”",
-   es:"Un comerciante lo describe así: «{d}»"},
-  {en:"The news anchor sums up the story: “{d}”",
-   es:"El presentador resume la noticia: «{d}»"},
-  {en:"Your cousin explains what happened to her: “{d}”",
-   es:"Tu prima explica lo que le pasó: «{d}»"},
-  {en:"A group chat argument boils down to this: “{d}”",
-   es:"Una discusión del chat se reduce a esto: «{d}»"}
-];
-function scenSituation(v, i){
-  const f = L(SCEN_FRAME[i % SCEN_FRAME.length]);
-  const d = String(L(v.d)).trim();
-  return f.replace("{d}", d.charAt(0).toLowerCase() + d.slice(1).replace(/\.$/, ""));
-}
-function scenarioCategory(unit, baseTopic, perCat){
-  const es = S.lang === "es";
-  const own = vocabByTopic(unit, baseTopic);
-  const pool = own.length >= 4 ? own : vocabOf(unit);
-  const clues = [], seen = new Set();
-  const others = v => shuffled(pool.filter(o => L(o.w) !== L(v.w))).slice(0, 3);
-
-  /* SPOT: the term is given, the four options are situations */
-  shuffled(own).forEach((v, i) => {
-    if (clues.length >= Math.ceil(perCat * 0.5)) return;
-    const d = others(v); if (d.length < 3) return;
-    const opts = shuffled([{t:scenSituation(v, i), ok:true}]
-      .concat(d.map((o, k) => ({t:scenSituation(o, i + k + 1), ok:false}))));
-    const q = (es ? "¿Cuál de estas situaciones muestra “" : "Which situation shows “")
-      + L(v.w) + (es ? "”?" : "”?");
-    if (seen.has(q)) return; seen.add(q);
-    clues.push({q, c:opts.map(o => o.t), a:opts.findIndex(o => o.ok),
-      why:L(v.w) + " — " + L(v.d)});
-  });
-
-  /* APPLIED: the unit's real bank */
-  const u = findUnit(unit);
-  shuffled((u && u.items || []).filter(i => i.type === "mcq")).forEach(it => {
-    if (clues.length >= Math.ceil(perCat * 0.8)) return;
-    const c = jeoClueFromItem(it);
-    if (c && !seen.has(c.q)){ seen.add(c.q); clues.push(c); }
-  });
-
-  /* NAME: a situation is given, the four options are terms */
-  shuffled(own).forEach((v, i) => {
-    if (clues.length >= perCat) return;
-    const d = others(v); if (d.length < 3) return;
-    const opts = shuffled([{t:L(v.w), ok:true}].concat(d.map(o => ({t:L(o.w), ok:false}))));
-    const q = scenSituation(v, i + 2) + (es ? " ¿Qué idea está en juego?"
-                                            : " Which idea is at work?");
-    if (seen.has(q)) return; seen.add(q);
-    clues.push({q, c:opts.map(o => o.t), a:opts.findIndex(o => o.ok),
-      why:L(v.w) + " — " + L(v.d)});
-  });
-
-  return {topic:baseTopic + SCEN, unit, label:topicLabel(baseTopic + SCEN),
-          clues:clues.slice(0, perCat)};
-}
+const topicLabel = t => TOPIC_LABEL[t] ? L(TOPIC_LABEL[t]) : t;
 
 /* Vocabulary for a unit, including anything a teacher added via a pack. */
 function vocabOf(unitId){
@@ -8314,26 +7916,14 @@ function topicsOf(unitId){
 function allTopics(){
   const out = [];
   allUnits().forEach(u => topicsOf(u.id).forEach(t => {
-    if (out.some(x => x.t === t && x.unit === u.id)) return;
-    const n = vocabOf(u.id).filter(v => v.t === t).length;
-    out.push({t:t, unit:u.id, unitTitle:L(u.title), pack:L(u.pack.name), n:n});
-    /* Every academic topic gets its scenario twin. scenarioCategory falls back
-       to the whole unit for distractors, so a one-term topic still builds — the
-       only unbuildable case is no terms and no applied bank at all. */
-    const applied = ((u.items || []).filter(i => i.type === "mcq")).length;
-    if (n + applied > 0)
-      out.push({t:t + SCEN, unit:u.id, unitTitle:L(u.title), pack:L(u.pack.name),
-                n:n, applied:applied, scen:true});
+    if (!out.some(x => x.t === t && x.unit === u.id))
+      out.push({t:t, unit:u.id, unitTitle:L(u.title), pack:L(u.pack.name),
+                n:vocabOf(u.id).filter(v => v.t === t).length});
   }));
-  /* the fun banks ride along as ordinary topics, so the picker, the board and
-     the study list all handle them without special cases */
-  if (typeof FUN_BANKS !== "undefined")
-    FUN_BANKS.forEach(b => out.push({t:b.id, unit:"fun", unitTitle:L(b.blurb),
-                                     pack:L(FUN_PACK_NAME), n:b.rows.length}));
   return out;
 }
 function vocabByTopic(unitId, topic){
-  return vocabOf(unitId).filter(v => v.t === scenBase(topic));
+  return vocabOf(unitId).filter(v => v.t === topic);
 }
 
 /* ============================================================================
@@ -8468,8 +8058,8 @@ function makeReviewCert(unitId, activity, score){
     name: S.name||"Student", unit: L(u.title), course: L(u.pack.name),
     score: Math.max(0,Math.min(100,score)), date: today(), kind:"review", activity: activity
   };
-  if (!S.certs.some(c=>c.code===rec.code)){ S.certs.push(rec); save(); certCoin(); }
-  else save();
+  if (!S.certs.some(c=>c.code===rec.code)) S.certs.push(rec);
+  save();
   drawCert(rec, false);
 }
 
@@ -8505,7 +8095,7 @@ function revAward(uid, which, score){
   if (first) award(40, 1);
   if (revComplete(uid) && !r.paid){
     r.paid = true;
-    award(150, 5);
+    award(150, 2);
     toast("★ " + T_.reviewAllDone);
   }
   save();
@@ -8604,25 +8194,13 @@ function drawCard(){
       </div>
     </div>
   </div>
-  <div class="row" id="fcMarks" style="margin-top:14px;gap:10px;${C.flipped?"":"display:none"}">
+  ${C.flipped?`<div class="row" style="margin-top:14px;gap:10px">
      <button class="btn wide" style="flex:1;color:var(--hot)" onclick="cardMark(false)">${T_.didntKnow}</button>
      <button class="btn primary" style="flex:1" onclick="cardMark(true)">${T_.knewIt}</button>
-  </div>
-  <button class="btn primary wide" id="fcFlip" style="margin-top:14px;${C.flipped?"display:none":""}" onclick="flipCard()">${T_.flip}</button>`;
+   </div>`:`<button class="btn primary wide" style="margin-top:14px" onclick="flipCard()">${T_.flip}</button>`}`;
   window.scrollTo(0,0);
 }
-/* The card used to re-render on every flip, which threw away the 3D transition
-   half way through. Now the flip is a class toggle and the two control rows
-   just trade places. */
-function flipCard(){
-  CARDS.flipped = !CARDS.flipped;
-  const c = document.getElementById("fcard");
-  if (!c) return drawCard();
-  c.classList.toggle("flipped", CARDS.flipped);
-  const m = document.getElementById("fcMarks"), f = document.getElementById("fcFlip");
-  if (m) m.style.display = CARDS.flipped ? "" : "none";
-  if (f) f.style.display = CARDS.flipped ? "none" : "";
-}
+function flipCard(){ CARDS.flipped = !CARDS.flipped; drawCard(); }
 function cardMark(knew){
   if (knew) CARDS.got++; else CARDS.missed.push(CARDS.list[CARDS.i]);
   CARDS.i++; CARDS.flipped = false; drawCard();
@@ -8966,143 +8544,7 @@ function jeoClueFromItem(it){
   const opts = shuffled(tagged);
   return {q:L(it.q), c:opts.map(o=>o.t), a:opts.findIndex(o=>o.ok), why:L(it.why)};
 }
-/* ----------------------------------------------------------------------------
-   JUST-FOR-FUN BANKS
-   Rows are compact on purpose: [question, choices, correct index, why], each
-   string "english|español", choices separated by ";". They are parsed at draw
-   time so a bilingual class reads the same clue in either language.
-   -------------------------------------------------------------------------- */
-const FUN_PACK_NAME = {en:"Just for fun · no studying required",
-                       es:"Solo por diversión · sin estudiar"};
-const FUN_BANKS = [
-{id:"fun_pop", blurb:{en:"Movies, shows and characters",es:"Cine, series y personajes"}, rows:[
- ["Which film sends three men after a shark off Amity Island?|¿Qué película manda a tres hombres tras un tiburón en Amity Island?",
-  "Jaws|Tiburón;The Abyss|El abismo;Free Willy|Liberen a Willy;Moby Dick|Moby Dick",0,
-  "Steven Spielberg's 1975 thriller.|El thriller de Steven Spielberg de 1975."],
- ["Which planet is Superman born on?|¿En qué planeta nace Superman?",
-  "Krypton|Kryptón;Vulcan|Vulcano;Tatooine|Tatooine;Asgard|Asgard",0,
-  "He is rocketed to Earth as Krypton dies.|Lo envían a la Tierra cuando Kryptón muere."],
- ["What is Spider-Man's real name?|¿Cómo se llama en realidad Spider-Man?",
-  "Peter Parker|Peter Parker;Bruce Wayne|Bruce Wayne;Clark Kent|Clark Kent;Tony Stark|Tony Stark",0,
-  "Bruce Wayne is Batman, Clark Kent is Superman.|Bruce Wayne es Batman y Clark Kent es Superman."],
- ["Which animated film follows a lion cub named Simba?|¿Qué película animada sigue a un cachorro de león llamado Simba?",
-  "The Lion King|El rey león;Madagascar|Madagascar;Zootopia|Zootopia;Tarzan|Tarzán",0,
-  "Simba, Mufasa and Scar.|Simba, Mufasa y Scar."],
- ["What weapon is a Jedi known for?|¿ Qué arma distingue a un Jedi?",
-  "A lightsaber|Un sable de luz;A crossbow|Una ballesta;A war hammer|Un martillo;A trident|Un tridente",0,
-  "Star Wars.|La guerra de las galaxias."],
- ["Which yellow animated family lives in Springfield?|¿Qué familia amarilla animada vive en Springfield?",
-  "The Simpsons|Los Simpson;The Flintstones|Los Picapiedra;The Jetsons|Los Supersónicos;The Addams Family|Los locos Addams",0,
-  "On air since 1989.|Al aire desde 1989."],
- ["In the Harry Potter books, what is the school called?|En los libros de Harry Potter, ¿cómo se llama la escuela?",
-  "Hogwarts|Hogwarts;Camelot|Camelot;Winterfell|Invernalia;Xavier's|Xavier",0,
-  "Hogwarts School of Witchcraft and Wizardry.|Colegio Hogwarts de Magia y Hechicería."],
- ["What does Buzz Lightyear say?|¿Qué dice Buzz Lightyear?",
-  "To infinity and beyond|Hasta el infinito y más allá;I'll be back|Volveré;Wakanda forever|Wakanda por siempre;Let it go|Suéltalo",0,
-  "Toy Story.|Toy Story."],
- ["Which city does Batman protect?|¿Qué ciudad protege Batman?",
-  "Gotham City|Ciudad Gótica;Metropolis|Metópolis;Central City|Ciudad Central;Star City|Ciudad Estrella",0,
-  "Metropolis belongs to Superman.|Metópolis es de Superman."],
- ["In Toy Story, what kind of toy is Woody?|En Toy Story, ¿qué tipo de juguete es Woody?",
-  "A cowboy doll|Un vaquero de trapo;A robot|Un robot;A dinosaur|Un dinosaurio;A race car|Un auto de carreras",0,
-  "A pull-string cowboy.|Un vaquero de cuerda."]]},
-{id:"fun_music", blurb:{en:"Instruments, genres, legends",es:"Instrumentos, géneros, leyendas"}, rows:[
- ["How many strings does a standard guitar have?|¿Cuántas cuerdas tiene una guitarra estándar?",
-  "6|6;4|4;8|8;12|12",0,"Six. A bass has four.|Seis. El bajo tiene cuatro."],
- ["How many keys are on a full-size piano?|¿Cuántas teclas tiene un piano completo?",
-  "88|88;66|66;76|76;101|101",0,"52 white and 36 black.|52 blancas y 36 negras."],
- ["Who is known as the King of Pop?|¿Quién es el Rey del Pop?",
-  "Michael Jackson|Michael Jackson;Elvis Presley|Elvis Presley;Prince|Prince;James Brown|James Brown",0,
-  "Elvis is the King of Rock and Roll.|Elvis es el Rey del Rock and Roll."],
- ["How many lines are in a musical staff?|¿Cuántas líneas tiene un pentagrama?",
-  "5|5;4|4;6|6;7|7",0,"Five lines, four spaces.|Cinco líneas y cuatro espacios."],
- ["In music, what does 'forte' mean?|En música, ¿qué significa «forte»?",
-  "Loud|Fuerte;Soft|Suave;Fast|Rápido;Slow|Lento",0,"Piano means soft.|«Piano» significa suave."],
- ["Which genre started in the Bronx in the 1970s?|¿Qué género nació en el Bronx en los años 70?",
-  "Hip-hop|Hip-hop;Country|Country;Reggae|Reggae;Jazz|Jazz",0,
-  "Block parties, turntables and MCs.|Fiestas de barrio, tornamesas y MCs."],
- ["Which Beatle played the drums?|¿Qué Beatle tocaba la batería?",
-  "Ringo Starr|Ringo Starr;Paul McCartney|Paul McCartney;John Lennon|John Lennon;George Harrison|George Harrison",0,
-  "Paul on bass, John and George on guitar.|Paul en el bajo, John y George en la guitarra."],
- ["Violin, viola and cello belong to which family?|Violín, viola y violonchelo, ¿a qué familia pertenecen?",
-  "Strings|Cuerdas;Brass|Metales;Woodwind|Viento madera;Percussion|Percusión",0,
-  "All bowed string instruments.|Todos son de cuerda frotada."],
- ["What time signature has four beats per measure?|¿Qué compás tiene cuatro tiempos por medida?",
-  "4/4|4/4;3/4|3/4;6/8|6/8;2/2|2/2",0,"Called common time.|Se llama compás de cuatro por cuatro."],
- ["What does DJ stand for?|¿Qué significa DJ?",
-  "Disc jockey|Disc jockey;Digital jam|Digital jam;Drum judge|Juez de batería;Dance joint|Dance joint",0,
-  "From spinning discs on the radio.|Viene de girar discos en la radio."]]},
-{id:"fun_trivia", blurb:{en:"A bit of everything",es:"Un poco de todo"}, rows:[
- ["How many continents are there?|¿Cuántos continentes hay?","7|7;5|5;6|6;8|8",0,
-  "Africa, Antarctica, Asia, Europe, North America, Oceania, South America.|África, Antártida, Asia, Europa, América del Norte, Oceanía y América del Sur."],
- ["Which planet is the largest in our solar system?|¿Cuál es el planeta más grande del sistema solar?",
-  "Jupiter|Júpiter;Saturn|Saturno;Neptune|Neptuno;Earth|La Tierra",0,
-  "Over 1,300 Earths would fit inside.|Cabrían más de 1.300 Tierras dentro."],
- ["What is the chemical symbol for gold?|¿Cuál es el símbolo químico del oro?",
-  "Au|Au;Go|Go;Gd|Gd;Ag|Ag",0,"From the Latin aurum. Ag is silver.|Del latín aurum. Ag es la plata."],
- ["How many bones are in the adult human body?|¿Cuántos huesos tiene el cuerpo humano adulto?",
-  "206|206;180|180;300|300;250|250",0,"Babies start with about 300.|Los bebés empiezan con unos 300."],
- ["What is the capital of Japan?|¿Cuál es la capital de Japón?",
-  "Tokyo|Tokio;Kyoto|Kioto;Osaka|Osaka;Seoul|Seúl",0,"Kyoto was the old capital.|Kioto fue la capital antigua."],
- ["What is the fastest land animal?|¿Cuál es el animal terrestre más rápido?",
-  "Cheetah|Guepardo;Lion|León;Horse|Caballo;Ostrich|Avestruz",0,
-  "Around 100 km/h in short bursts.|Unos 100 km/h en tramos cortos."],
- ["How many sides does a hexagon have?|¿Cuántos lados tiene un hexágono?","6|6;5|5;7|7;8|8",0,
-  "Hex means six.|«Hexa» significa seis."],
- ["Which ocean is the largest?|¿ Qué océano es el más grande?",
-  "Pacific|Pacífico;Atlantic|Atlántico;Indian|Índico;Arctic|Ártico",0,
-  "Bigger than all the land on Earth combined.|Más grande que toda la tierra firme junta."],
- ["Which gas do plants take in to make food?|¿Qué gas absorben las plantas para fabricar alimento?",
-  "Carbon dioxide|Dióxido de carbono;Oxygen|Oxígeno;Nitrogen|Nitrógeno;Helium|Helio",0,
-  "Photosynthesis takes in CO2 and gives out oxygen.|La fotosíntesis toma CO2 y libera oxígeno."],
- ["How many minutes are in a full day?|¿Cuántos minutos tiene un día completo?",
-  "1,440|1.440;720|720;1,240|1.240;2,400|2.400",0,"24 x 60.|24 x 60."]]},
-{id:"fun_riddle", blurb:{en:"Think before you buzz",es:"Piensa antes de pulsar"}, rows:[
- ["What has keys but opens no locks?|¿Qué tiene teclas pero no abre cerraduras?",
-  "A piano|Un piano;A map|Un mapa;A jail|Una cárcel;A car|Un auto",0,"Keys you press, not turn.|Teclas que se pulsan, no que giran."],
- ["What goes up but never comes down?|¿Qué sube y nunca baja?",
-  "Your age|Tu edad;A balloon|Un globo;Smoke|El humo;A kite|Una cometa",0,"One direction only.|Solo va en una dirección."],
- ["What has hands but cannot clap?|¿Qué tiene manecillas pero no puede aplaudir?",
-  "A clock|Un reloj;A statue|Una estatua;A glove|Un guante;A tree|Un árbol",0,"Hour hand and minute hand.|Manecilla de horas y de minutos."],
- ["The more you take, the more you leave behind. What is it?|Cuantos más das, más dejas atrás. ¿Qué es?",
-  "Footsteps|Pasos;Money|Dinero;Photos|Fotos;Time|El tiempo",0,"Every step you take leaves one behind.|Cada paso que das deja uno atrás."],
- ["What has a neck but no head?|¿Qué tiene cuello pero no cabeza?",
-  "A bottle|Una botella;A shirt|Una camisa;A giraffe|Una jirafa;A road|Un camino",0,"The neck of the bottle.|El cuello de la botella."],
- ["What gets wetter the more it dries?|¿Qué se moja más cuanto más seca?",
-  "A towel|Una toalla;The sun|El sol;A sponge cake|Un bizcocho;A river|Un río",0,"It dries you and soaks itself.|Te seca y se empapa."],
- ["What travels around the world while staying in one corner?|¿Qué viaja por el mundo sin salir de una esquina?",
-  "A stamp|Una estampilla;A globe|Un globo terráqueo;The moon|La luna;A shadow|Una sombra",0,
-  "Stuck to the corner of an envelope.|Pegada en la esquina de un sobre."],
- ["What has many teeth but cannot bite?|¿Qué tiene muchos dientes pero no muerde?",
-  "A comb|Un peine;A shark|Un tiburón;A saw blade|Una sierra;A zipper|Un cierre",0,"A comb's teeth.|Los dientes del peine."],
- ["What comes once in a minute, twice in a moment, never in a thousand years?|¿ Qué aparece una vez en «minuto», dos en «momento» y nunca en «mil años»?",
-  "The letter M|La letra M;A leap year|Un año bisiesto;A heartbeat|Un latido;An eclipse|Un eclipse",0,
-  "Count the letters, not the clock.|Cuenta las letras, no el reloj."],
- ["What has an eye but cannot see?|¿Qué tiene ojo pero no ve?",
-  "A needle|Una aguja;A potato|Una papa;A camera|Una cámara;A storm|Una tormenta",0,
-  "The eye of the needle.|El ojo de la aguja."]]}
-];
-const funBank = id => FUN_BANKS.find(b => b.id === id);
-/* Parse one compact row into the same clue shape buildCategory returns, with
-   the options shuffled so the answer is not always A. */
-function funClue(row){
-  const es = S.lang === "es";
-  const pick = s => { const p = String(s).split("|"); return (es && p[1]) ? p[1] : p[0]; };
-  const opts = row[1].split(";").map((s,i) => ({t:pick(s), ok:i === row[2]}));
-  const sh = shuffled(opts);
-  return {q:pick(row[0]), c:sh.map(o=>o.t), a:sh.findIndex(o=>o.ok), why:pick(row[3])};
-}
-function funCategory(id, perCat){
-  const b = funBank(id);
-  const clues = shuffled(b.rows).slice(0, perCat).map(funClue);
-  while (clues.length && clues.length < perCat) clues.push(funClue(shuffled(b.rows)[0]));
-  return {topic:id, unit:"fun", label:topicLabel(id), clues};
-}
-
 function buildCategory(topicRef, perCat){
-  if (topicRef.unit === "fun") return funCategory(topicRef.t, perCat);
-  if (isScen(topicRef.t))
-    return scenarioCategory(topicRef.unit, scenBase(topicRef.t), perCat);
   const voc = vocabByTopic(topicRef.unit, topicRef.t);
   const u = findUnit(topicRef.unit);
   const bank = shuffled((u && u.items || []).filter(i => i.type === "mcq"));
@@ -9193,21 +8635,6 @@ function commitSeat(team, seat){
   team.turns[seat] = (team.turns[seat] || 0) + 1;
   team.lastSeat = seat;
 }
-/* Assign, for every table, the member who answers the next clue. Announced on
-   the board so a table can get that student ready instead of being told after
-   they buzz. Kept until it is used, then re-rolled for the next clue. */
-function jeoAssignSeats(force){
-  if (!JEO || !JEO.teams) return;
-  JEO.teams.forEach(t => {
-    if (!t.size) { t.upNext = null; return; }
-    if (force || t.upNext == null) t.upNext = pickSeat(t);
-  });
-}
-function seatBadge(t){
-  return (JEO.whosUp && t.size && t.upNext != null)
-    ? `<span class="seatbadge">#${t.upNext+1}</span>` : "";
-}
-
 /* How evenly has this table shared its turns? Used in the wrap-up. */
 function seatSpread(team){
   if (!team.turns || !team.turns.length) return "";
@@ -9249,7 +8676,7 @@ function jeoSkipSizes(){
 /* ---- the buzzer bar drawn on the board --------------------------------- */
 function jeoBuzzerBar(){
   const C = JEO.cur;
-  const locked = C && (C.buzzed !== null || C.revealed || C.phase === "read");
+  const locked = C && (C.buzzed !== null || C.revealed);
   return `
   <div class="buzzbar">
     ${JEO.teams.map(t=>{
@@ -9258,7 +8685,6 @@ function jeoBuzzerBar(){
       return `<button class="buzzer ${isBuzzed?'won':''} ${out?'out':''}"
         ${out||locked?'disabled':''} onclick="jeoBuzz(${t.i})">
         <span class="bznum">${t.i===9?0:t.i+1}</span>
-        ${seatBadge(t)}
         <span class="bzname">${esc(t.name)}</span>
         <span class="bzscore">$${t.score}</span>
       </button>`;}).join("")}
@@ -9383,479 +8809,9 @@ function jeoTopics(){
   <section class="panel">
     <button class="btn primary wide" ${JEO.topics.length<5?"disabled":""}
       onclick="jeoStart()">${JEO.topics.length<5?T_.needFive:T_.startGame}</button>
-    <button class="btn ghost wide" style="margin-top:8px" ${JEO.topics.length?"":"disabled"}
-      onclick="jeoPublishStudy()">${S.lang==="es"
-        ?"Publicar estos temas para estudiar":"Post these topics for study"}</button>
-    <p class="muted" style="font-size:12.5px;margin:8px 0 0">${S.lang==="es"
-      ?"Aparecen en la pantalla de inicio de todos. Se pueden estudiar libremente, sin desbloquear nada."
-      :"They show up on everyone's home screen. Open and study any of them freely — nothing to unlock."}</p>
   </section>`;
   window.scrollTo(0,0);
 }
-/* ============================================================================
-   GAME SHOW STUDY — what we're playing, open to everyone
-   ----------------------------------------------------------------------------
-   The teacher posts the categories from the picker. Students see them on the
-   home screen and can open any of them: the terms, then the same generated
-   clues the board will use. No unit order, no unlock, no tokens — this is the
-   part of the game show you are allowed to prepare for.
-   ========================================================================== */
-let SHOWST = null;
-function showTopics(){ return (S.showTopics || []).filter(x => x && x.t); }
-function jeoPublishStudy(){
-  S.showTopics = JEO.topics.map(t => ({unit:t.unit, t:t.t}));
-  save();
-  toast("✓ " + (S.lang === "es" ? "Publicado para estudiar" : "Posted for study"));
-  viewGameShow();
-}
-function viewShowStudy(){
-  const es = S.lang === "es", list = showTopics();
-  if (SHOWST) return drawShowStudy();
-  V().innerHTML = `
-  <div class="eprow"><button class="btn ghost" style="padding:8px 12px;min-height:0"
-    onclick="go('home')">← ${T_.back}</button></div>
-  <section class="panel raised jeohead">
-    <div class="eyebrow">${es?"Reto de Smith":"Smith's Challenge"}</div>
-    <h1 class="jeotitle">${es?"Lo que vamos a jugar":"What we're playing"}</h1>
-    <p class="muted">${es
-      ?"Estas son las categorías del tablero. Ábrelas y estudia lo que quieras, en el orden que quieras."
-      :"These are the categories on the board. Open any one and study it, in any order."}</p>
-  </section>
-  ${list.length?`<div class="grid two">${list.map(x=>{
-    const fun = x.unit === "fun";
-    const n = fun ? (funBank(x.t)||{rows:[]}).rows.length : vocabByTopic(x.unit, x.t).length;
-    return `<button class="panel coursecard" style="--cc:${fun?'var(--hot)':'var(--neon)'}"
-      onclick="showStudyOpen('${x.unit}','${x.t}')">
-      <span class="ccbody">
-        <span class="eyebrow">${fun?(es?"Solo por diversión":"Just for fun"):(es?"Categoría":"Category")}</span>
-        <b>${esc(topicLabel(x.t))}</b>
-        <span class="ccchips"><span class="chip">${n} ${fun?(es?"preguntas":"questions"):T_.terms}</span></span>
-      </span>
-      <span class="ccgo">▸</span></button>`;}).join("")}</div>`
-   :`<section class="panel"><p class="muted">${es
-      ?"Todavía no hay temas publicados. Tu profe los pondrá aquí antes del juego."
-      :"No topics posted yet. Your teacher will put them here before the game."}</p></section>`}`;
-  window.scrollTo(0,0);
-}
-function showStudyOpen(unit, t){
-  SHOWST = {unit, t, cat:buildCategory({unit, t}, 6), i:0, picked:null, right:0,
-            mode: (unit === "fun" || isScen(t)) ? "quiz" : "terms"};
-  TAB = "showstudy"; drawShowStudy(); window.scrollTo(0,0);
-}
-function showStudyClose(){ SHOWST = null; viewShowStudy(); window.scrollTo(0,0); }
-function showStudyMode(m){ SHOWST.mode = m; SHOWST.i = 0; SHOWST.picked = null; SHOWST.right = 0;
-  drawShowStudy(); window.scrollTo(0,0); }
-function showStudyPick(i){
-  const s = SHOWST; if (!s || s.picked !== null) return;
-  s.picked = i;
-  const ok = i === s.cat.clues[s.i].a;
-  if (ok) s.right++;
-  sfx(ok ? "right" : "wrong");
-  drawShowStudy();
-}
-function showStudyNext(){
-  const s = SHOWST;
-  s.picked = null; s.i++;
-  drawShowStudy(); window.scrollTo(0,0);
-}
-function drawShowStudy(){
-  const s = SHOWST, es = S.lang === "es";
-  if (!s) return viewShowStudy();
-  const head = `
-  <div class="eprow"><button class="btn ghost" style="padding:8px 12px;min-height:0"
-    onclick="showStudyClose()">← ${es?"Temas":"Topics"}</button>
-    <span style="flex:1"></span>
-    <span class="chip">${esc(topicLabel(s.t))}</span></div>`;
-
-  if (s.mode === "terms"){
-    const voc = vocabByTopic(s.unit, s.t);
-    V().innerHTML = head + `
-    <section class="panel raised jeohead">
-      <h1 class="jeotitle">${esc(topicLabel(s.t))}</h1>
-      <p class="muted">${es?"Lee los términos y luego pruébate. Nada de esto cuenta para tu progreso."
-                          :"Read the terms, then test yourself. None of this counts against your progress."}</p>
-    </section>
-    <section class="panel">
-      ${voc.length?voc.map(v=>`<div class="termrow">
-        <b>${esc(L(v.w))}</b><span class="muted">${esc(L(v.d))}</span></div>`).join("")
-        :`<p class="muted">${es?"Esta categoría es solo de preguntas.":"This category is questions only."}</p>`}
-      <button class="btn primary wide" style="margin-top:14px" onclick="showStudyMode('quiz')">
-        ${es?"Pruébame":"Quiz me"} →</button>
-    </section>`;
-    return;
-  }
-
-  const cl = s.cat.clues[s.i];
-  if (!cl){
-    V().innerHTML = head + `
-    <section class="panel raised jeohead">
-      <div class="eyebrow">${es?"Listo":"Done"}</div>
-      <h1 class="jeotitle">${s.right}/${s.cat.clues.length}</h1>
-      <p class="muted">${es?"Vuélvelo a hacer cuantas veces quieras — las preguntas se rebarajan."
-                          :"Run it as many times as you like — the questions reshuffle."}</p>
-      <button class="btn primary wide" style="margin-top:12px"
-        onclick="showStudyOpen('${s.unit}','${s.t}')">${es?"Otra vez":"Again"}</button>
-      <button class="btn ghost wide" style="margin-top:8px" onclick="showStudyClose()">
-        ${es?"Otros temas":"Other topics"}</button>
-    </section>`;
-    return;
-  }
-  const done = s.picked !== null;
-  V().innerHTML = head + `
-  <section class="panel raised jeoclue">
-    <div class="eyebrow">${es?"Pregunta":"Question"} ${s.i+1}/${s.cat.clues.length}</div>
-    <p class="jeoq">${esc(cl.q)}</p>
-    <div class="jeoopts">
-      ${cl.c.map((t,i)=>`<button class="jeoopt ${done?(i===cl.a?'right':(s.picked===i?'wrong':'')):''}"
-        ${done?'disabled':''} onclick="showStudyPick(${i})">
-        <span class="jeoletter">${"ABCD"[i]}</span>${esc(t)}</button>`).join("")}
-    </div>
-  </section>
-  ${done?`<section class="panel jeowhy">
-    <div class="eyebrow">${T_.whyThat}</div>
-    <p>${esc(cl.why)}</p>
-    <button class="btn primary wide" style="margin-top:12px" onclick="showStudyNext()">
-      ${s.i+1 >= s.cat.clues.length ? (es?"Ver resultado":"See result") : (es?"Siguiente":"Next")} →</button>
-  </section>`:""}`;
-}
-
-/* ============================================================================
-   STUDY FOR THE GAME SHOW  ·  open to everyone, no unlocking
-   ----------------------------------------------------------------------------
-   The teacher writes the category list on the board; students tick the same
-   boxes here. Nothing is gated and nothing is posted from one device to
-   another, so this works on thirty phones that have never met each other.
-
-   The walkthrough deliberately does not go topic-by-topic. Cards are dealt
-   round-robin across everything selected, so a student who studies "supply"
-   and "elasticity" together gets them interleaved the way the board will mix
-   them. Three card types, one idea each:
-
-     RECALL  the definition first, the term hidden. You try to name it, then
-             reveal. Retrieval beats re-reading, and a hint is one tap away
-             (first letter and word count — enough to unstick, not enough to
-             answer for you).
-     CHECK   a real board-style question. The hint strikes out two wrong
-             options, which is a genuine narrowing rather than a nudge.
-     RECAP   every sixth card, a short list of what has gone by, because the
-             reminder is the point of studying a blended set.
-   ========================================================================== */
-let PREP = null;
-const prepSel = () => (S.prepSel || []).filter(x => x && x.t);
-const prepHas = (unit, t) => prepSel().some(x => x.unit === unit && x.t === t);
-function prepToggle(unit, t){
-  const cur = prepSel();
-  const on = prepHas(unit, t);
-  S.prepSel = on ? cur.filter(x => !(x.unit === unit && x.t === t))
-                 : cur.concat([{unit, t}]);
-  save(); sfx("tap");
-  /* Repaint in place instead of re-rendering the view: a full render resets the
-     scroll position, and ticking a box halfway down a long list should not send
-     you back to the top. */
-  const btn = document.getElementById("pt_" + unit + "_" + t);
-  if (btn){
-    btn.classList.toggle("right", !on);
-    const mark = btn.querySelector(".jeoletter");
-    if (mark) mark.textContent = on ? "·" : "✓";
-    prepPaintFoot();
-  } else viewShowPrep();
-}
-function prepPaintFoot(){
-  const es = S.lang === "es", n = prepSel().length;
-  const b = document.getElementById("prepGo");
-  if (!b) return;
-  b.disabled = !n;
-  b.textContent = n
-    ? (es ? "Empezar" : "Start studying") + " · " + n + " " +
-      (es ? (n === 1 ? "categoría" : "categorías") : (n === 1 ? "category" : "categories"))
-    : (es ? "Elige al menos una" : "Pick at least one");
-  const c = document.getElementById("prepClear");
-  if (c) c.style.display = n ? "" : "none";
-}
-function prepSubject(k){ S.prepSubj = k; S.prepUnit = "all"; save(); sfx("tap"); viewShowPrep(); }
-function prepUnitPick(k){ S.prepUnit = k; save(); sfx("tap"); viewShowPrep(); }
-function prepSelectAllShown(){
-  const shown = prepShownTopics();
-  const every = shown.every(x => prepHas(x.unit, x.t));
-  const cur = prepSel();
-  S.prepSel = every
-    ? cur.filter(c => !shown.some(x => x.unit === c.unit && x.t === c.t))
-    : cur.concat(shown.filter(x => !prepHas(x.unit, x.t)).map(x => ({unit:x.unit, t:x.t})));
-  save(); sfx("tap"); viewShowPrep();
-}
-/* Two levels, coarse first. Level one is the COURSE — the same four the nav
-   uses — which keeps the filter to five buttons instead of one per unit. Unit
-   buttons only appear once a course is chosen, by which point "Unit 1" is no
-   longer ambiguous. */
-function prepSubjects(){
-  const out = [];
-  allTopics().forEach(x => {
-    if (!out.some(s => s.k === x.pack)) out.push({k:x.pack, label:x.pack});
-  });
-  return out;
-}
-function prepUnits(){
-  const subj = S.prepSubj || "all";
-  if (subj === "all") return [];
-  const out = [];
-  allTopics().forEach(x => {
-    if (x.pack !== subj || x.unit === "fun") return;
-    if (!out.some(u => u.k === x.unit)) out.push({k:x.unit, label:x.unitTitle});
-  });
-  return out.length > 1 ? out : [];
-}
-function prepShownTopics(){
-  const subj = S.prepSubj || "all", unit = S.prepUnit || "all";
-  return allTopics().filter(x =>
-    (subj === "all" || x.pack === subj) && (unit === "all" || x.unit === unit));
-}
-function prepClear(){ S.prepSel = []; save(); viewShowPrep(); }
-function prepPickPosted(){
-  S.prepSel = showTopics().map(x => ({unit:x.unit, t:x.t})); save(); sfx("tap"); viewShowPrep();
-}
-
-function viewShowPrep(){
-  const es = S.lang === "es";
-  if (PREP) return drawPrep();
-  const sel = prepSel(), subj = S.prepSubj || "all", unit = S.prepUnit || "all";
-  const subs = prepSubjects(), units = prepUnits(), shown = prepShownTopics();
-  const allShown = shown.length && shown.every(x => prepHas(x.unit, x.t));
-  const byPack = {};
-  shown.forEach(t => { (byPack[t.pack] = byPack[t.pack] || []).push(t); });
-  V().innerHTML = `
-  <div class="eprow"><button class="btn ghost" style="padding:8px 12px;min-height:0"
-    onclick="go('home')">← ${T_.back}</button></div>
-  <section class="panel raised jeohead">
-    <div class="eyebrow">${es?"Reto de Smith":"Smith's Challenge"}</div>
-    <h1 class="jeotitle">${es?"Estudiar para el concurso":"Study for the game show"}</h1>
-    <p class="muted">${es
-      ?"Elige la materia, luego marca las categorías que tu profe puso en el pizarrón."
-      :"Pick the subject, then tick the categories your teacher put on the board."}</p>
-  </section>
-
-  <section class="panel">
-    <div class="eyebrow">${es?"Materia":"Subject"}</div>
-    <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:10px">
-      <button class="szbtn ${subj==='all'?'on':''}" style="width:auto;padding:8px 14px"
-        onclick="prepSubject('all')">${es?"Todas":"All subjects"}</button>
-      ${subs.map(s=>`<button class="szbtn ${subj===s.k?'on':''}" style="width:auto;padding:8px 14px"
-        onclick="prepSubject(${JSON.stringify(s.k)})">${esc(s.label)}</button>`).join("")}
-    </div>
-    ${units.length?`
-    <div class="eyebrow" style="margin-top:14px">${es?"Unidad":"Unit"}</div>
-    <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:10px">
-      <button class="szbtn ${unit==='all'?'on':''}" style="width:auto;padding:7px 12px;font-size:13px"
-        onclick="prepUnitPick('all')">${es?"Todas":"All units"}</button>
-      ${units.map(u=>`<button class="szbtn ${unit===u.k?'on':''}"
-        style="width:auto;padding:7px 12px;font-size:13px"
-        onclick="prepUnitPick('${u.k}')">${esc(u.label)}</button>`).join("")}
-    </div>`:""}
-    <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:14px">
-      <button class="btn ghost" style="padding:8px 12px;min-height:0" onclick="prepSelectAllShown()">
-        ${allShown?(es?"Quitar todas":"Unselect all"):(es?"Seleccionar todas":"Select all shown")}</button>
-      ${showTopics().length?`<button class="btn ghost" style="padding:8px 12px;min-height:0"
-        onclick="prepPickPosted()">${es?"Usar los del profe":"Use teacher's list"}</button>`:""}
-      <button class="btn ghost" id="prepClear" style="padding:8px 12px;min-height:0;${sel.length?"":"display:none"}"
-        onclick="prepClear()">${es?"Limpiar":"Clear"}</button>
-    </div>
-    <p class="muted" style="font-size:12px;margin:10px 0 0">${shown.length} ${
-      es?"categorías a la vista":"categories shown"}</p>
-  </section>
-
-  ${Object.keys(byPack).map(pk=>`
-  <section class="panel">
-    <div class="eyebrow">${esc(pk)}</div>
-    <div style="display:grid;gap:8px;margin-top:10px">
-      ${byPack[pk].map(x=>{
-        const on = prepHas(x.unit, x.t), fun = x.unit === "fun";
-        return `<button class="jeoopt ${on?'right':''}" style="text-align:left"
-          id="pt_${x.unit}_${x.t}" onclick="prepToggle('${x.unit}','${x.t}')">
-          <span class="jeoletter">${on?"✓":"·"}</span>
-          <span style="flex:1"><b>${esc(topicLabel(x.t))}</b>
-            <small style="display:block;color:var(--dim);font-size:12px">${
-              x.scen?(es?"Situaciones · aplica la idea":"Situations · apply the idea")
-                    :esc(x.unitTitle) + " · " + x.n + " " +
-                     (fun?(es?"preguntas":"questions"):T_.terms)}</small></span></button>`;}).join("")}
-    </div>
-  </section>`).join("")}
-
-  <section class="panel" style="position:sticky;bottom:12px">
-    <button class="btn primary wide" id="prepGo" ${sel.length?"":"disabled"} onclick="prepStart()">
-      ${sel.length?`${es?"Empezar":"Start studying"} · ${sel.length} ${
-        es?(sel.length===1?"categoría":"categorías"):(sel.length===1?"category":"categories")}`
-       :(es?"Elige al menos una":"Pick at least one")}</button>
-  </section>`;
-  window.scrollTo(0,0);
-}
-
-/* Deal the cards round-robin: two recalls then a check from each topic in turn,
-   with a recap every sixth card. */
-function prepStart(){
-  const sel = prepSel();
-  const lanes = sel.map(x => {
-    /* scenario categories are all questions — the terms themselves live in the
-       plain topic, so a student who picks both does not read them twice */
-    const terms = (x.unit === "fun" || isScen(x.t)) ? [] : shuffled(vocabByTopic(x.unit, x.t));
-    const cat = buildCategory({unit:x.unit, t:x.t}, isScen(x.t) ? 6 : 4);
-    const q = [];
-    let ti = 0, ci = 0;
-    while (ti < terms.length || ci < cat.clues.length){
-      for (let k = 0; k < 2 && ti < terms.length; k++)
-        q.push({type:"recall", unit:x.unit, t:x.t, v:terms[ti++]});
-      if (ci < cat.clues.length) q.push({type:"check", unit:x.unit, t:x.t, clue:cat.clues[ci++]});
-    }
-    return q;
-  });
-  const deck = [];
-  for (let round = 0; lanes.some(l => l.length); round++)
-    lanes.forEach(l => { if (l.length) deck.push(l.shift()); });
-  const withRecaps = [];
-  deck.forEach((c, i) => {
-    withRecaps.push(c);
-    if ((i + 1) % 6 === 0 && i + 1 < deck.length) withRecaps.push({type:"recap"});
-  });
-  PREP = {q:withRecaps, i:0, hint:false, shown:false, picked:null, cut:[], right:0, asked:0, seen:[]};
-  TAB = "showprep"; drawPrep(); window.scrollTo(0,0);
-}
-function prepQuit(){ PREP = null; viewShowPrep(); window.scrollTo(0,0); }
-function prepNext(){
-  const p = PREP;
-  p.i++; p.hint = false; p.shown = false; p.picked = null; p.cut = [];
-  drawPrep(); window.scrollTo(0,0);
-}
-function prepReveal(){ PREP.shown = true; sfx("tap"); drawPrep(); }
-function prepHint(){
-  const p = PREP, c = p.q[p.i];
-  p.hint = true;
-  if (c.type === "check"){
-    /* strike out two options that are not the answer */
-    const wrong = shuffled(c.clue.c.map((_, i) => i).filter(i => i !== c.clue.a));
-    p.cut = wrong.slice(0, Math.max(0, Math.min(2, c.clue.c.length - 2)));
-  }
-  sfx("tap"); drawPrep();
-}
-function prepPick(i){
-  const p = PREP, c = p.q[p.i];
-  if (p.picked !== null || p.cut.indexOf(i) >= 0) return;
-  p.picked = i; p.asked++;
-  const ok = i === c.clue.a;
-  if (ok) p.right++;
-  sfx(ok ? "right" : "wrong");
-  drawPrep();
-}
-/* A recall hint that unsticks without answering: first letter and word count. */
-function prepTermHint(w){
-  const es = S.lang === "es";
-  const words = String(w).trim().split(/\s+/);
-  return (es ? "Empieza con " : "Starts with ") + `“${words[0][0]}” · ` +
-    words.length + " " + (es ? (words.length === 1 ? "palabra" : "palabras")
-                             : (words.length === 1 ? "word" : "words"));
-}
-
-function drawPrep(){
-  const p = PREP, es = S.lang === "es";
-  if (!p) return viewShowPrep();
-  const c = p.q[p.i];
-  const head = `
-  <div class="eprow">
-    <button class="btn ghost" style="padding:8px 12px;min-height:0" onclick="prepQuit()">← ${es?"Temas":"Topics"}</button>
-    <span style="flex:1"></span>
-    <span class="chip">${Math.min(p.i+1,p.q.length)}/${p.q.length}</span>
-    ${p.asked?`<span class="chip on">${p.right}/${p.asked}</span>`:""}
-  </div>
-  <div style="height:6px;border-radius:99px;background:rgba(255,255,255,.09);margin:0 0 12px">
-    <i style="display:block;height:100%;border-radius:99px;background:var(--gold);
-      width:${(p.i/p.q.length)*100}%;transition:width .3s"></i></div>`;
-
-  if (!c){
-    V().innerHTML = head + `
-    <section class="panel raised jeohead">
-      <div class="eyebrow">${es?"Listo para el concurso":"Ready for the show"}</div>
-      <h1 class="jeotitle">${p.asked?`${p.right}/${p.asked}`:(es?"Repaso hecho":"Run complete")}</h1>
-      <p class="muted">${es?"Estas son todas las ideas que acabas de repasar."
-                          :"Everything you just went through:"}</p>
-    </section>
-    <section class="panel">
-      ${p.seen.length?p.seen.map(s=>`<div class="termrow"><b>${esc(s.w)}</b>
-        <span>${esc(s.d)}</span></div>`).join("")
-       :`<p class="muted">${es?"Fueron todas preguntas.":"That set was all questions."}</p>`}
-      <button class="btn primary wide" style="margin-top:14px" onclick="prepStart()">
-        ${es?"Otra ronda":"Another round"}</button>
-      <button class="btn ghost wide" style="margin-top:8px" onclick="prepQuit()">
-        ${es?"Cambiar temas":"Change topics"}</button>
-    </section>`;
-    return;
-  }
-
-  if (c.type === "recap"){
-    const last = p.seen.slice(-4);
-    V().innerHTML = head + `
-    <section class="panel raised jeohead">
-      <div class="eyebrow" style="color:var(--gold)">${es?"Recordatorio":"Reminder"}</div>
-      <h1 class="jeotitle" style="font-size:26px">${es?"Antes de seguir":"Before you go on"}</h1>
-      <p class="muted">${es?"Lee estas otra vez. En el tablero van mezcladas igual que aquí."
-                          :"Read these once more. The board mixes them exactly like this."}</p>
-    </section>
-    <section class="panel">
-      ${last.length?last.map(s=>`<div class="termrow"><b>${esc(s.w)}</b>
-        <span>${esc(s.d)}</span></div>`).join("")
-       :`<p class="muted">${es?"Sigue adelante.":"Keep going."}</p>`}
-      <button class="btn primary wide" style="margin-top:14px" onclick="prepNext()">
-        ${es?"Seguir":"Keep going"} →</button>
-    </section>`;
-    return;
-  }
-
-  if (c.type === "recall"){
-    const w = L(c.v.w), d = L(c.v.d);
-    if (p.shown && !p.seen.some(s => s.w === w)) p.seen.push({w, d});
-    V().innerHTML = head + `
-    <section class="panel raised jeoclue">
-      <div class="eyebrow">${es?"Nombra el término":"Name the term"} · ${esc(topicLabel(c.t))}</div>
-      <p class="jeoq">${esc(d)}</p>
-      ${p.hint&&!p.shown?`<p class="muted" style="text-align:center;margin:-8px 0 14px">
-        ${esc(prepTermHint(w))}</p>`:""}
-      ${p.shown?`<div class="termrow" style="margin:0">
-        <b style="font-size:20px">${esc(w)}</b>
-        <span class="muted">${es?"Archivado en":"Filed under"} ${esc(topicLabel(c.t))}</span></div>`
-       :`<div style="display:grid;gap:8px">
-          <button class="btn primary wide" onclick="prepReveal()">${es?"Ver el término":"Reveal the term"}</button>
-          ${p.hint?"":`<button class="btn ghost wide" onclick="prepHint()">${es?"Dame una pista":"Give me a hint"}</button>`}
-        </div>`}
-    </section>
-    ${p.shown?`<section class="panel">
-      <p class="muted" style="margin:0 0 12px">${es
-        ?"¿Lo dijiste antes de verlo? Esa es la parte que cuenta."
-        :"Did you say it before you looked? That's the part that sticks."}</p>
-      <button class="btn primary wide" onclick="prepNext()">${es?"Siguiente":"Next"} →</button>
-    </section>`:""}`;
-    return;
-  }
-
-  const cl = c.clue, done = p.picked !== null;
-  V().innerHTML = head + `
-  <section class="panel raised jeoclue">
-    <div class="eyebrow">${es?"Como en el tablero":"Board-style"} · ${esc(topicLabel(c.t))}</div>
-    <p class="jeoq">${esc(cl.q)}</p>
-    <div class="jeoopts">
-      ${cl.c.map((t,i)=>`<button class="jeoopt ${done?(i===cl.a?'right':(p.picked===i?'wrong':''))
-          :(p.cut.indexOf(i)>=0?'wrong':'')}"
-        ${done||p.cut.indexOf(i)>=0?'disabled':''} onclick="prepPick(${i})"
-        style="${p.cut.indexOf(i)>=0?'opacity:.45;text-decoration:line-through':''}">
-        <span class="jeoletter">${"ABCD"[i]}</span>${esc(t)}</button>`).join("")}
-    </div>
-    ${!done&&!p.hint?`<button class="btn ghost wide" style="margin-top:10px" onclick="prepHint()">
-      ${es?"Descartar dos":"Cut two options"}</button>`:""}
-    ${!done&&p.hint?`<p class="muted" style="text-align:center;margin:10px 0 0;font-size:13px">
-      ${es?"Quedan dos. Piensa cuál se ajusta mejor.":"Two left. Think about which one actually fits."}</p>`:""}
-  </section>
-  ${done?`<section class="panel jeowhy">
-    <div class="eyebrow">${T_.whyThat}</div>
-    <p>${esc(cl.why)}</p>
-    <button class="btn primary wide" style="margin-top:12px" onclick="prepNext()">${es?"Siguiente":"Next"} →</button>
-  </section>`:""}`;
-}
-
 function jeoToggleTopic(unit, t){
   const i = JEO.topics.findIndex(s=>s.t===t&&s.unit===unit);
   if (i>=0) JEO.topics.splice(i,1);
@@ -9872,7 +8828,7 @@ function jeoStart(){
   JEO.round = 1;
   jeoBuildRound();
   JEO.stage = "board";
-  jeoIntro(() => viewGameShow());
+  viewGameShow();
 }
 function jeoBuildRound(){
   const perCat = 5;
@@ -9880,31 +8836,15 @@ function jeoBuildRound(){
   const base = JEO.round === 1 ? 100 : 200;
   cats.forEach(c => c.clues.forEach((cl,i)=>{ cl.value = base*(i+1); cl.used = false; }));
   /* one hidden Smith's Special per round, never in the top row */
-  /* A thin topic can yield fewer than perCat clues, so aim the special at a
-     column that actually has a second row rather than trusting the grid. */
-  const wide = cats.filter(c => c.clues.length > 1);
-  if (wide.length){
-    const col = wide[Math.floor(Math.random()*wide.length)];
-    col.clues[1 + Math.floor(Math.random()*(col.clues.length-1))].special = true;
-  }
+  const sc = Math.floor(Math.random()*cats.length);
+  const sr = 1 + Math.floor(Math.random()*(perCat-1));
+  cats[sc].clues[sr].special = true;
   JEO.cats = cats;
-  JEO.remaining = cats.reduce((n,c)=>n+c.clues.length, 0);
+  JEO.remaining = cats.length * perCat;
 }
 function jeoBoard(){
   const leader = Math.max(...JEO.teams.map(t=>t.score));
-  if (JEO.control == null || !JEO.teams[JEO.control]) JEO.control = 0;
-  jeoAssignSeats();
-  const holder = JEO.teams[JEO.control];
-  const es = S.lang === "es";
-  const upLine = (JEO.whosUp && holder.size && holder.upNext != null)
-    ? ` — ${es?"contesta":"answering"}: <b>${es?"jugador":"player"} #${holder.upNext+1}</b>` : "";
   V().innerHTML = `
-  <section class="panel raised jeoctl">
-    <span class="ctldot"></span>
-    <span class="ctltext"><b>${esc(holder.name)}</b> ${es?"elige la siguiente pista":"picks the next clue"}${upLine}</span>
-    <span class="ctlrule">${es?"Acierto = sigues eligiendo · Fallo = pasa a la siguiente mesa"
-                             :"Right = pick again · Wrong = the next table picks"}</span>
-  </section>` + `
   <div class="eprow">
     <button class="btn ghost" style="padding:8px 12px;min-height:0" onclick="jeoQuit()">← ${T_.exit}</button>
     <span style="flex:1"></span>
@@ -9922,8 +8862,8 @@ function jeoBoard(){
   </div>
   <div class="jeoscores">
     ${JEO.teams.map(t=>`
-      <div class="jeoteam ${t.score===leader&&leader>0?'lead':''} ${t.i===JEO.control?'hasctl':''}">
-        <span class="jt-name">${esc(t.name)}${seatBadge(t)}</span>
+      <div class="jeoteam ${t.score===leader&&leader>0?'lead':''}">
+        <span class="jt-name">${esc(t.name)}</span>
         <span class="jt-score ${t.score<0?'neg':''}">$${t.score}</span>
         <span class="jt-key">${JEO.buzz==='keys'?(t.i===9?0:t.i+1):"·"}</span>
       </div>`).join("")}
@@ -9939,141 +8879,17 @@ function jeoNextPhase(){
 }
 function jeoQuit(){
   if (!confirm(T_.quitGame)) return;
-  jeoStopClock(); clearInterval(JEO.countTimer);
   jeoUnbind(); JEO = null; go("teacher");
 }
 
 /* ---------- a clue ------------------------------------------------------ */
-/* ----------------------------------------------------------------------------
-   THE CLOCK
-   A clue runs on four timed windows, and the clock is the drama:
-     READ   10s  everyone reads the question, buzzers dead
-     BUZZ   20s  first table to buzz takes it
-     ANSWER 10s  that table answers — miss or timeout and it is still live
-     STEAL  10s  anyone else can take it; after that the clue is gone
-   One interval drives all four. Ticks get louder in the last five seconds and
-   the phase transition sounds are how the room knows what changed without
-   anyone having to say it.
-   -------------------------------------------------------------------------- */
-const JEO_T = {read:10, buzz:20, answer:10, steal:10};
-function jeoStopClock(){ if (JEO && JEO.clock){ clearInterval(JEO.clock); JEO.clock = null; } }
-function jeoSetPhase(name, secs){
-  const C = JEO.cur; if (!C) return;
-  jeoStopClock();
-  C.phase = name; C.tLeft = secs; C.tMax = secs;
-  sfx(name === "read" ? "jeoRead" : name === "buzz" ? "jeoOpen"
-      : name === "steal" ? "jeoSteal" : "jeoBuzzIn");
-  jeoPaintClock();
-  JEO.clock = setInterval(() => {
-    const c = JEO.cur;
-    if (!c || JEO.stage !== "clue"){ jeoStopClock(); return; }
-    c.tLeft--;
-    if (c.tLeft > 0 && c.tLeft <= 5) sfx(c.tLeft <= 3 ? "jeoTickHot" : "jeoTick");
-    jeoPaintClock();
-    if (c.tLeft <= 0){ jeoStopClock(); jeoPhaseEnd(); }
-  }, 1000);
-}
-function jeoPhaseLabel(){
-  const C = JEO.cur, es = S.lang === "es";
-  if (!C || !C.phase) return "";
-  if (C.phase === "read")   return es ? "Lean la pregunta" : "Read the question";
-  if (C.phase === "buzz")   return es ? "¡Buzzers abiertos!" : "Buzzers open!";
-  if (C.phase === "steal")  return es ? "Robo abierto — cualquier otra mesa" : "Steal open — any other table";
-  const t = C.buzzed != null && JEO.teams[C.buzzed];
-  return (es ? "Responde " : "Answering: ") + (t ? t.name : "");
-}
-function jeoPaintClock(){
-  const C = JEO.cur; if (!C) return;
-  const n = document.getElementById("jclockN");
-  const bar = document.getElementById("jclockBar");
-  const lbl = document.getElementById("jclockLbl");
-  const wrap = document.getElementById("jclock");
-  if (n) n.textContent = Math.max(0, C.tLeft);
-  if (lbl) lbl.textContent = jeoPhaseLabel();
-  if (bar) bar.style.width = Math.max(0, (C.tLeft / (C.tMax || 1)) * 100) + "%";
-  const hot = C.tLeft <= 5;
-  const col = C.phase === "steal" ? "var(--hot)" : hot ? "#FF5C7A" : "var(--gold)";
-  if (bar) bar.style.background = col;
-  if (n){ n.style.color = col; n.style.transform = hot ? "scale(1.12)" : "none"; }
-  if (wrap) wrap.style.borderColor = hot ? col : "var(--line)";
-}
-function jeoPhaseEnd(){
-  const C = JEO.cur; if (!C || C.revealed) return;
-  if (C.phase === "read"){ jeoSetPhase("buzz", JEO_T.buzz); return viewGameShow(); }
-  if (C.phase === "buzz") return jeoOutTheWindow(true);
-  if (C.phase === "answer"){
-    /* ran the clock out: the buzzing table drops the value and the clue
-       stays live for one steal */
-    const team = JEO.teams[C.buzzed];
-    if (team){ team.score -= (C.wager != null ? C.wager : C.clue.value); }
-    toast("⏱ " + (S.lang === "es" ? "Se acabó el tiempo" : "Out of time"));
-    return jeoOpenSteal();
-  }
-  if (C.phase === "steal") return jeoOutTheWindow(false);
-}
-/* Hand the clue to the rest of the room for one 10-second window. */
-function jeoOpenSteal(){
-  const C = JEO.cur; if (!C || C.dead) return;
-  if (C.buzzed != null) JEO.teams[C.buzzed].lock = true;
-  C.stolen = true; C.buzzed = null; C.picked = null; C.counting = false; C.seat = null;
-  if (!JEO.teams.some(t => !t.lock)) return jeoOutTheWindow(false);
-  jeoSetPhase("steal", JEO_T.steal);
-  viewGameShow();
-}
-/* Nobody got it. Show the answer, score nothing, move the pick along. */
-function jeoOutTheWindow(noBuzz){
-  const C = JEO.cur; if (!C || C.dead) return;
-  jeoStopClock();
-  C.dead = true; C.noBuzz = !!noBuzz; C.revealed = true; C.counting = false; C.picked = null;
-  C.clue.used = true; JEO.remaining--;
-  JEO.teams.forEach(t => t.lock = false);
-  const from = (C.lastTeam != null) ? C.lastTeam : JEO.control;
-  jeoSetControl((from + 1) % JEO.teams.length, "passed");
-  sfx("jeoDead");
-  jeoUnbind();
-  viewGameShow();
-}
-function jeoSkipRead(){
-  const C = JEO.cur; if (!C || C.phase !== "read") return;
-  jeoSetPhase("buzz", JEO_T.buzz); viewGameShow();
-}
-function jeoAddTime(n){
-  const C = JEO.cur; if (!C || C.revealed || !C.phase) return;
-  C.tLeft += n; C.tMax = Math.max(C.tMax, C.tLeft); jeoPaintClock();
-}
-function jeoClockHTML(){
-  const C = JEO.cur;
-  if (!C || C.revealed || !C.phase) return "";
-  return `
-  <div id="jclock" style="display:flex;align-items:center;gap:14px;border:2px solid var(--line);
-    border-radius:14px;padding:10px 14px;margin:12px 0 0;background:rgba(0,0,0,.28)">
-    <span id="jclockN" style="font-family:var(--mono);font-size:34px;font-weight:800;
-      min-width:56px;text-align:center;color:var(--gold);transition:transform .15s ease">${C.tLeft}</span>
-    <span style="flex:1">
-      <span id="jclockLbl" style="display:block;font-size:13px;letter-spacing:.06em;
-        text-transform:uppercase;color:var(--dim);margin-bottom:6px">${esc(jeoPhaseLabel())}</span>
-      <span style="display:block;height:8px;border-radius:99px;background:rgba(255,255,255,.09)">
-        <i id="jclockBar" style="display:block;height:100%;border-radius:99px;background:var(--gold);
-          width:${(C.tLeft/(C.tMax||1))*100}%;transition:width .9s linear"></i></span>
-    </span>
-    <span style="display:flex;gap:6px">
-      ${C.phase==="read"?`<button class="btn ghost" style="padding:6px 10px;min-height:0"
-        onclick="jeoSkipRead()">${S.lang==="es"?"Abrir":"Open"}</button>`:""}
-      <button class="btn ghost" style="padding:6px 10px;min-height:0" onclick="jeoAddTime(10)">+10s</button>
-    </span>
-  </div>`;
-}
-
 function jeoOpen(ci, ri){
   const cl = JEO.cats[ci].clues[ri];
   if (cl.used) return;
-  jeoAssignSeats();
   JEO.cur = {ci, ri, clue:cl, buzzed:null, revealed:false, picked:null,
-             wager:null, counting:false, wrongPicks:[], stolen:false,
-             dead:false, lastTeam:null, phase:null, tLeft:0, tMax:1};
+             wager:null, counting:false};
   JEO.stage = "clue";
   if (cl.special && !cl.wagerDone){ JEO.cur.needWager = true; }
-  else jeoSetPhase("read", JEO_T.read);
   viewGameShow();
 }
 function jeoClue(){
@@ -10108,48 +8924,33 @@ function jeoClue(){
     ${cl.special?`<div class="eyebrow" style="color:var(--gold)">★ ${T_.smithsSpecial}</div>`:""}
     <p class="jeoq">${esc(cl.q)}</p>
     <div class="jeoopts" id="jopts">
-      ${cl.c.map((t,i)=>`<button class="jeoopt ${C.revealed
-          ?(i===cl.a?'right':((C.picked===i||C.wrongPicks.indexOf(i)>=0)?'wrong':''))
-          :(C.wrongPicks.indexOf(i)>=0?'wrong':'')}"
-        ${C.phase==="answer"&&!C.revealed&&C.wrongPicks.indexOf(i)<0?'':'disabled'} onclick="jeoPick(${i})">
+      ${cl.c.map((t,i)=>`<button class="jeoopt ${C.revealed?(i===cl.a?'right':(C.picked===i?'wrong':'')):''}"
+        ${C.buzzed===null&&JEO.buzz!=='tap'?'disabled':''} onclick="jeoPick(${i})">
         <span class="jeoletter">${"ABCD"[i]}</span>${esc(t)}</button>`).join("")}
     </div>
     <div id="jstatus" class="jeostatus">${jeoStatusHTML()}</div>
-    ${jeoClockHTML()}
   </section>
   ${jeoWhosUpCard()}
   ${C.revealed?`<section class="panel jeowhy">
-    ${C.dead?`<div class="eyebrow" style="color:var(--hot)">${S.lang==="es"
-        ?(C.noBuzz?"Nadie pulso — se fue por la ventana":"Nadie la acerto — se fue por la ventana")
-        :(C.noBuzz?"No buzz — out the window":"Nobody got it — out the window")}</div>`:""}
     <div class="eyebrow">${T_.whyThat}</div>
     <p>${esc(cl.why)}</p>
     <button class="btn primary wide" style="margin-top:12px" onclick="jeoBackToBoard()">${T_.board}</button>
   </section>`:`
   <section class="panel">
-    <div class="eyebrow">${C.phase==="read"?(S.lang==="es"?"Buzzers bloqueados":"Buzzers locked")
-      :C.buzzed===null?T_.tapYourBuzzer:T_.buzzedIn}</div>
+    <div class="eyebrow">${C.buzzed===null?T_.tapYourBuzzer:T_.buzzedIn}</div>
     ${jeoBuzzerBar()}
     ${C.buzzed!==null?`<button class="btn ghost wide" style="margin-top:10px" onclick="jeoNoAnswer()">${T_.passIt}</button>`:""}
   </section>`}`;
   if ((JEO.buzz === "keys" || JEO.buzz === "board") && !C.revealed) jeoBind();
-  jeoPaintClock();
   window.scrollTo(0,0);
 }
 function jeoStatusHTML(){
   const C = JEO.cur;
-  const es = S.lang === "es";
   if (C.counting) return `<span class="jeocount" id="jcount">${T_.locking}</span>`;
   if (C.revealed){
-    if (C.dead) return `<span class="jeoverdict no">${es?"Por la ventana":"Out the window"}</span>`;
     const ok = C.picked === C.clue.a;
     return `<span class="jeoverdict ${ok?'ok':'no'}">${ok?T_.correctMsg:T_.wrongMsg}</span>`;
   }
-  if (C.phase === "read")
-    return `<span class="muted">${es?"Lean. Los buzzers se abren cuando llegue a cero."
-                                  :"Read it. Buzzers open when the clock hits zero."}</span>`;
-  if (C.phase === "steal" && C.buzzed === null)
-    return `<span class="jeobuzzed">${es?"Robo abierto — pulsa para quitarsela":"Steal open — buzz to take it"}</span>`;
   if (C.buzzed !== null)
     return `<span class="jeobuzzed">${esc(JEO.teams[C.buzzed].name)} — ${T_.yourAnswer}</span>`;
   return `<span class="muted">${JEO.buzz==='keys'?T_.pressYourKey:T_.tapWhoBuzzed}</span>`;
@@ -10165,9 +8966,7 @@ function jeoSpecialTeam(i){
   w = Math.max(0, Math.min(max, w));
   C.wager = w;
   C.buzzed = i;                       /* the finder answers it alone */
-  C.lastTeam = i;
   JEO.teams.forEach(x => x.lock = x.i !== i);
-  jeoSetPhase("answer", JEO_T.answer);
   viewGameShow();
 }
 function jeoBind(){
@@ -10175,7 +8974,6 @@ function jeoBind(){
   JEO.keyHandler = e => {
     const C = JEO.cur;
     if (!C || C.revealed || C.buzzed !== null || C.counting) return;
-    if (C.phase === "read") return;
     const idx = JEO_KEYS.indexOf(e.code);
     if (idx < 0 || idx >= JEO.teams.length) return;
     if (JEO.teams[idx].lock) return;
@@ -10190,39 +8988,24 @@ function jeoUnbind(){
 function jeoBuzz(i){
   const C = JEO.cur;
   if (!C || C.buzzed !== null || C.revealed) return;
-  if (C.phase === "read") return;
   if (JEO.teams[i].lock) return;
-  C.buzzed = i; C.lastTeam = i;
+  C.buzzed = i;
   /* name the specific student who has to answer */
   if (JEO.whosUp && JEO.teams[i].size > 0){
-    const t = JEO.teams[i];
-    C.seat = (t.upNext != null) ? t.upNext : pickSeat(t);
-    commitSeat(t, C.seat);
-    t.upNext = null;
+    C.seat = pickSeat(JEO.teams[i]);
+    commitSeat(JEO.teams[i], C.seat);
   } else C.seat = null;
   jeoUnbind();
-  jeoSetPhase("answer", JEO_T.answer);
   toast("🔔 " + JEO.teams[i].name + (C.seat!=null ? " · " + T_.seat + " " + (C.seat+1) : ""));
   viewGameShow();
 }
-/* Who picks the next clue. Right answer keeps the board, a miss moves it on. */
-function jeoSetControl(i, why, from){
-  JEO.control = i;
-  jeoAssignSeats();
-  const es = S.lang === "es";
-  const name = JEO.teams[i] ? JEO.teams[i].name : "";
-  if (why === "kept") toast("✓ " + (es ? name + " sigue eligiendo" : name + " picks again"));
-  else toast("→ " + (es ? "Le toca a " + name : name + " picks next"));
-}
-
 /* The dramatic pause. Four seconds of the board holding its breath before the
    answer lights up, because the wait is most of the fun. */
 function jeoPick(i){
   const C = JEO.cur;
   if (!C || C.revealed || C.counting) return;
-  if (C.phase !== "answer") return;
-  if (C.buzzed === null) return;
-  jeoStopClock();
+  if ((JEO.buzz === "keys" || JEO.buzz === "board") && C.buzzed === null) return;
+  if (C.buzzed === null) C.buzzed = 0;
   C.picked = i;
   C.counting = true;
   /* lock the options visually and run the countdown */
@@ -10244,50 +9027,28 @@ function jeoPick(i){
 }
 function jeoReveal(){
   const C = JEO.cur, cl = C.clue;
-  jeoStopClock();
   const ok = C.picked === cl.a;
   const amount = C.wager != null ? C.wager : cl.value;
   const team = JEO.teams[C.buzzed];
-  C.counting = false;
   if (team) team.score += ok ? amount : -amount;
-
-  if (ok){
-    C.revealed = true; cl.used = true; JEO.remaining--;
-    JEO.teams.forEach(t => t.lock = false);
-    /* Control of the board is the reward for being right: the table that
-       answers correctly picks the next clue. */
-    if (team) jeoSetControl(team.i, "kept", team);
-    sfx("right"); jeoUnbind();
-    return viewGameShow();
-  }
-
-  /* A miss does not end the clue. The wrong option stays struck out, the
-     correct one stays hidden, and the rest of the room gets one steal. */
-  sfx("wrong");
-  C.wrongPicks.push(C.picked);
-  const others = JEO.teams.filter(t => !t.lock && (!team || t.i !== team.i)).length;
-  if (!C.stolen && C.wager == null && others > 0){
-    C.picked = null;
-    toast("✗ " + (S.lang === "es" ? "Fallo — robo abierto" : "Miss — steal is open"));
-    return jeoOpenSteal();
-  }
-  /* the steal has already been spent, or there is nobody left to take it */
-  jeoOutTheWindow(false);
+  C.revealed = true; C.counting = false;
+  cl.used = true; JEO.remaining--;
+  JEO.teams.forEach(t => t.lock = false);
+  viewGameShow();
 }
 function jeoNoAnswer(){
   const C = JEO.cur;
   if (!C || C.revealed) return;
-  /* the buzzing table drops the value and the clue goes up for a steal */
+  /* the buzzing table loses the value and the clue reopens to everyone else */
   const team = JEO.teams[C.buzzed];
-  if (team) team.score -= (C.wager != null ? C.wager : C.clue.value);
-  if (C.stolen || C.wager != null) return jeoOutTheWindow(false);
-  jeoOpenSteal();
+  if (team){ team.score -= (C.wager != null ? C.wager : C.clue.value); team.lock = true; }
+  C.buzzed = null; C.picked = null;
+  viewGameShow();
 }
 function jeoBackToBoard(){
   const C = JEO.cur;
   if (C && !C.revealed && C.clue){ /* abandoned without answering: leave it open */ }
   clearInterval(JEO.countTimer);
-  jeoStopClock();
   jeoUnbind();
   JEO.teams.forEach(t => t.lock = false);
   JEO.stage = "board"; JEO.cur = null;
@@ -10394,81 +9155,8 @@ function jeoDone(){
 
 
 /* ============================================================================
-   HOW IT WORKS  —  the one screen that explains the whole loop
-   ----------------------------------------------------------------------------
-   Everything in here is reachable from the title screen, so a student landing
-   on the app cold can read the rules before pressing start.
-   ========================================================================== */
-function showInstructions(){
-  const es = S.lang === "es";
-  const steps = es ? [
-    ["1","Elige un curso","Inicio lista tus cursos y unidades. Abre una unidad para ver los apuntes y el episodio."],
-    ["2","Juega el episodio","Cada unidad es una historia jugable: lees un poco, respondes, y sigues. Si fallas, te lo vuelve a explicar."],
-    ["3","Arcade de repaso","Tarjetas, emparejar y el disparador de vocabulario. Cada actividad nueva paga 1 ficha."],
-    ["4","El examen escrito","25 preguntas. 70% o más gana el certificado."],
-    ["5","Certificados","Cada certificado nuevo vale 1 ficha. Descárgalo o imprímelo desde la unidad."],
-    ["6","Gasta las fichas","1 ficha por partida en el arcade. Termina el arcade de repaso completo y ganas 5 fichas de golpe."]
-  ] : [
-    ["1","Pick a course","Home lists your courses and units. Open a unit for the notes and its episode."],
-    ["2","Play the episode","Each unit is a playable story: read a beat, answer, move on. Miss one and it reteaches before asking again."],
-    ["3","Review arcade","Flashcards, matching and the vocab blaster. Each activity pays 1 coin the first time you clear it."],
-    ["4","The written test","25 questions. 70% or better earns the certificate."],
-    ["5","Certificates","Every new certificate is worth 1 coin. Download or print it from the unit."],
-    ["6","Spend the coins","1 coin per arcade play. Clear the whole review arcade and 5 coins land at once."]
-  ];
-  const extras = es ? [
-    ["◎","Fichas","El contador de arriba. Se ganan estudiando y se gastan en el arcade."],
-    ["★","El reto de Smith","Concurso por equipos para la clase, en modo docente. Acertar mantiene el turno; fallar lo pasa a la siguiente mesa."],
-    ["▤","Arte","Cambia a Coach Smith y el resto del arte por el tuyo. Solo cambia tu copia."],
-    ["↔","Transferir","Copia tu código y pégalo en otro dispositivo: tiempo, temas, certificados y fichas viajan contigo."]
-  ] : [
-    ["◎","Coins","The counter up top. Earned by studying, spent in the arcade."],
-    ["★","Smith's Challenge","The classroom team game show, under teacher mode. A right answer keeps your turn; a miss passes the pick to the next table."],
-    ["▤","Art","Swap Coach Smith and the rest of the art for your own. It only changes your copy."],
-    ["↔","Transfer","Copy your code and paste it on another device — study time, topics, certificates and coins all travel with it."]
-  ];
-  const el = document.getElementById("dance");
-  el.classList.remove("hidden");
-  el.innerHTML = `
-    <div class="dancewrap" style="max-width:560px">
-      <section class="panel raised howto">
-        <div class="howhead">
-          <div class="howart">${artTag("point")}</div>
-          <div>
-            <div class="eyebrow">${es?"Cómo funciona":"How it works"}</div>
-            <h1 class="jeotitle" style="margin:4px 0 0">${es?"Estudia · gana · juega":"Study · earn · play"}</h1>
-          </div>
-        </div>
-        <ol class="howsteps">
-          ${steps.map(s=>`<li><span class="hownum">${s[0]}</span>
-            <span class="howbody"><b>${esc(s[1])}</b><small>${esc(s[2])}</small></span></li>`).join("")}
-        </ol>
-        <div class="eyebrow" style="margin-top:18px">${es?"Lo demás":"Everything else"}</div>
-        <div class="howextras">
-          ${extras.map(x=>`<div class="howx"><span class="howicon">${x[0]}</span>
-            <span class="howbody"><b>${esc(x[1])}</b><small>${esc(x[2])}</small></span></div>`).join("")}
-        </div>
-        <button class="btn primary wide" style="margin-top:18px" onclick="closeTheme()">${T_.close}</button>
-      </section>
-    </div>`;
-}
-
-/* ============================================================================
    CREDITS
    ========================================================================== */
-/* Any overlay on the dance stage closes on Escape or a tap outside the panel. */
-(function(){
-  const stage = () => document.getElementById("dance");
-  document.addEventListener("keydown", e => {
-    const el = stage();
-    if (e.key === "Escape" && el && !el.classList.contains("hidden")) closeTheme();
-  });
-  document.addEventListener("click", e => {
-    const el = stage();
-    if (el && !el.classList.contains("hidden") && e.target === el) closeTheme();
-  });
-})();
-
 function showCredits(){
   const el = document.getElementById("dance");
   el.classList.remove("hidden");
@@ -11442,39 +10130,17 @@ function wireSimple(correct, why){
    If the file is missing or audio is blocked, the button reports it and
    nothing else breaks.
    ========================================================================== */
-/* Three tracks now, so the stage is a jukebox rather than one button. Each
-   lives beside index.html as a normal file the browser streams and caches. */
-const TRACKS = [
-  {file:"Where_the_Knowledge_Flows.mp3", title:"Where the Knowledge Flows", tag:"Theme"},
-  {file:"Choose_Your_Own_Hero.mp3",      title:"Choose Your Own Hero",      tag:"Hero theme"},
-  {file:"The_Final_Frame.mp3",           title:"The Final Frame",           tag:"Game show"}
-];
-const THEME_FILE = TRACKS[0].file;   /* kept: older code still reads this */
-let THEME = {audio:null, ctx:null, analyser:null, data:null, raf:0, playing:false,
-             i:0, onEnd:null, loop:true};
-
-/* The troupe. Coach Smith has a singing set now, so the stage is a group
-   number instead of one sprite cycling four poses. */
-const DANCE_TROUPE = [
-  ["sing_walk_side","sing_crowd","joy_emote","sing_idle"],
-  ["sing_idle","sing_hype","sing_climax","sing_crowd"],
-  ["hype_triumph","sing_hype","sing_walk_front","joy_emote"]
-];
+const THEME_FILE = "Where_the_Knowledge_Flows.mp3";
+let THEME = {audio:null, ctx:null, analyser:null, data:null, raf:0, playing:false};
 
 function themeAvailable(){ return true; }   /* resolved at play time */
 
-function trackButtons(){
-  return TRACKS.map((t,i)=>`<button class="trackbtn ${THEME.i===i?'on':''}"
-    onclick="pickTrack(${i})"><b>${esc(t.title)}</b><small>${esc(t.tag)}</small></button>`).join("");
-}
 function openTheme(){
   const el = document.getElementById("dance");
   el.classList.remove("hidden");
-  THEME.loop = true; THEME.onEnd = null;
   el.innerHTML = `
     <div class="dancewrap">
       <canvas id="danceCv" width="640" height="360"></canvas>
-      <div class="tracklist">${trackButtons()}</div>
       <div class="dancebar">
         <button class="btn primary" id="dPlay">▶ ${T_.play}</button>
         <button class="btn ghost" id="dClose">${T_.close}</button>
@@ -11485,65 +10151,27 @@ function openTheme(){
   document.getElementById("dPlay").onclick = toggleTheme;
   startDanceLoop();
 }
-/* Switching tracks mid-song tears down the old element so the analyser can be
-   rewired to the new one. */
-function pickTrack(i){
-  if (THEME.i === i && THEME.audio){ toggleTheme(); return; }
-  const wasPlaying = THEME.playing;
-  themeTeardown();
-  THEME.i = i;
-  const list = document.querySelector(".tracklist");
-  if (list) list.innerHTML = trackButtons();
-  const btn = document.getElementById("dPlay");
-  if (btn) btn.textContent = "▶ " + T_.play;
-  if (wasPlaying) toggleTheme();
-}
 function closeTheme(){
   stopTheme();
   cancelAnimationFrame(THEME.raf); THEME.raf = 0;
   document.getElementById("dance").classList.add("hidden");
-  const cb = THEME.onEnd; THEME.onEnd = null;
-  if (cb) cb();
 }
 function stopTheme(){
   if (THEME.audio){ THEME.audio.pause(); THEME.audio.currentTime = 0; }
   THEME.playing = false;
 }
-/* Drop the live audio element and its analyser so the next play builds one for
-   the track actually being asked for. */
-function themeTeardown(){
-  if (THEME.audio){ THEME.audio.pause(); THEME.audio.onended = null; THEME.audio = null; }
-  if (THEME.ctx){ try{ THEME.ctx.close(); }catch(e){} }
-  THEME.ctx = null; THEME.analyser = null; THEME.data = null;
-  THEME.playing = false;
-}
-/* True when the element on hand cannot serve this request. */
-function themeStale(track){
-  if (!THEME.audio) return false;
-  const want = new URL(track.file, location.href).href;
-  return THEME.audio.src !== want || THEME.audio.loop !== THEME.loop;
-}
 function toggleTheme(){
   const btn = document.getElementById("dPlay"), note = document.getElementById("dNote");
-  const track = TRACKS[THEME.i] || TRACKS[0];
-  if (THEME.playing){ THEME.audio.pause(); THEME.playing = false;
-    if (btn) btn.textContent = "▶ " + T_.play; return; }
-  if (themeStale(track)) themeTeardown();
+  if (THEME.playing){ THEME.audio.pause(); THEME.playing = false; btn.textContent = "▶ " + T_.play; return; }
   if (!THEME.audio){
-    THEME.audio = new Audio(track.file);
-    THEME.audio.loop = THEME.loop;
+    THEME.audio = new Audio(THEME_FILE);
+    THEME.audio.loop = true;
     THEME.audio.crossOrigin = "anonymous";
     THEME.audio.onerror = () => {
-      if (note) note.textContent = (S.lang==="es"?"No se encuentra ":"Can't find ") + track.file;
-      if (btn) btn.disabled = true;
+      note.textContent = T_.themeMissing;
+      btn.disabled = true;
     };
-    THEME.audio.onplaying = () => {
-      if (note) note.textContent = (S.lang==="es"?"Sonando — ":"Now playing — ") + track.title; };
-    THEME.audio.onended = () => {
-      THEME.playing = false;
-      if (btn) btn.textContent = "▶ " + T_.play;
-      if (THEME.onEnd) closeTheme();   /* closeTheme fires the callback */
-    };
+    THEME.audio.onplaying = () => { note.textContent = T_.themePlaying; };
   }
   /* AnalyserNode has to be created after a user gesture or the context stays
      suspended. Wiring it here rather than at load is what keeps autoplay
@@ -11566,69 +10194,22 @@ function toggleTheme(){
 
   THEME.audio.play().then(()=>{
     THEME.playing = true;
-    if (btn) btn.textContent = "❚❚ " + T_.pause;
+    btn.textContent = "❚❚ " + T_.pause;
   }).catch(()=>{
-    if (note) note.textContent = (S.lang==="es"
-      ? "Toca reproducir otra vez para permitir el audio."
-      : "Tap play once more to allow audio.");
+    note.textContent = T_.themeMissing;
   });
 }
 
-/* ---------------------------------------------------------------------------
-   THE GAME SHOW INTRO
-   Smith's Challenge opens on a title card with the troupe dancing and a credit
-   roll drifting up the screen. Skip is always one tap away, and the board is
-   already built behind it either way.
-   ------------------------------------------------------------------------- */
-function jeoIntro(done){
-  const el = document.getElementById("dance");
-  el.classList.remove("hidden");
-  const es = S.lang === "es";
-  themeTeardown();
-  THEME.i = 2;                 /* The Final Frame — the game show's own track */
-  THEME.loop = false;
-  THEME.onEnd = done;
-  el.innerHTML = `
-    <div class="dancewrap">
-      <canvas id="danceCv" width="640" height="360"></canvas>
-      <div class="dancebar">
-        <button class="btn primary" id="dPlay">▶ ${es?"Poner la intro":"Roll the intro"}</button>
-        <button class="btn ghost" id="dSkip">${es?"Saltar ⏭":"Skip ⏭"}</button>
-      </div>
-      <p class="muted" id="dNote" style="font-size:12px;margin:8px 0 0">${
-        es?"The Final Frame — toca saltar cuando quieras empezar."
-          :"The Final Frame — skip whenever you're ready to play."}</p>
-    </div>`;
-  document.getElementById("dPlay").onclick = toggleTheme;
-  document.getElementById("dSkip").onclick = closeTheme;
-  startDanceLoop({credits:[
-    es?"EL RETO DE SMITH":"SMITH'S CHALLENGE",
-    "The Final Frame",
-    es?"Musica de Coach Smith":"Music by Coach Smith",
-    es?"Arte de Coach Smith":"Art by Coach Smith",
-    es?"Contesta bien y sigues eligiendo":"Answer right and you pick again",
-    es?"Falla y pasa a la siguiente mesa":"Miss and the next table picks",
-    es?"Dos rondas, luego la final":"Two rounds, then the final",
-    es?"Buena suerte":"Good luck"
-  ]});
-  /* Autoplay is blocked until a gesture, and opening this screen WAS one. */
-  setTimeout(()=>{ if(!THEME.playing) toggleTheme(); }, 260);
-}
-
-/* The stage: a lit floor, an equaliser, the troupe switching poses on the beat,
-   and an optional credit roll drifting up. Pose changes follow bass energy
-   when the analyser is available and a steady timer when it is not. */
-function startDanceLoop(opts){
+/* The stage: a lit floor, an equaliser, and Coach Smith switching poses on the
+   beat. Pose changes are driven by bass energy when the analyser is available
+   and by a steady timer when it is not, so it always looks alive. */
+function startDanceLoop(){
   const cv = document.getElementById("danceCv");
   if (!cv) return;
-  opts = opts || {};
   const x = cv.getContext("2d");
   const W = cv.width, H = cv.height;
-  const troupe = DANCE_TROUPE.map(list => list.map(p => spriteOf(p)));
-  let t = 0, poseI = [0,0,0], lastKick = 0, kickHold = 0;
-  const credits = opts.credits || null;
-  let cards = [], nextCard = 0, ci = 0;
-  cancelAnimationFrame(THEME.raf);
+  const poses = ["idle","walk","cheer","point"].map(p => spriteOf(p));
+  let t = 0, poseI = 0, lastKick = 0, kickHold = 0;
 
   (function frame(){
     THEME.raf = requestAnimationFrame(frame);
@@ -11648,17 +10229,13 @@ function startDanceLoop(opts){
 
     /* backdrop: dance-floor gradient with a sweeping spotlight */
     const g = x.createLinearGradient(0,0,0,H);
-    g.addColorStop(0,"#180E3A"); g.addColorStop(0.55,"#2E1A63"); g.addColorStop(1,"#120A2E");
+    g.addColorStop(0,"#150F2B"); g.addColorStop(0.55,"#2B2150"); g.addColorStop(1,"#0B0F1F");
     x.fillStyle = g; x.fillRect(0,0,W,H);
     const sweep = W/2 + Math.sin(t*0.8)*W*0.32;
     const spot = x.createRadialGradient(sweep,H*0.15,10,sweep,H*0.9,W*0.55);
-    spot.addColorStop(0,"rgba(255,46,134,"+(0.18+bass*0.30)+")");
-    spot.addColorStop(1,"rgba(255,46,134,0)");
+    spot.addColorStop(0,"rgba(242,180,65,"+(0.20+bass*0.28)+")");
+    spot.addColorStop(1,"rgba(242,180,65,0)");
     x.fillStyle = spot; x.fillRect(0,0,W,H);
-    const spot2 = x.createRadialGradient(W-sweep,H*0.12,10,W-sweep,H*0.9,W*0.5);
-    spot2.addColorStop(0,"rgba(34,216,240,"+(0.14+bass*0.24)+")");
-    spot2.addColorStop(1,"rgba(34,216,240,0)");
-    x.fillStyle = spot2; x.fillRect(0,0,W,H);
 
     /* checker floor, receding */
     for (let r=0;r<8;r++){
@@ -11672,81 +10249,44 @@ function startDanceLoop(opts){
       }
     }
 
-    /* the credit roll, drifting up behind the troupe */
-    if (credits){
-      if (t > nextCard){
-        cards.push({txt:credits[ci % credits.length], y:H+20,
-                    x:W*0.5 + (Math.random()-0.5)*W*0.34, big:ci%credits.length===0});
-        ci++; nextCard = t + 2.3;
-      }
-      x.textAlign = "center";
-      cards.forEach(c2 => {
-        c2.y -= 0.55 + bass*0.7;
-        const a = Math.max(0, Math.min(1, (c2.y-20)/90)) * Math.min(1,(H+20-c2.y)/50);
-        x.globalAlpha = a * 0.85;
-        x.fillStyle = c2.big ? "#FFD60A" : "#F1ECFF";
-        x.font = (c2.big?"800 20px 'Trebuchet MS',sans-serif":"600 14px 'Trebuchet MS',sans-serif");
-        x.fillText(c2.txt, c2.x, c2.y);
-        x.globalAlpha = 1;
-      });
-      cards = cards.filter(c2 => c2.y > 10);
-    }
-
     /* equaliser */
     const n = Math.min(16, bins.length), bw = W/(n*1.6);
     for (let i=0;i<n;i++){
       const v = (bins[i]||0)/255;
-      const hh2 = 12 + v*H*0.42;
+      const h = 12 + v*H*0.42;
       const bx = W*0.06 + i*(bw*1.6);
-      const bg = x.createLinearGradient(0,H-40-hh2,0,H-40);
-      bg.addColorStop(0,"#22D8F0"); bg.addColorStop(1,"#FF2E86");
+      const bg = x.createLinearGradient(0,H-40-h,0,H-40);
+      bg.addColorStop(0,"#4DE0B1"); bg.addColorStop(1,"#F2B441");
       x.fillStyle = bg;
-      x.fillRect(bx, H-40-hh2, bw, hh2);
+      x.fillRect(bx, H-40-h, bw, h);
       x.fillStyle = "rgba(255,255,255,.25)";
-      x.fillRect(bx, H-40-hh2, bw, 3);
+      x.fillRect(bx, H-40-h, bw, 3);
     }
 
     /* pose change on a kick, with a hold so it can't strobe */
     if (kickHold > 0) kickHold--;
-    if (bass > 0.55 && kickHold === 0){
-      poseI = poseI.map((p,i2)=> (p + 1 + i2) % troupe[i2].length); kickHold = 12;
-    } else if (!THEME.playing && t - lastKick > 1.1){
-      poseI = poseI.map((p,i2)=> (p+1) % troupe[i2].length); lastKick = t;
+    if (bass > 0.55 && kickHold === 0){ poseI = (poseI+1) % poses.length; kickHold = 14; }
+    else if (!THEME.playing && t - lastKick > 1.1){ poseI = (poseI+1)%poses.length; lastKick = t; }
+
+    /* Coach Smith, bouncing */
+    const im = poses[poseI] || poses[0];
+    const bounce = Math.abs(Math.sin(t*(THEME.playing?7:2)))*(10+bass*26);
+    const hh = H*0.46 + bass*22;
+    if (drawable(im)){
+      const ww = im.naturalWidth/im.naturalHeight*hh;
+      x.save();
+      x.translate(W/2, H-52-bounce);
+      x.rotate(Math.sin(t*(THEME.playing?7:2))*0.06);
+      x.drawImage(im,-ww/2,-hh,ww,hh);
+      x.restore();
     }
 
-    /* the troupe: centre dancer front and largest, two flanking and smaller */
-    const slots = [
-      {cx:W*0.20, sc:0.74, ph:1.7},
-      {cx:W*0.50, sc:1.00, ph:0.0},
-      {cx:W*0.80, sc:0.74, ph:3.1}
-    ];
-    slots.forEach((s,i2)=>{
-      const im = troupe[i2][poseI[i2]] || troupe[i2][0];
-      if (!drawable(im)) return;
-      const beat = Math.sin(t*(THEME.playing?7:2) + s.ph);
-      const bounce = Math.abs(beat)*(8+bass*22)*s.sc;
-      const hh2 = H*0.44*s.sc + bass*18*s.sc;
-      const ww = im.naturalWidth/im.naturalHeight*hh2;
-      x.save();
-      x.globalAlpha = 0.22;
-      x.fillStyle = "#000";
-      x.beginPath();
-      x.ellipse(s.cx, H-48, ww*0.34, 7, 0, 0, 7);
-      x.fill();
-      x.globalAlpha = 1;
-      x.translate(s.cx, H-52-bounce);
-      x.rotate(beat*0.07);
-      x.drawImage(im,-ww/2,-hh2,ww,hh2);
-      x.restore();
-    });
-
     /* title card */
-    const track = TRACKS[THEME.i] || TRACKS[0];
     x.textAlign = "center";
-    x.fillStyle = "#FFD60A";
-    x.font = "800 21px 'Trebuchet MS',sans-serif";
-    x.fillText(track.title.toUpperCase(), W/2, 34);
-    x.fillStyle = "#A79CD0"; x.font = "11px 'Courier New',monospace";
+    x.fillStyle = "#F2B441";
+    x.font = "800 22px 'Trebuchet MS',sans-serif";
+    x.fillText("WHERE THE KNOWLEDGE FLOWS", W/2, 34);
+    x.fillStyle = "#9B92BE"; x.font = "11px 'Courier New',monospace";
     x.fillText("SMITH'S CLASSROOM", W/2, 52);
   })();
 }
@@ -12052,11 +10592,10 @@ function finishSet(timeUp){
     award(right*10+(won?120:0),tok);
     if(won){
       const code=certCode(S.name||"student",Q.unit.id+"-test",pct);
-      if(!S.certs.some(c=>c.code===code)){
+      if(!S.certs.some(c=>c.code===code))
         S.certs.push({code,name:S.name||"Student",unit:L(Q.unit.title),
           course:L(Q.unit.pack.name),score:pct,date:today(),kind:"exam"});
-        save(); certCoin();
-      }
+      save();
     }
     V().innerHTML=`<section class="panel raised" style="text-align:center;margin-top:20px">
       <div class="eyebrow">${T_.testReview}</div>
@@ -12084,11 +10623,7 @@ function finishSet(timeUp){
     S.session=null;
     const tok=pass?3:1; award(right*15+(pass?100:0),tok);
     if(pass){ const code=certCode(S.name||"student",Q.unit.id,pct);
-      if(!S.certs.some(c=>c.code===code)){
-        S.certs.push({code,name:S.name||"Student",unit:L(Q.unit.title),course:L(Q.unit.pack.name),score:pct,date:today()});
-        save(); certCoin();
-      }
-    }
+      S.certs.push({code,name:S.name||"Student",unit:L(Q.unit.title),course:L(Q.unit.pack.name),score:pct,date:today()}); save(); }
     V().innerHTML=`<section class="panel raised" style="text-align:center;margin-top:20px">
       <div class="eyebrow">${timeUp?T_.timeLeft+" 00:00":""}</div>
       <h1 class="big" style="color:${pass?'var(--crt)':'var(--hot)'}">${pass?T_.passed:T_.failed}</h1>
@@ -12279,29 +10814,7 @@ const GAMES=[
         es:["Flechas para moverte en ocho direcciones","Espacio para golpear","Un golpe te empuja y te acelera un momento",
             "Tres golpes terminan la partida"]},
   touch:{en:"Touch: drag on the left half to move, tap the right half to swing.",
-         es:"Táctil: arrastra en la mitad izquierda para moverte; toca la derecha para golpear."}},
- {id:"gunner", color:"#7CE0FF", dur:120,
-  name:{en:"Chalk Brigade",es:"Brigada de tiza"},
-  tag:{en:"Run-and-gun the hallways. Real platform physics, chalk in hand.",
-       es:"Corre y dispara por los pasillos. Física real de plataformas, tiza en mano."},
-  goal:{en:"Fight your way left to right across campus and reach the bell. Free movement, honest jumps, no auto-run.",
-        es:"Avanza de izquierda a derecha por el campus hasta la campana. Movimiento libre, saltos honestos, sin correr solo."},
-  keys:{en:["← → run · ↑ aim high · ↓ crouch (or aim down in the air)",
-            "Space / K jump — hold for height, tap for a hop",
-            "J / F / X / Shift fire — hold it down, it repeats",
-            "Aim 8 ways: hold a direction while you fire, diagonals included",
-            "Grab crates for Spread (3 shots at ±15°) or Laser (pierces)",
-            "Hall monitors patrol the floor; erasers hover in sine waves",
-            "Three hearts. Reach the bell before the clock runs out."],
-        es:["← → correr · ↑ apuntar arriba · ↓ agacharse (o apuntar abajo en el aire)",
-            "Espacio / K saltar: mantén para altura, toca para un brinco",
-            "J / F / X / Shift disparar: mantenlo pulsado y repite",
-            "Apunta en 8 direcciones: mantén una dirección al disparar, diagonales incluidas",
-            "Coge cajas para Abanico (3 tiros a ±15°) o Láser (atraviesa)",
-            "Los prefectos patrullan el suelo; los borradores flotan en ondas",
-            "Tres corazones. Llega a la campana antes de que acabe el reloj."]},
-  touch:{en:"Touch: left half runs, top-right jumps, bottom-right fires.",
-         es:"Táctil: mitad izquierda corre, arriba-derecha salta, abajo-derecha dispara."}}
+         es:"Táctil: arrastra en la mitad izquierda para moverte; toca la derecha para golpear."}}
 ];
 
 let RAF=null, cleanupInput=null, GAME_OVER=false;
@@ -12339,7 +10852,6 @@ function startLoop(step){
   })(performance.now());
 }
 function stopGame(){
-  document.body.classList.remove("playing");
   if(RAF) cancelAnimationFrame(RAF); RAF=null;
   if(LOOP.vis){ document.removeEventListener("visibilitychange",LOOP.vis); LOOP.vis=null; }
   if(cleanupInput){ try{ cleanupInput(); }catch(e){} cleanupInput=null; }
@@ -12443,7 +10955,6 @@ function playGame(id){
   if(!TEACHER_OK){ if(S.tokens<1) return toast(T_.noTokens); S.tokens--; save(); paintBar(); }
   const g=GAMES.find(x=>x.id===id);
   GAME_OVER=false;
-  document.body.classList.add("playing");
   V().innerHTML=`<div class="row" style="margin:14px 0">
       <button class="btn ghost" style="padding:8px 12px;min-height:0" onclick="go('arcade')">${T_.exit}</button>
       <span style="flex:1"></span>
@@ -12464,13 +10975,7 @@ function playGame(id){
   cv.width=Math.min(id==="kart"?640:900, Math.max(320, Math.round(rw*scale)));
   cv.height=Math.round(Math.min(id==="kart"?460:760, Math.max(id==="kart"?360:520, cv.width*(id==="kart"?0.72:0.92))));
   const lvl=lvlOf(id), zone=zoneOf(id);
-  /* the platformer authors its levels against a fixed 960x576 stage, so it asks
-     for a 5:3 buffer and scales the context rather than the layout */
-  if(id==="gunner"){
-    cv.width=Math.min(960,Math.max(360,Math.round(rw*2)));
-    cv.height=Math.round(cv.width*0.6);
-  }
-  ({sprint:gameSprint,shuttle:gameShuttle,kart:gameKart,quest:gameQuest,gunner:gameGunner}[id])(cv,id,lvl,zone);
+  ({sprint:gameSprint,shuttle:gameShuttle,kart:gameKart,quest:gameQuest}[id])(cv,id,lvl,zone);
 }
 function setHUD(hp,tokens,frames,sc){
   const h=document.getElementById("hp"); if(h) h.textContent="♥".repeat(Math.max(0,hp))||"—";
@@ -13832,678 +12337,6 @@ function gameKart(cv,id,lvl,zone){
 }
 
 /* ============================================================================
-   GAME 5 — CHALK BRIGADE  ·  run-and-gun platformer
-   ----------------------------------------------------------------------------
-   PHASE 1: physics and the Cartesian core.
-
-   Smith's Run is a 1D auto-runner: the world scrolls at a speed the game owns,
-   the player only picks moments. This is the opposite contract. The player owns
-   a position in a 2D plane, the world is static geometry, and the camera merely
-   watches. Everything below exists to make that plane behave predictably.
-
-   COORDINATE SPACE
-     Levels are authored against a fixed 960x576 virtual stage in pixels, y
-     increasing downward (screen convention, so gravity is +y). The context is
-     scaled once per frame, so a 360px phone and a 960px laptop run byte-for-byte
-     the same level geometry — no layout reflows into a different game.
-
-   TIME
-     startLoop() already advances the world at a fixed 60Hz with a time
-     accumulator, so DT is the constant 1/60 s. That is what makes the motion
-     frame-rate independent: a 144Hz screen renders more often but steps the
-     same integer number of 1/60 s slices, and a dropped frame is caught up by
-     running two steps rather than by taking one larger, different step. Every
-     constant below is therefore written in real units — px/s, px/s^2 — not in
-     per-frame nudges.
-
-   KINEMATICS (semi-implicit Euler, exact for constant acceleration)
-     P(t) = P0 + V*dt + 0.5*A*dt^2
-     V(t) = V0 + A*dt
-     The 0.5*A*dt^2 term is not decoration: dropping it makes the apex of a jump
-     land half a gravity-step low, which is a visible 3px error at 60Hz and a
-     wrong-feeling jump at any other rate.
-
-   JUMP PHYSICS (derived, not tuned)
-     Given a desired peak height H and time-to-apex T:
-       g     = 2H / T^2
-       V_y0  = sqrt(2*g*H)     ( = g*T, the two agree by construction)
-     H = 132px clears the 24px platforms with a 40px margin; T = 0.36s is the
-     snappy end of the arcade range. That yields g = 2037 px/s^2 and
-     V_y0 = 733 px/s. Change H or T and every other number follows.
-
-   AABB COLLISION
-     Solids are axis-aligned boxes. For each overlap we compute the penetration
-     depth on both axes and resolve on the axis of LEAST penetration, pushing
-     along the sign of the centre-to-centre difference. Least-penetration is the
-     correct disambiguation here because per-step displacement is bounded well
-     under a box's dimensions (max |dx| = 320/60 = 5.3px, max |dy| = 733/60 =
-     12.2px, versus a 24px minimum solid thickness), so the shallow axis is
-     always the axis the body actually entered through.
-   ========================================================================== */
-
-/* Level geometry. Each solid is [x, y, w, h] in stage pixels. Level 1 is the
-   only one Phase 1 loads; the array shape is already the multi-level one so
-   Phase 4 adds entries rather than rewriting the loader. */
-const GUN_LEVELS=[
- {id:1, w:4200, name:{en:"East Hallway",es:"Pasillo este"},
-  spawn:{x:80,y:420}, exit:4120,
-  checkpoints:[80,1300,2320,3120],
-  solids:[
-    [0,496,1180,80],[1300,496,900,80],[2320,496,700,80],[3120,496,1080,80],
-    [520,400,120,24],[760,320,120,24],[1000,400,140,24],
-    [1480,392,160,24],[1760,300,160,24],
-    [2120,410,110,86],
-    [2480,392,150,24],[2700,300,150,24],[2980,410,120,24],
-    [3400,392,180,24],[3640,296,180,24],
-    [3880,330,120,166]
-  ],
-  /* PHASE 3 enemy spawns. `kind` selects the automaton, the rest are its
-     parameters: A/B are the sine amplitude (px) and angular frequency (rad/s);
-     patrollers take a speed and find their own turning points by edge test. */
-  enemies:[
-    {kind:"monitor", x:640,  y:444, spd:70},
-    {kind:"drone",   x:980,  y:330, A:52, B:2.1, spd:44},
-    {kind:"monitor", x:1560, y:444, spd:82},
-    {kind:"drone",   x:1900, y:250, A:70, B:1.6, spd:56},
-    {kind:"monitor", x:2420, y:444, spd:74},
-    {kind:"drone",   x:2600, y:300, A:60, B:2.6, spd:50},
-    {kind:"monitor", x:2860, y:444, spd:96},
-    {kind:"drone",   x:3260, y:280, A:80, B:1.9, spd:52},
-    {kind:"monitor", x:3420, y:340, spd:60},
-    {kind:"monitor", x:3760, y:444, spd:104},
-    {kind:"drone",   x:3980, y:240, A:46, B:3.0, spd:38}
-  ]}
-];
-
-function gameGunner(cv,id,lvl,zone){
-  const x=cv.getContext("2d");
-  const VW=960, VH=576;                       /* virtual stage */
-  const level=GUN_LEVELS[0];
-
-  /* ---- derived constants (see header) ---------------------------------- */
-  const DT=1/60;
-  const JUMP_H=132, JUMP_T=0.36;
-  const GRAV=(2*JUMP_H)/(JUMP_T*JUMP_T);      /* 2037 px/s^2 */
-  const JUMP_V=Math.sqrt(2*GRAV*JUMP_H);      /* 733 px/s    */
-  const CUT_V=-JUMP_V*0.36;                   /* release clamp -> short hop  */
-  const MAX_FALL=1150;                        /* terminal velocity           */
-  const RUN_MAX=320+lvl*6, RUN_ACC=2400, RUN_FRIC=3200, AIR_ACC=1500;
-  const COYOTE=0.10, BUFFER=0.12;             /* seconds of forgiveness      */
-
-  const p={x:level.spawn.x, y:level.spawn.y, vx:0, vy:0,
-           w:34, h:56, ground:false, face:1, coyote:0, buffer:0, held:false,
-           anim:0, crouch:false, inv:0};
-  const H_STAND=56, H_CROUCH=34;
-  const cam={x:0,y:0};
-
-  /* ==========================================================================
-     PHASE 2 — projectile geometry, health, weapons
-
-     AIM ANGLES. θ is in the standard maths convention (0° = +x, growing
-     counter-clockwise as a human reads a protractor) even though the render
-     space has +y downward. The single place that reconciles the two is the
-     velocity decomposition:
-         V_x = V * cosθ
-         V_y = -V * sinθ        ← the negation IS the y-flip
-     Doing it once here means every downstream calculation (spread offsets,
-     laser raycasts, muzzle placement) can be reasoned about in ordinary
-     trigonometry with no per-site sign corrections.
-
-     The 8 directions are the vector sum of the held direction keys quantised to
-     45° steps: (±1,0)→0°/180°, (±1,±1)→45°/135°/225°/315°, (0,±1)→90°/270°.
-     ========================================================================== */
-  const BULLET_V=680, LASER_RANGE=1400;
-  const WEAPONS={
-    chalk:{name:{en:"CHALK",es:"TIZA"}, cd:0.16, col:"#FFFFFF", dmg:1},
-    spread:{name:{en:"SPREAD",es:"ABANICO"}, cd:0.26, col:"#F2B441", dmg:1},
-    laser:{name:{en:"LASER",es:"LÁSER"}, cd:0.42, col:"#7CE0FF", dmg:3}
-  };
-  let weapon="chalk", ammo=Infinity, cool=0, aimDeg=0;
-
-  /* OBJECT POOL. Bullets are allocated once and recycled by flipping .on, so a
-     firefight never triggers a GC pause mid-jump. Capacity 90 is comfortably
-     above the worst case: spread fires 3 at cd 0.26s with a ~1.6s max lifetime
-     at range, i.e. ~19 live. */
-  const POOL_N=90;
-  const pool=[]; for(let i=0;i<POOL_N;i++) pool.push({on:false,x:0,y:0,vx:0,vy:0,life:0,dmg:1,col:"#fff",r:4});
-  function spawnBullet(bx,by,deg,col,dmg){
-    const b=pool.find(o=>!o.on); if(!b) return null;
-    const r=deg*Math.PI/180;
-    b.on=true; b.x=bx; b.y=by;
-    b.vx=BULLET_V*Math.cos(r);      /* V_x = V cosθ */
-    b.vy=-BULLET_V*Math.sin(r);     /* V_y = -V sinθ (screen y grows downward) */
-    b.life=1.6; b.dmg=dmg; b.col=col; b.r=4;
-    return b;
-  }
-  const beams=[];  /* instantaneous laser segments, drawn then decayed */
-
-  /* ==========================================================================
-     PHASE 3 — enemy automata
-
-     MONITOR (linear patrol with edge detection). Walks a constant velocity and
-     reverses when either (a) the point one step ahead at foot level +2px is not
-     over a solid — the ledge test — or (b) that point is inside a solid — the
-     wall test. Both are single-point samples rather than swept boxes, which is
-     sufficient because the step is spd*DT ≤ 1.7px against 24px geometry.
-
-     DRONE (trigonometric flight). Y(t) = y0 + A*sin(B*t + φ), drifting in x at a
-     constant rate. Phase φ is seeded from the spawn x so a row of drones sweeps
-     out of step rather than in formation.
-
-     Both carry an integer hp, a hit-flash timer, and an AABB. Damage is a pure
-     intersection test — no physics response — so a shot never pushes a body.
-     ========================================================================== */
-  const EK={
-    monitor:{w:34,h:52,hp:2,score:60,col:"#FF7A5C"},
-    drone:  {w:38,h:26,hp:1,score:40,col:"#C58BFF"}
-  };
-  const foes=level.enemies.map(e=>({
-    ...EK[e.kind], ...e, y0:e.y, spawnX0:e.x, dir:-1, flash:0, alive:true,
-    t0:(e.x%360)/360*6.283
-  }));
-  const pops=[];   /* short-lived death rings; the real emitter arrives Phase 5 */
-
-  const solidAt=(qx,qy)=>level.solids.some(s=>qx>s[0]&&qx<s[0]+s[2]&&qy>s[1]&&qy<s[1]+s[3]);
-
-  function damage(f,n){
-    f.hp-=n; f.flash=0.12;
-    if(f.hp<=0){
-      f.alive=false; sc+=f.score; sfx("coin");
-      pops.push({x:f.x+f.w/2, y:f.y+f.h/2, t:0.32, col:f.col});
-    }
-  }
-
-  function updateFoes(){
-    for(const f of foes){
-      if(!f.alive) continue;
-      f.flash=Math.max(0,f.flash-DT);
-      /* asleep until they are within a screen and a half — keeps distant
-         patrollers from walking themselves off the level before you arrive */
-      if(Math.abs((f.x+f.w/2)-(p.x+p.w/2))>VW*0.75) continue;
-
-      if(f.kind==="monitor"){
-        const step=f.spd*f.dir*DT;
-        const probeX=f.dir>0?f.x+f.w+2:f.x-2;
-        const ledge=!solidAt(probeX,f.y+f.h+3);   /* nothing to walk onto     */
-        const wall=solidAt(probeX,f.y+f.h-8);     /* something in the way     */
-        if(ledge||wall) f.dir*=-1; else f.x+=step;
-      }else{
-        f.t0+=DT;
-        f.x+=f.spd*f.dir*DT;
-        f.y=f.y0+f.A*Math.sin(f.B*f.t0);          /* Y(t) = y0 + A sin(Bt) */
-        /* drones turn on walls and on their patrol leash, not on ledges */
-        if(solidAt(f.dir>0?f.x+f.w+2:f.x-2, f.y+f.h/2)) f.dir*=-1;
-        /* leash: drift no further than 260px either side of the spawn */
-        if(Math.abs(f.x-f.spawnX0)>260) f.dir*=-1;
-      }
-
-      /* contact damage: player AABB vs enemy AABB */
-      if(p.inv<=0&&overlaps(p.x,p.y,p.w,p.h,[f.x,f.y,f.w,f.h])) hurt(1);
-    }
-    for(let i=pops.length-1;i>=0;i--){ pops[i].t-=DT; if(pops[i].t<=0) pops.splice(i,1); }
-  }
-
-  function fire(){
-    if(cool>0) return;
-    const w=WEAPONS[weapon];
-    cool=w.cd;
-    /* muzzle sits on the barrel: half a body forward along θ, chest height */
-    const r=aimDeg*Math.PI/180;
-    const cx=p.x+p.w/2+Math.cos(r)*22, cy=p.y+p.h*0.34-Math.sin(r)*22;
-    if(weapon==="laser"){
-      /* RAYCAST. March the ray in 6px steps and stop at the first solid; the
-         step is well under the 24px minimum solid thickness so nothing is
-         tunnelled through. Enemy AABBs are tested at every sample and the
-         beam pierces them — only level geometry terminates the ray. */
-      let hx=cx, hy=cy, d=0;
-      const struck=new Set();
-      while(d<LASER_RANGE){
-        hx+=Math.cos(r)*6; hy-=Math.sin(r)*6; d+=6;
-        for(const f of foes){
-          if(!f.alive||struck.has(f)) continue;
-          if(hx>f.x&&hx<f.x+f.w&&hy>f.y&&hy<f.y+f.h){ struck.add(f); damage(f,w.dmg); }
-        }
-        if(level.solids.some(s=>hx>s[0]&&hx<s[0]+s[2]&&hy>s[1]&&hy<s[1]+s[3])) break;
-      }
-      beams.push({x1:cx,y1:cy,x2:hx,y2:hy,t:0.16});
-      sfx("zap");
-    }else if(weapon==="spread"){
-      /* [θ-15°, θ, θ+15°] */
-      [-15,0,15].forEach(o=>spawnBullet(cx,cy,aimDeg+o,w.col,w.dmg));
-      sfx("shoot");
-    }else{
-      spawnBullet(cx,cy,aimDeg,w.col,w.dmg);
-      sfx("shoot");
-    }
-    if(ammo!==Infinity&&--ammo<=0){ weapon="chalk"; ammo=Infinity; }
-  }
-
-  /* Power-up crates. Shooting is not required to collect — walk into one. */
-  const drops=[
-    {x:900, y:452, kind:"spread", on:true},
-    {x:1800,y:256, kind:"laser",  on:true},
-    {x:2740,y:256, kind:"spread", on:true},
-    {x:3690,y:252, kind:"laser",  on:true}
-  ];
-  let hp=3, sc=0, framesLeft=GAMES.find(g=>g.id==="gunner").dur*60;
-  let over=false, cp=0, best=level.spawn.x, t=0;
-  /* Last position the player was actually standing on ground. Respawn uses this
-     rather than raw p.x: horizontal velocity is retained through a fall, so a
-     player who drops into a gap crosses the far checkpoint mid-air and would
-     otherwise be handed the progress the gap exists to deny. */
-  let safe={x:level.spawn.x, y:level.spawn.y};
-
-  const heroRun=spriteOf("run"), heroIdle=spriteOf("idle"), heroJump=spriteOf("walk");
-
-  /* ---- input ----------------------------------------------------------- */
-  const keys={left:false,right:false,up:false,down:false,jump:false,fire:false};
-  const MAP={ArrowLeft:"left",KeyA:"left",ArrowRight:"right",KeyD:"right",
-             ArrowUp:"up",KeyW:"up",ArrowDown:"down",KeyS:"down",
-             Space:"jump",KeyK:"jump",
-             KeyJ:"fire",KeyF:"fire",KeyX:"fire",ShiftLeft:"fire",ShiftRight:"fire"};
-  const kd=e=>{ const k=MAP[e.code]; if(k){ keys[k]=true; e.preventDefault(); } };
-  const ku=e=>{ const k=MAP[e.code]; if(k){ keys[k]=false; e.preventDefault(); } };
-  window.addEventListener("keydown",kd); window.addEventListener("keyup",ku);
-  let padX=null;
-  /* Touch zones: left half is a relative run pad, the right half splits into
-     jump (upper) and fire (lower) so both are reachable with one thumb. */
-  const readTouch=e=>{
-    let l=false,r=false,j=false,f=false,u=false,d=false;
-    for(const tc of e.touches){
-      const pt=canvasPoint(cv,tc);
-      if(pt.x<0.5){ if(padX===null) padX=pt.x; const dx=pt.x-padX;
-        if(dx<-0.03) l=true; else if(dx>0.03) r=true;
-        else if(pt.x<0.22) l=true; else r=true;
-        if(pt.y<0.32) u=true; else if(pt.y>0.8) d=true; }
-      else if(pt.y<0.5) j=true;
-      else f=true;
-    }
-    keys.left=l; keys.right=r; keys.jump=j; keys.fire=f; keys.up=u; keys.down=d;
-    if(!l&&!r) padX=null;
-  };
-  const ts=e=>{ padX=null; readTouch(e); e.preventDefault(); };
-  const tm=e=>{ readTouch(e); e.preventDefault(); };
-  const te=e=>{ readTouch(e); if(!e.touches.length){ keys.left=keys.right=keys.jump=keys.fire=keys.up=keys.down=false; padX=null; } e.preventDefault(); };
-  cv.addEventListener("touchstart",ts,{passive:false});
-  cv.addEventListener("touchmove",tm,{passive:false});
-  cv.addEventListener("touchend",te,{passive:false});
-  cv.addEventListener("touchcancel",te,{passive:false});
-  cleanupInput=()=>{ window.removeEventListener("keydown",kd); window.removeEventListener("keyup",ku);
-    cv.removeEventListener("touchstart",ts); cv.removeEventListener("touchmove",tm);
-    cv.removeEventListener("touchend",te); cv.removeEventListener("touchcancel",te); };
-
-  /* ---- AABB helpers ---------------------------------------------------- */
-  const overlaps=(ax,ay,aw,ah,b)=>ax<b[0]+b[2]&&ax+aw>b[0]&&ay<b[1]+b[3]&&ay+ah>b[1];
-
-  /* Resolve every overlap on its axis of least penetration. One pass is enough
-     for convex, non-overlapping solids at these speeds; two passes are run so a
-     body wedged into a corner settles in the same step it entered. */
-  function resolve(){
-    p.ground=false;
-    for(let pass=0;pass<2;pass++){
-      for(const s of level.solids){
-        if(!overlaps(p.x,p.y,p.w,p.h,s)) continue;
-        /* penetration depth on each axis: how far the boxes interpenetrate */
-        const penX=Math.min(p.x+p.w,s[0]+s[2])-Math.max(p.x,s[0]);
-        const penY=Math.min(p.y+p.h,s[1]+s[3])-Math.max(p.y,s[1]);
-        /* sign: direction from the solid's centre to the body's centre */
-        const sx=Math.sign((p.x+p.w/2)-(s[0]+s[2]/2))||1;
-        const sy=Math.sign((p.y+p.h/2)-(s[1]+s[3]/2))||1;
-        if(penX<penY){ p.x+=penX*sx; if(Math.sign(p.vx)===-sx) p.vx=0; }
-        else{
-          p.y+=penY*sy;
-          if(sy<0){ p.ground=true; if(p.vy>0) p.vy=0; }   /* landed on top    */
-          else if(p.vy<0) p.vy=0;                          /* head on a ceiling */
-        }
-      }
-    }
-  }
-
-  function hurt(n){
-    if(p.inv>0||over) return;
-    hp-=n||1; p.inv=1.1; sfx("hit");     /* invincibility frames, in seconds */
-    if(hp<=0){ over=true; endGame(id,sc,false); }
-  }
-
-  function respawn(){
-    hp--; sfx("hit");
-    if(hp<=0){ over=true; endGame(id,sc,false); return; }
-    /* the later of the last grounded spot and its checkpoint, backed off the
-       ledge so you land with room to run at the gap again */
-    const c=level.checkpoints[cp];
-    p.x=Math.max(c, safe.x-30); p.y=safe.y-8; p.vx=0; p.vy=0;
-    p.inv=1.1;
-  }
-
-  /* ---- procedural backdrop -------------------------------------------- */
-  /* Drawn, not loaded: a chalkboard-slate sky over two silhouette bands of
-     campus buildings and corridor lockers. Deterministic PRNG so the skyline is
-     identical on every run instead of shimmering. */
-  const rnd=(seed=>()=>{ seed=(seed+0x6D2B79F5)|0; let a=seed;
-    a=Math.imul(a^(a>>>15),a|1); a^=a+Math.imul(a^(a>>>7),a|61);
-    return ((a^(a>>>14))>>>0)/4294967296; })(90210);
-  const sky1=zone.sky||"#14213A";
-  const far=[],mid=[];
-  for(let i=0;i<70;i++) far.push({x:i*140+rnd()*60, w:70+rnd()*80, h:90+rnd()*170, lit:rnd()});
-  for(let i=0;i<90;i++) mid.push({x:i*96, h:120+rnd()*40, tone:rnd()});
-  const stars=[]; for(let i=0;i<80;i++) stars.push({x:rnd()*VW,y:rnd()*300,r:rnd()*1.4+0.3});
-
-  function backdrop(){
-    const g=x.createLinearGradient(0,0,0,VH);
-    g.addColorStop(0,sky1); g.addColorStop(0.62,"#2A2044"); g.addColorStop(1,"#3A2438");
-    x.fillStyle=g; x.fillRect(0,0,VW,VH);
-    x.fillStyle="rgba(255,255,255,.5)";
-    stars.forEach(s=>{ x.globalAlpha=0.25+0.35*Math.sin(t*1.3+s.x); x.beginPath();
-      x.arc(s.x,s.y,s.r,0,6.283); x.fill(); });
-    x.globalAlpha=1;
-    /* chalk grid, the one nod to the hub's blackboard */
-    x.strokeStyle="rgba(255,255,255,.045)"; x.lineWidth=1;
-    for(let gx=-((cam.x*0.12)%80); gx<VW; gx+=80){ x.beginPath(); x.moveTo(gx,0); x.lineTo(gx,VH); x.stroke(); }
-    for(let gy=40; gy<VH; gy+=80){ x.beginPath(); x.moveTo(0,gy); x.lineTo(VW,gy); x.stroke(); }
-    /* far skyline, depth 0.22 */
-    far.forEach(b=>{
-      const bx=b.x-cam.x*0.22; if(bx>VW||bx+b.w<0) return;
-      x.fillStyle="#1B1730"; x.fillRect(bx,420-b.h,b.w,b.h+40);
-      x.fillStyle="rgba(242,180,65,.5)";
-      for(let wy=420-b.h+14; wy<400; wy+=26)
-        for(let wx=bx+10; wx<bx+b.w-10; wx+=22)
-          if(((wx+wy)|0)%3===(b.lit>0.5?0:1)) x.fillRect(wx,wy,8,10);
-    });
-    /* corridor lockers, depth 0.55 */
-    mid.forEach(b=>{
-      const bx=b.x-cam.x*0.55; if(bx>VW||bx+96<0) return;
-      x.fillStyle=b.tone>0.5?"#243A52":"#1F3247"; x.fillRect(bx,496-b.h,92,b.h);
-      x.fillStyle="rgba(0,0,0,.35)"; x.fillRect(bx+44,496-b.h,4,b.h);
-      x.fillStyle="rgba(124,224,255,.35)";
-      x.fillRect(bx+14,496-b.h+22,14,3); x.fillRect(bx+58,496-b.h+22,14,3);
-      x.fillStyle="rgba(255,255,255,.06)"; x.fillRect(bx,496-b.h,92,3);
-    });
-    x.fillStyle="rgba(10,8,20,.55)"; x.fillRect(0,470,VW,VH-470);
-  }
-
-  function drawSolid(s){
-    const sx=s[0]-cam.x, sy=s[1]-cam.y;
-    if(sx>VW||sx+s[2]<0) return;
-    x.fillStyle="#2B2440"; x.fillRect(sx,sy,s[2],s[3]);
-    x.fillStyle="#3D3358"; x.fillRect(sx,sy,s[2],6);
-    x.fillStyle="rgba(124,224,255,.8)"; x.fillRect(sx,sy,s[2],2);
-    /* chalk hatching so the floor reads as a surface, not a colour field */
-    x.strokeStyle="rgba(255,255,255,.07)"; x.lineWidth=1;
-    for(let hx=sx+8; hx<sx+s[2]; hx+=18){
-      x.beginPath(); x.moveTo(hx,sy+8); x.lineTo(hx-8,sy+s[3]); x.stroke();
-    }
-  }
-
-  startLoop(function(){
-    t+=DT;
-    if(!over){
-      framesLeft--;
-      if(framesLeft<=0){ over=true; endGame(id,sc,false); }
-
-      /* --- crouch: shrink the box from the top so the feet stay planted --- */
-      const wantCrouch=keys.down&&p.ground;
-      if(wantCrouch!==p.crouch){
-        const nh=wantCrouch?H_CROUCH:H_STAND;
-        /* standing up is refused if the taller box would clip a ceiling */
-        const ny=p.y+p.h-nh;
-        const blocked=!wantCrouch&&level.solids.some(s=>overlaps(p.x,ny,p.w,nh,s));
-        if(!blocked){ p.y=ny; p.h=nh; p.crouch=wantCrouch; }
-      }
-
-      /* --- horizontal: accelerate toward the held direction ------------- */
-      const dir=(keys.right?1:0)-(keys.left?1:0);
-      const acc=p.ground?RUN_ACC:AIR_ACC;
-      const cap=p.crouch?RUN_MAX*0.42:RUN_MAX;
-      if(dir!==0){
-        p.vx+=dir*acc*DT; p.face=dir;
-        if(Math.abs(p.vx)>cap) p.vx=cap*Math.sign(p.vx);
-      }else if(p.ground){
-        const drop=RUN_FRIC*DT;
-        p.vx=Math.abs(p.vx)<=drop?0:p.vx-drop*Math.sign(p.vx);
-      }
-
-      /* --- jump: coyote time and an input buffer ------------------------ */
-      p.coyote=p.ground?COYOTE:Math.max(0,p.coyote-DT);
-      const jumpReq=keys.jump&&!p.crouch;
-      if(jumpReq&&!p.held) p.buffer=BUFFER; else p.buffer=Math.max(0,p.buffer-DT);
-      p.held=jumpReq;
-      if(p.buffer>0&&p.coyote>0){ p.vy=-JUMP_V; p.buffer=0; p.coyote=0; p.ground=false; }
-      /* releasing early clamps the rise: same g, shorter arc */
-      if(!keys.jump&&p.vy<CUT_V) p.vy=CUT_V;
-
-      /* --- integrate: P = P0 + V*dt + 0.5*A*dt^2 ------------------------ */
-      p.x+=p.vx*DT;
-      p.y+=p.vy*DT+0.5*GRAV*DT*DT;
-      p.vy=Math.min(MAX_FALL,p.vy+GRAV*DT);
-
-      if(p.x<0){ p.x=0; p.vx=0; }
-      if(p.x+p.w>level.w){ p.x=level.w-p.w; p.vx=0; }
-      resolve();
-
-      /* --- aiming: quantise the held direction vector to 45° steps ------- */
-      const ax=dir, ay=(keys.up?1:0)-(keys.down&&!p.ground?1:0);
-      if(ax||ay){
-        /* atan2 already returns the exact 45° multiple for unit-ish inputs */
-        aimDeg=Math.round(Math.atan2(ay,ax)*180/Math.PI/45)*45;
-      }else if(keys.up){ aimDeg=90; }
-      else{ aimDeg=p.face>0?0:180; }
-      if(!ax&&!ay&&p.crouch) aimDeg=p.face>0?0:180;
-      if(aimDeg===90){ /* straight up keeps the current facing */ }
-      else if(Math.cos(aimDeg*Math.PI/180)>0.1) p.face=1;
-      else if(Math.cos(aimDeg*Math.PI/180)<-0.1) p.face=-1;
-
-      cool=Math.max(0,cool-DT);
-      p.inv=Math.max(0,p.inv-DT);
-      if(keys.fire) fire();
-
-      /* --- advance the pool -------------------------------------------- */
-      for(const b of pool){
-        if(!b.on) continue;
-        b.x+=b.vx*DT; b.y+=b.vy*DT;                  /* no gravity on shots */
-        b.life-=DT;
-        if(b.life<=0||b.x<cam.x-80||b.x>cam.x+VW+80||b.y<-200||b.y>VH+300){ b.on=false; continue; }
-        /* damage intersection: bullet point inside an enemy AABB. Point-vs-box
-           is honest here because the per-step travel (680/60 = 11.3px) is under
-           the smallest enemy dimension (26px), so nothing passes through. */
-        let spent=false;
-        for(const f of foes){
-          if(!f.alive) continue;
-          if(b.x>f.x&&b.x<f.x+f.w&&b.y>f.y&&b.y<f.y+f.h){ damage(f,b.dmg); spent=true; break; }
-        }
-        if(spent){ b.on=false; continue; }
-        if(level.solids.some(s=>b.x>s[0]&&b.x<s[0]+s[2]&&b.y>s[1]&&b.y<s[1]+s[3])) b.on=false;
-      }
-      for(let i=beams.length-1;i>=0;i--){ beams[i].t-=DT; if(beams[i].t<=0) beams.splice(i,1); }
-      updateFoes();
-
-      /* --- power-up pickups --------------------------------------------- */
-      for(const d of drops){
-        if(!d.on) continue;
-        if(overlaps(p.x,p.y,p.w,p.h,[d.x,d.y,30,30])){
-          d.on=false; weapon=d.kind; ammo=d.kind==="laser"?18:40; sc+=120; sfx("prize");
-        }
-      }
-
-      /* checkpoints and the safe spot only advance with both feet down */
-      if(p.ground){
-        safe.x=p.x; safe.y=p.y;
-        for(let i=0;i<level.checkpoints.length;i++) if(p.x>level.checkpoints[i]-40) cp=i;
-      }
-      if(p.x>best){ sc+=Math.round(p.x-best); best=p.x; }
-      if(p.y>VH+80) respawn();
-      if(p.x+p.w>=level.exit){ over=true; sc+=Math.round(framesLeft/6); endGame(id,sc,true); }
-
-      /* camera: lead the player, clamp to the level, ease vertically */
-      const want=p.x+p.w/2-VW*0.38+p.vx*0.22;
-      cam.x+=(Math.max(0,Math.min(level.w-VW,want))-cam.x)*0.14;
-      /* level 1 fits one stage height, so the vertical camera stays parked;
-         Phase 4's taller levels raise this clamp instead of adding a branch */
-      const wantY=Math.max(0,Math.min(0,p.y-VH*0.55));
-      cam.y+=(wantY-cam.y)*0.12;
-      p.anim+=Math.abs(p.vx)*DT;
-    }
-
-    /* ---- render ------------------------------------------------------- */
-    x.setTransform(cv.width/VW,0,0,cv.height/VH,0,0);
-    x.imageSmoothingEnabled=false;
-    backdrop();
-    x.save(); x.translate(0,-cam.y);
-    level.solids.forEach(drawSolid);
-
-    /* power-up crates: a chalk box with the weapon's colour inside */
-    drops.forEach(d=>{
-      if(!d.on) return;
-      const dx=d.x-cam.x; if(dx<-60||dx>VW+60) return;
-      const dy=d.y+Math.sin(t*3+d.x)*3;
-      x.fillStyle="rgba(0,0,0,.35)"; x.fillRect(dx+3,dy+3,30,30);
-      x.fillStyle=WEAPONS[d.kind].col; x.fillRect(dx,dy,30,30);
-      x.fillStyle="#181228"; x.fillRect(dx+4,dy+4,22,22);
-      x.fillStyle=WEAPONS[d.kind].col; x.font="bold 15px monospace"; x.textAlign="center";
-      x.fillText(d.kind==="laser"?"L":"S",dx+15,dy+21); x.textAlign="left";
-    });
-
-    /* enemies */
-    foes.forEach(f=>{
-      if(!f.alive) return;
-      const fx=f.x-cam.x; if(fx<-90||fx>VW+90) return;
-      const flash=f.flash>0;
-      if(f.kind==="monitor"){
-        x.fillStyle="rgba(0,0,0,.3)";
-        x.beginPath(); x.ellipse(fx+f.w/2,f.y+f.h+3,f.w*0.5,4,0,0,6.283); x.fill();
-        x.fillStyle=flash?"#fff":"#3A2A46"; x.fillRect(fx,f.y,f.w,f.h);
-        x.fillStyle=flash?"#fff":f.col; x.fillRect(fx,f.y,f.w,12);          /* sash  */
-        x.fillStyle="#181228"; x.fillRect(fx+(f.dir>0?f.w-14:6),f.y+20,8,6); /* visor */
-        x.fillStyle="rgba(255,255,255,.14)"; x.fillRect(fx,f.y,3,f.h);
-        /* legs, stepped off its own x so the walk reads without a sprite */
-        const ph=Math.sin(f.x*0.12)*5;
-        x.fillStyle="#241A30";
-        x.fillRect(fx+7,f.y+f.h-6+ph*0.2,8,6); x.fillRect(fx+f.w-15,f.y+f.h-6-ph*0.2,8,6);
-      }else{
-        x.fillStyle=flash?"#fff":f.col;
-        x.beginPath(); x.ellipse(fx+f.w/2,f.y+f.h/2,f.w/2,f.h/2,0,0,6.283); x.fill();
-        x.fillStyle="#181228";
-        x.beginPath(); x.arc(fx+f.w/2+(f.dir>0?6:-6),f.y+f.h/2-2,4,0,6.283); x.fill();
-        /* rotor blur — a chalk-dust eraser hovering the hallway */
-        x.strokeStyle="rgba(255,255,255,.35)"; x.lineWidth=2;
-        const sw=Math.abs(Math.cos(t*22))*13+5;
-        x.beginPath(); x.moveTo(fx+f.w/2-sw,f.y-3); x.lineTo(fx+f.w/2+sw,f.y-3); x.stroke();
-      }
-    });
-
-    /* death pops */
-    pops.forEach(o=>{
-      const k=1-o.t/0.32;
-      x.globalAlpha=1-k; x.strokeStyle=o.col; x.lineWidth=3;
-      x.beginPath(); x.arc(o.x-cam.x,o.y,6+k*26,0,6.283); x.stroke();
-      x.globalAlpha=1;
-    });
-
-    /* laser beams */
-    beams.forEach(b=>{
-      x.globalAlpha=Math.min(1,b.t/0.16);
-      x.strokeStyle="#7CE0FF"; x.lineWidth=6; x.globalCompositeOperation="lighter";
-      x.beginPath(); x.moveTo(b.x1-cam.x,b.y1); x.lineTo(b.x2-cam.x,b.y2); x.stroke();
-      x.strokeStyle="#FFFFFF"; x.lineWidth=2;
-      x.beginPath(); x.moveTo(b.x1-cam.x,b.y1); x.lineTo(b.x2-cam.x,b.y2); x.stroke();
-      x.globalCompositeOperation="source-over"; x.globalAlpha=1;
-    });
-
-    /* bullets: a short trail along -V renders the direction better than a dot */
-    pool.forEach(b=>{
-      if(!b.on) return;
-      const bx=b.x-cam.x;
-      x.strokeStyle=b.col; x.lineWidth=3; x.globalAlpha=.55;
-      x.beginPath(); x.moveTo(bx,b.y); x.lineTo(bx-b.vx*0.018,b.y-b.vy*0.018); x.stroke();
-      x.globalAlpha=1; x.fillStyle=b.col;
-      x.beginPath(); x.arc(bx,b.y,b.r,0,6.283); x.fill();
-    });
-
-    /* the bell: a lit doorway at the exit */
-    const ex=level.exit-cam.x;
-    if(ex<VW+60){
-      x.fillStyle="rgba(124,224,255,.15)"; x.fillRect(ex-6,300,60,196);
-      x.fillStyle="#7CE0FF"; x.fillRect(ex-6,300,60,5);
-      x.fillStyle="rgba(255,255,255,.85)"; x.font="bold 15px monospace";
-      x.fillText(S.lang==="es"?"CAMPANA":"BELL",ex-2,290);
-    }
-
-    /* player */
-    const px=p.x-cam.x, py=p.y;
-    const moving=Math.abs(p.vx)>18;
-    let im=p.ground?(moving?heroRun:heroIdle):heroJump;
-    if(!drawable(im)) im=heroIdle;
-    x.save();
-    /* i-frames blink at 12Hz — fast enough to read as damage, slow enough to
-       keep the player legible while it runs */
-    if(p.inv>0&&Math.floor(p.inv*12)%2===0) x.globalAlpha=0.35;
-    x.translate(px+p.w/2,0);
-    if(p.face<0) x.scale(-1,1);
-    if(drawable(im)){
-      const bob=p.ground&&moving?Math.sin(p.anim*0.055)*2:0;
-      const h=p.h*1.34, w=im.naturalWidth/im.naturalHeight*h;
-      x.drawImage(im,-w/2,p.y+p.h-h+bob,w,h);
-    }else{
-      x.fillStyle="#F2B441"; x.fillRect(-p.w/2,p.y,p.w,p.h);
-    }
-    x.restore();
-    x.globalAlpha=1;
-
-    /* aim arm: a short chalk stub along θ so the fire direction is visible
-       before anything is fired */
-    {
-      const r=aimDeg*Math.PI/180;
-      const ox=px+p.w/2, oy=p.y+p.h*0.34;
-      x.strokeStyle=WEAPONS[weapon].col; x.lineWidth=4; x.lineCap="round";
-      x.globalAlpha=.9;
-      x.beginPath(); x.moveTo(ox+Math.cos(r)*8,oy-Math.sin(r)*8);
-      x.lineTo(ox+Math.cos(r)*24,oy-Math.sin(r)*24); x.stroke();
-      x.globalAlpha=1; x.lineCap="butt";
-    }
-    /* contact shadow reads the distance to the floor, which is most of what
-       tells a player where they will land */
-    x.fillStyle="rgba(0,0,0,.3)";
-    let gy=VH+200;
-    for(const s of level.solids)
-      if(p.x+p.w>s[0]&&p.x<s[0]+s[2]&&s[1]>=p.y+p.h-2&&s[1]<gy) gy=s[1];
-    if(gy<VH+200){
-      const k=Math.max(0.25,1-(gy-(p.y+p.h))/260);
-      x.beginPath(); x.ellipse(px+p.w/2,gy+2,p.w*0.55*k,5*k,0,0,6.283); x.fill();
-    }
-    x.restore();
-
-    /* progress rail — how far along the hallway you are */
-    x.fillStyle="rgba(0,0,0,.45)"; x.fillRect(24,22,VW-48,8);
-    x.fillStyle="#7CE0FF"; x.fillRect(24,22,(VW-48)*Math.min(1,p.x/level.exit),8);
-
-    /* hearts — integer hit points, drawn on the canvas so the game reads at a
-       glance without the player's eye leaving the play field */
-    for(let i=0;i<3;i++){
-      const hx=24+i*30, hy=40, filled=i<hp;
-      x.fillStyle=filled?"#FF5C7A":"rgba(255,255,255,.16)";
-      x.beginPath();
-      x.moveTo(hx+11,hy+20);
-      x.bezierCurveTo(hx-4,hy+9,hx+2,hy-2,hx+11,hy+5);
-      x.bezierCurveTo(hx+20,hy-2,hx+26,hy+9,hx+11,hy+20);
-      x.fill();
-    }
-
-    /* weapon readout */
-    const w=WEAPONS[weapon];
-    x.fillStyle="rgba(0,0,0,.45)"; x.fillRect(VW-186,36,162,26);
-    x.fillStyle=w.col; x.fillRect(VW-186,36,4,26);
-    x.fillStyle="#fff"; x.font="bold 14px monospace";
-    x.fillText(w.name[S.lang==="es"?"es":"en"],VW-172,54);
-    if(ammo!==Infinity){
-      x.fillStyle="rgba(255,255,255,.6)"; x.textAlign="right";
-      x.fillText(String(ammo),VW-34,54); x.textAlign="left";
-    }
-    x.setTransform(1,0,0,1,0,0);
-
-    setHUD(hp,null,framesLeft,sc);
-  });
-}
-
-/* ============================================================================
    GAME 4 — SMITH'S QUEST (top-down action survival)
    ========================================================================== */
 function gameQuest(cv,id,lvl,zone){
@@ -14884,291 +12717,6 @@ if(S.langChosen) showTitle(); else showLangPick();
 window.addEventListener("beforeunload",save);
 window.addEventListener("resize",()=>{ const t=document.getElementById("title");
   if(t&&!t.classList.contains("hidden")) paintTitleScene(document.getElementById("titleCanvas")); });
-
-/* ============================================================================
-   10. JUICE  —  sound, particles, transitions.
-   Everything here decorates the app from the outside: it wraps a handful of
-   existing functions and watches the DOM, so no screen above had to change.
-   Muting is remembered, and anyone who asked their device for less motion
-   gets the plain app back.
-   ========================================================================== */
-const KEY_MUTE="smiths.mute";
-const FX={muted:localStorage.getItem(KEY_MUTE)==="1",ctx:null,
-  reduce:matchMedia("(prefers-reduced-motion:reduce)").matches};
-
-/* ---- sound: a few short blips, built on the fly, no files ---- */
-function fxCtx(){
-  if(FX.muted) return null;
-  if(!FX.ctx){ const C=window.AudioContext||window.webkitAudioContext; if(!C) return null;
-    try{ FX.ctx=new C(); }catch(e){ return null; } }
-  if(FX.ctx.state==="suspended") FX.ctx.resume();
-  return FX.ctx;
-}
-function blip(f,dur,type,vol,slideTo){
-  const c=fxCtx(); if(!c) return;
-  const o=c.createOscillator(), g=c.createGain(), t=c.currentTime;
-  o.type=type||"square"; o.frequency.setValueAtTime(f,t);
-  if(slideTo) o.frequency.exponentialRampToValueAtTime(Math.max(40,slideTo),t+dur);
-  g.gain.setValueAtTime(.0001,t);
-  g.gain.linearRampToValueAtTime(vol||.05,t+.008);
-  g.gain.exponentialRampToValueAtTime(.0001,t+dur);
-  o.connect(g); g.connect(c.destination); o.start(t); o.stop(t+dur+.03);
-}
-const seq=(notes,step,type,vol,dur)=>notes.forEach((n,i)=>
-  setTimeout(()=>blip(n,dur||.14,type||"square",vol||.05),i*(step||90)));
-const SFX={
-  tap:()=>blip(480,.045,"square",.035),
-  move:()=>blip(660,.05,"triangle",.04),
-  flip:()=>blip(430,.07,"triangle",.035,620),
-  right:()=>seq([659,880,1319],80,"square",.045,.13),
-  wrong:()=>blip(220,.24,"sawtooth",.04,80),
-  coin:()=>{blip(1046,.06,"square",.05); setTimeout(()=>blip(1568,.12,"square",.04),60);},
-  prize:()=>seq([523,659,784,1046],110,"square",.05,.18),
-  start:()=>seq([392,523,659,784],70,"square",.055,.16),
-  shoot:()=>blip(880,.045,"square",.028,420),
-  zap:()=>{blip(1400,.09,"sawtooth",.035,300); setTimeout(()=>blip(700,.1,"square",.025,180),40);},
-  hit:()=>blip(160,.18,"sawtooth",.05,70),
-  /* game show clock */
-  jeoRead:()=>seq([330,392],120,"triangle",.04,.2),
-  jeoOpen:()=>seq([523,659,880],90,"square",.06,.18),
-  jeoTick:()=>blip(300,.06,"triangle",.03,240),
-  jeoTickHot:()=>blip(600,.07,"square",.045,520),
-  jeoBuzzIn:()=>{blip(180,.22,"sawtooth",.06,120); setTimeout(()=>blip(240,.2,"square",.045),70);},
-  jeoSteal:()=>seq([880,1046,880,1046],110,"square",.05,.14),
-  jeoDead:()=>seq([392,330,262,196],150,"sawtooth",.05,.28)
-};
-function sfx(n){ try{ SFX[n](); }catch(e){} }
-function toggleMute(){
-  FX.muted=!FX.muted;
-  try{ localStorage.setItem(KEY_MUTE,FX.muted?"1":"0"); }catch(e){}
-  paintMute();
-  if(!FX.muted) sfx("coin");
-}
-function paintMute(){
-  const b=document.getElementById("muteBtn"); if(!b) return;
-  b.classList.toggle("off",FX.muted);
-  b.setAttribute("aria-pressed",String(!FX.muted));
-}
-
-/* ---- particle stage ---- */
-function fxLayer(){
-  let l=document.getElementById("fxlayer");
-  if(!l){ l=document.createElement("div"); l.id="fxlayer"; document.body.appendChild(l); }
-  return l;
-}
-function fxBackdrop(){
-  if(document.getElementById("fxbg")||FX.reduce) return;
-  const d=document.createElement("div"); d.id="fxbg";
-  d.innerHTML="<i></i><i></i><i></i>";
-  document.body.insertBefore(d,document.body.firstChild);
-}
-/* Coins arc out of the middle of the screen and land on the counter in the
-   marquee, so earning tokens has somewhere to go. */
-function coinFly(n){
-  const target=document.querySelector(".marquee .coin");
-  if(!target||FX.reduce||!Element.prototype.animate){ sfx("coin"); return; }
-  const t=target.getBoundingClientRect();
-  const sx=window.innerWidth/2, sy=window.innerHeight*.6;
-  const dx=t.left+t.width/2-sx, dy=t.top+t.height/2-sy;
-  for(let i=0;i<n;i++){
-    const c=document.createElement("div"); c.className="fxcoin";
-    c.style.left=(sx-12)+"px"; c.style.top=(sy-12)+"px";
-    fxLayer().appendChild(c);
-    const ax=dx*.3+(Math.random()*150-75), ay=dy*.3-130-Math.random()*80;
-    const a=c.animate([
-      {transform:"translate(0,0) scale(.35) rotate(0deg)",opacity:0},
-      {transform:`translate(${ax}px,${ay}px) scale(1.12) rotate(200deg)`,opacity:1,offset:.45},
-      {transform:`translate(${dx}px,${dy}px) scale(.42) rotate(560deg)`,opacity:.85}
-    ],{duration:780+i*30,delay:i*95,easing:"cubic-bezier(.32,.06,.24,1)",fill:"forwards"});
-    a.onfinish=()=>{
-      c.remove();
-      target.classList.remove("hit"); void target.offsetWidth; target.classList.add("hit");
-      sfx("coin");
-    };
-  }
-}
-function sparkle(el,color,count){
-  if(FX.reduce||!el||!el.getBoundingClientRect) return;
-  const r=el.getBoundingClientRect();
-  if(!r.width) return;
-  const cx=r.left+r.width/2, cy=r.top+r.height/2;
-  for(let i=0;i<(count||10);i++){
-    const s=document.createElement("div"); s.className="fxspark";
-    s.style.left=cx+"px"; s.style.top=cy+"px";
-    s.style.background=color||"#4DE0B1";
-    fxLayer().appendChild(s);
-    const ang=Math.random()*Math.PI*2, dist=50+Math.random()*90;
-    const a=s.animate([
-      {transform:"translate(-50%,-50%) scale(1) rotate(0deg)",opacity:1},
-      {transform:`translate(${Math.cos(ang)*dist}px,${Math.sin(ang)*dist-20}px) scale(0) rotate(220deg)`,opacity:0}
-    ],{duration:520+Math.random()*260,easing:"cubic-bezier(.2,.7,.3,1)",fill:"forwards"});
-    a.onfinish=()=>s.remove();
-  }
-}
-function countTo(el,from,to,ms){
-  if(FX.reduce||from===to){ el.textContent=to; return; }
-  const t0=performance.now();
-  (function step(now){
-    const p=Math.min(1,(now-t0)/(ms||700));
-    el.textContent=Math.round(from+(to-from)*(1-Math.pow(1-p,3)));
-    if(p<1) requestAnimationFrame(step); else el.textContent=to;
-  })(t0);
-}
-
-/* ---- press feel: one ripple and one blip for every tappable thing ---- */
-function ripple(el,x,y){
-  if(FX.reduce) return;
-  const r=el.getBoundingClientRect(), size=Math.max(r.width,r.height)*1.6;
-  const s=document.createElement("span"); s.className="rip";
-  s.style.width=s.style.height=size+"px";
-  s.style.left=(x-r.left)+"px"; s.style.top=(y-r.top)+"px";
-  el.appendChild(s);
-  const a=s.animate([{transform:"translate(-50%,-50%) scale(0)",opacity:.85},
-                     {transform:"translate(-50%,-50%) scale(1)",opacity:0}],
-                    {duration:520,easing:"cubic-bezier(.2,.7,.3,1)",fill:"forwards"});
-  a.onfinish=()=>s.remove();
-}
-document.addEventListener("pointerdown",e=>{
-  const el=e.target&&e.target.closest&&
-    e.target.closest("button,.opt,.mtile,.zone,.jeocell,.buzzer,.flashcard");
-  if(!el||el.disabled||el.classList.contains("hidden")) return;
-  ripple(el,e.clientX,e.clientY);
-  if(el.classList.contains("go")) sfx("start");
-  else if(el.classList.contains("opt")||el.classList.contains("mtile")) sfx("move");
-  else if(el.classList.contains("flashcard")) sfx("flip");
-  else sfx("tap");
-  if(navigator.vibrate) try{ navigator.vibrate(8); }catch(err){}
-},true);
-
-/* ---- answer feedback: one watcher covers practice, episodes, the boss
-        rounds, the timed challenge and the game show ---- */
-new MutationObserver(muts=>{
-  let good=null,bad=false;
-  muts.forEach(m=>{
-    const el=m.target;
-    if(!el||el.nodeType!==1||!el.classList) return;
-    if(el.classList.contains("wrong")&&!el.dataset.fxw){ el.dataset.fxw="1"; bad=true; }
-    else if(el.classList.contains("right")&&!el.dataset.fxr){ el.dataset.fxr="1"; good=good||el; }
-  });
-  if(bad){
-    sfx("wrong");
-    const v=document.getElementById("view");
-    if(v&&!FX.reduce){ v.classList.remove("shake"); void v.offsetWidth; v.classList.add("shake"); }
-  } else if(good){
-    sfx("right");
-    sparkle(good,"#4DE0B1",12);
-  }
-}).observe(document.body,{subtree:true,attributes:true,attributeFilter:["class"]});
-
-/* ---- token counter: count up, with coins landing on it ---- */
-let LAST_TOKENS=null;
-const _paintBar=paintBar;
-window.paintBar=function(){
-  _paintBar();
-  const el=document.getElementById("tokenCount");
-  if(el){
-    if(LAST_TOKENS!==null&&S.tokens>LAST_TOKENS){
-      coinFly(Math.min(6,S.tokens-LAST_TOKENS));
-      countTo(el,LAST_TOKENS,S.tokens,760);
-    }
-    LAST_TOKENS=S.tokens;
-  }
-};
-
-/* ---- screen transitions on every new screen that is not a game ---- */
-const _view=document.getElementById("view");
-if(_view&&!FX.reduce){
-  new MutationObserver(muts=>{
-    if(!muts.some(m=>m.type==="childList"&&m.addedNodes.length)) return;
-    if(_view.querySelector("canvas")) return;   /* games size and hit-test themselves */
-    _view.classList.remove("vin"); void _view.offsetWidth; _view.classList.add("vin");
-    /* progress bars sweep up from empty instead of appearing full */
-    _view.querySelectorAll(".meter i").forEach(bar=>{
-      const w=bar.style.width; if(!w||w==="0%") return;
-      bar.style.width="0%";
-      requestAnimationFrame(()=>requestAnimationFrame(()=>{ bar.style.width=w; }));
-    });
-  }).observe(_view,{childList:true});
-}
-
-/* ---- title screen: CRT boot, sweeping scanline, parallax ---- */
-function titleFx(){
-  const t=document.getElementById("title"); if(!t) return;
-  paintMute();
-  if(!FX.reduce){
-    t.querySelectorAll(".crtboot,.crtline,.sweep").forEach(el=>el.remove());
-    const boot=document.createElement("div"); boot.className="crtboot";
-    const line=document.createElement("div"); line.className="crtline";
-    const sweep=document.createElement("div"); sweep.className="sweep";
-    t.appendChild(sweep); t.appendChild(boot); t.appendChild(line);
-    setTimeout(()=>{ boot.remove(); line.remove(); },1100);
-  }
-  if(!t.dataset.px&&!FX.reduce){
-    t.dataset.px="1";
-    const move=(nx,ny)=>{
-      const set=(sel,d,f)=>{ const el=t.querySelector(sel);
-        if(el) el.style.transform=`translate3d(${nx*d}px,${ny*d*(f||.5)}px,0)`; };
-      set("#titleCanvas",10); set("#titleArt",10); set(".top",-9,.7);
-    };
-    t.addEventListener("pointermove",e=>{
-      const r=t.getBoundingClientRect();
-      move((e.clientX-r.width/2)/r.width*2,(e.clientY-r.height/2)/r.height*2);
-    });
-    t.addEventListener("pointerleave",()=>move(0,0));
-    window.addEventListener("deviceorientation",e=>{
-      if(e.gamma==null) return;
-      move(Math.max(-1,Math.min(1,e.gamma/24)),Math.max(-1,Math.min(1,((e.beta||0)-40)/30)));
-    });
-  }
-}
-const _showTitle=showTitle;
-window.showTitle=function(){ _showTitle(); titleFx(); };
-
-/* ---- the certificate prompt gets a fanfare ---- */
-const _askReviewCert=askReviewCert;
-window.askReviewCert=function(unitId,activity,score){
-  _askReviewCert(unitId,activity,score);
-  const box=document.getElementById("certAsk");
-  if(box&&!box.classList.contains("hidden")){
-    sfx("prize");
-    setTimeout(()=>sparkle(box.querySelector(".certask"),"#F2B441",18),160);
-  }
-};
-
-/* ---- the arcade signs off with a shake and a chime ---- */
-const _endGame=endGame;
-window.endGame=function(id,score,won){
-  if(!GAME_OVER){
-    const st=document.querySelector(".stage")||document.querySelector("canvas.game");
-    if(st&&!FX.reduce){ st.classList.remove("hitshake"); void st.offsetWidth; st.classList.add("hitshake"); }
-    if(won){ sfx("prize"); sparkle(st,"#F2B441",16); } else sfx("wrong");
-  }
-  return _endGame(id,score,won);
-};
-
-fxBackdrop(); paintMute();
-/* Init already painted the first screen before this layer loaded, so bring the
-   title screen up to speed if it is the one showing. */
-(function(){
-  const t=document.getElementById("title");
-  if(t&&!t.classList.contains("hidden")){
-    if(!FX.reduce){
-      const boot=document.createElement("div"); boot.className="crtboot";
-      const line=document.createElement("div"); line.className="crtline";
-      const sweep=t.querySelector(".sweep")||document.createElement("div");
-      if(!sweep.classList.contains("sweep")) sweep.className="sweep";
-      t.appendChild(sweep); t.appendChild(boot); t.appendChild(line);
-      setTimeout(()=>{ boot.remove(); line.remove(); },1100);
-    }
-    titleFx();
-  }
-  const v=document.getElementById("view");
-  if(v&&!FX.reduce&&v.children.length&&!v.querySelector("canvas")) v.classList.add("vin");
-})();
-/* Browsers hold audio until the first gesture; warm it up on the way in. */
-["pointerdown","keydown"].forEach(ev=>window.addEventListener(ev,function warm(){
-  fxCtx(); window.removeEventListener(ev,warm);
-},{once:true}));
 </script>
 </body>
 </html>
