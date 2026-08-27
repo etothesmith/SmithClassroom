@@ -12,17 +12,16 @@
    sunset sky, castle stone, gold arcade lettering, robe blue.
    ============================================================ */
 :root{
-  --void:#120A2E;
-  --cab:#1C1142;
-  --cab2:#271654;
+  --void:#0B0F1F;
+  --cab:#1A1430;
+  --cab2:#251C44;
   --gold:#F2B441;
   --robe:#2F6BD8;
-  --crt:#4DE0B1;      /* stays green: this one means "correct" */
-  --hot:#FF2E86;
-  --neon:#22D8F0;     /* the cyan half of the neon pair */
-  --ink:#F1ECFF;
-  --dim:#A79CD0;
-  --line:rgba(255,255,255,.12);
+  --crt:#4DE0B1;
+  --hot:#FF4D9D;
+  --ink:#EFEAFB;
+  --dim:#9B92BE;
+  --line:rgba(255,255,255,.10);
   --r:14px;
   --disp:"Trebuchet MS","Segoe UI",system-ui,sans-serif;
   --body:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
@@ -38,14 +37,12 @@ body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:9;
 h1,h2,h3{font-family:var(--disp);margin:0;letter-spacing:.02em}
 button{font:inherit;color:inherit;cursor:pointer;border:none;background:none}
 :focus-visible{outline:3px solid var(--gold);outline-offset:2px;border-radius:6px}
-.wrap{max-width:960px;margin:0 auto;padding:0 16px 112px}
+.wrap{max-width:960px;margin:0 auto;padding:0 16px 96px}
 
 /* ---------- marquee header ---------- */
-.marquee{position:sticky;top:0;z-index:10;background:linear-gradient(180deg,#2E1A63,#180E3A);
+.marquee{position:sticky;top:0;z-index:10;background:linear-gradient(180deg,#2B2150,#150F2B);
   border-bottom:2px solid var(--gold);padding:10px 16px;padding-top:calc(10px + env(safe-area-inset-top));
   display:flex;align-items:center;gap:12px}
-.marquee::after{content:"";position:absolute;left:0;right:0;bottom:-3px;height:2px;
-  background:linear-gradient(90deg,var(--neon),var(--hot),var(--gold));opacity:.55}
 .logo{font-family:var(--disp);font-weight:800;font-size:15px;letter-spacing:.16em;text-transform:uppercase;
   color:var(--gold);text-shadow:0 0 14px rgba(242,180,65,.45);white-space:nowrap;text-align:left}
 .logo small{display:block;font-size:9px;letter-spacing:.28em;color:var(--dim);text-shadow:none}
@@ -59,14 +56,12 @@ button{font:inherit;color:inherit;cursor:pointer;border:none;background:none}
 
 /* ---------- title screen: the signature moment ---------- */
 #title{position:fixed;inset:0;z-index:40;display:flex;flex-direction:column;align-items:center;
-  justify-content:space-between;background:#12203A;
-  overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;overscroll-behavior:contain}
-#titleArt,#titleCanvas{position:fixed;inset:0;width:100%;height:100%;object-fit:cover}
-#title .veil{position:fixed;inset:0;background:linear-gradient(180deg,rgba(6,4,14,.42),rgba(6,4,14,.05) 34%,rgba(6,4,14,.86))}
+  justify-content:space-between;background:#12203A;overflow:hidden}
+#titleArt,#titleCanvas{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+#title .veil{position:absolute;inset:0;background:linear-gradient(180deg,rgba(6,4,14,.42),rgba(6,4,14,.05) 34%,rgba(6,4,14,.86))}
 #title .top{position:relative;z-index:3;text-align:center;width:100%;
   padding:calc(5vh + env(safe-area-inset-top)) 18px 0}
-#title .bottom{position:relative;z-index:3;width:100%;
-  padding:24px 18px calc(28px + env(safe-area-inset-bottom))}
+#title .bottom{position:relative;z-index:3;width:100%;padding:0 18px calc(28px + env(safe-area-inset-bottom))}
 .wordmark{font-family:var(--disp);font-weight:800;text-transform:uppercase;line-height:.92;
   font-size:clamp(34px,12vw,80px);letter-spacing:.02em;color:var(--gold);
   text-shadow:0 4px 0 #8A5A0C,0 8px 0 #4C3106,0 10px 26px rgba(0,0,0,.7);margin-bottom:6px}
@@ -80,20 +75,14 @@ button{font:inherit;color:inherit;cursor:pointer;border:none;background:none}
   background:rgba(12,9,26,.66);color:#FFF}
 .startmenu button.go{border-color:var(--gold);color:var(--gold);animation:blink 1.6s steps(1,end) infinite}
 @keyframes blink{0%,60%{opacity:1}61%,100%{opacity:.5}}
-.hero{position:fixed;left:-4%;bottom:0;height:50%;max-height:420px;z-index:2;
+.hero{position:absolute;left:-4%;bottom:0;height:50%;max-height:420px;z-index:2;
   filter:drop-shadow(0 12px 22px rgba(0,0,0,.55));pointer-events:none}
 
 /* ---------- panels ---------- */
 .panel{background:var(--cab);border:1px solid var(--line);border-radius:var(--r);padding:18px;margin:14px 0}
-.panel.raised{background:var(--cab2);border-color:rgba(34,216,240,.22)}
-.eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--neon)}
-.big{font-size:clamp(28px,7.4vw,44px);font-weight:800;line-height:1.02;text-transform:uppercase;
-  letter-spacing:.01em;
-  background:linear-gradient(96deg,var(--gold) 8%,var(--hot) 58%,var(--neon) 100%);
-  -webkit-background-clip:text;background-clip:text;color:transparent;
-  -webkit-text-fill-color:transparent}
-/* a solid-colour .big for the places that set their own colour (pass/fail) */
-.big[style*="color"]{background:none;-webkit-text-fill-color:currentColor;color:inherit}
+.panel.raised{background:var(--cab2)}
+.eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--dim)}
+.big{font-size:clamp(26px,7vw,40px);font-weight:800;line-height:1.05;text-transform:uppercase}
 .muted{color:var(--dim)}
 .row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
 .grid{display:grid;gap:12px}
@@ -115,21 +104,12 @@ button{font:inherit;color:inherit;cursor:pointer;border:none;background:none}
 .btn[disabled]{opacity:.45;cursor:not-allowed}
 
 /* ---------- nav dock ---------- */
-.dock{position:fixed;left:0;right:0;bottom:0;z-index:11;display:flex;gap:4px;
-  margin:0 auto;max-width:660px;padding:6px;
-  margin-bottom:calc(8px + env(safe-area-inset-bottom));
-  background:#1B1046;
-  border:1px solid rgba(34,216,240,.28);border-radius:16px;
-  box-shadow:0 8px 24px rgba(0,0,0,.55)}
-@media(max-width:700px){.dock{left:8px;right:8px}}
-.dock button{flex:1;min-width:0;padding:8px 4px;font-size:10px;letter-spacing:.08em;text-transform:uppercase;
-  color:var(--dim);display:flex;flex-direction:column;align-items:center;gap:3px;border-radius:11px}
-.dock button[aria-current="page"]{color:#160B2E;font-weight:800;
-  background:linear-gradient(135deg,var(--neon),var(--hot));
-  box-shadow:0 0 18px rgba(255,46,134,.4)}
+.dock{position:fixed;left:0;right:0;bottom:0;z-index:11;display:flex;background:#150F2B;
+  border-top:1px solid var(--line);padding-bottom:env(safe-area-inset-bottom)}
+.dock button{flex:1;padding:9px 4px 10px;font-size:10px;letter-spacing:.08em;text-transform:uppercase;
+  color:var(--dim);display:flex;flex-direction:column;align-items:center;gap:3px}
+.dock button[aria-current="page"]{color:var(--gold)}
 .dock .ic{font-size:19px;line-height:1}
-body.playing .dock{display:none}
-body.playing .wrap{padding-bottom:24px}
 
 /* ---------- progress + quiz ---------- */
 .meter{height:9px;background:#0D0920;border-radius:99px;overflow:hidden;border:1px solid var(--line)}
@@ -438,46 +418,6 @@ ul.ctrl li{margin:4px 0;color:var(--ink)}
 .mtile.done{opacity:.25;border-color:var(--crt)}
 @media(min-width:700px){.matchgrid{grid-template-columns:repeat(3,1fr)}}
 
-/* ---------- home course cards ---------- */
-.coursecard{display:flex;align-items:center;gap:12px;text-align:left;padding:14px;
-  border:1px solid var(--line);position:relative;overflow:hidden;
-  transition:transform .16s,border-color .16s,box-shadow .16s}
-.coursecard::before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;
-  background:linear-gradient(180deg,var(--cc),var(--hot))}
-.coursecard:hover{transform:translateY(-3px);border-color:var(--neon);
-  box-shadow:0 10px 28px rgba(0,0,0,.4),0 0 20px rgba(34,216,240,.14)}
-.ccart{flex:0 0 auto;width:58px}
-.ccart img{width:100%;display:block}
-.ccbody{display:flex;flex-direction:column;gap:4px;min-width:0;flex:1}
-.ccbody b{font-family:var(--disp);font-size:20px;line-height:1.1;text-wrap:pretty}
-.ccchips{display:flex;gap:6px;flex-wrap:wrap;margin-top:2px}
-.ccgo{flex:0 0 auto;color:var(--neon);font-size:20px}
-
-/* ---------- how it works ---------- */
-.howto{text-align:left}
-.howhead{display:flex;align-items:center;gap:14px;margin-bottom:6px}
-.howart{width:82px;flex:0 0 auto}
-.howart img{width:100%;display:block}
-.howsteps{list-style:none;margin:14px 0 0;padding:0;display:flex;flex-direction:column;gap:10px}
-.howsteps li{display:flex;gap:12px;align-items:flex-start;
-  animation:howIn .42s cubic-bezier(.2,.9,.25,1) both}
-.howsteps li:nth-child(1){animation-delay:.04s}
-.howsteps li:nth-child(2){animation-delay:.09s}
-.howsteps li:nth-child(3){animation-delay:.14s}
-.howsteps li:nth-child(4){animation-delay:.19s}
-.howsteps li:nth-child(5){animation-delay:.24s}
-.howsteps li:nth-child(6){animation-delay:.29s}
-@keyframes howIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
-.hownum{flex:0 0 auto;width:28px;height:28px;display:grid;place-items:center;border-radius:50%;
-  background:var(--gold);color:#2A1D00;font-family:var(--mono);font-weight:800;font-size:14px}
-.howicon{flex:0 0 auto;width:28px;height:28px;display:grid;place-items:center;border-radius:8px;
-  background:var(--cab2);border:1px solid var(--line);color:var(--gold);font-size:15px}
-.howbody{display:flex;flex-direction:column;gap:2px;min-width:0}
-.howbody b{font-size:15px}
-.howbody small{font-size:13px;color:var(--dim);line-height:1.45;text-wrap:pretty}
-.howextras{display:flex;flex-direction:column;gap:10px;margin-top:8px}
-.howx{display:flex;gap:12px;align-items:flex-start}
-
 /* ---------- smartboard buzzers ---------- */
 .buzzbar{display:grid;gap:8px;margin-top:10px;
   grid-template-columns:repeat(auto-fit,minmax(120px,1fr))}
@@ -512,19 +452,6 @@ ul.ctrl li{margin:4px 0;color:var(--ink)}
   letter-spacing:.04em;font-size:clamp(17px,4.4vw,25px);color:var(--gold);margin:4px 0 0}
 
 /* ---------- game show ---------- */
-.jeoctl{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:10px;
-  border-color:var(--gold)}
-.jeoctl .ctldot{width:12px;height:12px;border-radius:50%;background:var(--gold);
-  box-shadow:0 0 0 0 rgba(242,180,65,.7);animation:ctlPulse 1.6s ease-out infinite;flex:0 0 auto}
-@keyframes ctlPulse{70%{box-shadow:0 0 0 12px rgba(242,180,65,0)}100%{box-shadow:0 0 0 0 rgba(242,180,65,0)}}
-.jeoctl .ctltext{font-size:15px}
-.jeoctl .ctltext b{color:var(--gold)}
-.jeoctl .ctlrule{font-size:12px;color:var(--dim);width:100%}
-.jeoteam.hasctl{border-color:var(--gold);box-shadow:inset 0 0 0 1px var(--gold)}
-.seatbadge{display:inline-grid;place-items:center;min-width:22px;height:20px;padding:0 5px;
-  margin-left:6px;border-radius:6px;background:rgba(34,216,240,.16);border:1px solid var(--neon);
-  color:var(--neon);font-family:var(--mono);font-size:11px;font-weight:700;vertical-align:middle}
-.buzzer .seatbadge{margin:2px 0 0}
 .jeohead{text-align:left}
 .jeotitle{font-family:var(--disp);font-weight:800;text-transform:uppercase;
   letter-spacing:.06em;font-size:clamp(22px,6vw,34px);color:var(--gold);
@@ -553,7 +480,6 @@ ul.ctrl li{margin:4px 0;color:var(--ink)}
 .jeocell:hover:not(:disabled){transform:scale(1.04);border-color:var(--gold)}
 .jeocell.used{background:#0D0920;border-color:var(--line);color:transparent}
 .jeoscores{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:6px}
-.jeoscores,.buzzbar{margin-bottom:26px}
 .jeoteam{display:flex;align-items:center;gap:8px;background:var(--cab2);
   border:1px solid var(--line);border-radius:8px;padding:8px 10px}
 .jeoteam.lead{border-color:var(--gold);background:rgba(242,180,65,.1)}
@@ -612,20 +538,9 @@ ul.ctrl li{margin:4px 0;color:var(--ink)}
 @media(max-width:520px){.certask{flex-direction:column;text-align:center}.certaskart{width:110px}}
 
 /* ---------- theme song / dance stage ---------- */
-.tracklist{display:grid;gap:6px;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));margin-top:10px}
-.trackbtn{display:flex;flex-direction:column;gap:2px;align-items:flex-start;text-align:left;
-  padding:9px 12px;border:1px solid var(--line);border-radius:10px;background:var(--cab);
-  transition:border-color .16s,transform .12s}
-.trackbtn:hover{border-color:var(--neon);transform:translateY(-2px)}
-.trackbtn.on{border-color:var(--hot);background:rgba(255,46,134,.12)}
-.trackbtn b{font-size:13px}
-.trackbtn small{font-family:var(--mono);font-size:10px;letter-spacing:.14em;
-  text-transform:uppercase;color:var(--dim)}
-.trackbtn.on small{color:var(--hot)}
-#dance{position:fixed;inset:0;z-index:70;display:flex;justify-content:center;
-  align-items:safe center;overflow-y:auto;-webkit-overflow-scrolling:touch;
+#dance{position:fixed;inset:0;z-index:70;display:grid;place-items:center;
   background:rgba(6,4,14,.92);padding:20px}
-.dancewrap{width:100%;max-width:660px;text-align:center;margin:auto}
+.dancewrap{width:100%;max-width:660px;text-align:center}
 #danceCv{display:block;width:100%;height:auto;border:2px solid var(--gold);
   border-radius:14px;box-shadow:0 12px 40px rgba(0,0,0,.6)}
 .dancebar{display:flex;gap:10px;justify-content:center;margin-top:12px}
@@ -641,153 +556,6 @@ ul.ctrl li{margin:4px 0;color:var(--ink)}
 .scorering{font-family:var(--mono);font-size:44px;margin:4px 0}
 .stage{position:relative;width:100%;background:#07050F;border-radius:12px;overflow:hidden;border:1px solid var(--line)}
 .stage canvas{display:block;width:100%;height:100%;touch-action:none}
-
-/* ============================================================
-   JUICE LAYER — cabinet glow, boot-up, coin flight, dock light,
-   ripples and screen transitions. Purely additive: every rule
-   below decorates markup that already exists.
-   ============================================================ */
-
-/* --- slow cabinet glow behind everything --- */
-#fxbg{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden}
-#fxbg i{position:absolute;display:block;border-radius:50%;filter:blur(70px);opacity:.30;
-  animation:drift 28s ease-in-out infinite alternate}
-#fxbg i:nth-child(1){width:56vw;height:56vw;left:-16vw;top:-12vh;background:#2F6BD8}
-#fxbg i:nth-child(2){width:48vw;height:48vw;right:-14vw;top:22vh;background:#7A2ED8;animation-duration:36s}
-#fxbg i:nth-child(3){width:40vw;height:40vw;left:16vw;bottom:-16vh;background:#F2B441;opacity:.14;animation-duration:44s}
-@keyframes drift{from{transform:translate3d(0,0,0) scale(1)}to{transform:translate3d(7vw,5vh,0) scale(1.2)}}
-.wrap{position:relative;z-index:1}
-
-/* --- particle stage --- */
-#fxlayer{position:fixed;inset:0;z-index:35;pointer-events:none;overflow:hidden}
-.fxcoin{position:fixed;width:24px;height:24px;border-radius:50%;
-  background:radial-gradient(circle at 34% 28%,#FFF0C4,#F2B441 58%,#B37D12);
-  border:2px solid #7A5A12;box-shadow:0 0 16px rgba(242,180,65,.85);will-change:transform,opacity}
-.fxspark{position:fixed;width:9px;height:9px;border-radius:2px;will-change:transform,opacity}
-
-/* --- screen transitions --- */
-@keyframes viewIn{from{opacity:0;transform:translateY(9px)}to{opacity:1;transform:none}}
-@keyframes riseInJ{from{opacity:0;transform:translateY(18px) scale(.99)}to{opacity:1;transform:none}}
-#view.vin{animation:viewIn .3s cubic-bezier(.2,.9,.25,1) both}
-#view.vin>*{animation:riseInJ .44s cubic-bezier(.18,.9,.24,1) both}
-#view.vin>*:nth-child(1){animation-delay:.02s}
-#view.vin>*:nth-child(2){animation-delay:.07s}
-#view.vin>*:nth-child(3){animation-delay:.12s}
-#view.vin>*:nth-child(4){animation-delay:.17s}
-#view.vin>*:nth-child(5){animation-delay:.21s}
-#view.vin>*:nth-child(6){animation-delay:.25s}
-#view.vin>*:nth-child(n+7){animation-delay:.28s}
-#view.shake{animation:shakeX .34s ease both}
-
-/* --- marquee: chasing bulbs, live coin --- */
-.marquee::after{background-size:12px 3px;animation:bulbs 1.15s linear infinite}
-@keyframes bulbs{to{background-position:12px 0}}
-.tokenbar{transition:transform .18s}
-.coin{transition:transform .18s,box-shadow .18s}
-.coin.hit{animation:coinPop .52s cubic-bezier(.2,1.7,.3,1)}
-@keyframes coinPop{0%{transform:scale(1)}35%{transform:scale(1.5) rotate(-14deg);
-  box-shadow:0 0 22px rgba(242,180,65,.9)}100%{transform:scale(1)}}
-#tokenCount{font-variant-numeric:tabular-nums;min-width:1.4em;display:inline-block}
-.mutebtn{position:relative;width:30px;height:30px;flex:none;display:grid;place-items:center;
-  border:1px solid var(--line);border-radius:999px;color:var(--gold);font-size:14px;line-height:1;
-  background:rgba(255,255,255,.03);transition:transform .14s,color .14s,border-color .14s}
-.mutebtn:hover{border-color:var(--gold)}
-.mutebtn:active{transform:scale(.9)}
-.mutebtn.off{color:var(--dim)}
-.mutebtn.off::after{content:"";position:absolute;left:5px;right:5px;top:50%;height:1.5px;
-  background:var(--dim);transform:rotate(-38deg)}
-
-/* --- dock: sliding light bar --- */
-.dock button{position:relative;overflow:hidden;transition:color .18s,transform .14s}
-.dock button::before{content:"";position:absolute;inset:0;border-radius:11px;pointer-events:none;
-  background:linear-gradient(135deg,rgba(34,216,240,.18),rgba(255,46,134,.18));
-  opacity:0;transition:opacity .18s}
-@media(hover:hover){.dock button:hover:not([aria-current="page"])::before{opacity:1}}
-.dock button:active{transform:scale(.9)}
-.dock button[aria-current="page"] .ic{animation:iconPop .46s cubic-bezier(.2,1.7,.3,1) both}
-@keyframes iconPop{0%{transform:translateY(4px) scale(.78)}58%{transform:translateY(-4px) scale(1.22)}
-  100%{transform:none}}
-
-/* --- press feel + ripples --- */
-.btn,.opt,.mtile,.buzzer,.zone,.startmenu button,.chunkcard,.revcard{position:relative;overflow:hidden}
-.rip{position:absolute;border-radius:50%;pointer-events:none;
-  background:radial-gradient(circle,rgba(255,255,255,.45),rgba(255,255,255,0) 70%)}
-.btn.primary::after{content:"";position:absolute;top:-60%;bottom:-60%;left:-50%;width:32%;
-  background:linear-gradient(90deg,transparent,rgba(255,255,255,.5),transparent);
-  transform:skewX(-18deg);pointer-events:none;animation:sheen 4.2s ease-in-out infinite}
-@keyframes sheen{0%,72%{left:-50%}100%{left:135%}}
-.panel{transition:transform .18s,box-shadow .18s,border-color .18s}
-@media(hover:hover) and (min-width:700px){
-  .panel:hover{transform:translateY(-2px);box-shadow:0 12px 30px rgba(0,0,0,.35)}
-  .zone:hover{transform:translateY(-3px)}
-}
-.zone{transition:transform .16s,border-color .16s,box-shadow .16s}
-.zone.on{animation:popIn .3s ease both}
-
-/* --- answer feedback, louder --- */
-.opt.right,.jeoopt.right{animation:rightPop .46s cubic-bezier(.2,1.6,.3,1) both,glowPulse 1.1s ease 1}
-@keyframes rightPop{0%{transform:scale(1)}40%{transform:scale(1.035)}100%{transform:none}}
-.opt.wrong,.jeoopt.wrong{animation:shakeX .42s ease both;filter:saturate(1.2)}
-.why{animation:riseInJ .4s cubic-bezier(.2,.9,.25,1) both}
-
-/* --- meters: fill with a moving highlight --- */
-.meter i{position:relative;overflow:hidden;transition:width .7s cubic-bezier(.2,.85,.2,1)}
-.meter i::after{content:"";position:absolute;inset:0;
-  background:linear-gradient(90deg,transparent,rgba(255,255,255,.5),transparent);
-  background-size:140px 100%;animation:shimmer 2s linear infinite}
-
-/* --- toast: spring in, fade out --- */
-.toast{animation:toastIn .42s cubic-bezier(.2,1.7,.3,1) both,toastOut .5s ease 2.05s both}
-@keyframes toastIn{from{opacity:0;transform:translate(-50%,26px) scale(.9)}
-  to{opacity:1;transform:translate(-50%,0) scale(1)}}
-@keyframes toastOut{to{opacity:0;transform:translate(-50%,-10px) scale(.96)}}
-
-/* --- title screen: CRT boot, sweep, parallax layers --- */
-#title .crtboot{position:absolute;inset:0;z-index:9;pointer-events:none;background:#0B0F1F;
-  animation:bootFade 1s ease-out both}
-@keyframes bootFade{0%{opacity:1}55%{opacity:.55}100%{opacity:0}}
-#title .crtline{position:absolute;left:0;right:0;top:50%;height:3px;z-index:10;pointer-events:none;
-  background:#EFEAFB;box-shadow:0 0 26px 8px rgba(239,234,251,.8);animation:crtOpen .72s ease-out both}
-@keyframes crtOpen{0%{transform:scaleX(.1);opacity:0}18%{transform:scaleX(1);opacity:1}
-  100%{transform:scaleX(1) scaleY(60);opacity:0}}
-#title .sweep{position:absolute;left:0;right:0;height:34%;z-index:8;pointer-events:none;
-  background:linear-gradient(180deg,transparent,rgba(255,255,255,.07),transparent);
-  animation:sweepDown 5.5s linear infinite}
-@keyframes sweepDown{from{top:-36%}to{top:106%}}
-#titleCanvas,#titleArt{transition:transform .28s ease-out}
-#title .top{animation:titleDrop .8s cubic-bezier(.2,1.35,.3,1) .3s both;transition:transform .3s ease-out}
-@keyframes titleDrop{from{opacity:0;transform:translateY(-38px) scale(.94)}to{opacity:1;transform:none}}
-#title .hero{animation:heroIn .8s cubic-bezier(.2,1.2,.3,1) .25s both,floaty 4.2s ease-in-out 1.1s infinite}
-@keyframes heroIn{from{opacity:0;transform:translateX(-46px)}to{opacity:1;transform:none}}
-#title .startmenu button{animation:riseInJ .5s cubic-bezier(.2,.9,.25,1) both;transition:transform .14s,border-color .14s}
-#title .startmenu button:nth-child(1){animation-delay:.55s}
-#title .startmenu button:nth-child(2){animation-delay:.63s}
-#title .startmenu button:nth-child(3){animation-delay:.7s}
-#title .startmenu button:nth-child(4){animation-delay:.76s}
-#title .startmenu button:nth-child(n+5){animation-delay:.82s}
-@media(hover:hover){#title .startmenu button:hover{transform:translateY(-2px) scale(1.02);border-color:var(--gold)}}
-#title .startmenu button.go{animation:riseInJ .5s cubic-bezier(.2,.9,.25,1) .55s both,
-  blink 1.6s steps(1,end) 1.1s infinite}
-
-/* --- flashcards: real flip, springier --- */
-.fcinner{transition:transform .6s cubic-bezier(.3,1.25,.35,1)}
-.flashcard{transition:transform .16s}
-.flashcard:active{transform:scale(.99)}
-
-/* --- arcade screens read as a CRT --- */
-.stage,canvas.game{position:relative}
-.stage::after{content:"";position:absolute;inset:0;z-index:3;pointer-events:none;border-radius:12px;
-  background:repeating-linear-gradient(180deg,rgba(0,0,0,.16) 0 2px,transparent 2px 4px);
-  box-shadow:inset 0 0 70px rgba(0,0,0,.65)}
-.stage.hitshake{animation:shakeX .3s ease both}
-
-/* --- certificate prompt lands like a prize --- */
-#certAsk .certask{animation:prizeIn .55s cubic-bezier(.2,1.55,.3,1) both}
-@keyframes prizeIn{from{opacity:0;transform:translateY(26px) scale(.9)}to{opacity:1;transform:none}}
-#certAsk::before{content:"";position:absolute;inset:0;pointer-events:none;
-  background:radial-gradient(circle at 50% 50%,rgba(242,180,65,.22),transparent 62%);
-  animation:prizeGlow 2.6s ease-in-out infinite}
-@keyframes prizeGlow{0%,100%{opacity:.5}50%{opacity:1}}
 </style>
 </head>
 <body>
@@ -799,7 +567,6 @@ ul.ctrl li{margin:4px 0;color:var(--ink)}
   <button class="logo" id="logoBtn">Smith's Classroom<small id="tagline">study · earn · play</small></button>
   <div class="spacer"></div>
   <div class="tokenbar"><span class="coin">◎</span><span id="tokenCount">0</span></div>
-  <button class="mutebtn" id="muteBtn" onclick="toggleMute()" aria-label="Sound" title="Sound">♪</button>
   <span id="teacherBadge" class="chip warn hidden" style="margin-left:6px;cursor:pointer" onclick="teacherLock()">◈ TEACHER</span>
   <div class="langsw" role="group" aria-label="Language">
     <button id="btnEN" aria-pressed="true">EN</button><button id="btnES" aria-pressed="false">ES</button>
@@ -6448,10 +6215,6 @@ function touchStreak(){ const t=today(); if(S.lastDay===t) return;
   const y=new Date(Date.now()-864e5).toISOString().slice(0,10);
   S.streak=(S.lastDay===y)?S.streak+1:1; S.lastDay=t; save(); }
 function award(xp,tok){ S.xp+=xp; S.tokens+=tok; save(); paintBar(); }
-/* A certificate is worth one coin, once. Called only where a genuinely new
-   record lands in S.certs, so re-downloading an old one pays nothing. */
-function certCoin(){ award(0,1);
-  toast("★ "+(S.lang==="es"?"Certificado · +1 ficha":"Certificate earned · +1 coin")); }
 
 /* ---- transfer: file + short code (both carry the same JSON) ---- */
 const enc=o=>btoa(unescape(encodeURIComponent(JSON.stringify(o))));
@@ -6488,34 +6251,11 @@ const ART_SLOTS=[
  {k:"title",label:{en:"Title screen picture",es:"Imagen de la pantalla de título"}}
 ];
 let ARTS={};
-/* Poses extracted from Coach Smith's sprite sheets, all sitting in assets/. */
-const POSE_LIB=["idle_front","idle_3q","walk_front","walk_side","special_move","damage",
-  "idle_front_frustrated","idle_3q_tense","walk_front_confused","walk_side_bored",
-  "fail_game_over","hype_triumph","idle_suit_front","attack_kick","paced_walk",
-  "lean_idle","joy_emote","admire_reaction",
-  "sing_idle","sing_hype","sing_walk_front","sing_walk_side","sing_climax","sing_crowd"];
-/* Keys the arcade asks for that no art file ever provided. Without these the
-   games drew flat rectangles instead of characters. */
-const ART_ALIAS={
-  kart_player:"idle_3q",
-  racer_miner:"idle_front",     racer_robo:"idle_suit_front",
-  racer_lizard:"lean_idle",     racer_pirate:"idle_3q_tense",
-  racer_ghost:"walk_side_bored",racer_alien:"joy_emote",
-  racer_panda:"paced_walk",     kart_cat:"walk_front",
-  kart_saucer:"hype_triumph",   kart_steam:"walk_side",
-  kart_wizard:"admire_reaction",kart_plant:"walk_front_confused",
-  kart_pirate:"idle_3q",
-  foe_gourd:"attack_kick",      foe_monkey:"special_move",
-  foe_warlock:"damage",         foe_enforcer:"idle_front_frustrated",
-  foe_phantom:"fail_game_over"
-};
 function art(k){
   if(ARTS[k]) return ARTS[k];
   if(POSES.indexOf(k)>=0){ const s=S.skin||"smith";
     return DEFAULT_ART[s+"_"+k]||DEFAULT_ART["smith_"+k]||DEFAULT_ART["smith_idle"]; }
   if(DEFAULT_ART[k]) return DEFAULT_ART[k];
-  if(ART_ALIAS[k]&&!ARTS[ART_ALIAS[k]]) return "assets/"+ART_ALIAS[k]+".png";
-  if(ART_ALIAS[k]) return ARTS[ART_ALIAS[k]];
   return "assets/"+k+(k.indexOf("bg_")===0?".jpg":".png");   /* optional extras from the zip */
 }
 function artIsUpload(k){ return !!(ARTS[k]&&ARTS[k].indexOf("data:")===0); }
@@ -6598,7 +6338,6 @@ function showTitle(){
     <div class="bottom"><div class="startmenu">
       <button class="go" id="startBtn" onclick="hideTitle()">▶ ${T_.pressStart}</button>
       <button onclick="hideTitle();go('home')">${T_.options}</button>
-      <button onclick="showInstructions()">${S.lang==="es"?"Cómo funciona":"How it works"}</button>
       <button onclick="hideTitle();go('art')">${T_.art}</button>
       <button onclick="openTheme()">♪ ${T_.theme}</button>
       <button onclick="showCredits()">${T_.credits}</button>
@@ -6615,10 +6354,7 @@ function showTitle(){
 }
 let titleAnim=null;
 function hideTitle(){ clearInterval(titleAnim); titleAnim=null;
-  const t=document.getElementById("title");
-  t.classList.add("hidden"); t.scrollTop=0;
-  window.scrollTo(0,0);
-}
+  document.getElementById("title").classList.add("hidden"); }
 /* Built-in scene, in the spirit of the Smith's World art: sunset, gate, castle,
    and one floating island — drawn so the app still looks right with no files. */
 function paintTitleScene(cv){
@@ -6766,26 +6502,17 @@ function viewHome(){
     <div class="row" style="margin-top:8px"><span class="chip">${done}/${bank} ${T_.items}</span>
       <span class="chip warn">◎ ${S.tokens} ${T_.tokens}</span>
       <span class="chip on">${S.certs.length} ★</span></div>
-    <button class="btn ghost wide" style="margin-top:12px" onclick="showInstructions()">
-      ? ${S.lang==="es"?"Cómo funciona":"How it works"}</button>
   </section>
   <section class="panel">
     <label for="nm">${T_.namePrompt}</label>
     <input id="nm" type="text" value="${esc(S.name)}" placeholder="${T_.yourName}">
     <button class="btn primary wide" style="margin-top:10px" onclick="S.name=document.getElementById('nm').value.trim();save();toast('✓');render()">${T_.saveName}</button>
   </section>
-  <div class="grid two">${allPacks().map((p,i)=>{
+  <div class="grid two">${allPacks().map(p=>{
     const t=p.units.reduce((n,u)=>n+u.items.length,0);
-    /* Cards used to send every course to the generic study tab; each one now
-       opens its own course. */
-    return `<button class="panel coursecard" style="--cc:${p.color||'var(--neon)'}" onclick="go('pack:${p.id}')">
-      <span class="ccart">${artTag(["idle","point","cheer"][i%3])}</span>
-      <span class="ccbody">
-        <span class="eyebrow">${T_.course}</span>
-        <b>${esc(L(p.name))}</b>
-        <span class="ccchips"><span class="chip">${p.units.length} ${T_.units}</span><span class="chip">${t} ${T_.items}</span></span>
-      </span>
-      <span class="ccgo">▸</span></button>`;}).join("")}</div>
+    return `<button class="panel" style="text-align:left;border-left:4px solid ${p.color||'#888'}" onclick="go('study')">
+      <div class="eyebrow">${T_.course}</div><h2 style="font-size:22px;margin:4px 0">${esc(L(p.name))}</h2>
+      <span class="chip">${p.units.length} ${T_.units}</span> <span class="chip">${t} ${T_.items}</span></button>`;}).join("")}</div>
   <section class="panel">
     <div class="eyebrow">${T_.saveProgress}</div>
     <p class="muted" style="margin:4px 0 10px">${T_.saveHelp}</p>
@@ -8331,8 +8058,8 @@ function makeReviewCert(unitId, activity, score){
     name: S.name||"Student", unit: L(u.title), course: L(u.pack.name),
     score: Math.max(0,Math.min(100,score)), date: today(), kind:"review", activity: activity
   };
-  if (!S.certs.some(c=>c.code===rec.code)){ S.certs.push(rec); save(); certCoin(); }
-  else save();
+  if (!S.certs.some(c=>c.code===rec.code)) S.certs.push(rec);
+  save();
   drawCert(rec, false);
 }
 
@@ -8368,7 +8095,7 @@ function revAward(uid, which, score){
   if (first) award(40, 1);
   if (revComplete(uid) && !r.paid){
     r.paid = true;
-    award(150, 5);
+    award(150, 2);
     toast("★ " + T_.reviewAllDone);
   }
   save();
@@ -8467,25 +8194,13 @@ function drawCard(){
       </div>
     </div>
   </div>
-  <div class="row" id="fcMarks" style="margin-top:14px;gap:10px;${C.flipped?"":"display:none"}">
+  ${C.flipped?`<div class="row" style="margin-top:14px;gap:10px">
      <button class="btn wide" style="flex:1;color:var(--hot)" onclick="cardMark(false)">${T_.didntKnow}</button>
      <button class="btn primary" style="flex:1" onclick="cardMark(true)">${T_.knewIt}</button>
-  </div>
-  <button class="btn primary wide" id="fcFlip" style="margin-top:14px;${C.flipped?"display:none":""}" onclick="flipCard()">${T_.flip}</button>`;
+   </div>`:`<button class="btn primary wide" style="margin-top:14px" onclick="flipCard()">${T_.flip}</button>`}`;
   window.scrollTo(0,0);
 }
-/* The card used to re-render on every flip, which threw away the 3D transition
-   half way through. Now the flip is a class toggle and the two control rows
-   just trade places. */
-function flipCard(){
-  CARDS.flipped = !CARDS.flipped;
-  const c = document.getElementById("fcard");
-  if (!c) return drawCard();
-  c.classList.toggle("flipped", CARDS.flipped);
-  const m = document.getElementById("fcMarks"), f = document.getElementById("fcFlip");
-  if (m) m.style.display = CARDS.flipped ? "" : "none";
-  if (f) f.style.display = CARDS.flipped ? "none" : "";
-}
+function flipCard(){ CARDS.flipped = !CARDS.flipped; drawCard(); }
 function cardMark(knew){
   if (knew) CARDS.got++; else CARDS.missed.push(CARDS.list[CARDS.i]);
   CARDS.i++; CARDS.flipped = false; drawCard();
@@ -8920,21 +8635,6 @@ function commitSeat(team, seat){
   team.turns[seat] = (team.turns[seat] || 0) + 1;
   team.lastSeat = seat;
 }
-/* Assign, for every table, the member who answers the next clue. Announced on
-   the board so a table can get that student ready instead of being told after
-   they buzz. Kept until it is used, then re-rolled for the next clue. */
-function jeoAssignSeats(force){
-  if (!JEO || !JEO.teams) return;
-  JEO.teams.forEach(t => {
-    if (!t.size) { t.upNext = null; return; }
-    if (force || t.upNext == null) t.upNext = pickSeat(t);
-  });
-}
-function seatBadge(t){
-  return (JEO.whosUp && t.size && t.upNext != null)
-    ? `<span class="seatbadge">#${t.upNext+1}</span>` : "";
-}
-
 /* How evenly has this table shared its turns? Used in the wrap-up. */
 function seatSpread(team){
   if (!team.turns || !team.turns.length) return "";
@@ -8985,7 +8685,6 @@ function jeoBuzzerBar(){
       return `<button class="buzzer ${isBuzzed?'won':''} ${out?'out':''}"
         ${out||locked?'disabled':''} onclick="jeoBuzz(${t.i})">
         <span class="bznum">${t.i===9?0:t.i+1}</span>
-        ${seatBadge(t)}
         <span class="bzname">${esc(t.name)}</span>
         <span class="bzscore">$${t.score}</span>
       </button>`;}).join("")}
@@ -9129,7 +8828,7 @@ function jeoStart(){
   JEO.round = 1;
   jeoBuildRound();
   JEO.stage = "board";
-  jeoIntro(() => viewGameShow());
+  viewGameShow();
 }
 function jeoBuildRound(){
   const perCat = 5;
@@ -9137,31 +8836,15 @@ function jeoBuildRound(){
   const base = JEO.round === 1 ? 100 : 200;
   cats.forEach(c => c.clues.forEach((cl,i)=>{ cl.value = base*(i+1); cl.used = false; }));
   /* one hidden Smith's Special per round, never in the top row */
-  /* A thin topic can yield fewer than perCat clues, so aim the special at a
-     column that actually has a second row rather than trusting the grid. */
-  const wide = cats.filter(c => c.clues.length > 1);
-  if (wide.length){
-    const col = wide[Math.floor(Math.random()*wide.length)];
-    col.clues[1 + Math.floor(Math.random()*(col.clues.length-1))].special = true;
-  }
+  const sc = Math.floor(Math.random()*cats.length);
+  const sr = 1 + Math.floor(Math.random()*(perCat-1));
+  cats[sc].clues[sr].special = true;
   JEO.cats = cats;
-  JEO.remaining = cats.reduce((n,c)=>n+c.clues.length, 0);
+  JEO.remaining = cats.length * perCat;
 }
 function jeoBoard(){
   const leader = Math.max(...JEO.teams.map(t=>t.score));
-  if (JEO.control == null || !JEO.teams[JEO.control]) JEO.control = 0;
-  jeoAssignSeats();
-  const holder = JEO.teams[JEO.control];
-  const es = S.lang === "es";
-  const upLine = (JEO.whosUp && holder.size && holder.upNext != null)
-    ? ` — ${es?"contesta":"answering"}: <b>${es?"jugador":"player"} #${holder.upNext+1}</b>` : "";
   V().innerHTML = `
-  <section class="panel raised jeoctl">
-    <span class="ctldot"></span>
-    <span class="ctltext"><b>${esc(holder.name)}</b> ${es?"elige la siguiente pista":"picks the next clue"}${upLine}</span>
-    <span class="ctlrule">${es?"Acierto = sigues eligiendo · Fallo = pasa a la siguiente mesa"
-                             :"Right = pick again · Wrong = the next table picks"}</span>
-  </section>` + `
   <div class="eprow">
     <button class="btn ghost" style="padding:8px 12px;min-height:0" onclick="jeoQuit()">← ${T_.exit}</button>
     <span style="flex:1"></span>
@@ -9179,8 +8862,8 @@ function jeoBoard(){
   </div>
   <div class="jeoscores">
     ${JEO.teams.map(t=>`
-      <div class="jeoteam ${t.score===leader&&leader>0?'lead':''} ${t.i===JEO.control?'hasctl':''}">
-        <span class="jt-name">${esc(t.name)}${seatBadge(t)}</span>
+      <div class="jeoteam ${t.score===leader&&leader>0?'lead':''}">
+        <span class="jt-name">${esc(t.name)}</span>
         <span class="jt-score ${t.score<0?'neg':''}">$${t.score}</span>
         <span class="jt-key">${JEO.buzz==='keys'?(t.i===9?0:t.i+1):"·"}</span>
       </div>`).join("")}
@@ -9203,7 +8886,6 @@ function jeoQuit(){
 function jeoOpen(ci, ri){
   const cl = JEO.cats[ci].clues[ri];
   if (cl.used) return;
-  jeoAssignSeats();
   JEO.cur = {ci, ri, clue:cl, buzzed:null, revealed:false, picked:null,
              wager:null, counting:false};
   JEO.stage = "clue";
@@ -9310,25 +8992,13 @@ function jeoBuzz(i){
   C.buzzed = i;
   /* name the specific student who has to answer */
   if (JEO.whosUp && JEO.teams[i].size > 0){
-    const t = JEO.teams[i];
-    C.seat = (t.upNext != null) ? t.upNext : pickSeat(t);
-    commitSeat(t, C.seat);
-    t.upNext = null;
+    C.seat = pickSeat(JEO.teams[i]);
+    commitSeat(JEO.teams[i], C.seat);
   } else C.seat = null;
   jeoUnbind();
   toast("🔔 " + JEO.teams[i].name + (C.seat!=null ? " · " + T_.seat + " " + (C.seat+1) : ""));
   viewGameShow();
 }
-/* Who picks the next clue. Right answer keeps the board, a miss moves it on. */
-function jeoSetControl(i, why, from){
-  JEO.control = i;
-  jeoAssignSeats();
-  const es = S.lang === "es";
-  const name = JEO.teams[i] ? JEO.teams[i].name : "";
-  if (why === "kept") toast("✓ " + (es ? name + " sigue eligiendo" : name + " picks again"));
-  else toast("→ " + (es ? "Le toca a " + name : name + " picks next"));
-}
-
 /* The dramatic pause. Four seconds of the board holding its breath before the
    answer lights up, because the wait is most of the fun. */
 function jeoPick(i){
@@ -9360,13 +9030,7 @@ function jeoReveal(){
   const ok = C.picked === cl.a;
   const amount = C.wager != null ? C.wager : cl.value;
   const team = JEO.teams[C.buzzed];
-  if (team){
-    team.score += ok ? amount : -amount;
-    /* Control of the board is the reward for being right: the table that
-       answers correctly picks the next clue, a miss hands the pick to the
-       next table round the room. */
-    jeoSetControl(ok ? team.i : (team.i + 1) % JEO.teams.length, ok ? "kept" : "passed", team);
-  }
+  if (team) team.score += ok ? amount : -amount;
   C.revealed = true; C.counting = false;
   cl.used = true; JEO.remaining--;
   JEO.teams.forEach(t => t.lock = false);
@@ -9377,10 +9041,7 @@ function jeoNoAnswer(){
   if (!C || C.revealed) return;
   /* the buzzing table loses the value and the clue reopens to everyone else */
   const team = JEO.teams[C.buzzed];
-  if (team){
-    team.score -= (C.wager != null ? C.wager : C.clue.value); team.lock = true;
-    jeoSetControl((team.i + 1) % JEO.teams.length, "passed", team);
-  }
+  if (team){ team.score -= (C.wager != null ? C.wager : C.clue.value); team.lock = true; }
   C.buzzed = null; C.picked = null;
   viewGameShow();
 }
@@ -9494,81 +9155,8 @@ function jeoDone(){
 
 
 /* ============================================================================
-   HOW IT WORKS  —  the one screen that explains the whole loop
-   ----------------------------------------------------------------------------
-   Everything in here is reachable from the title screen, so a student landing
-   on the app cold can read the rules before pressing start.
-   ========================================================================== */
-function showInstructions(){
-  const es = S.lang === "es";
-  const steps = es ? [
-    ["1","Elige un curso","Inicio lista tus cursos y unidades. Abre una unidad para ver los apuntes y el episodio."],
-    ["2","Juega el episodio","Cada unidad es una historia jugable: lees un poco, respondes, y sigues. Si fallas, te lo vuelve a explicar."],
-    ["3","Arcade de repaso","Tarjetas, emparejar y el disparador de vocabulario. Cada actividad nueva paga 1 ficha."],
-    ["4","El examen escrito","25 preguntas. 70% o más gana el certificado."],
-    ["5","Certificados","Cada certificado nuevo vale 1 ficha. Descárgalo o imprímelo desde la unidad."],
-    ["6","Gasta las fichas","1 ficha por partida en el arcade. Termina el arcade de repaso completo y ganas 5 fichas de golpe."]
-  ] : [
-    ["1","Pick a course","Home lists your courses and units. Open a unit for the notes and its episode."],
-    ["2","Play the episode","Each unit is a playable story: read a beat, answer, move on. Miss one and it reteaches before asking again."],
-    ["3","Review arcade","Flashcards, matching and the vocab blaster. Each activity pays 1 coin the first time you clear it."],
-    ["4","The written test","25 questions. 70% or better earns the certificate."],
-    ["5","Certificates","Every new certificate is worth 1 coin. Download or print it from the unit."],
-    ["6","Spend the coins","1 coin per arcade play. Clear the whole review arcade and 5 coins land at once."]
-  ];
-  const extras = es ? [
-    ["◎","Fichas","El contador de arriba. Se ganan estudiando y se gastan en el arcade."],
-    ["★","El reto de Smith","Concurso por equipos para la clase, en modo docente. Acertar mantiene el turno; fallar lo pasa a la siguiente mesa."],
-    ["▤","Arte","Cambia a Coach Smith y el resto del arte por el tuyo. Solo cambia tu copia."],
-    ["↔","Transferir","Copia tu código y pégalo en otro dispositivo: tiempo, temas, certificados y fichas viajan contigo."]
-  ] : [
-    ["◎","Coins","The counter up top. Earned by studying, spent in the arcade."],
-    ["★","Smith's Challenge","The classroom team game show, under teacher mode. A right answer keeps your turn; a miss passes the pick to the next table."],
-    ["▤","Art","Swap Coach Smith and the rest of the art for your own. It only changes your copy."],
-    ["↔","Transfer","Copy your code and paste it on another device — study time, topics, certificates and coins all travel with it."]
-  ];
-  const el = document.getElementById("dance");
-  el.classList.remove("hidden");
-  el.innerHTML = `
-    <div class="dancewrap" style="max-width:560px">
-      <section class="panel raised howto">
-        <div class="howhead">
-          <div class="howart">${artTag("point")}</div>
-          <div>
-            <div class="eyebrow">${es?"Cómo funciona":"How it works"}</div>
-            <h1 class="jeotitle" style="margin:4px 0 0">${es?"Estudia · gana · juega":"Study · earn · play"}</h1>
-          </div>
-        </div>
-        <ol class="howsteps">
-          ${steps.map(s=>`<li><span class="hownum">${s[0]}</span>
-            <span class="howbody"><b>${esc(s[1])}</b><small>${esc(s[2])}</small></span></li>`).join("")}
-        </ol>
-        <div class="eyebrow" style="margin-top:18px">${es?"Lo demás":"Everything else"}</div>
-        <div class="howextras">
-          ${extras.map(x=>`<div class="howx"><span class="howicon">${x[0]}</span>
-            <span class="howbody"><b>${esc(x[1])}</b><small>${esc(x[2])}</small></span></div>`).join("")}
-        </div>
-        <button class="btn primary wide" style="margin-top:18px" onclick="closeTheme()">${T_.close}</button>
-      </section>
-    </div>`;
-}
-
-/* ============================================================================
    CREDITS
    ========================================================================== */
-/* Any overlay on the dance stage closes on Escape or a tap outside the panel. */
-(function(){
-  const stage = () => document.getElementById("dance");
-  document.addEventListener("keydown", e => {
-    const el = stage();
-    if (e.key === "Escape" && el && !el.classList.contains("hidden")) closeTheme();
-  });
-  document.addEventListener("click", e => {
-    const el = stage();
-    if (el && !el.classList.contains("hidden") && e.target === el) closeTheme();
-  });
-})();
-
 function showCredits(){
   const el = document.getElementById("dance");
   el.classList.remove("hidden");
@@ -10542,39 +10130,17 @@ function wireSimple(correct, why){
    If the file is missing or audio is blocked, the button reports it and
    nothing else breaks.
    ========================================================================== */
-/* Three tracks now, so the stage is a jukebox rather than one button. Each
-   lives beside index.html as a normal file the browser streams and caches. */
-const TRACKS = [
-  {file:"Where_the_Knowledge_Flows.mp3", title:"Where the Knowledge Flows", tag:"Theme"},
-  {file:"Choose_Your_Own_Hero.mp3",      title:"Choose Your Own Hero",      tag:"Game show"},
-  {file:"The_Final_Frame.mp3",           title:"The Final Frame",           tag:"Finale"}
-];
-const THEME_FILE = TRACKS[0].file;   /* kept: older code still reads this */
-let THEME = {audio:null, ctx:null, analyser:null, data:null, raf:0, playing:false,
-             i:0, onEnd:null, loop:true};
-
-/* The troupe. Coach Smith has a singing set now, so the stage is a group
-   number instead of one sprite cycling four poses. */
-const DANCE_TROUPE = [
-  ["sing_walk_side","sing_crowd","joy_emote","sing_idle"],
-  ["sing_idle","sing_hype","sing_climax","sing_crowd"],
-  ["hype_triumph","sing_hype","sing_walk_front","joy_emote"]
-];
+const THEME_FILE = "Where_the_Knowledge_Flows.mp3";
+let THEME = {audio:null, ctx:null, analyser:null, data:null, raf:0, playing:false};
 
 function themeAvailable(){ return true; }   /* resolved at play time */
 
-function trackButtons(){
-  return TRACKS.map((t,i)=>`<button class="trackbtn ${THEME.i===i?'on':''}"
-    onclick="pickTrack(${i})"><b>${esc(t.title)}</b><small>${esc(t.tag)}</small></button>`).join("");
-}
 function openTheme(){
   const el = document.getElementById("dance");
   el.classList.remove("hidden");
-  THEME.loop = true; THEME.onEnd = null;
   el.innerHTML = `
     <div class="dancewrap">
       <canvas id="danceCv" width="640" height="360"></canvas>
-      <div class="tracklist">${trackButtons()}</div>
       <div class="dancebar">
         <button class="btn primary" id="dPlay">▶ ${T_.play}</button>
         <button class="btn ghost" id="dClose">${T_.close}</button>
@@ -10585,65 +10151,27 @@ function openTheme(){
   document.getElementById("dPlay").onclick = toggleTheme;
   startDanceLoop();
 }
-/* Switching tracks mid-song tears down the old element so the analyser can be
-   rewired to the new one. */
-function pickTrack(i){
-  if (THEME.i === i && THEME.audio){ toggleTheme(); return; }
-  const wasPlaying = THEME.playing;
-  themeTeardown();
-  THEME.i = i;
-  const list = document.querySelector(".tracklist");
-  if (list) list.innerHTML = trackButtons();
-  const btn = document.getElementById("dPlay");
-  if (btn) btn.textContent = "▶ " + T_.play;
-  if (wasPlaying) toggleTheme();
-}
 function closeTheme(){
   stopTheme();
   cancelAnimationFrame(THEME.raf); THEME.raf = 0;
   document.getElementById("dance").classList.add("hidden");
-  const cb = THEME.onEnd; THEME.onEnd = null;
-  if (cb) cb();
 }
 function stopTheme(){
   if (THEME.audio){ THEME.audio.pause(); THEME.audio.currentTime = 0; }
   THEME.playing = false;
 }
-/* Drop the live audio element and its analyser so the next play builds one for
-   the track actually being asked for. */
-function themeTeardown(){
-  if (THEME.audio){ THEME.audio.pause(); THEME.audio.onended = null; THEME.audio = null; }
-  if (THEME.ctx){ try{ THEME.ctx.close(); }catch(e){} }
-  THEME.ctx = null; THEME.analyser = null; THEME.data = null;
-  THEME.playing = false;
-}
-/* True when the element on hand cannot serve this request. */
-function themeStale(track){
-  if (!THEME.audio) return false;
-  const want = new URL(track.file, location.href).href;
-  return THEME.audio.src !== want || THEME.audio.loop !== THEME.loop;
-}
 function toggleTheme(){
   const btn = document.getElementById("dPlay"), note = document.getElementById("dNote");
-  const track = TRACKS[THEME.i] || TRACKS[0];
-  if (THEME.playing){ THEME.audio.pause(); THEME.playing = false;
-    if (btn) btn.textContent = "▶ " + T_.play; return; }
-  if (themeStale(track)) themeTeardown();
+  if (THEME.playing){ THEME.audio.pause(); THEME.playing = false; btn.textContent = "▶ " + T_.play; return; }
   if (!THEME.audio){
-    THEME.audio = new Audio(track.file);
-    THEME.audio.loop = THEME.loop;
+    THEME.audio = new Audio(THEME_FILE);
+    THEME.audio.loop = true;
     THEME.audio.crossOrigin = "anonymous";
     THEME.audio.onerror = () => {
-      if (note) note.textContent = (S.lang==="es"?"No se encuentra ":"Can't find ") + track.file;
-      if (btn) btn.disabled = true;
+      note.textContent = T_.themeMissing;
+      btn.disabled = true;
     };
-    THEME.audio.onplaying = () => {
-      if (note) note.textContent = (S.lang==="es"?"Sonando — ":"Now playing — ") + track.title; };
-    THEME.audio.onended = () => {
-      THEME.playing = false;
-      if (btn) btn.textContent = "▶ " + T_.play;
-      if (THEME.onEnd) closeTheme();   /* closeTheme fires the callback */
-    };
+    THEME.audio.onplaying = () => { note.textContent = T_.themePlaying; };
   }
   /* AnalyserNode has to be created after a user gesture or the context stays
      suspended. Wiring it here rather than at load is what keeps autoplay
@@ -10666,69 +10194,22 @@ function toggleTheme(){
 
   THEME.audio.play().then(()=>{
     THEME.playing = true;
-    if (btn) btn.textContent = "❚❚ " + T_.pause;
+    btn.textContent = "❚❚ " + T_.pause;
   }).catch(()=>{
-    if (note) note.textContent = (S.lang==="es"
-      ? "Toca reproducir otra vez para permitir el audio."
-      : "Tap play once more to allow audio.");
+    note.textContent = T_.themeMissing;
   });
 }
 
-/* ---------------------------------------------------------------------------
-   THE GAME SHOW INTRO
-   Smith's Challenge opens on a title card with the troupe dancing and a credit
-   roll drifting up the screen. Skip is always one tap away, and the board is
-   already built behind it either way.
-   ------------------------------------------------------------------------- */
-function jeoIntro(done){
-  const el = document.getElementById("dance");
-  el.classList.remove("hidden");
-  const es = S.lang === "es";
-  themeTeardown();
-  THEME.i = 1;                 /* Choose Your Own Hero */
-  THEME.loop = false;
-  THEME.onEnd = done;
-  el.innerHTML = `
-    <div class="dancewrap">
-      <canvas id="danceCv" width="640" height="360"></canvas>
-      <div class="dancebar">
-        <button class="btn primary" id="dPlay">▶ ${es?"Poner la intro":"Roll the intro"}</button>
-        <button class="btn ghost" id="dSkip">${es?"Saltar ⏭":"Skip ⏭"}</button>
-      </div>
-      <p class="muted" id="dNote" style="font-size:12px;margin:8px 0 0">${
-        es?"Choose Your Own Hero — toca saltar cuando quieras empezar."
-          :"Choose Your Own Hero — skip whenever you're ready to play."}</p>
-    </div>`;
-  document.getElementById("dPlay").onclick = toggleTheme;
-  document.getElementById("dSkip").onclick = closeTheme;
-  startDanceLoop({credits:[
-    es?"EL RETO DE SMITH":"SMITH'S CHALLENGE",
-    "Choose Your Own Hero",
-    es?"Musica de Coach Smith":"Music by Coach Smith",
-    es?"Arte de Coach Smith":"Art by Coach Smith",
-    es?"Contesta bien y sigues eligiendo":"Answer right and you pick again",
-    es?"Falla y pasa a la siguiente mesa":"Miss and the next table picks",
-    es?"Dos rondas, luego la final":"Two rounds, then the final",
-    es?"Buena suerte":"Good luck"
-  ]});
-  /* Autoplay is blocked until a gesture, and opening this screen WAS one. */
-  setTimeout(()=>{ if(!THEME.playing) toggleTheme(); }, 260);
-}
-
-/* The stage: a lit floor, an equaliser, the troupe switching poses on the beat,
-   and an optional credit roll drifting up. Pose changes follow bass energy
-   when the analyser is available and a steady timer when it is not. */
-function startDanceLoop(opts){
+/* The stage: a lit floor, an equaliser, and Coach Smith switching poses on the
+   beat. Pose changes are driven by bass energy when the analyser is available
+   and by a steady timer when it is not, so it always looks alive. */
+function startDanceLoop(){
   const cv = document.getElementById("danceCv");
   if (!cv) return;
-  opts = opts || {};
   const x = cv.getContext("2d");
   const W = cv.width, H = cv.height;
-  const troupe = DANCE_TROUPE.map(list => list.map(p => spriteOf(p)));
-  let t = 0, poseI = [0,0,0], lastKick = 0, kickHold = 0;
-  const credits = opts.credits || null;
-  let cards = [], nextCard = 0, ci = 0;
-  cancelAnimationFrame(THEME.raf);
+  const poses = ["idle","walk","cheer","point"].map(p => spriteOf(p));
+  let t = 0, poseI = 0, lastKick = 0, kickHold = 0;
 
   (function frame(){
     THEME.raf = requestAnimationFrame(frame);
@@ -10748,17 +10229,13 @@ function startDanceLoop(opts){
 
     /* backdrop: dance-floor gradient with a sweeping spotlight */
     const g = x.createLinearGradient(0,0,0,H);
-    g.addColorStop(0,"#180E3A"); g.addColorStop(0.55,"#2E1A63"); g.addColorStop(1,"#120A2E");
+    g.addColorStop(0,"#150F2B"); g.addColorStop(0.55,"#2B2150"); g.addColorStop(1,"#0B0F1F");
     x.fillStyle = g; x.fillRect(0,0,W,H);
     const sweep = W/2 + Math.sin(t*0.8)*W*0.32;
     const spot = x.createRadialGradient(sweep,H*0.15,10,sweep,H*0.9,W*0.55);
-    spot.addColorStop(0,"rgba(255,46,134,"+(0.18+bass*0.30)+")");
-    spot.addColorStop(1,"rgba(255,46,134,0)");
+    spot.addColorStop(0,"rgba(242,180,65,"+(0.20+bass*0.28)+")");
+    spot.addColorStop(1,"rgba(242,180,65,0)");
     x.fillStyle = spot; x.fillRect(0,0,W,H);
-    const spot2 = x.createRadialGradient(W-sweep,H*0.12,10,W-sweep,H*0.9,W*0.5);
-    spot2.addColorStop(0,"rgba(34,216,240,"+(0.14+bass*0.24)+")");
-    spot2.addColorStop(1,"rgba(34,216,240,0)");
-    x.fillStyle = spot2; x.fillRect(0,0,W,H);
 
     /* checker floor, receding */
     for (let r=0;r<8;r++){
@@ -10772,81 +10249,44 @@ function startDanceLoop(opts){
       }
     }
 
-    /* the credit roll, drifting up behind the troupe */
-    if (credits){
-      if (t > nextCard){
-        cards.push({txt:credits[ci % credits.length], y:H+20,
-                    x:W*0.5 + (Math.random()-0.5)*W*0.34, big:ci%credits.length===0});
-        ci++; nextCard = t + 2.3;
-      }
-      x.textAlign = "center";
-      cards.forEach(c2 => {
-        c2.y -= 0.55 + bass*0.7;
-        const a = Math.max(0, Math.min(1, (c2.y-20)/90)) * Math.min(1,(H+20-c2.y)/50);
-        x.globalAlpha = a * 0.85;
-        x.fillStyle = c2.big ? "#FFD60A" : "#F1ECFF";
-        x.font = (c2.big?"800 20px 'Trebuchet MS',sans-serif":"600 14px 'Trebuchet MS',sans-serif");
-        x.fillText(c2.txt, c2.x, c2.y);
-        x.globalAlpha = 1;
-      });
-      cards = cards.filter(c2 => c2.y > 10);
-    }
-
     /* equaliser */
     const n = Math.min(16, bins.length), bw = W/(n*1.6);
     for (let i=0;i<n;i++){
       const v = (bins[i]||0)/255;
-      const hh2 = 12 + v*H*0.42;
+      const h = 12 + v*H*0.42;
       const bx = W*0.06 + i*(bw*1.6);
-      const bg = x.createLinearGradient(0,H-40-hh2,0,H-40);
-      bg.addColorStop(0,"#22D8F0"); bg.addColorStop(1,"#FF2E86");
+      const bg = x.createLinearGradient(0,H-40-h,0,H-40);
+      bg.addColorStop(0,"#4DE0B1"); bg.addColorStop(1,"#F2B441");
       x.fillStyle = bg;
-      x.fillRect(bx, H-40-hh2, bw, hh2);
+      x.fillRect(bx, H-40-h, bw, h);
       x.fillStyle = "rgba(255,255,255,.25)";
-      x.fillRect(bx, H-40-hh2, bw, 3);
+      x.fillRect(bx, H-40-h, bw, 3);
     }
 
     /* pose change on a kick, with a hold so it can't strobe */
     if (kickHold > 0) kickHold--;
-    if (bass > 0.55 && kickHold === 0){
-      poseI = poseI.map((p,i2)=> (p + 1 + i2) % troupe[i2].length); kickHold = 12;
-    } else if (!THEME.playing && t - lastKick > 1.1){
-      poseI = poseI.map((p,i2)=> (p+1) % troupe[i2].length); lastKick = t;
+    if (bass > 0.55 && kickHold === 0){ poseI = (poseI+1) % poses.length; kickHold = 14; }
+    else if (!THEME.playing && t - lastKick > 1.1){ poseI = (poseI+1)%poses.length; lastKick = t; }
+
+    /* Coach Smith, bouncing */
+    const im = poses[poseI] || poses[0];
+    const bounce = Math.abs(Math.sin(t*(THEME.playing?7:2)))*(10+bass*26);
+    const hh = H*0.46 + bass*22;
+    if (drawable(im)){
+      const ww = im.naturalWidth/im.naturalHeight*hh;
+      x.save();
+      x.translate(W/2, H-52-bounce);
+      x.rotate(Math.sin(t*(THEME.playing?7:2))*0.06);
+      x.drawImage(im,-ww/2,-hh,ww,hh);
+      x.restore();
     }
 
-    /* the troupe: centre dancer front and largest, two flanking and smaller */
-    const slots = [
-      {cx:W*0.20, sc:0.74, ph:1.7},
-      {cx:W*0.50, sc:1.00, ph:0.0},
-      {cx:W*0.80, sc:0.74, ph:3.1}
-    ];
-    slots.forEach((s,i2)=>{
-      const im = troupe[i2][poseI[i2]] || troupe[i2][0];
-      if (!drawable(im)) return;
-      const beat = Math.sin(t*(THEME.playing?7:2) + s.ph);
-      const bounce = Math.abs(beat)*(8+bass*22)*s.sc;
-      const hh2 = H*0.44*s.sc + bass*18*s.sc;
-      const ww = im.naturalWidth/im.naturalHeight*hh2;
-      x.save();
-      x.globalAlpha = 0.22;
-      x.fillStyle = "#000";
-      x.beginPath();
-      x.ellipse(s.cx, H-48, ww*0.34, 7, 0, 0, 7);
-      x.fill();
-      x.globalAlpha = 1;
-      x.translate(s.cx, H-52-bounce);
-      x.rotate(beat*0.07);
-      x.drawImage(im,-ww/2,-hh2,ww,hh2);
-      x.restore();
-    });
-
     /* title card */
-    const track = TRACKS[THEME.i] || TRACKS[0];
     x.textAlign = "center";
-    x.fillStyle = "#FFD60A";
-    x.font = "800 21px 'Trebuchet MS',sans-serif";
-    x.fillText(track.title.toUpperCase(), W/2, 34);
-    x.fillStyle = "#A79CD0"; x.font = "11px 'Courier New',monospace";
+    x.fillStyle = "#F2B441";
+    x.font = "800 22px 'Trebuchet MS',sans-serif";
+    x.fillText("WHERE THE KNOWLEDGE FLOWS", W/2, 34);
+    x.fillStyle = "#9B92BE"; x.font = "11px 'Courier New',monospace";
     x.fillText("SMITH'S CLASSROOM", W/2, 52);
   })();
 }
@@ -11152,11 +10592,10 @@ function finishSet(timeUp){
     award(right*10+(won?120:0),tok);
     if(won){
       const code=certCode(S.name||"student",Q.unit.id+"-test",pct);
-      if(!S.certs.some(c=>c.code===code)){
+      if(!S.certs.some(c=>c.code===code))
         S.certs.push({code,name:S.name||"Student",unit:L(Q.unit.title),
           course:L(Q.unit.pack.name),score:pct,date:today(),kind:"exam"});
-        save(); certCoin();
-      }
+      save();
     }
     V().innerHTML=`<section class="panel raised" style="text-align:center;margin-top:20px">
       <div class="eyebrow">${T_.testReview}</div>
@@ -11184,11 +10623,7 @@ function finishSet(timeUp){
     S.session=null;
     const tok=pass?3:1; award(right*15+(pass?100:0),tok);
     if(pass){ const code=certCode(S.name||"student",Q.unit.id,pct);
-      if(!S.certs.some(c=>c.code===code)){
-        S.certs.push({code,name:S.name||"Student",unit:L(Q.unit.title),course:L(Q.unit.pack.name),score:pct,date:today()});
-        save(); certCoin();
-      }
-    }
+      S.certs.push({code,name:S.name||"Student",unit:L(Q.unit.title),course:L(Q.unit.pack.name),score:pct,date:today()}); save(); }
     V().innerHTML=`<section class="panel raised" style="text-align:center;margin-top:20px">
       <div class="eyebrow">${timeUp?T_.timeLeft+" 00:00":""}</div>
       <h1 class="big" style="color:${pass?'var(--crt)':'var(--hot)'}">${pass?T_.passed:T_.failed}</h1>
@@ -11417,7 +10852,6 @@ function startLoop(step){
   })(performance.now());
 }
 function stopGame(){
-  document.body.classList.remove("playing");
   if(RAF) cancelAnimationFrame(RAF); RAF=null;
   if(LOOP.vis){ document.removeEventListener("visibilitychange",LOOP.vis); LOOP.vis=null; }
   if(cleanupInput){ try{ cleanupInput(); }catch(e){} cleanupInput=null; }
@@ -11521,7 +10955,6 @@ function playGame(id){
   if(!TEACHER_OK){ if(S.tokens<1) return toast(T_.noTokens); S.tokens--; save(); paintBar(); }
   const g=GAMES.find(x=>x.id===id);
   GAME_OVER=false;
-  document.body.classList.add("playing");
   V().innerHTML=`<div class="row" style="margin:14px 0">
       <button class="btn ghost" style="padding:8px 12px;min-height:0" onclick="go('arcade')">${T_.exit}</button>
       <span style="flex:1"></span>
@@ -13284,280 +12717,6 @@ if(S.langChosen) showTitle(); else showLangPick();
 window.addEventListener("beforeunload",save);
 window.addEventListener("resize",()=>{ const t=document.getElementById("title");
   if(t&&!t.classList.contains("hidden")) paintTitleScene(document.getElementById("titleCanvas")); });
-
-/* ============================================================================
-   10. JUICE  —  sound, particles, transitions.
-   Everything here decorates the app from the outside: it wraps a handful of
-   existing functions and watches the DOM, so no screen above had to change.
-   Muting is remembered, and anyone who asked their device for less motion
-   gets the plain app back.
-   ========================================================================== */
-const KEY_MUTE="smiths.mute";
-const FX={muted:localStorage.getItem(KEY_MUTE)==="1",ctx:null,
-  reduce:matchMedia("(prefers-reduced-motion:reduce)").matches};
-
-/* ---- sound: a few short blips, built on the fly, no files ---- */
-function fxCtx(){
-  if(FX.muted) return null;
-  if(!FX.ctx){ const C=window.AudioContext||window.webkitAudioContext; if(!C) return null;
-    try{ FX.ctx=new C(); }catch(e){ return null; } }
-  if(FX.ctx.state==="suspended") FX.ctx.resume();
-  return FX.ctx;
-}
-function blip(f,dur,type,vol,slideTo){
-  const c=fxCtx(); if(!c) return;
-  const o=c.createOscillator(), g=c.createGain(), t=c.currentTime;
-  o.type=type||"square"; o.frequency.setValueAtTime(f,t);
-  if(slideTo) o.frequency.exponentialRampToValueAtTime(Math.max(40,slideTo),t+dur);
-  g.gain.setValueAtTime(.0001,t);
-  g.gain.linearRampToValueAtTime(vol||.05,t+.008);
-  g.gain.exponentialRampToValueAtTime(.0001,t+dur);
-  o.connect(g); g.connect(c.destination); o.start(t); o.stop(t+dur+.03);
-}
-const seq=(notes,step,type,vol,dur)=>notes.forEach((n,i)=>
-  setTimeout(()=>blip(n,dur||.14,type||"square",vol||.05),i*(step||90)));
-const SFX={
-  tap:()=>blip(480,.045,"square",.035),
-  move:()=>blip(660,.05,"triangle",.04),
-  flip:()=>blip(430,.07,"triangle",.035,620),
-  right:()=>seq([659,880,1319],80,"square",.045,.13),
-  wrong:()=>blip(220,.24,"sawtooth",.04,80),
-  coin:()=>{blip(1046,.06,"square",.05); setTimeout(()=>blip(1568,.12,"square",.04),60);},
-  prize:()=>seq([523,659,784,1046],110,"square",.05,.18),
-  start:()=>seq([392,523,659,784],70,"square",.055,.16)
-};
-function sfx(n){ try{ SFX[n](); }catch(e){} }
-function toggleMute(){
-  FX.muted=!FX.muted;
-  try{ localStorage.setItem(KEY_MUTE,FX.muted?"1":"0"); }catch(e){}
-  paintMute();
-  if(!FX.muted) sfx("coin");
-}
-function paintMute(){
-  const b=document.getElementById("muteBtn"); if(!b) return;
-  b.classList.toggle("off",FX.muted);
-  b.setAttribute("aria-pressed",String(!FX.muted));
-}
-
-/* ---- particle stage ---- */
-function fxLayer(){
-  let l=document.getElementById("fxlayer");
-  if(!l){ l=document.createElement("div"); l.id="fxlayer"; document.body.appendChild(l); }
-  return l;
-}
-function fxBackdrop(){
-  if(document.getElementById("fxbg")||FX.reduce) return;
-  const d=document.createElement("div"); d.id="fxbg";
-  d.innerHTML="<i></i><i></i><i></i>";
-  document.body.insertBefore(d,document.body.firstChild);
-}
-/* Coins arc out of the middle of the screen and land on the counter in the
-   marquee, so earning tokens has somewhere to go. */
-function coinFly(n){
-  const target=document.querySelector(".marquee .coin");
-  if(!target||FX.reduce||!Element.prototype.animate){ sfx("coin"); return; }
-  const t=target.getBoundingClientRect();
-  const sx=window.innerWidth/2, sy=window.innerHeight*.6;
-  const dx=t.left+t.width/2-sx, dy=t.top+t.height/2-sy;
-  for(let i=0;i<n;i++){
-    const c=document.createElement("div"); c.className="fxcoin";
-    c.style.left=(sx-12)+"px"; c.style.top=(sy-12)+"px";
-    fxLayer().appendChild(c);
-    const ax=dx*.3+(Math.random()*150-75), ay=dy*.3-130-Math.random()*80;
-    const a=c.animate([
-      {transform:"translate(0,0) scale(.35) rotate(0deg)",opacity:0},
-      {transform:`translate(${ax}px,${ay}px) scale(1.12) rotate(200deg)`,opacity:1,offset:.45},
-      {transform:`translate(${dx}px,${dy}px) scale(.42) rotate(560deg)`,opacity:.85}
-    ],{duration:780+i*30,delay:i*95,easing:"cubic-bezier(.32,.06,.24,1)",fill:"forwards"});
-    a.onfinish=()=>{
-      c.remove();
-      target.classList.remove("hit"); void target.offsetWidth; target.classList.add("hit");
-      sfx("coin");
-    };
-  }
-}
-function sparkle(el,color,count){
-  if(FX.reduce||!el||!el.getBoundingClientRect) return;
-  const r=el.getBoundingClientRect();
-  if(!r.width) return;
-  const cx=r.left+r.width/2, cy=r.top+r.height/2;
-  for(let i=0;i<(count||10);i++){
-    const s=document.createElement("div"); s.className="fxspark";
-    s.style.left=cx+"px"; s.style.top=cy+"px";
-    s.style.background=color||"#4DE0B1";
-    fxLayer().appendChild(s);
-    const ang=Math.random()*Math.PI*2, dist=50+Math.random()*90;
-    const a=s.animate([
-      {transform:"translate(-50%,-50%) scale(1) rotate(0deg)",opacity:1},
-      {transform:`translate(${Math.cos(ang)*dist}px,${Math.sin(ang)*dist-20}px) scale(0) rotate(220deg)`,opacity:0}
-    ],{duration:520+Math.random()*260,easing:"cubic-bezier(.2,.7,.3,1)",fill:"forwards"});
-    a.onfinish=()=>s.remove();
-  }
-}
-function countTo(el,from,to,ms){
-  if(FX.reduce||from===to){ el.textContent=to; return; }
-  const t0=performance.now();
-  (function step(now){
-    const p=Math.min(1,(now-t0)/(ms||700));
-    el.textContent=Math.round(from+(to-from)*(1-Math.pow(1-p,3)));
-    if(p<1) requestAnimationFrame(step); else el.textContent=to;
-  })(t0);
-}
-
-/* ---- press feel: one ripple and one blip for every tappable thing ---- */
-function ripple(el,x,y){
-  if(FX.reduce) return;
-  const r=el.getBoundingClientRect(), size=Math.max(r.width,r.height)*1.6;
-  const s=document.createElement("span"); s.className="rip";
-  s.style.width=s.style.height=size+"px";
-  s.style.left=(x-r.left)+"px"; s.style.top=(y-r.top)+"px";
-  el.appendChild(s);
-  const a=s.animate([{transform:"translate(-50%,-50%) scale(0)",opacity:.85},
-                     {transform:"translate(-50%,-50%) scale(1)",opacity:0}],
-                    {duration:520,easing:"cubic-bezier(.2,.7,.3,1)",fill:"forwards"});
-  a.onfinish=()=>s.remove();
-}
-document.addEventListener("pointerdown",e=>{
-  const el=e.target&&e.target.closest&&
-    e.target.closest("button,.opt,.mtile,.zone,.jeocell,.buzzer,.flashcard");
-  if(!el||el.disabled||el.classList.contains("hidden")) return;
-  ripple(el,e.clientX,e.clientY);
-  if(el.classList.contains("go")) sfx("start");
-  else if(el.classList.contains("opt")||el.classList.contains("mtile")) sfx("move");
-  else if(el.classList.contains("flashcard")) sfx("flip");
-  else sfx("tap");
-  if(navigator.vibrate) try{ navigator.vibrate(8); }catch(err){}
-},true);
-
-/* ---- answer feedback: one watcher covers practice, episodes, the boss
-        rounds, the timed challenge and the game show ---- */
-new MutationObserver(muts=>{
-  let good=null,bad=false;
-  muts.forEach(m=>{
-    const el=m.target;
-    if(!el||el.nodeType!==1||!el.classList) return;
-    if(el.classList.contains("wrong")&&!el.dataset.fxw){ el.dataset.fxw="1"; bad=true; }
-    else if(el.classList.contains("right")&&!el.dataset.fxr){ el.dataset.fxr="1"; good=good||el; }
-  });
-  if(bad){
-    sfx("wrong");
-    const v=document.getElementById("view");
-    if(v&&!FX.reduce){ v.classList.remove("shake"); void v.offsetWidth; v.classList.add("shake"); }
-  } else if(good){
-    sfx("right");
-    sparkle(good,"#4DE0B1",12);
-  }
-}).observe(document.body,{subtree:true,attributes:true,attributeFilter:["class"]});
-
-/* ---- token counter: count up, with coins landing on it ---- */
-let LAST_TOKENS=null;
-const _paintBar=paintBar;
-window.paintBar=function(){
-  _paintBar();
-  const el=document.getElementById("tokenCount");
-  if(el){
-    if(LAST_TOKENS!==null&&S.tokens>LAST_TOKENS){
-      coinFly(Math.min(6,S.tokens-LAST_TOKENS));
-      countTo(el,LAST_TOKENS,S.tokens,760);
-    }
-    LAST_TOKENS=S.tokens;
-  }
-};
-
-/* ---- screen transitions on every new screen that is not a game ---- */
-const _view=document.getElementById("view");
-if(_view&&!FX.reduce){
-  new MutationObserver(muts=>{
-    if(!muts.some(m=>m.type==="childList"&&m.addedNodes.length)) return;
-    if(_view.querySelector("canvas")) return;   /* games size and hit-test themselves */
-    _view.classList.remove("vin"); void _view.offsetWidth; _view.classList.add("vin");
-    /* progress bars sweep up from empty instead of appearing full */
-    _view.querySelectorAll(".meter i").forEach(bar=>{
-      const w=bar.style.width; if(!w||w==="0%") return;
-      bar.style.width="0%";
-      requestAnimationFrame(()=>requestAnimationFrame(()=>{ bar.style.width=w; }));
-    });
-  }).observe(_view,{childList:true});
-}
-
-/* ---- title screen: CRT boot, sweeping scanline, parallax ---- */
-function titleFx(){
-  const t=document.getElementById("title"); if(!t) return;
-  paintMute();
-  if(!FX.reduce){
-    t.querySelectorAll(".crtboot,.crtline,.sweep").forEach(el=>el.remove());
-    const boot=document.createElement("div"); boot.className="crtboot";
-    const line=document.createElement("div"); line.className="crtline";
-    const sweep=document.createElement("div"); sweep.className="sweep";
-    t.appendChild(sweep); t.appendChild(boot); t.appendChild(line);
-    setTimeout(()=>{ boot.remove(); line.remove(); },1100);
-  }
-  if(!t.dataset.px&&!FX.reduce){
-    t.dataset.px="1";
-    const move=(nx,ny)=>{
-      const set=(sel,d,f)=>{ const el=t.querySelector(sel);
-        if(el) el.style.transform=`translate3d(${nx*d}px,${ny*d*(f||.5)}px,0)`; };
-      set("#titleCanvas",10); set("#titleArt",10); set(".top",-9,.7);
-    };
-    t.addEventListener("pointermove",e=>{
-      const r=t.getBoundingClientRect();
-      move((e.clientX-r.width/2)/r.width*2,(e.clientY-r.height/2)/r.height*2);
-    });
-    t.addEventListener("pointerleave",()=>move(0,0));
-    window.addEventListener("deviceorientation",e=>{
-      if(e.gamma==null) return;
-      move(Math.max(-1,Math.min(1,e.gamma/24)),Math.max(-1,Math.min(1,((e.beta||0)-40)/30)));
-    });
-  }
-}
-const _showTitle=showTitle;
-window.showTitle=function(){ _showTitle(); titleFx(); };
-
-/* ---- the certificate prompt gets a fanfare ---- */
-const _askReviewCert=askReviewCert;
-window.askReviewCert=function(unitId,activity,score){
-  _askReviewCert(unitId,activity,score);
-  const box=document.getElementById("certAsk");
-  if(box&&!box.classList.contains("hidden")){
-    sfx("prize");
-    setTimeout(()=>sparkle(box.querySelector(".certask"),"#F2B441",18),160);
-  }
-};
-
-/* ---- the arcade signs off with a shake and a chime ---- */
-const _endGame=endGame;
-window.endGame=function(id,score,won){
-  if(!GAME_OVER){
-    const st=document.querySelector(".stage")||document.querySelector("canvas.game");
-    if(st&&!FX.reduce){ st.classList.remove("hitshake"); void st.offsetWidth; st.classList.add("hitshake"); }
-    if(won){ sfx("prize"); sparkle(st,"#F2B441",16); } else sfx("wrong");
-  }
-  return _endGame(id,score,won);
-};
-
-fxBackdrop(); paintMute();
-/* Init already painted the first screen before this layer loaded, so bring the
-   title screen up to speed if it is the one showing. */
-(function(){
-  const t=document.getElementById("title");
-  if(t&&!t.classList.contains("hidden")){
-    if(!FX.reduce){
-      const boot=document.createElement("div"); boot.className="crtboot";
-      const line=document.createElement("div"); line.className="crtline";
-      const sweep=t.querySelector(".sweep")||document.createElement("div");
-      if(!sweep.classList.contains("sweep")) sweep.className="sweep";
-      t.appendChild(sweep); t.appendChild(boot); t.appendChild(line);
-      setTimeout(()=>{ boot.remove(); line.remove(); },1100);
-    }
-    titleFx();
-  }
-  const v=document.getElementById("view");
-  if(v&&!FX.reduce&&v.children.length&&!v.querySelector("canvas")) v.classList.add("vin");
-})();
-/* Browsers hold audio until the first gesture; warm it up on the way in. */
-["pointerdown","keydown"].forEach(ev=>window.addEventListener(ev,function warm(){
-  fxCtx(); window.removeEventListener(ev,warm);
-},{once:true}));
 </script>
 </body>
 </html>
