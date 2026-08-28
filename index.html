@@ -1115,6 +1115,13 @@ const T = {
     dqToast:"Disqualified! Clue returned to the board.",
     redo:"Redo",redoHelp:"New question, same runners",
     powerEarned:"earned a power-up!",noPowerAvail:"No powers left to earn",
+    timeLimits:"Time limits",readTime:"Read time",buzzTime:"Buzz time",answerTime:"Answer time",stealTime:"Steal time",
+    seconds:"seconds",
+    finalType:"Final round type",finalWager:"Top 2 wager",finalAllPlay:"All-play lightning",finalSuddenDeath:"Sudden death",
+    finalWagerHelp:"Top two teams wager and answer one clue.",
+    finalAllPlayHelp:"Every team answers 5 quick-fire clues. Most correct wins.",
+    finalSuddenDeathHelp:"All teams buzz in. First wrong answer and you're out. Last team standing wins.",
+    midGameEdit:"Mid-game settings",midGameHelp:"Changes apply immediately. Scores and powers are kept.",
     quitGame:"Quit the game? Scores will be lost.",
     board:"Board",whyThat:"Why that's the answer",
     waitingBuzz:"Waiting for a buzz",whoBuzzed:"Who buzzed first?",
@@ -1416,6 +1423,13 @@ const T = {
     dqToast:"¡Descalificado! La pista volvió al tablero.",
     redo:"Repetir",redoHelp:"Nueva pregunta, mismos jugadores",
     powerEarned:"¡ganó un poder!",noPowerAvail:"No quedan poderes por ganar",
+    timeLimits:"Límites de tiempo",readTime:"Tiempo de lectura",buzzTime:"Tiempo de buzzer",answerTime:"Tiempo de respuesta",stealTime:"Tiempo de robo",
+    seconds:"segundos",
+    finalType:"Tipo de ronda final",finalWager:"Top 2 apuestan",finalAllPlay:"Relámpago todos juegan",finalSuddenDeath:"Muerte súbita",
+    finalWagerHelp:"Los dos mejores equipos apuestan y contestan una pista.",
+    finalAllPlayHelp:"Todos contestan 5 pistas rápidas. Más correctas gana.",
+    finalSuddenDeathHelp:"Todos pulsan. Primer error y estás fuera. Último equipo en pie gana.",
+    midGameEdit:"Ajustes en juego",midGameHelp:"Los cambios se aplican de inmediato. Puntajes y poderes se conservan.",
     quitGame:"Salir del juego? Se pierden los puntajes.",
     board:"Tablero",whyThat:"Por que esa es la respuesta",
     waitingBuzz:"Esperando el timbre",whoBuzzed:"Quien sono primero?",
@@ -4355,12 +4369,14 @@ function jeoWhosUpCard(){
 function viewGameShow(){
   if (!TEACHER_OK) return go("home");
   dock();   /* every stage repaints through here, so the hide stays applied */
-  JEO = JEO || {stage:"setup", tables:4, teams:[], topics:[], buzz:"board", round:1, whosUp:true};
+  JEO = JEO || {stage:"setup", tables:4, teams:[], topics:[], buzz:"board", round:1, whosUp:true,
+    tRead:3, tBuzz:20, tAnswer:3, tSteal:10, finalMode:"wager"};
   if (JEO.stage === "setup")  return jeoSetup();
   if (JEO.stage === "names")  return jeoNames();
   if (JEO.stage === "sizes")  return jeoSizes();
   if (JEO.stage === "topics") return jeoTopics();
   if (JEO.stage === "rules")  return jeoRules();
+  if (JEO.stage === "midgame") return jeoMidGame();
   if (JEO.stage === "board")  return jeoBoard();
   if (JEO.stage === "clue")   return jeoClue();
   if (JEO.stage === "final")  return jeoFinal();
@@ -4390,7 +4406,45 @@ function jeoSetup(){
     </div>
     <p class="muted" style="font-size:13px;margin-top:8px">${
       JEO.buzz==='board'?T_.buzzBoardHelp:JEO.buzz==='keys'?T_.buzzKeysHelp:T_.buzzTapHelp}</p>
-    <button class="btn primary wide" style="margin-top:18px" onclick="jeoGoNames()">${T_.next} →</button>
+  </section>
+  <section class="panel">
+    <div class="eyebrow">${T_.timeLimits}</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px">
+      <label>${T_.readTime}<br>
+        <select onchange="JEO.tRead=+this.value">
+          ${[2,3,4,5].map(n=>`<option value="${n}" ${JEO.tRead===n?'selected':''}>${n}s</option>`).join("")}
+        </select></label>
+      <label>${T_.buzzTime}<br>
+        <select onchange="JEO.tBuzz=+this.value">
+          ${[10,15,20,25,30].map(n=>`<option value="${n}" ${JEO.tBuzz===n?'selected':''}>${n}s</option>`).join("")}
+        </select></label>
+      <label>${T_.answerTime}<br>
+        <select onchange="JEO.tAnswer=+this.value">
+          ${[3,5,7,10].map(n=>`<option value="${n}" ${JEO.tAnswer===n?'selected':''}>${n}s</option>`).join("")}
+        </select></label>
+      <label>${T_.stealTime}<br>
+        <select onchange="JEO.tSteal=+this.value">
+          ${[5,8,10,15].map(n=>`<option value="${n}" ${JEO.tSteal===n?'selected':''}>${n}s</option>`).join("")}
+        </select></label>
+    </div>
+  </section>
+  <section class="panel">
+    <div class="eyebrow">${T_.finalType}</div>
+    <div class="row" style="margin-top:10px;flex-wrap:wrap">
+      <button class="btn ${JEO.finalMode==='wager'?'primary':'ghost'}" style="flex:1;min-width:110px"
+        onclick="JEO.finalMode='wager';viewGameShow()">🎯 ${T_.finalWager}</button>
+      <button class="btn ${JEO.finalMode==='allplay'?'primary':'ghost'}" style="flex:1;min-width:110px"
+        onclick="JEO.finalMode='allplay';viewGameShow()">⚡ ${T_.finalAllPlay}</button>
+      <button class="btn ${JEO.finalMode==='sudden'?'primary':'ghost'}" style="flex:1;min-width:110px"
+        onclick="JEO.finalMode='sudden';viewGameShow()">💀 ${T_.finalSuddenDeath}</button>
+    </div>
+    <p class="muted" style="font-size:13px;margin-top:8px">${
+      JEO.finalMode==='wager'?T_.finalWagerHelp
+      :JEO.finalMode==='allplay'?T_.finalAllPlayHelp
+      :T_.finalSuddenDeathHelp}</p>
+  </section>
+  <section class="panel">
+    <button class="btn primary wide" onclick="jeoGoNames()">${T_.next} →</button>
   </section>`;
   window.scrollTo(0,0);
 }
@@ -5111,7 +5165,7 @@ function jeoBoard(){
 function jeoRunnersReady(){ JEO.runnersSet = true; sfx("jeoOpen"); viewGameShow(); }
 function jeoReroll(){ jeoAssignSeats(true); sfx("tap"); viewGameShow(); }
 function jeoNextPhase(){
-  JEO.stage = "final"; JEO.finalStage = "wager"; jeoBuildFinal(); viewGameShow();
+  jeoGoFinal();
 }
 function jeoQuit(){
   if (!confirm(T_.quitGame)) return;
@@ -5133,7 +5187,8 @@ function jeoQuit(){
    the phase transition sounds are how the room knows what changed without
    anyone having to say it.
    -------------------------------------------------------------------------- */
-const JEO_T = {read:3, buzz:20, answer:3, steal:10};
+const JEO_T = {get read(){return JEO&&JEO.tRead||3}, get buzz(){return JEO&&JEO.tBuzz||20},
+               get answer(){return JEO&&JEO.tAnswer||3}, get steal(){return JEO&&JEO.tSteal||10}};
 function jeoStopClock(){ if (JEO && JEO.clock){ clearInterval(JEO.clock); JEO.clock = null; } }
 function jeoSetPhase(name, secs){
   const C = JEO.cur; if (!C) return;
@@ -5266,11 +5321,16 @@ function jeoClue(){
   V().innerHTML = `
   <div class="eprow">
     <button class="btn ghost" style="padding:8px 12px;min-height:0" onclick="jeoBackToBoard()">← ${T_.board}</button>
-    <button class="btn ghost" style="padding:8px 12px;min-height:0"
+    <span style="flex:1"></span>
+    <button class="btn" style="padding:8px 14px;min-height:0;background:#1A2744;border-color:var(--dim)"
+      onclick="jeoRedo()">🔁 ${T_.redo}</button>
+    <button class="btn" style="padding:8px 14px;min-height:0;background:#2A1020;border-color:var(--hot);color:var(--hot)"
+      onclick="jeoDisqualify()">🚫 ${T_.disqualify}</button>
+  </div>
+  <div class="eprow" style="margin-top:4px">
+    <button class="btn ghost" style="padding:6px 10px;min-height:0;font-size:12px"
       onclick="JEO.stage='rules';viewGameShow()">${S.lang==="es"?"Reglas":"Rules"}</button>
     <span style="flex:1"></span>
-    ${!C.revealed && C.buzzed!==null?`<button class="btn ghost" style="padding:8px 12px;min-height:0;color:var(--hot)"
-      onclick="jeoDisqualify()">🚫 ${T_.disqualify}</button>`:""}
     <span class="chip">${esc(cat.label)}</span>
     <span class="chip warn">$${C.wager != null ? C.wager : cl.value}${JEO.doubleNext?" ×2":""}</span>
   </div>
@@ -5300,13 +5360,7 @@ function jeoClue(){
     <div class="eyebrow">${C.phase==="read"?(S.lang==="es"?"Buzzers bloqueados":"Buzzers locked")
       :C.buzzed===null?T_.tapYourBuzzer:T_.buzzedIn}</div>
     ${jeoBuzzerBar()}
-    ${C.buzzed!==null?`<div class="row" style="margin-top:10px">
-      <button class="btn ghost" style="flex:1" onclick="jeoNoAnswer()">${T_.passIt}</button>
-      <button class="btn ghost" style="flex:0 0 auto" onclick="jeoRedo()"
-        title="${T_.redoHelp}">🔁 ${T_.redo}</button>
-      <button class="btn ghost" style="flex:0 0 auto;color:var(--hot)" onclick="jeoDisqualify()"
-        title="${T_.disqualifyHelp}">🚫 ${T_.disqualify}</button>
-    </div>`:""}
+    ${C.buzzed!==null?`<button class="btn ghost wide" style="margin-top:10px" onclick="jeoNoAnswer()">${T_.passIt}</button>`:""}
   </section>`}`;
   if ((JEO.buzz === "keys" || JEO.buzz === "board") && !C.revealed) jeoBind();
   jeoPaintClock();
@@ -5503,13 +5557,103 @@ function jeoMaybeAwardPower(team){
 function jeoEndEarly(){
   if (!confirm(T_.endEarlyConfirm)) return;
   jeoStopClock(); clearInterval(JEO.countTimer);
-  JEO.stage = "final"; JEO.finalStage = "wager"; jeoBuildFinal(); viewGameShow();
+  jeoGoFinal();
 }
 function jeoEditSetup(){
   jeoStopClock(); clearInterval(JEO.countTimer);
-  /* Jump back to names stage, preserving scores and powers. Teams and topics
-     stay — the teacher just wants to tweak sizes or names mid-game. */
-  JEO.stage = "names"; JEO.cur = null;
+  JEO.cur = null;
+  JEO.stage = "midgame"; viewGameShow();
+}
+function jeoMidGame(){
+  const es = S.lang === "es";
+  V().innerHTML = `
+  <div class="eprow"><button class="btn ghost" style="padding:8px 12px;min-height:0"
+    onclick="JEO.stage='board';JEO.runnersSet=false;jeoAssignSeats(true);viewGameShow()">← ${T_.board}</button></div>
+  <section class="panel raised jeohead">
+    <div class="eyebrow">${T_.midGameEdit}</div>
+    <h1 class="jeotitle">${es?"Ajustes":"Settings"}</h1>
+    <p class="muted">${T_.midGameHelp}</p>
+  </section>
+
+  <section class="panel">
+    <div class="eyebrow">${T_.teamNames}</div>
+    ${JEO.teams.map((t,i)=>`
+      <div class="row" style="margin-top:8px;align-items:end">
+        <div style="flex:1">
+          <label for="mn${i}" style="font-size:12px">${T_.table} ${i+1}</label>
+          <input id="mn${i}" type="text" maxlength="22" value="${esc(t.name)}"
+            placeholder="${T_.teamPlaceholder} ${i+1}">
+        </div>
+        <div style="width:70px">
+          <label for="ms${i}" style="font-size:12px">${es?"Jugadores":"Players"}</label>
+          <input id="ms${i}" type="number" min="1" max="8" value="${t.size||3}" style="width:100%">
+        </div>
+        <div style="width:70px;text-align:center">
+          <label style="font-size:12px">$${t.score}</label>
+        </div>
+      </div>`).join("")}
+  </section>
+
+  <section class="panel">
+    <div class="eyebrow">${T_.timeLimits}</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px">
+      <label>${T_.readTime}<br>
+        <select id="mt_read">
+          ${[2,3,4,5].map(n=>`<option value="${n}" ${JEO.tRead===n?'selected':''}>${n}s</option>`).join("")}
+        </select></label>
+      <label>${T_.buzzTime}<br>
+        <select id="mt_buzz">
+          ${[10,15,20,25,30].map(n=>`<option value="${n}" ${JEO.tBuzz===n?'selected':''}>${n}s</option>`).join("")}
+        </select></label>
+      <label>${T_.answerTime}<br>
+        <select id="mt_ans">
+          ${[3,5,7,10].map(n=>`<option value="${n}" ${JEO.tAnswer===n?'selected':''}>${n}s</option>`).join("")}
+        </select></label>
+      <label>${T_.stealTime}<br>
+        <select id="mt_steal">
+          ${[5,8,10,15].map(n=>`<option value="${n}" ${JEO.tSteal===n?'selected':''}>${n}s</option>`).join("")}
+        </select></label>
+    </div>
+  </section>
+
+  <section class="panel">
+    <div class="eyebrow">${T_.finalType}</div>
+    <div class="row" style="margin-top:10px;flex-wrap:wrap">
+      <button class="btn ${JEO.finalMode==='wager'?'primary':'ghost'}" style="flex:1;min-width:100px"
+        id="mf_wager" onclick="JEO.finalMode='wager';viewGameShow()">🎯 ${T_.finalWager}</button>
+      <button class="btn ${JEO.finalMode==='allplay'?'primary':'ghost'}" style="flex:1;min-width:100px"
+        id="mf_allplay" onclick="JEO.finalMode='allplay';viewGameShow()">⚡ ${T_.finalAllPlay}</button>
+      <button class="btn ${JEO.finalMode==='sudden'?'primary':'ghost'}" style="flex:1;min-width:100px"
+        id="mf_sudden" onclick="JEO.finalMode='sudden';viewGameShow()">💀 ${T_.finalSuddenDeath}</button>
+    </div>
+  </section>
+
+  <section class="panel">
+    <button class="btn primary wide" onclick="jeoApplyMidGame()">${es?"Aplicar y volver":"Apply and return"}</button>
+  </section>`;
+  window.scrollTo(0,0);
+}
+function jeoApplyMidGame(){
+  /* Save team names and sizes */
+  JEO.teams.forEach((t,i) => {
+    const nameEl = document.getElementById("mn"+i);
+    const sizeEl = document.getElementById("ms"+i);
+    if (nameEl) t.name = nameEl.value.trim() || (T_.table + " " + (i+1));
+    if (sizeEl){
+      const newSize = Math.max(1, Math.min(8, parseInt(sizeEl.value,10)||3));
+      if (newSize !== t.size) seatInit(t, newSize);
+    }
+  });
+  /* Save timers */
+  const r = document.getElementById("mt_read"), b = document.getElementById("mt_buzz");
+  const a = document.getElementById("mt_ans"), s = document.getElementById("mt_steal");
+  if (r) JEO.tRead   = +r.value;
+  if (b) JEO.tBuzz   = +b.value;
+  if (a) JEO.tAnswer = +a.value;
+  if (s) JEO.tSteal  = +s.value;
+
+  JEO.stage = "board"; JEO.runnersSet = false; jeoAssignSeats(true);
+  toast("✓ " + (S.lang==="es"?"Ajustes aplicados":"Settings applied"));
   viewGameShow();
 }
 function jeoDisqualify(){
@@ -5637,6 +5781,13 @@ function jeoBackToBoard(){
 }
 
 /* ---------- the final --------------------------------------------------- */
+function jeoGoFinal(){
+  JEO.stage = "final";
+  if (JEO.finalMode === "allplay")       JEO.finalStage = "allplay_intro";
+  else if (JEO.finalMode === "sudden")   JEO.finalStage = "sudden_intro";
+  else                                   JEO.finalStage = "wager";
+  jeoBuildFinal(); viewGameShow();
+}
 function jeoBuildFinal(){
   const ranked = JEO.teams.slice().sort((a,b)=>b.score-a.score);
   JEO.finalists = ranked.slice(0,2).map(t=>t.i);
@@ -5648,6 +5799,130 @@ function jeoBuildFinal(){
 }
 function jeoFinal(){
   const fa = JEO.finalists.map(i=>JEO.teams[i]);
+  const es = S.lang === "es";
+
+  /* ---------- ALL-PLAY LIGHTNING ---------- */
+  if (JEO.finalStage === "allplay_intro"){
+    /* build 5 clues for all teams */
+    const cat = buildCategory(shuffled(JEO.topics)[0], 8);
+    JEO.apClues = cat.clues.slice(0,5);
+    JEO.apIdx = 0;
+    JEO.apScores = {}; JEO.teams.forEach(t => JEO.apScores[t.i] = 0);
+    V().innerHTML = `
+    <section class="panel raised jeohead">
+      <div class="eyebrow">${T_.finalRound}</div>
+      <h1 class="jeotitle">⚡ ${T_.finalAllPlay}</h1>
+      <p class="muted">${T_.finalAllPlayHelp}</p>
+      <p class="muted">${es?"5 preguntas, 10 segundos cada una. Todas las mesas juegan.":"5 questions, 10 seconds each. Every table plays."}</p>
+    </section>
+    <section class="panel">
+      <button class="btn primary wide" onclick="JEO.finalStage='allplay';viewGameShow()">
+        ${es?"Empezar":"Start"} →</button>
+    </section>`;
+    return;
+  }
+  if (JEO.finalStage === "allplay"){
+    if (JEO.apIdx >= JEO.apClues.length){
+      /* tally results */
+      const ranked = JEO.teams.slice().sort((a,b)=>(JEO.apScores[b.i]||0)-(JEO.apScores[a.i]||0));
+      ranked[0].score += 500;
+      V().innerHTML = `
+      <section class="panel raised jeohead" style="text-align:center">
+        <div class="eyebrow">${T_.finalRound}</div>
+        <h1 class="jeotitle" style="color:var(--gold)">⚡ ${es?"Resultados":"Results"}</h1>
+        ${JEO.teams.map(t=>`<p>${esc(t.name)}: <b>${JEO.apScores[t.i]||0}/5</b></p>`).join("")}
+        <p style="margin-top:12px;color:var(--crt)"><b>${esc(ranked[0].name)}</b> ${es?"gana +$500":"wins +$500"}</p>
+      </section>
+      <section class="panel">
+        <button class="btn primary wide" onclick="JEO.stage='done';viewGameShow()">
+          ${T_.finalStandings}</button>
+      </section>`;
+      return;
+    }
+    const cl = JEO.apClues[JEO.apIdx];
+    V().innerHTML = `
+    <section class="panel raised jeoclue">
+      <div class="eyebrow">⚡ ${es?"Pregunta":"Question"} ${JEO.apIdx+1}/5</div>
+      <p class="jeoq">${esc(cl.q)}</p>
+      <div class="jeoopts">
+        ${cl.c.map((t,i)=>`<button class="jeoopt" disabled><span class="jeoletter">${"ABCD"[i]}</span>${esc(t)}</button>`).join("")}
+      </div>
+      <p class="muted" style="margin-top:10px">${es
+        ?"Cada mesa elige A, B, C o D en silencio. Cuenta 10 segundos, luego revela."
+        :"Each table picks A, B, C or D silently. Count 10 seconds, then reveal."}</p>
+    </section>
+    <section class="panel">
+      <div class="eyebrow">${es?"Marca quién acertó":"Mark who got it right"}</div>
+      <div class="row" style="margin-top:8px;flex-wrap:wrap">
+        ${JEO.teams.map(t=>`<button class="btn ghost" id="ap_${t.i}"
+          onclick="jeoApMark(${t.i},this)" style="flex:1;min-width:80px">${esc(t.name)}</button>`).join("")}
+      </div>
+      <p class="muted" style="font-size:13px;margin-top:10px">${es?"Respuesta correcta":"Correct answer"}: <b>${"ABCD"[cl.a]}</b> — ${esc(cl.c[cl.a])}</p>
+      <div class="why"><b>${es?"Por qué":"Why"}:</b> ${esc(cl.why)}</div>
+      <button class="btn primary wide" style="margin-top:14px" onclick="jeoApNext()">${T_.next}</button>
+    </section>`;
+    return;
+  }
+
+  /* ---------- SUDDEN DEATH ---------- */
+  if (JEO.finalStage === "sudden_intro"){
+    JEO.sdAlive = JEO.teams.map(t=>t.i);
+    const cat = buildCategory(shuffled(JEO.topics)[0], 15);
+    JEO.sdClues = cat.clues;
+    JEO.sdIdx = 0;
+    V().innerHTML = `
+    <section class="panel raised jeohead">
+      <div class="eyebrow">${T_.finalRound}</div>
+      <h1 class="jeotitle">💀 ${T_.finalSuddenDeath}</h1>
+      <p class="muted">${T_.finalSuddenDeathHelp}</p>
+    </section>
+    <section class="panel">
+      <button class="btn primary wide" onclick="JEO.finalStage='sudden';viewGameShow()">
+        ${es?"Empezar":"Start"} →</button>
+    </section>`;
+    return;
+  }
+  if (JEO.finalStage === "sudden"){
+    if (JEO.sdAlive.length <= 1 || JEO.sdIdx >= JEO.sdClues.length){
+      const winner = JEO.teams[JEO.sdAlive[0]] || JEO.teams[0];
+      winner.score += 500;
+      V().innerHTML = `
+      <section class="panel raised jeohead" style="text-align:center">
+        <div class="eyebrow">💀 ${T_.finalRound}</div>
+        <h1 class="jeotitle" style="color:var(--gold)">🏆 ${esc(winner.name)}</h1>
+        <p class="muted">${es?"Último equipo en pie — +$500":"Last team standing — +$500"}</p>
+        <p class="muted">${es?"Eliminados":"Eliminated"}: ${JEO.teams.filter(t=>!JEO.sdAlive.includes(t.i)).map(t=>esc(t.name)).join(", ")||"—"}</p>
+      </section>
+      <section class="panel">
+        <button class="btn primary wide" onclick="JEO.stage='done';viewGameShow()">
+          ${T_.finalStandings}</button>
+      </section>`;
+      return;
+    }
+    const cl = JEO.sdClues[JEO.sdIdx];
+    const alive = JEO.sdAlive.map(i=>JEO.teams[i]);
+    V().innerHTML = `
+    <section class="panel raised jeoclue">
+      <div class="eyebrow">💀 ${es?"Ronda":"Round"} ${JEO.sdIdx+1} · ${alive.length} ${es?"quedan":"remain"}</div>
+      <p class="jeoq">${esc(cl.q)}</p>
+      <div class="jeoopts">
+        ${cl.c.map((t,i)=>`<button class="jeoopt" disabled><span class="jeoletter">${"ABCD"[i]}</span>${esc(t)}</button>`).join("")}
+      </div>
+    </section>
+    <section class="panel">
+      <div class="eyebrow">${es?"¿Quién falló? Toca para eliminar":"Who missed? Tap to eliminate"}</div>
+      <div class="row" style="margin-top:8px;flex-wrap:wrap">
+        ${alive.map(t=>`<button class="btn ghost" style="flex:1;min-width:80px"
+          onclick="jeoSdElim(${t.i})">${esc(t.name)}</button>`).join("")}
+      </div>
+      <p class="muted" style="font-size:13px;margin-top:10px">${es?"Respuesta correcta":"Correct answer"}: <b>${"ABCD"[cl.a]}</b> — ${esc(cl.c[cl.a])}</p>
+      <div class="why"><b>${es?"Por qué":"Why"}:</b> ${esc(cl.why)}</div>
+      <button class="btn primary wide" style="margin-top:14px" onclick="jeoSdNext()">${es?"Nadie falló — siguiente":"Nobody missed — next"}</button>
+    </section>`;
+    return;
+  }
+
+  /* ---------- CLASSIC WAGER (top 2) ---------- */
   if (JEO.finalStage === "wager"){
     V().innerHTML = `
     <section class="panel raised jeohead">
@@ -5701,6 +5976,24 @@ function jeoLockWagers(){
   });
   JEO.finalStage = "answer"; viewGameShow();
 }
+/* All-play helpers */
+function jeoApMark(i, btn){
+  JEO.apScores[i] = (JEO.apScores[i]||0) + 1;
+  btn.disabled = true; btn.style.background = "var(--crt)"; btn.style.color = "#03201A";
+  sfx("right");
+}
+function jeoApNext(){ JEO.apIdx++; viewGameShow(); }
+
+/* Sudden death helpers */
+function jeoSdElim(i){
+  JEO.sdAlive = JEO.sdAlive.filter(x => x !== i);
+  toast("💀 " + esc(JEO.teams[i].name) + " " + (S.lang==="es"?"eliminado":"eliminated"));
+  sfx("wrong");
+  if (JEO.sdAlive.length <= 1) return viewGameShow();
+  viewGameShow();
+}
+function jeoSdNext(){ JEO.sdIdx++; viewGameShow(); }
+
 function jeoRevealFinal(){
   const cl = JEO.finalClue;
   JEO.finalists.forEach(i=>{
