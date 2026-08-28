@@ -1113,6 +1113,8 @@ const T = {
     endEarly:"End game",endEarlyConfirm:"End the game now and go to the final?",
     editSetup:"Edit setup",disqualify:"DQ",disqualifyHelp:"Foul — clue goes back on the board",
     dqToast:"Disqualified! Clue returned to the board.",
+    redo:"Redo",redoHelp:"New question, same runners",
+    powerEarned:"earned a power-up!",noPowerAvail:"No powers left to earn",
     quitGame:"Quit the game? Scores will be lost.",
     board:"Board",whyThat:"Why that's the answer",
     waitingBuzz:"Waiting for a buzz",whoBuzzed:"Who buzzed first?",
@@ -1412,6 +1414,8 @@ const T = {
     endEarly:"Terminar juego",endEarlyConfirm:"¿Terminar el juego ahora e ir a la final?",
     editSetup:"Editar config",disqualify:"DQ",disqualifyHelp:"Falta — la pista vuelve al tablero",
     dqToast:"¡Descalificado! La pista volvió al tablero.",
+    redo:"Repetir",redoHelp:"Nueva pregunta, mismos jugadores",
+    powerEarned:"¡ganó un poder!",noPowerAvail:"No quedan poderes por ganar",
     quitGame:"Salir del juego? Se pierden los puntajes.",
     board:"Tablero",whyThat:"Por que esa es la respuesta",
     waitingBuzz:"Esperando el timbre",whoBuzzed:"Quien sono primero?",
@@ -4945,7 +4949,10 @@ function jeoStart(){
   JEO.round = 1;
   /* --- power-ups: one of each per team, used once --- */
   JEO.teams.forEach(t => {
-    t.powers = {steal:1, swap:1, double:1, freeze:1};
+    t.powers = {steal:0, swap:0, double:0, freeze:0};
+    /* each team starts with one random power — earn the rest by playing well */
+    const starter = POWER_TYPES[Math.floor(Math.random()*POWER_TYPES.length)];
+    t.powers[starter] = 1;
     t.lastWin = 0;
   });
   JEO.doubleNext = false;   /* true when a team activates "double down" */
@@ -4970,7 +4977,7 @@ function jeoRules(){
     ["4","3 segundos para contestar","Sólo contesta el representante de esa mesa. Si pulsas, ya deberías saberla."],
     ["5","10 s para robar","Si fallan, cualquier otra mesa puede quitársela."],
     ["6","Por la ventana","Si nadie la acierta, se va y nadie gana nada."],
-    ["⚡","Poderes","Cada equipo empieza con 4 poderes de un solo uso. El equipo que elige puede usar uno antes de elegir pista:"],
+    ["⚡","Poderes","Cada equipo empieza con UN poder al azar. Contesta bien y podrías ganar más — aparecen al azar con respuestas correctas:"],
     ["🏴‍☠️","Robar","Toma la MITAD de la última ganancia de otro equipo."],
     ["🔄","Intercambiar","Cambia tu puntaje con el de cualquier otro equipo."],
     ["⚡","Doble o nada","La siguiente pista vale 2×, para bien o para mal."],
@@ -4982,7 +4989,7 @@ function jeoRules(){
     ["4","3 seconds to answer","Only that table's runner answers. Buzz in and you had better know it."],
     ["5","10 seconds to steal","Miss it and any other table can take it off you."],
     ["6","Out the window","If nobody gets it, the clue is gone and nobody scores."],
-    ["⚡","Power-ups","Each team starts with 4 one-time powers. The team picking the clue can use one before choosing:"],
+    ["⚡","Power-ups","Each team starts with ONE random power. Answer correctly and you might earn more — they drop randomly on right answers:"],
     ["🏴‍☠️","Steal","Take HALF of another team's last win."],
     ["🔄","Swap","Trade your score with any other team's."],
     ["⚡","Double Down","The next clue is worth 2×, up or down."],
@@ -5243,28 +5250,16 @@ function jeoOpen(ci, ri){
              wager:null, counting:false, wrongPicks:[], stolen:false,
              dead:false, lastTeam:null, phase:null, tLeft:0, tMax:1};
   JEO.stage = "clue";
-  if (cl.special && !cl.wagerDone){ JEO.cur.needWager = true; }
-  else jeoSetPhase("read", JEO_T.read);
+  if (cl.special && !cl.wagerDone){ JEO.cur.isSpecial = true; }
+  jeoSetPhase("read", JEO_T.read);
   viewGameShow();
 }
 function jeoClue(){
   const C = JEO.cur, cl = C.clue, cat = JEO.cats[C.ci];
 
-  /* Smith's Special: pick who found it, then let them wager first. */
-  if (C.needWager && C.wager === null){
-    V().innerHTML = `
-    <section class="panel raised jeospecial">
-      <div class="eyebrow">${T_.smithsSpecial}</div>
-      <h1 class="jeotitle" style="color:var(--gold)">★ ${T_.specialFound}</h1>
-      <p class="muted">${T_.specialHelp}</p>
-      <div class="eyebrow" style="margin-top:14px">${T_.whichTable}</div>
-      <div class="topicgrid" style="margin-top:8px">
-        ${JEO.teams.map(t=>`<button class="topicbtn" onclick="jeoSpecialTeam(${t.i})">
-          <b>${esc(t.name)}</b><small>$${t.score}</small></button>`).join("")}
-      </div>
-    </section>`;
-    return;
-  }
+  /* Smith's Special is now handled like any other clue — the question shows,
+     buzzers open, everyone competes. The wager prompt appears only after a team
+     buzzes, and the special badge is cosmetic flair. */
   if (C.needWager && C.wager === null) return;
 
   const canWager = C.needWager && C.wagerTeam != null && C.wager === undefined;
@@ -5307,6 +5302,8 @@ function jeoClue(){
     ${jeoBuzzerBar()}
     ${C.buzzed!==null?`<div class="row" style="margin-top:10px">
       <button class="btn ghost" style="flex:1" onclick="jeoNoAnswer()">${T_.passIt}</button>
+      <button class="btn ghost" style="flex:0 0 auto" onclick="jeoRedo()"
+        title="${T_.redoHelp}">🔁 ${T_.redo}</button>
       <button class="btn ghost" style="flex:0 0 auto;color:var(--hot)" onclick="jeoDisqualify()"
         title="${T_.disqualifyHelp}">🚫 ${T_.disqualify}</button>
     </div>`:""}
@@ -5333,22 +5330,9 @@ function jeoStatusHTML(){
     return `<span class="jeobuzzed">${esc(JEO.teams[C.buzzed].name)} — ${T_.yourAnswer}</span>`;
   return `<span class="muted">${JEO.buzz==='keys'?T_.pressYourKey:T_.tapWhoBuzzed}</span>`;
 }
-function jeoSpecialTeam(i){
-  const C = JEO.cur;
-  C.wagerTeam = i;
-  const t = JEO.teams[i];
-  const max = Math.max(1000, t.score);
-  const raw = prompt(T_.wagerPrompt.replace("{}", t.name).replace("{max}", max), String(Math.min(500,max)));
-  if (raw === null){ C.needWager = false; C.wager = null; return viewGameShow(); }
-  let w = Math.abs(parseInt(raw,10) || 0);
-  w = Math.max(0, Math.min(max, w));
-  C.wager = w;
-  C.buzzed = i;                       /* the finder answers it alone */
-  C.lastTeam = i;
-  JEO.teams.forEach(x => x.lock = x.i !== i);
-  jeoSetPhase("answer", JEO_T.answer);
-  viewGameShow();
-}
+/* jeoSpecialTeam is now unused — the special wager prompt runs inline in jeoBuzz.
+   Kept as a no-op for safety in case any stale onclick references it. */
+function jeoSpecialTeam(i){ viewGameShow(); }
 function jeoBind(){
   jeoUnbind();
   JEO.keyHandler = e => {
@@ -5381,6 +5365,17 @@ function jeoBuzz(i){
     t.upNext = null;
   } else C.seat = null;
   jeoUnbind();
+  /* Smith's Special: the buzzing team gets a wager prompt before answering */
+  if (C.isSpecial && !C.wagerAsked){
+    C.wagerAsked = true;
+    const t = JEO.teams[i];
+    const max = Math.max(1000, t.score);
+    const raw = prompt(T_.wagerPrompt.replace("{}",t.name).replace("{max}",max), String(Math.min(500,max)));
+    if (raw !== null){
+      let w = Math.abs(parseInt(raw,10)||0);
+      C.wager = Math.max(0, Math.min(max, w));
+    }
+  }
   jeoSetPhase("answer", JEO_T.answer);
   toast("🔔 " + JEO.teams[i].name + (C.seat!=null ? " · " + T_.seat + " " + (C.seat+1) : ""));
   viewGameShow();
@@ -5439,9 +5434,7 @@ function jeoReveal(){
   if (ok){
     C.revealed = true; cl.used = true; JEO.remaining--;
     JEO.teams.forEach(t => t.lock = false);
-    /* Control of the board is the reward for being right: the table that
-       answers correctly picks the next clue. */
-    if (team) jeoSetControl(team.i, "kept", team);
+    if (team){ jeoSetControl(team.i, "kept", team); jeoMaybeAwardPower(team); }
     sfx("right"); jeoUnbind();
     return viewGameShow();
   }
@@ -5468,6 +5461,44 @@ function jeoNoAnswer(){
   if (C.stolen || C.wager != null) return jeoOutTheWindow(false);
   jeoOpenSteal();
 }
+/* ---------- REDO — swap the question, keep the same runners -------------- */
+function jeoRedo(){
+  const C = JEO.cur; if (!C) return;
+  jeoStopClock(); clearInterval(JEO.countTimer);
+  const ci = C.ci, cat = JEO.cats[ci];
+  /* build a fresh clue for this category and swap it in */
+  const topicRef = JEO.topics[ci % JEO.topics.length];
+  const newCat = buildCategory(topicRef, 8);
+  const used = new Set(cat.clues.map(c=>c.q));
+  const fresh = newCat.clues.find(c => !used.has(c.q));
+  if (fresh){
+    fresh.value = C.clue.value; fresh.used = false; fresh.special = C.clue.special;
+    cat.clues[C.ri] = fresh;
+  }
+  /* reopen as if we just picked the tile — same runners, fresh question */
+  jeoOpen(ci, C.ri);
+}
+
+/* ---------- POWER EARNING — random clues award a power on correct -------- */
+const POWER_TYPES = ["steal","swap","double","freeze"];
+function jeoMaybeAwardPower(team){
+  if (!team || !team.powers) return;
+  /* ~25% chance on any correct answer */
+  if (Math.random() > 0.25) return;
+  /* find a power they don't already have, or the one with fewest uses left */
+  const empty = POWER_TYPES.filter(k => team.powers[k] <= 0);
+  if (!empty.length){
+    /* they already have all four — award a duplicate of a random one */
+    const k = POWER_TYPES[Math.floor(Math.random()*POWER_TYPES.length)];
+    team.powers[k]++;
+    toast("⚡ " + esc(team.name) + " " + T_.powerEarned + " +" + T_["power"+k[0].toUpperCase()+k.slice(1)]);
+    return;
+  }
+  const k = empty[Math.floor(Math.random()*empty.length)];
+  team.powers[k]++;
+  toast("⚡ " + esc(team.name) + " " + T_.powerEarned + " " + T_["power"+k[0].toUpperCase()+k.slice(1)]);
+}
+
 /* ---------- END EARLY / EDIT SETUP / DISQUALIFY -------------------------- */
 function jeoEndEarly(){
   if (!confirm(T_.endEarlyConfirm)) return;
