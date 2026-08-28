@@ -577,6 +577,7 @@ ul.ctrl li{margin:4px 0;color:var(--ink)}
 .jeoclue{background:linear-gradient(180deg,#141C6B,#0B0F3F);border-color:var(--gold)}
 .jeoq{font-size:clamp(17px,4.2vw,26px);font-weight:600;line-height:1.4;
   margin:10px 0 18px;text-align:center}
+.bi-es{color:var(--dim);font-size:0.82em;font-style:italic;display:block;margin-top:4px}
 .jeoopts{display:grid;gap:8px}
 @media(min-width:700px){.jeoopts{grid-template-columns:1fr 1fr}}
 .jeoopt{display:flex;align-items:center;gap:10px;text-align:left;padding:14px;
@@ -1497,6 +1498,29 @@ const allPacks=()=>PACKS.concat(S.extraPacks||[]);
 const allUnits=()=>allPacks().flatMap(p=>p.units.map(u=>({...u,pack:p})));
 const findUnit=id=>allUnits().find(u=>u.id===id);
 function L(o){ if(o==null) return ""; if(typeof o==="string") return o; return o[S.lang]||o.en||Object.values(o)[0]||""; }
+/* Bilingual display: shows both languages when they differ. Used by the game
+   show so every student can read the clue regardless of language setting. */
+function B(o){
+  if(o==null) return "";
+  if(typeof o==="string"){
+    /* pipe syntax: "english|español" */
+    if(o.includes("|")){
+      const [en,es] = o.split("|");
+      return en.trim() === es.trim() ? esc(en) : esc(en) + `<br><span class="bi-es">${esc(es)}</span>`;
+    }
+    return esc(o);
+  }
+  const en = o.en||"", es = o.es||"";
+  if(!es || en===es) return esc(en);
+  return esc(en) + `<br><span class="bi-es">${esc(es)}</span>`;
+}
+/* Bilingual choice: show Spanish inline if it differs */
+function BC(cl, i){
+  const en = cl.c[i] || "";
+  const es = cl.cEs ? (cl.cEs[i] || en) : en;
+  if (!es || en === es) return esc(en);
+  return esc(en) + ` <span class="bi-es" style="display:inline;margin-left:6px">${esc(es)}</span>`;
+}
 const levelOf=xp=>Math.floor(xp/250)+1;
 function today(){return new Date().toISOString().slice(0,10);}
 function touchStreak(){ const t=today(); if(S.lastDay===t) return;
@@ -3459,11 +3483,11 @@ function drawSoloClue(){
     <span class="chip ${S2.score<0?'bad':'on'}">$${S2.score}</span>
   </div>
   <section class="panel raised jeoclue">
-    <p class="jeoq">${esc(cl.q)}</p>
+    <p class="jeoq">${B(cl.q)}</p>
     <div class="jeoopts" id="sopts">
       ${cl.c.map((t,i)=>`<button class="jeoopt ${S2.revealed?(i===cl.a?'right':(S2.picked===i?'wrong':'')):''}"
         ${S2.revealed?'disabled':''} onclick="soloPick(${i})">
-        <span class="jeoletter">${"ABCD"[i]}</span>${esc(t)}</button>`).join("")}
+        <span class="jeoletter">${"ABCD"[i]}</span>${BC(cl,i)}</button>`).join("")}
     </div>
     ${S2.revealed?`<div class="jeostatus">
       <span class="jeoverdict ${S2.picked===cl.a?'ok':'no'}">
@@ -3471,7 +3495,7 @@ function drawSoloClue(){
   </section>
   ${S2.revealed?`<section class="panel jeowhy">
     <div class="eyebrow">${T_.whyThat}</div>
-    <p>${esc(cl.why)}</p>
+    <p>${B(cl.why)}</p>
     <button class="btn primary wide" style="margin-top:12px" onclick="soloBack()">${T_.board}</button>
   </section>`:""}`;
   window.scrollTo(0,0);
@@ -4025,20 +4049,24 @@ let JEO = null;
 function jeoClueFromVocab(v, pool, reverse){
   const wrong = shuffled(pool.filter(o => L(o.w) !== L(v.w))).slice(0,3);
   if (!reverse){
-    const opts = shuffled([{t:L(v.w), ok:true}].concat(wrong.map(o=>({t:L(o.w), ok:false}))));
-    return {q:L(v.d), c:opts.map(o=>o.t), a:opts.findIndex(o=>o.ok),
-            why:L(v.w) + " — " + L(v.d)};
+    const opts = shuffled([{t:L(v.w), tEs:v.w&&v.w.es||L(v.w), ok:true}]
+      .concat(wrong.map(o=>({t:L(o.w), tEs:o.w&&o.w.es||L(o.w), ok:false}))));
+    return {q:v.d, c:opts.map(o=>o.t), cEs:opts.map(o=>o.tEs), a:opts.findIndex(o=>o.ok),
+            why:v.w&&v.w.en ? {en:v.w.en+" — "+(v.d.en||L(v.d)), es:(v.w.es||v.w.en)+" — "+(v.d.es||L(v.d))} : L(v.w)+" — "+L(v.d), _bi:true};
   }
-  const opts = shuffled([{t:L(v.d), ok:true}].concat(wrong.map(o=>({t:L(o.d), ok:false}))));
-  return {q:T_.whatDoesMean.replace("{}", L(v.w)), c:opts.map(o=>o.t),
-          a:opts.findIndex(o=>o.ok), why:L(v.w) + " — " + L(v.d)};
+  const opts = shuffled([{t:L(v.d), tEs:v.d&&v.d.es||L(v.d), ok:true}]
+    .concat(wrong.map(o=>({t:L(o.d), tEs:o.d&&o.d.es||L(o.d), ok:false}))));
+  return {q:v.w, c:opts.map(o=>o.t), cEs:opts.map(o=>o.tEs), a:opts.findIndex(o=>o.ok),
+          why:v.w&&v.w.en ? {en:v.w.en+" — "+(v.d.en||L(v.d)), es:(v.w.es||v.w.en)+" — "+(v.d.es||L(v.d))} : L(v.w)+" — "+L(v.d), _bi:true};
 }
 function jeoClueFromItem(it){
   const ch = (it.c && (it.c[S.lang] || it.c.en)) || [];
+  const chEs = (it.c && it.c.es) || ch;
   if (it.type !== "mcq" || ch.length < 2) return null;
-  const tagged = ch.map((t,i)=>({t:t, ok:i===it.a}));
+  const tagged = ch.map((t,i)=>({t:t, tEs:chEs[i]||t, ok:i===it.a}));
   const opts = shuffled(tagged);
-  return {q:L(it.q), c:opts.map(o=>o.t), a:opts.findIndex(o=>o.ok), why:L(it.why)};
+  return {q:it.q, c:opts.map(o=>o.t), cEs:opts.map(o=>o.tEs), a:opts.findIndex(o=>o.ok),
+          why:it.why, _bi:true};
 }
 /* ----------------------------------------------------------------------------
    JUST-FOR-FUN BANKS
@@ -4629,16 +4657,16 @@ function drawShowStudy(){
   V().innerHTML = head + `
   <section class="panel raised jeoclue">
     <div class="eyebrow">${es?"Pregunta":"Question"} ${s.i+1}/${s.cat.clues.length}</div>
-    <p class="jeoq">${esc(cl.q)}</p>
+    <p class="jeoq">${B(cl.q)}</p>
     <div class="jeoopts">
       ${cl.c.map((t,i)=>`<button class="jeoopt ${done?(i===cl.a?'right':(s.picked===i?'wrong':'')):''}"
         ${done?'disabled':''} onclick="showStudyPick(${i})">
-        <span class="jeoletter">${"ABCD"[i]}</span>${esc(t)}</button>`).join("")}
+        <span class="jeoletter">${"ABCD"[i]}</span>${BC(cl,i)}</button>`).join("")}
     </div>
   </section>
   ${done?`<section class="panel jeowhy">
     <div class="eyebrow">${T_.whyThat}</div>
-    <p>${esc(cl.why)}</p>
+    <p>${B(cl.why)}</p>
     <button class="btn primary wide" style="margin-top:12px" onclick="showStudyNext()">
       ${s.i+1 >= s.cat.clues.length ? (es?"Ver resultado":"See result") : (es?"Siguiente":"Next")} →</button>
   </section>`:""}`;
@@ -4967,13 +4995,13 @@ function drawPrep(){
   V().innerHTML = head + `
   <section class="panel raised jeoclue">
     <div class="eyebrow">${es?"Como en el tablero":"Board-style"} · ${esc(topicLabel(c.t))}</div>
-    <p class="jeoq">${esc(cl.q)}</p>
+    <p class="jeoq">${B(cl.q)}</p>
     <div class="jeoopts">
       ${cl.c.map((t,i)=>`<button class="jeoopt ${done?(i===cl.a?'right':(p.picked===i?'wrong':''))
           :(p.cut.indexOf(i)>=0?'wrong':'')}"
         ${done||p.cut.indexOf(i)>=0?'disabled':''} onclick="prepPick(${i})"
         style="${p.cut.indexOf(i)>=0?'opacity:.45;text-decoration:line-through':''}">
-        <span class="jeoletter">${"ABCD"[i]}</span>${esc(t)}</button>`).join("")}
+        <span class="jeoletter">${"ABCD"[i]}</span>${BC(cl,i)}</button>`).join("")}
     </div>
     ${!done&&!p.hint?`<button class="btn ghost wide" style="margin-top:10px" onclick="prepHint()">
       ${es?"Descartar dos":"Cut two options"}</button>`:""}
@@ -4982,7 +5010,7 @@ function drawPrep(){
   </section>
   ${done?`<section class="panel jeowhy">
     <div class="eyebrow">${T_.whyThat}</div>
-    <p>${esc(cl.why)}</p>
+    <p>${B(cl.why)}</p>
     <button class="btn primary wide" style="margin-top:12px" onclick="prepNext()">${es?"Siguiente":"Next"} →</button>
   </section>`:""}`;
 }
@@ -5336,13 +5364,13 @@ function jeoClue(){
   </div>
   <section class="panel raised jeoclue">
     ${cl.special?`<div class="eyebrow" style="color:var(--gold)">★ ${T_.smithsSpecial}</div>`:""}
-    <p class="jeoq">${esc(cl.q)}</p>
+    <p class="jeoq">${B(cl.q)}</p>
     <div class="jeoopts" id="jopts">
       ${cl.c.map((t,i)=>`<button class="jeoopt ${C.revealed
           ?(i===cl.a?'right':((C.picked===i||C.wrongPicks.indexOf(i)>=0)?'wrong':''))
           :(C.wrongPicks.indexOf(i)>=0?'wrong':'')}"
         ${C.phase==="answer"&&!C.revealed&&C.wrongPicks.indexOf(i)<0?'':'disabled'} onclick="jeoPick(${i})">
-        <span class="jeoletter">${"ABCD"[i]}</span>${esc(t)}</button>`).join("")}
+        <span class="jeoletter">${"ABCD"[i]}</span>${BC(cl,i)}</button>`).join("")}
     </div>
     <div id="jstatus" class="jeostatus">${jeoStatusHTML()}</div>
     ${jeoClockHTML()}
@@ -5353,7 +5381,7 @@ function jeoClue(){
         ?(C.noBuzz?"Nadie pulso — se fue por la ventana":"Nadie la acerto — se fue por la ventana")
         :(C.noBuzz?"No buzz — out the window":"Nobody got it — out the window")}</div>`:""}
     <div class="eyebrow">${T_.whyThat}</div>
-    <p>${esc(cl.why)}</p>
+    <p>${B(cl.why)}</p>
     <button class="btn primary wide" style="margin-top:12px" onclick="jeoBackToBoard()">${T_.board}</button>
   </section>`:`
   <section class="panel">
@@ -5843,9 +5871,9 @@ function jeoFinal(){
     V().innerHTML = `
     <section class="panel raised jeoclue">
       <div class="eyebrow">⚡ ${es?"Pregunta":"Question"} ${JEO.apIdx+1}/5</div>
-      <p class="jeoq">${esc(cl.q)}</p>
+      <p class="jeoq">${B(cl.q)}</p>
       <div class="jeoopts">
-        ${cl.c.map((t,i)=>`<button class="jeoopt" disabled><span class="jeoletter">${"ABCD"[i]}</span>${esc(t)}</button>`).join("")}
+        ${cl.c.map((t,i)=>`<button class="jeoopt" disabled><span class="jeoletter">${"ABCD"[i]}</span>${BC(cl,i)}</button>`).join("")}
       </div>
       <p class="muted" style="margin-top:10px">${es
         ?"Cada mesa elige A, B, C o D en silencio. Cuenta 10 segundos, luego revela."
@@ -5857,8 +5885,8 @@ function jeoFinal(){
         ${JEO.teams.map(t=>`<button class="btn ghost" id="ap_${t.i}"
           onclick="jeoApMark(${t.i},this)" style="flex:1;min-width:80px">${esc(t.name)}</button>`).join("")}
       </div>
-      <p class="muted" style="font-size:13px;margin-top:10px">${es?"Respuesta correcta":"Correct answer"}: <b>${"ABCD"[cl.a]}</b> — ${esc(cl.c[cl.a])}</p>
-      <div class="why"><b>${es?"Por qué":"Why"}:</b> ${esc(cl.why)}</div>
+      <p class="muted" style="font-size:13px;margin-top:10px">${es?"Respuesta correcta":"Correct answer"}: <b>${"ABCD"[cl.a]}</b> — ${BC(cl,cl.a)}</p>
+      <div class="why"><b>${es?"Por qué":"Why"}:</b> ${B(cl.why)}</div>
       <button class="btn primary wide" style="margin-top:14px" onclick="jeoApNext()">${T_.next}</button>
     </section>`;
     return;
@@ -5904,9 +5932,9 @@ function jeoFinal(){
     V().innerHTML = `
     <section class="panel raised jeoclue">
       <div class="eyebrow">💀 ${es?"Ronda":"Round"} ${JEO.sdIdx+1} · ${alive.length} ${es?"quedan":"remain"}</div>
-      <p class="jeoq">${esc(cl.q)}</p>
+      <p class="jeoq">${B(cl.q)}</p>
       <div class="jeoopts">
-        ${cl.c.map((t,i)=>`<button class="jeoopt" disabled><span class="jeoletter">${"ABCD"[i]}</span>${esc(t)}</button>`).join("")}
+        ${cl.c.map((t,i)=>`<button class="jeoopt" disabled><span class="jeoletter">${"ABCD"[i]}</span>${BC(cl,i)}</button>`).join("")}
       </div>
     </section>
     <section class="panel">
@@ -5915,8 +5943,8 @@ function jeoFinal(){
         ${alive.map(t=>`<button class="btn ghost" style="flex:1;min-width:80px"
           onclick="jeoSdElim(${t.i})">${esc(t.name)}</button>`).join("")}
       </div>
-      <p class="muted" style="font-size:13px;margin-top:10px">${es?"Respuesta correcta":"Correct answer"}: <b>${"ABCD"[cl.a]}</b> — ${esc(cl.c[cl.a])}</p>
-      <div class="why"><b>${es?"Por qué":"Why"}:</b> ${esc(cl.why)}</div>
+      <p class="muted" style="font-size:13px;margin-top:10px">${es?"Respuesta correcta":"Correct answer"}: <b>${"ABCD"[cl.a]}</b> — ${BC(cl,cl.a)}</p>
+      <div class="why"><b>${es?"Por qué":"Why"}:</b> ${B(cl.why)}</div>
       <button class="btn primary wide" style="margin-top:14px" onclick="jeoSdNext()">${es?"Nadie falló — siguiente":"Nobody missed — next"}</button>
     </section>`;
     return;
@@ -5946,9 +5974,9 @@ function jeoFinal(){
     V().innerHTML = `
     <section class="panel raised jeoclue">
       <div class="eyebrow" style="color:var(--gold)">${T_.finalRound} · ${esc(JEO.finalCat)}</div>
-      <p class="jeoq">${esc(cl.q)}</p>
+      <p class="jeoq">${B(cl.q)}</p>
       <div class="jeoopts">
-        ${cl.c.map((t,i)=>`<button class="jeoopt" disabled><span class="jeoletter">${"ABCD"[i]}</span>${esc(t)}</button>`).join("")}
+        ${cl.c.map((t,i)=>`<button class="jeoopt" disabled><span class="jeoletter">${"ABCD"[i]}</span>${BC(cl,i)}</button>`).join("")}
       </div>
       <p class="muted" style="margin-top:12px">${T_.finalWriteIt}</p>
     </section>
@@ -6013,7 +6041,7 @@ function jeoDone(){
   </section>
   ${cl?`<section class="panel jeowhy">
     <div class="eyebrow">${T_.whyThat}</div>
-    <p><b>${esc(cl.c[cl.a])}</b> — ${esc(cl.why)}</p>
+    <p><b>${BC(cl,cl.a)}</b> — ${B(cl.why)}</p>
   </section>`:""}
   <section class="panel">
     <table><tbody>
