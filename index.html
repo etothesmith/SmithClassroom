@@ -1080,7 +1080,7 @@ const T = {
     hit:"Direct hit",wrongTerm:"Wrong term",itGotPast:"It got past you",
     /* --- game show --- */
     gameShow:"Smith's Challenge",
-    gameShowIntro:"A team game show for the room. Two full rounds, then the top two wager it out.",
+    gameShowIntro:"A team game show for the room. One fast round with steals, swaps, and power-ups — then the top two wager it all.",
     howManyTables:"How many tables are playing?",
     buzzMode:"Buzz-in",buzzKeys:"Keyboard buzzers",buzzTap:"I'll tap who buzzed",
     buzzBoard:"Smartboard buzzers",
@@ -1102,6 +1102,14 @@ const T = {
     startGame:"Start the game",
     round:"Round",cluesLeft:"clues left",
     startRound2:"Start round 2 — values double",startFinal:"Go to the final",
+    powerSteal:"Steal",powerSwap:"Swap scores",powerDouble:"Double down",powerFreeze:"Freeze",
+    powerStealHelp:"Take half a rival's last win",powerSwapHelp:"Trade scores with any team",
+    powerDoubleHelp:"Next clue is worth 2×",powerFreezeHelp:"Lock a rival out of the next clue",
+    usePower:"Use a power-up",noPowers:"No power-ups left",powerUsed:"Used",
+    stealHalf:"Pick a team to steal from",swapWith:"Pick a team to swap scores with",
+    freezeWho:"Pick a team to freeze out of the next clue",
+    youStole:"stole",fromTeam:"from",youSwapped:"swapped scores with",youFroze:"froze",
+    doubleActive:"Next clue is worth DOUBLE",
     quitGame:"Quit the game? Scores will be lost.",
     board:"Board",whyThat:"Why that's the answer",
     waitingBuzz:"Waiting for a buzz",whoBuzzed:"Who buzzed first?",
@@ -1368,7 +1376,7 @@ const T = {
     hit:"Directo",wrongTerm:"Termino incorrecto",itGotPast:"Se te escapo",
     /* --- concurso --- */
     gameShow:"El reto de Smith",
-    gameShowIntro:"Un concurso por equipos. Dos rondas completas y luego los dos mejores apuestan.",
+    gameShowIntro:"Un concurso por equipos. Una ronda rápida con robos, intercambios y poderes — luego los dos mejores apuestan todo.",
     howManyTables:"Cuantas mesas juegan?",
     buzzMode:"Timbre",buzzKeys:"Teclas como timbres",buzzTap:"Yo toco quien sono",
     buzzBoard:"Timbres en la pizarra",
@@ -1390,6 +1398,14 @@ const T = {
     startGame:"Comenzar el juego",
     round:"Ronda",cluesLeft:"pistas restantes",
     startRound2:"Ronda 2 — valores dobles",startFinal:"Ir a la final",
+    powerSteal:"Robar",powerSwap:"Intercambiar",powerDouble:"Doble o nada",powerFreeze:"Congelar",
+    powerStealHelp:"Toma la mitad de la última ganancia de un rival",powerSwapHelp:"Intercambia puntajes con cualquier equipo",
+    powerDoubleHelp:"La siguiente pista vale 2×",powerFreezeHelp:"Bloquea a un rival en la siguiente pista",
+    usePower:"Usar un poder",noPowers:"Sin poderes",powerUsed:"Usado",
+    stealHalf:"Elige un equipo para robar",swapWith:"Elige un equipo para intercambiar puntajes",
+    freezeWho:"Elige un equipo para congelar en la siguiente pista",
+    youStole:"robó",fromTeam:"de",youSwapped:"intercambió puntajes con",youFroze:"congeló a",
+    doubleActive:"La siguiente pista vale el DOBLE",
     quitGame:"Salir del juego? Se pierden los puntajes.",
     board:"Tablero",whyThat:"Por que esa es la respuesta",
     waitingBuzz:"Esperando el timbre",whoBuzzed:"Quien sono primero?",
@@ -4913,6 +4929,13 @@ function jeoToggleTopic(unit, t){
 /* ---------- board ------------------------------------------------------- */
 function jeoStart(){
   JEO.round = 1;
+  /* --- power-ups: one of each per team, used once --- */
+  JEO.teams.forEach(t => {
+    t.powers = {steal:1, swap:1, double:1, freeze:1};
+    t.lastWin = 0;
+  });
+  JEO.doubleNext = false;   /* true when a team activates "double down" */
+  JEO.frozen = null;        /* team index frozen for the next clue */
   jeoBuildRound();
   JEO.runnersSet = false;
   JEO.stage = "board";
@@ -4932,14 +4955,24 @@ function jeoRules(){
     ["3","Buzzers abiertos · 20 s","El primero en pulsar se la queda. Corre desde el fondo o desde tu asiento — yo decido."],
     ["4","3 segundos para contestar","Sólo contesta el representante de esa mesa. Si pulsas, ya deberías saberla."],
     ["5","10 s para robar","Si fallan, cualquier otra mesa puede quitársela."],
-    ["6","Por la ventana","Si nadie la acierta, se va y nadie gana nada."]
+    ["6","Por la ventana","Si nadie la acierta, se va y nadie gana nada."],
+    ["⚡","Poderes","Cada equipo empieza con 4 poderes de un solo uso. El equipo que elige puede usar uno antes de elegir pista:"],
+    ["🏴‍☠️","Robar","Toma la MITAD de la última ganancia de otro equipo."],
+    ["🔄","Intercambiar","Cambia tu puntaje con el de cualquier otro equipo."],
+    ["⚡","Doble o nada","La siguiente pista vale 2×, para bien o para mal."],
+    ["❄️","Congelar","Bloquea a un rival para que no pulse en la siguiente pista."]
   ] : [
     ["1","Runners to the back","Before every clue I name who answers for each table. That person goes and stands at the back of the room."],
     ["2","3 seconds to read","The clue appears. Buzzers are dead. Just read it."],
     ["3","Buzzers open · 20s","First table to buzz takes it. Run from the back or go from your desk — my call."],
     ["4","3 seconds to answer","Only that table's runner answers. Buzz in and you had better know it."],
     ["5","10 seconds to steal","Miss it and any other table can take it off you."],
-    ["6","Out the window","If nobody gets it, the clue is gone and nobody scores."]
+    ["6","Out the window","If nobody gets it, the clue is gone and nobody scores."],
+    ["⚡","Power-ups","Each team starts with 4 one-time powers. The team picking the clue can use one before choosing:"],
+    ["🏴‍☠️","Steal","Take HALF of another team's last win."],
+    ["🔄","Swap","Trade your score with any other team's."],
+    ["⚡","Double Down","The next clue is worth 2×, up or down."],
+    ["❄️","Freeze","Lock one rival out of buzzing on the next clue."]
   ];
   V().innerHTML = `
   <section class="panel raised jeohead">
@@ -4962,7 +4995,7 @@ function jeoRules(){
 function jeoBuildRound(){
   const perCat = 5;
   const cats = shuffled(JEO.topics).slice(0,5).map(t => buildCategory(t, perCat));
-  const base = JEO.round === 1 ? 100 : 200;
+  const base = 200;   /* single round, higher values keep pace */
   cats.forEach(c => c.clues.forEach((cl,i)=>{ cl.value = base*(i+1); cl.used = false; }));
   /* one hidden Smith's Special per round, never in the top row */
   /* A thin topic can yield fewer than perCat clues, so aim the special at a
@@ -5000,7 +5033,7 @@ function jeoBoard(){
     <span style="flex:1"></span>
     <button class="btn ghost" style="padding:8px 12px;min-height:0"
       onclick="JEO.stage='rules';viewGameShow()">${es?"Reglas":"Rules"}</button>
-    <span class="chip warn">${T_.round} ${JEO.round}/2</span>
+    <span class="chip warn">${T_.round} 1</span>
     <span class="chip">${JEO.remaining} ${T_.cluesLeft}</span>
   </div>
   ${gate?`
@@ -5035,24 +5068,24 @@ function jeoBoard(){
             onclick="jeoOpen(${ci},${ri})">${cl.used?"":"$"+cl.value}</button>`).join("")}
       </div>`).join("")}
   </div>
+  ${!gate ? jeoPowerPanel() : ""}
   <div class="jeoscores">
     ${JEO.teams.map(t=>`
-      <div class="jeoteam ${t.score===leader&&leader>0?'lead':''} ${t.i===JEO.control?'hasctl':''}">
-        <span class="jt-name">${esc(t.name)}${seatBadge(t)}</span>
+      <div class="jeoteam ${t.score===leader&&leader>0?'lead':''} ${t.i===JEO.control?'hasctl':''}
+        ${JEO.frozen===t.i?' frozen':''}">
+        <span class="jt-name">${esc(t.name)}${seatBadge(t)}${JEO.frozen===t.i?" ❄️":""}</span>
         <span class="jt-score ${t.score<0?'neg':''}">$${t.score}</span>
         <span class="jt-key">${JEO.buzz==='keys'?(t.i===9?0:t.i+1):"·"}</span>
       </div>`).join("")}
   </div>
   ${JEO.remaining===0?`<section class="panel" style="margin-top:14px">
     <button class="btn primary wide" onclick="jeoNextPhase()">${
-      JEO.round===1?T_.startRound2:T_.startFinal}</button></section>`:""}`;
+      T_.startFinal}</button></section>`:""}`;
   window.scrollTo(0,0);
 }
 function jeoRunnersReady(){ JEO.runnersSet = true; sfx("jeoOpen"); viewGameShow(); }
 function jeoReroll(){ jeoAssignSeats(true); sfx("tap"); viewGameShow(); }
 function jeoNextPhase(){
-  if (JEO.round === 1){ JEO.round = 2; jeoBuildRound(); JEO.stage="board";
-    JEO.runnersSet = false; jeoAssignSeats(true); return viewGameShow(); }
   JEO.stage = "final"; JEO.finalStage = "wager"; jeoBuildFinal(); viewGameShow();
 }
 function jeoQuit(){
@@ -5312,6 +5345,7 @@ function jeoBuzz(i){
   if (!C || C.buzzed !== null || C.revealed) return;
   if (C.phase === "read") return;
   if (JEO.teams[i].lock) return;
+  if (JEO.frozen === i){ toast("❄️ " + JEO.teams[i].name + " is frozen!"); return; }
   C.buzzed = i; C.lastTeam = i;
   /* name the specific student who has to answer */
   if (JEO.whosUp && JEO.teams[i].size > 0){
@@ -5366,10 +5400,15 @@ function jeoReveal(){
   const C = JEO.cur, cl = C.clue;
   jeoStopClock();
   const ok = C.picked === cl.a;
-  const amount = C.wager != null ? C.wager : cl.value;
+  let amount = C.wager != null ? C.wager : cl.value;
+  if (JEO.doubleNext){ amount *= 2; JEO.doubleNext = false; }
   const team = JEO.teams[C.buzzed];
   C.counting = false;
-  if (team) team.score += ok ? amount : -amount;
+  if (team){
+    team.score += ok ? amount : -amount;
+    if (ok) team.lastWin = amount;
+  }
+  JEO.frozen = null;   /* freeze expires after one clue */
 
   if (ok){
     C.revealed = true; cl.used = true; JEO.remaining--;
@@ -5403,6 +5442,94 @@ function jeoNoAnswer(){
   if (C.stolen || C.wager != null) return jeoOutTheWindow(false);
   jeoOpenSteal();
 }
+/* ---------- POWER-UPS ---------------------------------------------------- */
+function jeoPowerPanel(){
+  const t = JEO.teams[JEO.control];
+  if (!t || !t.powers) return "";
+  const es = S.lang === "es";
+  const pows = [
+    {k:"steal",  icon:"🏴‍☠️", label:T_.powerSteal,  help:T_.powerStealHelp},
+    {k:"swap",   icon:"🔄", label:T_.powerSwap,   help:T_.powerSwapHelp},
+    {k:"double", icon:"⚡", label:T_.powerDouble, help:T_.powerDoubleHelp},
+    {k:"freeze", icon:"❄️", label:T_.powerFreeze, help:T_.powerFreezeHelp}
+  ];
+  const any = pows.some(p => t.powers[p.k] > 0);
+  if (!any) return `<section class="panel"><div class="eyebrow">${T_.noPowers}</div></section>`;
+  return `<section class="panel">
+    <div class="eyebrow">${T_.usePower} — ${esc(t.name)}</div>
+    <div class="row" style="margin-top:8px;flex-wrap:wrap">
+      ${pows.map(p => `<button class="btn ${t.powers[p.k]>0?'':'ghost'}"
+        ${t.powers[p.k]>0?`onclick="jeoPowerUse('${p.k}')"`:'disabled'}
+        title="${esc(p.help)}"
+        style="flex:1;min-width:100px;${t.powers[p.k]<=0?'opacity:.35':''}">
+        ${p.icon} ${p.label}${t.powers[p.k]<=0?' ✓':''}</button>`).join("")}
+    </div>
+    ${JEO.doubleNext?`<div class="chip warn" style="margin-top:8px">${T_.doubleActive}</div>`:""}
+    ${JEO.frozen!=null?`<div class="chip bad" style="margin-top:8px">❄️ ${esc(JEO.teams[JEO.frozen].name)}</div>`:""}
+  </section>`;
+}
+function jeoPowerUse(k){
+  const t = JEO.teams[JEO.control];
+  if (!t || !t.powers || t.powers[k] <= 0) return;
+  t.powers[k] = 0;
+  const es = S.lang === "es";
+
+  if (k === "double"){
+    JEO.doubleNext = true;
+    toast("⚡ " + T_.doubleActive);
+    sfx("tap");
+    return viewGameShow();
+  }
+  if (k === "steal"){
+    const others = JEO.teams.filter(x => x.i !== t.i && x.lastWin > 0);
+    if (!others.length){ toast(es?"Nadie tiene ganancias que robar":"Nobody has winnings to steal"); return viewGameShow(); }
+    jeoPowerPick(T_.stealHalf, others, victim => {
+      const half = Math.ceil(victim.lastWin / 2);
+      victim.score -= half; t.score += half;
+      toast("🏴‍☠️ " + esc(t.name) + " " + T_.youStole + " $" + half + " " + T_.fromTeam + " " + esc(victim.name));
+      sfx("right");
+      viewGameShow();
+    });
+    return;
+  }
+  if (k === "swap"){
+    const others = JEO.teams.filter(x => x.i !== t.i);
+    jeoPowerPick(T_.swapWith, others, victim => {
+      const tmp = t.score; t.score = victim.score; victim.score = tmp;
+      toast("🔄 " + esc(t.name) + " " + T_.youSwapped + " " + esc(victim.name));
+      sfx("tap");
+      viewGameShow();
+    });
+    return;
+  }
+  if (k === "freeze"){
+    const others = JEO.teams.filter(x => x.i !== t.i);
+    jeoPowerPick(T_.freezeWho, others, victim => {
+      JEO.frozen = victim.i;
+      toast("❄️ " + esc(t.name) + " " + T_.youFroze + " " + esc(victim.name));
+      sfx("wrong");
+      viewGameShow();
+    });
+    return;
+  }
+}
+function jeoPowerPick(prompt, teams, cb){
+  const html = `<section class="panel raised" style="border-color:var(--gold)">
+    <div class="eyebrow" style="color:var(--gold)">${esc(prompt)}</div>
+    <div class="topicgrid" style="margin-top:10px">
+      ${teams.map(t=>`<button class="topicbtn" onclick="JEO._pwrCb(${t.i})">
+        <b>${esc(t.name)}</b><small>$${t.score}</small></button>`).join("")}
+    </div>
+    <button class="btn ghost wide" style="margin-top:10px" onclick="JEO._pwrCb(-1)">Cancel</button>
+  </section>`;
+  JEO._pwrCb = function(i){
+    delete JEO._pwrCb;
+    if (i < 0) return viewGameShow();
+    cb(JEO.teams[i]);
+  };
+  V().innerHTML = html;
+}
+
 function jeoBackToBoard(){
   const C = JEO.cur;
   if (C && !C.revealed && C.clue){ /* abandoned without answering: leave it open */ }
