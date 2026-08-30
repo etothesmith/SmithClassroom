@@ -5091,8 +5091,8 @@ const PACKS = [
           "es": "Unidad 1 · Mercados y la economía de EE. UU. (SS.912.E.1)"
         },
         "brief": {
-          "en": "Every economy answers three questions: what to produce, how to produce it, and for whom. A market economy answers them through prices set by supply and demand, a command economy through central planning, and a mixed economy through both. Prices act as signals: shortages push prices up, surpluses push them down, and profit draws producers toward what buyers want. Competition among sellers lowers prices and raises quality, while monopoly power does the opposite. Private property, voluntary exchange, and the profit motive are the defining features of the U.S. free enterprise system.",
-          "es": "Toda economía responde tres preguntas: qué producir, cómo producirlo y para quién. Una economía de mercado las responde mediante precios fijados por la oferta y la demanda, una centralizada mediante planificación estatal y una mixta mediante ambas. Los precios son señales: la escasez los sube, el excedente los baja y el beneficio atrae a los productores hacia lo que los compradores quieren. La competencia entre vendedores baja precios y mejora la calidad; el poder monopólico hace lo contrario. La propiedad privada, el intercambio voluntario y el afán de lucro definen el sistema de libre empresa de EE. UU."
+          "en": "Every economy answers three questions: what to produce, how to produce it, and for whom. A market economy answers them through prices set by supply and demand, a command economy through central planning, and a mixed economy through both. Prices act as signals: shortages push prices up, surpluses push them down, and profit draws producers toward what buyers want. Elasticity measures how responsive quantity demanded or supplied is to a price change; necessities tend to be inelastic while luxuries are elastic. Market structures range from perfect competition (many sellers, identical products) through monopolistic competition (many sellers, differentiated products) and oligopoly (a few dominant firms) to monopoly (one seller with barriers to entry). Consumer surplus is the gap between willingness to pay and the actual price; producer surplus is the gap between the price and the cost of production. The circular flow model shows how households and firms interact in product and factor markets. Rational decision-making uses marginal analysis: continue an activity as long as the marginal benefit exceeds the marginal cost. Private property, voluntary exchange, and the profit motive are the defining features of the U.S. free enterprise system.",
+          "es": "Toda economía responde tres preguntas: qué producir, cómo producirlo y para quién. Una economía de mercado las responde mediante precios fijados por la oferta y la demanda, una centralizada mediante planificación estatal y una mixta mediante ambas. Los precios son señales: la escasez los sube, el excedente los baja y el beneficio atrae a los productores hacia lo que los compradores quieren. La elasticidad mide cuánto cambia la cantidad demandada u ofrecida ante un cambio de precio; las necesidades tienden a ser inelásticas mientras los lujos son elásticos. Las estructuras de mercado van desde competencia perfecta (muchos vendedores, productos idénticos) hasta monopolio (un vendedor con barreras de entrada), pasando por competencia monopolística y oligopolio. El excedente del consumidor es la diferencia entre la disposición a pagar y el precio real; el del productor es entre el precio y el costo. El modelo de flujo circular muestra cómo interactúan hogares y empresas en mercados de productos y factores. La toma de decisiones racional usa análisis marginal: continuar una actividad mientras el beneficio marginal supere al costo marginal. La propiedad privada, el intercambio voluntario y el afán de lucro definen el sistema de libre empresa de EE. UU."
         },
         "items": [
           {
@@ -5695,6 +5695,540 @@ const PACKS = [
               "en": "Human capital is the knowledge, skills, and experience that make workers more productive.",
               "es": "El capital humano es el conocimiento, habilidades y experiencia que hacen a los trabajadores más productivos."
             }
+          },
+          {
+                        "id": "eh121",
+                        "topic": "elasticity",
+                        "type": "mcq",
+                        "diff": 2,
+                        "q": {
+                                      "en": "If a 10% price increase causes a 20% drop in quantity demanded, demand is:",
+                                      "es": "Si un aumento del 10% en el precio causa una caída del 20% en la cantidad demandada, la demanda es:"
+                        },
+                        "c": {
+                                      "en": [
+                                                    "Elastic",
+                                                    "Inelastic",
+                                                    "Unit elastic",
+                                                    "Perfectly inelastic"
+                                      ],
+                                      "es": [
+                                                    "Elástica",
+                                                    "Inelástica",
+                                                    "Unitariamente elástica",
+                                                    "Perfectamente inelástica"
+                                      ]
+                        },
+                        "a": 0,
+                        "why": {
+                                      "en": "When the percentage change in quantity demanded is greater than the percentage change in price, demand is elastic (Ed > 1).",
+                                      "es": "Cuando el cambio porcentual en la cantidad demandada es mayor que el cambio porcentual en el precio, la demanda es elástica (Ed > 1)."
+                        }
+          },
+          {
+                        "id": "eh122",
+                        "topic": "elasticity",
+                        "type": "mcq",
+                        "diff": 2,
+                        "q": {
+                                      "en": "Which good most likely has inelastic demand?",
+                                      "es": "¿Qué bien probablemente tiene demanda inelástica?"
+                        },
+                        "c": {
+                                      "en": [
+                                                    "Insulin for a diabetic patient",
+                                                    "A specific brand of soda",
+                                                    "Luxury vacation packages",
+                                                    "Designer handbags"
+                                      ],
+                                      "es": [
+                                                    "Insulina para un paciente diabético",
+                                                    "Una marca específica de refresco",
+                                                    "Paquetes de vacaciones de lujo",
+                                                    "Bolsos de diseñador"
+                                      ]
+                        },
+                        "a": 0,
+                        "why": {
+                                      "en": "Necessities with no close substitutes have inelastic demand — people need them regardless of price changes.",
+                                      "es": "Las necesidades sin sustitutos cercanos tienen demanda inelástica: la gente las necesita sin importar los cambios de precio."
+                        }
+          },
+          {
+                        "id": "eh123",
+                        "topic": "elasticity",
+                        "type": "multi",
+                        "diff": 2,
+                        "q": {
+                                      "en": "Select ALL factors that make demand MORE elastic.",
+                                      "es": "Selecciona TODOS los factores que hacen la demanda MÁS elástica."
+                        },
+                        "c": {
+                                      "en": [
+                                                    "Many close substitutes available",
+                                                    "The good is a luxury, not a necessity",
+                                                    "More time to adjust to the price change",
+                                                    "The good takes a small share of the buyer's income"
+                                      ],
+                                      "es": [
+                                                    "Muchos sustitutos cercanos disponibles",
+                                                    "El bien es un lujo, no una necesidad",
+                                                    "Más tiempo para ajustarse al cambio de precio",
+                                                    "El bien ocupa poca parte del ingreso del comprador"
+                                      ]
+                        },
+                        "a": [
+                                      0,
+                                      1,
+                                      2
+                        ],
+                        "why": {
+                                      "en": "More substitutes, luxury status, and longer time horizons all increase elasticity. A small budget share makes demand less elastic.",
+                                      "es": "Más sustitutos, ser un lujo y más tiempo aumentan la elasticidad. Una pequeña parte del presupuesto la reduce."
+                        }
+          },
+          {
+                        "id": "eh124",
+                        "topic": "elasticity",
+                        "type": "numeric",
+                        "diff": 2,
+                        "q": {
+                                      "en": "Price rises from $10 to $12 and quantity demanded falls from 100 to 80 units. What is the price elasticity of demand (use the simple percentage method)? Answer as a positive number.",
+                                      "es": "El precio sube de $10 a $12 y la cantidad demandada baja de 100 a 80 unidades. ¿Cuál es la elasticidad precio de la demanda (método simple)? Responde como número positivo."
+                        },
+                        "a": 1,
+                        "tol": 0.05,
+                        "why": {
+                                      "en": "%ΔQd = -20/100 = -20%. %ΔP = 2/10 = 20%. Ed = 20%/20% = 1.0 (unit elastic).",
+                                      "es": "%ΔQd = -20/100 = -20%. %ΔP = 2/10 = 20%. Ed = 20%/20% = 1.0 (elástica unitaria)."
+                        }
+          },
+          {
+                        "id": "eh125",
+                        "topic": "elasticity",
+                        "type": "short",
+                        "diff": 2,
+                        "q": {
+                                      "en": "A gas station raises prices 15% and total revenue barely changes. Is the demand for gasoline elastic or inelastic? Explain.",
+                                      "es": "Una gasolinera sube los precios 15% y los ingresos totales casi no cambian. ¿La demanda de gasolina es elástica o inelástica? Explica."
+                        },
+                        "a": [
+                                      "inelastic",
+                                      "necessity",
+                                      "few substitutes",
+                                      "quantity",
+                                      "small change"
+                        ],
+                        "why": {
+                                      "en": "Inelastic — gasoline is a necessity with few substitutes, so quantity demanded barely falls when price rises, keeping total revenue roughly constant.",
+                                      "es": "Inelástica — la gasolina es una necesidad con pocos sustitutos, así que la cantidad demandada apenas baja al subir el precio, manteniendo los ingresos totales."
+                        }
+          },
+          {
+                        "id": "eh126",
+                        "topic": "structures",
+                        "type": "mcq",
+                        "diff": 2,
+                        "q": {
+                                      "en": "Which market structure has many sellers offering identical products?",
+                                      "es": "¿Qué estructura de mercado tiene muchos vendedores ofreciendo productos idénticos?"
+                        },
+                        "c": {
+                                      "en": [
+                                                    "Perfect competition",
+                                                    "Monopolistic competition",
+                                                    "Oligopoly",
+                                                    "Monopoly"
+                                      ],
+                                      "es": [
+                                                    "Competencia perfecta",
+                                                    "Competencia monopolística",
+                                                    "Oligopolio",
+                                                    "Monopolio"
+                                      ]
+                        },
+                        "a": 0,
+                        "why": {
+                                      "en": "Perfect competition features many sellers, identical products, easy entry/exit, and no individual seller can influence the market price.",
+                                      "es": "La competencia perfecta tiene muchos vendedores, productos idénticos, fácil entrada/salida, y ningún vendedor individual puede influir en el precio."
+                        }
+          },
+          {
+                        "id": "eh127",
+                        "topic": "structures",
+                        "type": "mcq",
+                        "diff": 2,
+                        "q": {
+                                      "en": "A market dominated by a few large firms that watch each other's pricing is called:",
+                                      "es": "Un mercado dominado por unas pocas empresas grandes que vigilan los precios de las demás se llama:"
+                        },
+                        "c": {
+                                      "en": [
+                                                    "An oligopoly",
+                                                    "A monopoly",
+                                                    "Perfect competition",
+                                                    "A monopsony"
+                                      ],
+                                      "es": [
+                                                    "Un oligopolio",
+                                                    "Un monopolio",
+                                                    "Competencia perfecta",
+                                                    "Un monopsonio"
+                                      ]
+                        },
+                        "a": 0,
+                        "why": {
+                                      "en": "An oligopoly is a market with a few dominant firms whose decisions affect each other — think airlines, cell phone carriers, or car manufacturers.",
+                                      "es": "Un oligopolio es un mercado con pocas empresas dominantes cuyas decisiones se afectan mutuamente — como aerolíneas, telefonía celular o automotrices."
+                        }
+          },
+          {
+                        "id": "eh128",
+                        "topic": "structures",
+                        "type": "mcq",
+                        "diff": 2,
+                        "q": {
+                                      "en": "Restaurants in a city compete by offering different menus, atmospheres, and prices. This is an example of:",
+                                      "es": "Los restaurantes de una ciudad compiten ofreciendo menús, ambientes y precios diferentes. Esto es un ejemplo de:"
+                        },
+                        "c": {
+                                      "en": [
+                                                    "Monopolistic competition",
+                                                    "Perfect competition",
+                                                    "Monopoly",
+                                                    "Oligopoly"
+                                      ],
+                                      "es": [
+                                                    "Competencia monopolística",
+                                                    "Competencia perfecta",
+                                                    "Monopolio",
+                                                    "Oligopolio"
+                                      ]
+                        },
+                        "a": 0,
+                        "why": {
+                                      "en": "Monopolistic competition has many sellers with differentiated products. Each firm has a tiny bit of market power from its unique features.",
+                                      "es": "La competencia monopolística tiene muchos vendedores con productos diferenciados. Cada empresa tiene un poco de poder de mercado por sus características únicas."
+                        }
+          },
+          {
+                        "id": "eh129",
+                        "topic": "structures",
+                        "type": "multi",
+                        "diff": 2,
+                        "q": {
+                                      "en": "Select ALL characteristics of a monopoly.",
+                                      "es": "Selecciona TODAS las características de un monopolio."
+                        },
+                        "c": {
+                                      "en": [
+                                                    "A single seller controls the market",
+                                                    "High barriers to entry",
+                                                    "The firm is a price maker",
+                                                    "Products have many close substitutes"
+                                      ],
+                                      "es": [
+                                                    "Un solo vendedor controla el mercado",
+                                                    "Altas barreras de entrada",
+                                                    "La empresa fija el precio",
+                                                    "Los productos tienen muchos sustitutos cercanos"
+                                      ]
+                        },
+                        "a": [
+                                      0,
+                                      1,
+                                      2
+                        ],
+                        "why": {
+                                      "en": "A monopoly has one seller, high barriers to entry, and is a price maker. Having many close substitutes would make it competitive, not a monopoly.",
+                                      "es": "Un monopolio tiene un vendedor, altas barreras de entrada y fija precios. Tener muchos sustitutos cercanos lo haría competitivo, no un monopolio."
+                        }
+          },
+          {
+                        "id": "eh130",
+                        "topic": "structures",
+                        "type": "mcq",
+                        "diff": 2,
+                        "q": {
+                                      "en": "A natural monopoly exists when:",
+                                      "es": "Un monopolio natural existe cuando:"
+                        },
+                        "c": {
+                                      "en": [
+                                                    "One firm can serve the whole market at lower cost than two or more firms",
+                                                    "The government gives one firm exclusive rights",
+                                                    "A firm has the best product in the market",
+                                                    "Many small firms merge into one"
+                                      ],
+                                      "es": [
+                                                    "Una empresa puede servir a todo el mercado a menor costo que dos o más",
+                                                    "El gobierno otorga derechos exclusivos a una empresa",
+                                                    "Una empresa tiene el mejor producto del mercado",
+                                                    "Muchas empresas pequeñas se fusionan en una"
+                                      ]
+                        },
+                        "a": 0,
+                        "why": {
+                                      "en": "Natural monopolies have very high fixed costs (power lines, water pipes) so one firm can produce at lower average cost than multiple competitors.",
+                                      "es": "Los monopolios naturales tienen costos fijos muy altos (líneas eléctricas, tuberías) así que una empresa produce a menor costo promedio que varias competidoras."
+                        }
+          },
+          {
+                        "id": "eh131",
+                        "topic": "structures",
+                        "type": "short",
+                        "diff": 3,
+                        "q": {
+                                      "en": "Explain why firms in an oligopoly are interdependent. Give one real-world example.",
+                                      "es": "Explica por qué las empresas en un oligopolio son interdependientes. Da un ejemplo real."
+                        },
+                        "a": [
+                                      "few firms",
+                                      "affect each other",
+                                      "pricing decisions",
+                                      "react",
+                                      "airlines",
+                                      "cell phone",
+                                      "auto"
+                        ],
+                        "why": {
+                                      "en": "With only a few firms, each one's pricing and output decisions directly affect the others' sales. If one airline drops fares, the others must respond or lose customers.",
+                                      "es": "Con pocas empresas, las decisiones de precio y producción de cada una afectan directamente las ventas de las demás. Si una aerolínea baja tarifas, las demás deben responder o perder clientes."
+                        }
+          },
+          {
+                        "id": "eh132",
+                        "topic": "structures",
+                        "type": "mcq",
+                        "diff": 2,
+                        "q": {
+                                      "en": "Which is the BEST example of product differentiation?",
+                                      "es": "¿Cuál es el MEJOR ejemplo de diferenciación de producto?"
+                        },
+                        "c": {
+                                      "en": [
+                                                    "Nike designs unique shoe styles and runs ad campaigns",
+                                                    "A wheat farmer sells grain at the market price",
+                                                    "A utility company is the only electricity provider",
+                                                    "Two gas stations sell the same grade of gasoline"
+                                      ],
+                                      "es": [
+                                                    "Nike diseña estilos de zapatos únicos y hace campañas publicitarias",
+                                                    "Un agricultor vende grano al precio de mercado",
+                                                    "Una empresa de servicios es el único proveedor de electricidad",
+                                                    "Dos gasolineras venden la misma gasolina"
+                                      ]
+                        },
+                        "a": 0,
+                        "why": {
+                                      "en": "Product differentiation means making your product stand out through design, branding, quality, or features — a hallmark of monopolistic competition.",
+                                      "es": "La diferenciación de producto significa hacer que tu producto se destaque por diseño, marca, calidad o características — sello de la competencia monopolística."
+                        }
+          },
+          {
+                        "id": "eh133",
+                        "topic": "structures",
+                        "type": "mcq",
+                        "diff": 3,
+                        "q": {
+                                      "en": "Antitrust laws like the Sherman Act were created primarily to:",
+                                      "es": "Las leyes antimonopolio como la Ley Sherman se crearon principalmente para:"
+                        },
+                        "c": {
+                                      "en": [
+                                                    "Prevent monopolies and promote competition",
+                                                    "Protect domestic industries from foreign competition",
+                                                    "Set minimum wages for workers",
+                                                    "Regulate the stock market"
+                                      ],
+                                      "es": [
+                                                    "Prevenir monopolios y promover la competencia",
+                                                    "Proteger industrias nacionales de competencia extranjera",
+                                                    "Fijar salarios mínimos para trabajadores",
+                                                    "Regular el mercado de valores"
+                                      ]
+                        },
+                        "a": 0,
+                        "why": {
+                                      "en": "The Sherman Antitrust Act (1890) and Clayton Act (1914) prevent businesses from forming monopolies or engaging in anti-competitive practices like price-fixing.",
+                                      "es": "La Ley Sherman (1890) y la Ley Clayton (1914) previenen que las empresas formen monopolios o tengan prácticas anticompetitivas como fijación de precios."
+                        }
+          },
+          {
+                        "id": "eh134",
+                        "topic": "surplus",
+                        "type": "mcq",
+                        "diff": 2,
+                        "q": {
+                                      "en": "Consumer surplus is the difference between:",
+                                      "es": "El excedente del consumidor es la diferencia entre:"
+                        },
+                        "c": {
+                                      "en": [
+                                                    "What a buyer is willing to pay and what they actually pay",
+                                                    "The price and the cost of production",
+                                                    "Supply and demand at equilibrium",
+                                                    "Imports and exports"
+                                      ],
+                                      "es": [
+                                                    "Lo que un comprador está dispuesto a pagar y lo que realmente paga",
+                                                    "El precio y el costo de producción",
+                                                    "La oferta y la demanda en equilibrio",
+                                                    "Las importaciones y las exportaciones"
+                                      ]
+                        },
+                        "a": 0,
+                        "why": {
+                                      "en": "Consumer surplus measures the benefit buyers get from paying less than their maximum willingness to pay. It's the area below the demand curve and above the price.",
+                                      "es": "El excedente del consumidor mide el beneficio que obtienen los compradores al pagar menos de su disposición máxima a pagar."
+                        }
+          },
+          {
+                        "id": "eh135",
+                        "topic": "surplus",
+                        "type": "mcq",
+                        "diff": 2,
+                        "q": {
+                                      "en": "In the circular flow model, households provide _____ to firms and receive _____ in return.",
+                                      "es": "En el modelo de flujo circular, los hogares proporcionan _____ a las empresas y reciben _____ a cambio."
+                        },
+                        "c": {
+                                      "en": [
+                                                    "Factors of production; income",
+                                                    "Goods and services; taxes",
+                                                    "Revenue; capital",
+                                                    "Government spending; subsidies"
+                                      ],
+                                      "es": [
+                                                    "Factores de producción; ingresos",
+                                                    "Bienes y servicios; impuestos",
+                                                    "Ingresos; capital",
+                                                    "Gasto público; subsidios"
+                                      ]
+                        },
+                        "a": 0,
+                        "why": {
+                                      "en": "In the factor market, households sell their labor, land, and capital to firms and receive wages, rent, interest, and profit in return.",
+                                      "es": "En el mercado de factores, los hogares venden su trabajo, tierra y capital a las empresas y reciben salarios, rentas, intereses y beneficios."
+                        }
+          },
+          {
+                        "id": "eh136",
+                        "topic": "surplus",
+                        "type": "short",
+                        "diff": 2,
+                        "q": {
+                                      "en": "Explain how a price ceiling set below equilibrium reduces total surplus (consumer + producer surplus) in a market.",
+                                      "es": "Explica cómo un precio máximo fijado por debajo del equilibrio reduce el excedente total en un mercado."
+                        },
+                        "a": [
+                                      "shortage",
+                                      "deadweight loss",
+                                      "willing buyers",
+                                      "cannot buy",
+                                      "quantity",
+                                      "less than equilibrium"
+                        ],
+                        "why": {
+                                      "en": "A binding price ceiling creates a shortage — the quantity traded falls below equilibrium, so some mutually beneficial trades don't happen. The lost surplus is called deadweight loss.",
+                                      "es": "Un precio máximo vinculante crea escasez — la cantidad intercambiada cae por debajo del equilibrio, así que algunos intercambios mutuamente beneficiosos no ocurren. El excedente perdido se llama pérdida de peso muerto."
+                        }
+          },
+          {
+                        "id": "eh137",
+                        "topic": "surplus",
+                        "type": "mcq",
+                        "diff": 2,
+                        "q": {
+                                      "en": "In the circular flow model, the product market is where:",
+                                      "es": "En el modelo de flujo circular, el mercado de productos es donde:"
+                        },
+                        "c": {
+                                      "en": [
+                                                    "Firms sell goods and services to households",
+                                                    "Households sell labor to firms",
+                                                    "The government collects taxes",
+                                                    "Banks lend money to businesses"
+                                      ],
+                                      "es": [
+                                                    "Las empresas venden bienes y servicios a los hogares",
+                                                    "Los hogares venden trabajo a las empresas",
+                                                    "El gobierno recauda impuestos",
+                                                    "Los bancos prestan dinero a las empresas"
+                                      ]
+                        },
+                        "a": 0,
+                        "why": {
+                                      "en": "The product market is where firms supply goods and services and households demand them. The factor market is the reverse — households supply resources and firms demand them.",
+                                      "es": "El mercado de productos es donde las empresas ofrecen bienes y servicios y los hogares los demandan. El mercado de factores es al revés."
+                        }
+          },
+          {
+                        "id": "eh138",
+                        "topic": "marginal",
+                        "type": "mcq",
+                        "diff": 2,
+                        "q": {
+                                      "en": "A rational decision-maker should continue an activity as long as:",
+                                      "es": "Un tomador de decisiones racional debe continuar una actividad mientras:"
+                        },
+                        "c": {
+                                      "en": [
+                                                    "The marginal benefit exceeds the marginal cost",
+                                                    "Total revenue is positive",
+                                                    "The average cost is falling",
+                                                    "Other people are doing it too"
+                                      ],
+                                      "es": [
+                                                    "El beneficio marginal supere al costo marginal",
+                                                    "Los ingresos totales sean positivos",
+                                                    "El costo promedio esté bajando",
+                                                    "Otras personas también lo hagan"
+                                      ]
+                        },
+                        "a": 0,
+                        "why": {
+                                      "en": "The marginal principle says you should keep doing something as long as the additional benefit of one more unit exceeds its additional cost.",
+                                      "es": "El principio marginal dice que debes seguir haciendo algo mientras el beneficio adicional de una unidad más supere su costo adicional."
+                        }
+          },
+          {
+                        "id": "eh139",
+                        "topic": "marginal",
+                        "type": "numeric",
+                        "diff": 2,
+                        "q": {
+                                      "en": "A pizza shop can sell 5 pizzas for $60 total revenue or 6 pizzas for $66 total revenue. What is the marginal revenue of the 6th pizza in dollars?",
+                                      "es": "Una pizzería puede vender 5 pizzas con ingresos totales de $60 o 6 pizzas con ingresos totales de $66. ¿Cuál es el ingreso marginal de la 6.ª pizza en dólares?"
+                        },
+                        "a": 6,
+                        "tol": 0,
+                        "why": {
+                                      "en": "Marginal revenue = change in total revenue ÷ change in quantity = ($66 - $60) / (6 - 5) = $6.",
+                                      "es": "Ingreso marginal = cambio en ingresos totales ÷ cambio en cantidad = ($66 - $60) / (6 - 5) = $6."
+                        }
+          },
+          {
+                        "id": "eh140",
+                        "topic": "marginal",
+                        "type": "short",
+                        "diff": 3,
+                        "q": {
+                                      "en": "A student studies for an exam. The first hour raises their grade 15 points, the second hour raises it 8 points, and the third hour raises it 2 points. Explain the concept of diminishing marginal returns using this example.",
+                                      "es": "Un estudiante estudia para un examen. La primera hora sube su nota 15 puntos, la segunda 8, y la tercera 2. Explica el concepto de rendimientos marginales decrecientes usando este ejemplo."
+                        },
+                        "a": [
+                                      "diminishing",
+                                      "each additional",
+                                      "less",
+                                      "benefit",
+                                      "decreasing",
+                                      "returns"
+                        ],
+                        "why": {
+                                      "en": "Each additional hour of studying produces a smaller increase in the grade. This is diminishing marginal returns — the marginal benefit of each additional unit of input decreases.",
+                                      "es": "Cada hora adicional de estudio produce un aumento menor en la nota. Esto son rendimientos marginales decrecientes: el beneficio marginal de cada unidad adicional de insumo disminuye."
+                        }
           }
         ],
         "topics": [
@@ -5712,6 +6246,26 @@ const PACKS = [
             "id": "roles",
             "en": "Roles in the Economy",
             "es": "Roles en la economía"
+          },
+          {
+            "id": "elasticity",
+            "en": "Elasticity",
+            "es": "Elasticidad"
+          },
+          {
+            "id": "structures",
+            "en": "Market Structures",
+            "es": "Estructuras de mercado"
+          },
+          {
+            "id": "surplus",
+            "en": "Surplus & Circular Flow",
+            "es": "Excedente y flujo circular"
+          },
+          {
+            "id": "marginal",
+            "en": "Marginal Analysis",
+            "es": "Análisis marginal"
           }
         ]
       },
