@@ -1,0 +1,621 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Quiz Builder · Smith's Classroom</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=JetBrains+Mono:wght@400;600&display=swap');
+
+  :root {
+    --bg: #0B0F1F;
+    --surface: #151A2E;
+    --card: #1C2240;
+    --border: #2A3158;
+    --text: #EFEAFB;
+    --muted: #8B8BA3;
+    --gold: #F2B441;
+    --green: #4DE0B1;
+    --pink: #FF4D9D;
+    --blue: #2F6BD8;
+    --purple: #9B7BE0;
+    --orange: #F0A15E;
+    --radius: 10px;
+    --font: 'Space Grotesk', system-ui, sans-serif;
+    --mono: 'JetBrains Mono', 'Courier New', monospace;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--bg); color: var(--text); font-family: var(--font);
+         min-height: 100vh; padding: 0; }
+
+  .app { max-width: 960px; margin: 0 auto; padding: 24px 16px; }
+
+  /* Header */
+  .header { display: flex; align-items: baseline; gap: 16px; margin-bottom: 32px;
+            border-bottom: 3px dashed var(--gold); padding-bottom: 16px; }
+  .header h1 { font-size: 22px; font-weight: 700; color: var(--gold);
+               letter-spacing: 1.5px; text-transform: uppercase; }
+  .header .sub { color: var(--muted); font-size: 13px; }
+
+  /* Panels */
+  .panel { background: var(--surface); border: 1px solid var(--border);
+           border-radius: var(--radius); padding: 20px; margin-bottom: 16px; }
+  .panel h2 { font-size: 15px; color: var(--gold); text-transform: uppercase;
+              letter-spacing: 1px; margin-bottom: 14px; font-weight: 700; }
+  .panel h3 { font-size: 14px; color: var(--text); margin: 12px 0 8px; font-weight: 600; }
+
+  /* Course selector */
+  .course-tabs { display: flex; gap: 8px; margin-bottom: 16px; flex-wrap: wrap; }
+  .course-tab { background: var(--card); border: 2px solid var(--border);
+                border-radius: 8px; padding: 10px 16px; font-family: var(--font);
+                font-size: 14px; font-weight: 600; color: var(--muted);
+                cursor: pointer; transition: all .15s; }
+  .course-tab:hover { border-color: var(--gold); color: var(--text); }
+  .course-tab.on { border-color: var(--gold); color: var(--gold); background: rgba(242,180,65,.08); }
+
+  /* Topic checkboxes */
+  .unit-group { margin-bottom: 14px; }
+  .unit-label { font-size: 13px; color: var(--green); font-weight: 600;
+                margin-bottom: 6px; display: flex; align-items: center; gap: 8px; }
+  .unit-label .count { color: var(--muted); font-size: 11px; font-family: var(--mono); }
+  .topics { display: flex; flex-wrap: wrap; gap: 6px; margin-left: 4px; }
+  .topic-chip { display: flex; align-items: center; gap: 6px;
+                background: var(--card); border: 1px solid var(--border);
+                border-radius: 6px; padding: 6px 12px; font-size: 13px;
+                cursor: pointer; transition: all .12s; user-select: none; }
+  .topic-chip:hover { border-color: var(--gold); }
+  .topic-chip.on { border-color: var(--green); background: rgba(77,224,177,.08); color: var(--green); }
+  .topic-chip input { display: none; }
+  .check-dot { width: 14px; height: 14px; border-radius: 4px; border: 2px solid var(--border);
+               display: inline-flex; align-items: center; justify-content: center;
+               font-size: 10px; transition: all .12s; flex-shrink: 0; }
+  .topic-chip.on .check-dot { border-color: var(--green); background: var(--green); color: var(--bg); }
+  .select-all { background: none; border: none; color: var(--gold); font-size: 12px;
+                font-family: var(--font); cursor: pointer; text-decoration: underline; }
+
+  /* Question type pills */
+  .type-row { display: flex; flex-wrap: wrap; gap: 8px; }
+  .type-pill { display: flex; align-items: center; gap: 6px;
+               background: var(--card); border: 2px solid var(--border);
+               border-radius: 8px; padding: 8px 14px; font-size: 13px; font-weight: 600;
+               cursor: pointer; transition: all .12s; user-select: none; }
+  .type-pill:hover { border-color: var(--purple); }
+  .type-pill.on { border-color: var(--purple); background: rgba(155,123,224,.08); color: var(--purple); }
+  .type-pill.on .check-dot { border-color: var(--purple); background: var(--purple); color: var(--bg); }
+
+  /* Number input */
+  .num-row { display: flex; align-items: center; gap: 12px; }
+  .num-input { width: 80px; background: var(--card); border: 2px solid var(--border);
+               border-radius: 8px; padding: 8px 12px; font-family: var(--mono);
+               font-size: 16px; color: var(--text); text-align: center; }
+  .num-input:focus { outline: none; border-color: var(--gold); }
+  .num-label { color: var(--muted); font-size: 13px; }
+
+  /* Generate button */
+  .gen-btn { display: flex; align-items: center; justify-content: center; gap: 10px;
+             width: 100%; padding: 14px; background: linear-gradient(135deg, var(--gold), var(--orange));
+             border: none; border-radius: var(--radius); font-family: var(--font);
+             font-size: 16px; font-weight: 700; color: var(--bg); cursor: pointer;
+             text-transform: uppercase; letter-spacing: 1px; transition: all .15s; }
+  .gen-btn:hover { filter: brightness(1.1); transform: translateY(-1px); }
+  .gen-btn:disabled { opacity: 0.4; cursor: not-allowed; transform: none; filter: none; }
+
+  /* Progress */
+  .progress { margin-top: 12px; }
+  .progress-bar { height: 6px; background: var(--card); border-radius: 3px; overflow: hidden; }
+  .progress-fill { height: 100%; background: var(--green); border-radius: 3px; transition: width .3s; }
+  .progress-text { font-size: 12px; color: var(--muted); margin-top: 6px; font-family: var(--mono); }
+
+  /* Output */
+  .output { margin-top: 20px; }
+  .output-header { display: flex; align-items: center; justify-content: space-between;
+                   margin-bottom: 12px; flex-wrap: wrap; gap: 8px; }
+  .output-header h2 { margin: 0; }
+  .export-btns { display: flex; gap: 8px; }
+  .export-btn { background: var(--card); border: 1px solid var(--border);
+                border-radius: 6px; padding: 8px 14px; font-family: var(--font);
+                font-size: 13px; font-weight: 600; color: var(--text);
+                cursor: pointer; transition: all .12s; }
+  .export-btn:hover { border-color: var(--gold); color: var(--gold); }
+  .export-btn.primary { background: var(--green); border-color: var(--green); color: var(--bg); }
+  .export-btn.primary:hover { filter: brightness(1.1); }
+
+  /* Question cards */
+  .q-card { background: var(--card); border: 1px solid var(--border);
+            border-radius: 8px; padding: 16px; margin-bottom: 10px; }
+  .q-card .q-num { font-size: 11px; color: var(--gold); font-family: var(--mono);
+                   text-transform: uppercase; margin-bottom: 6px; }
+  .q-card .q-type { font-size: 11px; color: var(--purple); font-family: var(--mono);
+                    float: right; }
+  .q-card .q-text { font-size: 14px; line-height: 1.5; margin-bottom: 10px; }
+  .q-card .q-choices { list-style: none; padding: 0; }
+  .q-card .q-choices li { padding: 4px 0; font-size: 13px; color: var(--muted); }
+  .q-card .q-choices li.correct { color: var(--green); font-weight: 600; }
+  .q-card .q-answer { font-size: 13px; color: var(--green); font-weight: 600;
+                      margin-top: 6px; padding-top: 6px; border-top: 1px solid var(--border); }
+  .q-card .q-blank { border-bottom: 2px solid var(--gold); padding: 0 4px; }
+
+  /* Toast */
+  .toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%);
+           background: var(--green); color: var(--bg); padding: 10px 20px;
+           border-radius: 8px; font-weight: 600; font-size: 14px;
+           opacity: 0; transition: opacity .3s; pointer-events: none; z-index: 99; }
+  .toast.show { opacity: 1; }
+
+  @media (max-width: 600px) {
+    .app { padding: 16px 10px; }
+    .header h1 { font-size: 17px; }
+    .course-tabs { flex-direction: column; }
+    .num-row { flex-direction: column; align-items: flex-start; }
+  }
+</style>
+</head>
+<body>
+<div class="app" id="app"></div>
+<div class="toast" id="toast"></div>
+
+<script>
+/* ─── Course data (extracted from content.js) ─── */
+const COURSES = [
+  { id:"ap-econ", name:"AP Economics", color:"#4DE0B1", units:[
+    { id:"ap-m1", title:"Macro Unit 1 · Basic Economic Concepts",
+      topics:["costs","ppc","trade","growth"],
+      brief:"Scarcity forces choice, and every choice has an opportunity cost: the value of the next-best option given up. The production possibilities curve shows the maximum combinations an economy can produce; interior points are inefficient, exterior points are unattainable today. A bowed-out curve reflects increasing opportunity cost because resources are not equally suited to both goods. Comparative advantage — the lower opportunity cost, not the larger output — determines who should specialize, and trade between two parties benefits both when the terms of trade fall between their opportunity costs. Growth shifts the whole curve outward through more resources, better technology, or more capital." },
+    { id:"ap-m2", title:"Macro Unit 2 · Indicators and the Business Cycle",
+      topics:["gdp","unemp","prices","cycle"],
+      brief:"GDP is the market value of final goods and services produced inside a country in a year (expenditure: C+I+G+Xn). Nominal GDP uses current prices; real GDP adjusts for inflation. The unemployment rate is unemployed ÷ labor force; natural rate includes frictional and structural. CPI measures the cost of a fixed basket; the GDP deflator covers all goods in GDP. The business cycle has expansion, peak, contraction, trough; leading indicators signal turns before they happen." },
+    { id:"ap-m3", title:"Macro Unit 3 · AD, AS, and Fiscal Policy",
+      topics:["ad","as","mult","fiscal"],
+      brief:"Aggregate demand slopes down and shifts with consumption, investment, government spending, and net exports. Short-run AS slopes up; long-run AS is vertical at full employment. The spending multiplier is 1/(1-MPC) and the tax multiplier is -MPC/(1-MPC). Expansionary fiscal policy (more G or less T) shifts AD right; contractionary does the opposite. Automatic stabilizers partially offset swings." },
+    { id:"ap-m4", title:"Macro Unit 4 · Money and Monetary Policy",
+      topics:["money","bank","fed","monpol"],
+      brief:"Money serves as a medium of exchange, unit of account, and store of value. Banks create money through the money multiplier (1/reserve ratio). The Federal Reserve uses open-market operations, the discount rate, and reserve requirements. Expansionary monetary policy increases the money supply, lowering the interest rate and increasing investment. The loanable-funds market determines the real interest rate; foreign exchange markets determine currency values." }
+  ]},
+  { id:"us-gov", name:"U.S. Government Honors", color:"#2F6BD8", units:[
+    { id:"gov-u1", title:"Unit 1 · Founding Principles (SS.912.CG.1.1–1.4)",
+      topics:["natural-rights","social-contract","enlightenment","founding-docs"],
+      brief:"The Founders drew on natural rights philosophy from John Locke, separation of powers from Montesquieu, and social contract theory from Rousseau. The Declaration of Independence, Articles of Confederation, and Constitution reflect these ideas. Key debates: federalism vs. anti-federalism, individual rights vs. government power." },
+    { id:"gov-u2", title:"Unit 2 · The Constitution and Federalism (SS.912.CG.1.5–1.9)",
+      topics:["constitution","amendments","federalism","supremacy"],
+      brief:"The Constitution opens with the Preamble, then Articles I, II, and III creating the three branches. The amendment process requires supermajorities. Federalism divides power between national and state governments; the Supremacy Clause makes the Constitution the supreme law of the land. Enumerated, implied, reserved, and concurrent powers define who does what." },
+    { id:"gov-u3", title:"Unit 3 · The Three Branches at Work",
+      topics:["congress","president","judiciary","checks"],
+      brief:"Congress has two chambers: the House with 435 members serving two-year terms and the Senate with 100 serving six-year terms. The President executes laws, commands the military, and conducts foreign policy. The judiciary interprets laws; judicial review was established in Marbury v. Madison. Checks and balances prevent any branch from dominating." },
+    { id:"gov-u4", title:"Unit 4 · Citizenship, Elections, Participation (SS.912.CG.2)",
+      topics:["citizenship","voting","elections","parties"],
+      brief:"Citizenship comes by birth or through naturalization, which requires lawful residency, English, civics knowledge, and an oath. The Electoral College, primary elections, and campaign finance rules shape elections. Political parties, interest groups, and media influence participation. Voter turnout is affected by registration laws, demographics, and engagement." },
+    { id:"gov-u5", title:"Unit 5 · Rights, Landmark Cases, World Systems (SS.912.CG.3–4)",
+      topics:["bill-of-rights","landmark-cases","civil-liberties","world-systems"],
+      brief:"The Bill of Rights protects speech, religion, press, assembly, and petition in the 1st Amendment; due process in the 5th and 14th. Landmark cases include Marbury v. Madison, Brown v. Board, Miranda v. Arizona, Tinker v. Des Moines. Comparing democracy, authoritarianism, and totalitarianism reveals how governments differ in power distribution." },
+    { id:"gov-u6", title:"Unit 6 · Smith Island Scenarios",
+      topics:["island-gov","applied-civics","scenario-analysis"],
+      brief:"Students apply all government concepts to build a government for Smith Island. Scenarios test understanding of constitutional principles, rights, branches, and civic participation in novel situations." }
+  ]},
+  { id:"econ-h", name:"Economics Honors", color:"#F0A15E", units:[
+    { id:"eh-u1", title:"Unit 1 · Markets and the U.S. Economy (SS.912.E.1)",
+      topics:["systems","markets","roles","elasticity","structures","surplus","marginal"],
+      brief:"Every economy answers three questions: what to produce, how to produce it, and for whom. A market economy answers them through prices set by supply and demand. Elasticity measures how responsive quantity demanded or supplied is to a price change; necessities tend to be inelastic while luxuries are elastic. Market structures range from perfect competition (many sellers, identical products) through monopolistic competition (differentiated products) and oligopoly (a few dominant firms) to monopoly (one seller with barriers to entry). Consumer surplus is the gap between willingness to pay and the actual price. The circular flow model shows how households and firms interact in product and factor markets. Rational decision-making uses marginal analysis: continue an activity as long as the marginal benefit exceeds the marginal cost." },
+    { id:"eh-u2", title:"Unit 2 · The National Economy (SS.912.E.2)",
+      topics:["measure","cycles","policy"],
+      brief:"GDP measures the value of final goods and services produced in a country in a year. The business cycle alternates between expansion and contraction. Fiscal policy uses government spending and taxes; monetary policy uses the money supply and interest rates. Inflation reduces purchasing power; unemployment measures underutilized labor." },
+    { id:"eh-u3", title:"Unit 3 · Trade and the Global Economy (SS.912.E.3)",
+      topics:["tradeb","fx","barriers"],
+      brief:"Nations trade because specialization based on comparative advantage lets both sides gain. Exchange rates convert currencies; appreciation makes imports cheaper and exports more expensive. Trade barriers like tariffs and quotas protect domestic industries but raise consumer prices. Trade agreements like NAFTA/USMCA reduce barriers." },
+    { id:"eh-u4", title:"Unit 4 · Financial Literacy (SS.912.FL)",
+      topics:["income","credit","saving"],
+      brief:"Gross pay is what you earn; net pay is what remains after taxes and deductions. Credit scores affect borrowing costs. Compound interest grows savings; the rule of 72 estimates doubling time. Budgeting, insurance, and diversification manage financial risk. Understanding APR, loan terms, and credit reports empowers financial decisions." }
+  ]}
+];
+
+const Q_TYPES = [
+  { id:"mc", label:"Multiple Choice", icon:"◉" },
+  { id:"tf", label:"True / False", icon:"⊘" },
+  { id:"fib", label:"Fill in the Blank", icon:"▬" },
+  { id:"short", label:"Short Answer", icon:"✎" }
+];
+
+/* ─── State ─── */
+let state = {
+  course: "ap-econ",
+  selectedTopics: new Set(),
+  selectedTypes: new Set(["mc","tf","fib","short"]),
+  numQuestions: 10,
+  generating: false,
+  progress: 0,
+  progressMsg: "",
+  questions: [],
+  error: null
+};
+
+/* ─── Helpers ─── */
+function $(s){ return document.querySelector(s); }
+function toast(msg){
+  const el=document.getElementById("toast");
+  el.textContent=msg; el.classList.add("show");
+  setTimeout(()=>el.classList.remove("show"), 2200);
+}
+
+function getCourse(){ return COURSES.find(c=>c.id===state.course); }
+
+function topicLabel(t){
+  const labels = {
+    costs:"Costs & Scarcity", ppc:"PPC", trade:"Trade & Advantage", growth:"Growth",
+    gdp:"GDP", unemp:"Unemployment", prices:"Price Indices", cycle:"Business Cycle",
+    ad:"Aggregate Demand", as:"Aggregate Supply", mult:"Multipliers", fiscal:"Fiscal Policy",
+    money:"Money", bank:"Banking", fed:"The Fed", monpol:"Monetary Policy",
+    "natural-rights":"Natural Rights","social-contract":"Social Contract",
+    enlightenment:"Enlightenment","founding-docs":"Founding Documents",
+    constitution:"Constitution", amendments:"Amendments", federalism:"Federalism",
+    supremacy:"Supremacy Clause", congress:"Congress", president:"The President",
+    judiciary:"Judiciary", checks:"Checks & Balances",
+    citizenship:"Citizenship", voting:"Voting", elections:"Elections", parties:"Parties",
+    "bill-of-rights":"Bill of Rights","landmark-cases":"Landmark Cases",
+    "civil-liberties":"Civil Liberties","world-systems":"World Systems",
+    "island-gov":"Island Government","applied-civics":"Applied Civics",
+    "scenario-analysis":"Scenarios",
+    systems:"Economic Systems", markets:"Markets", roles:"Gov Roles",
+    elasticity:"Elasticity", structures:"Market Structures",
+    surplus:"Surplus & Circular Flow", marginal:"Marginal Analysis",
+    measure:"Measuring GDP", cycles:"Business Cycles", policy:"Policy",
+    tradeb:"Trade Benefits", fx:"Exchange Rates", barriers:"Trade Barriers",
+    income:"Income & Taxes", credit:"Credit", saving:"Saving & Investing"
+  };
+  return labels[t] || t;
+}
+
+/* ─── Render ─── */
+function render(){
+  const c = getCourse();
+  const allTopics = c.units.flatMap(u=>u.topics);
+  const allSelected = allTopics.every(t=>state.selectedTopics.has(t));
+
+  document.getElementById("app").innerHTML = `
+    <div class="header">
+      <h1>Quiz Builder</h1>
+      <span class="sub">Smith's Classroom · Canvas Export</span>
+    </div>
+
+    <!-- Course picker -->
+    <div class="panel">
+      <h2>1 · Course</h2>
+      <div class="course-tabs">
+        ${COURSES.map(cr=>`
+          <button class="course-tab ${cr.id===state.course?'on':''}"
+            style="${cr.id===state.course?'border-color:'+cr.color+';color:'+cr.color:''}"
+            onclick="setCourse('${cr.id}')">${cr.name}</button>
+        `).join("")}
+      </div>
+    </div>
+
+    <!-- Topic picker -->
+    <div class="panel">
+      <h2>2 · Topics</h2>
+      <button class="select-all" onclick="toggleAll()">${allSelected?'Deselect all':'Select all'}</button>
+      ${c.units.map(u=>`
+        <div class="unit-group">
+          <div class="unit-label">
+            ${u.title}
+            <span class="count">${u.topics.length} topics</span>
+          </div>
+          <div class="topics">
+            ${u.topics.map(t=>`
+              <label class="topic-chip ${state.selectedTopics.has(t)?'on':''}"
+                onclick="toggleTopic('${t}')">
+                <span class="check-dot">${state.selectedTopics.has(t)?'✓':''}</span>
+                ${topicLabel(t)}
+              </label>
+            `).join("")}
+          </div>
+        </div>
+      `).join("")}
+    </div>
+
+    <!-- Question types -->
+    <div class="panel">
+      <h2>3 · Question Types</h2>
+      <div class="type-row">
+        ${Q_TYPES.map(qt=>`
+          <label class="type-pill ${state.selectedTypes.has(qt.id)?'on':''}"
+            onclick="toggleType('${qt.id}')">
+            <span class="check-dot">${state.selectedTypes.has(qt.id)?'✓':''}</span>
+            ${qt.icon} ${qt.label}
+          </label>
+        `).join("")}
+      </div>
+    </div>
+
+    <!-- Count -->
+    <div class="panel">
+      <h2>4 · Number of Questions</h2>
+      <div class="num-row">
+        <input type="number" class="num-input" value="${state.numQuestions}" min="1" max="50"
+          onchange="setNum(this.value)">
+        <span class="num-label">questions total (max 50)</span>
+      </div>
+    </div>
+
+    <!-- Generate -->
+    <div class="panel">
+      <button class="gen-btn" onclick="generate()"
+        ${state.generating||state.selectedTopics.size===0||state.selectedTypes.size===0?'disabled':''}>
+        ${state.generating?'Generating...':'⚡ Generate Quiz'}
+      </button>
+      ${state.generating?`
+        <div class="progress">
+          <div class="progress-bar"><div class="progress-fill" style="width:${state.progress}%"></div></div>
+          <div class="progress-text">${state.progressMsg}</div>
+        </div>
+      `:''}
+      ${state.error?`<p style="color:var(--pink);margin-top:10px;font-size:13px">${state.error}</p>`:''}
+      ${state.selectedTopics.size===0?`<p style="color:var(--muted);margin-top:8px;font-size:13px">Select at least one topic above</p>`:''}
+    </div>
+
+    <!-- Output -->
+    ${state.questions.length?`
+      <div class="output">
+        <div class="output-header">
+          <h2 style="color:var(--gold);font-size:15px;text-transform:uppercase;letter-spacing:1px">
+            Generated Quiz · ${state.questions.length} Questions
+          </h2>
+          <div class="export-btns">
+            <button class="export-btn" onclick="copyText()">📋 Copy as Text</button>
+            <button class="export-btn primary" onclick="downloadQTI()">⬇ Download QTI for Canvas</button>
+          </div>
+        </div>
+        ${state.questions.map((q,i)=>renderQuestion(q,i)).join("")}
+      </div>
+    `:''}
+  `;
+}
+
+function renderQuestion(q, i){
+  let body = '';
+  if(q.type==='mc'){
+    body = `<ol class="q-choices" type="A">
+      ${q.choices.map((ch,j)=>`<li class="${j===q.answer?'correct':''}">${ch}${j===q.answer?' ✓':''}</li>`).join("")}
+    </ol>`;
+  } else if(q.type==='tf'){
+    body = `<div class="q-answer">Answer: ${q.answer?'True':'False'}</div>`;
+  } else if(q.type==='fib'){
+    body = `<div class="q-answer">Answer: ${q.answer}</div>`;
+  } else if(q.type==='short'){
+    body = `<div class="q-answer">Key concepts: ${q.keywords.join(', ')}</div>`;
+  }
+  const typeLabel = Q_TYPES.find(t=>t.id===q.type)?.label||q.type;
+  return `<div class="q-card">
+    <span class="q-type">${typeLabel}</span>
+    <div class="q-num">Question ${i+1}</div>
+    <div class="q-text">${q.question}</div>
+    ${body}
+  </div>`;
+}
+
+/* ─── Actions ─── */
+function setCourse(id){
+  state.course=id; state.selectedTopics=new Set(); state.questions=[]; render();
+}
+function toggleTopic(t){
+  state.selectedTopics.has(t) ? state.selectedTopics.delete(t) : state.selectedTopics.add(t);
+  render();
+}
+function toggleAll(){
+  const c=getCourse(); const all=c.units.flatMap(u=>u.topics);
+  const allOn=all.every(t=>state.selectedTopics.has(t));
+  if(allOn) state.selectedTopics=new Set();
+  else all.forEach(t=>state.selectedTopics.add(t));
+  render();
+}
+function toggleType(id){
+  state.selectedTypes.has(id) ? state.selectedTypes.delete(id) : state.selectedTypes.add(id);
+  render();
+}
+function setNum(v){ state.numQuestions=Math.max(1,Math.min(50,parseInt(v)||10)); }
+
+/* ─── AI Generation ─── */
+async function generate(){
+  if(state.generating) return;
+  state.generating=true; state.error=null; state.questions=[]; state.progress=0;
+  state.progressMsg="Building prompt..."; render();
+
+  const c = getCourse();
+  /* gather context for selected topics */
+  const topicBriefs = [];
+  for(const u of c.units){
+    const matched = u.topics.filter(t=>state.selectedTopics.has(t));
+    if(matched.length){
+      topicBriefs.push(`UNIT: ${u.title}\nTopics: ${matched.map(topicLabel).join(', ')}\nContent: ${u.brief}`);
+    }
+  }
+
+  const typeNames = [...state.selectedTypes].map(id=>Q_TYPES.find(t=>t.id===id)?.label).join(', ');
+
+  const prompt = `You are a quiz builder for a high-school ${c.name} course. Generate exactly ${state.numQuestions} questions.
+
+COURSE CONTENT:
+${topicBriefs.join('\n\n')}
+
+QUESTION TYPES TO USE (distribute evenly across these types):
+${typeNames}
+
+FORMAT: Respond ONLY with a JSON array. No markdown, no backticks, no preamble. Each question object:
+
+For Multiple Choice:
+{"type":"mc","topic":"topic_id","question":"...","choices":["A","B","C","D"],"answer":0,"explanation":"..."}
+(answer is the 0-based index of the correct choice)
+
+For True/False:
+{"type":"tf","topic":"topic_id","question":"... (statement to evaluate)","answer":true,"explanation":"..."}
+
+For Fill in the Blank:
+{"type":"fib","topic":"topic_id","question":"... use _____ for the blank ...","answer":"correct word/phrase","explanation":"..."}
+
+For Short Answer:
+{"type":"short","topic":"topic_id","question":"...","keywords":["key1","key2","key3"],"sampleAnswer":"...","explanation":"..."}
+
+RULES:
+- Questions should be rigorous and grade-appropriate
+- Vary difficulty (some recall, some application, some analysis)
+- Distribute questions across the selected topics
+- MC distractors should be plausible but clearly wrong
+- Fill-in-the-blank should test key vocabulary or concepts
+- Short answer keywords are what a teacher would look for when grading
+- Every question needs an explanation field`;
+
+  state.progressMsg = "Calling Claude API..."; state.progress = 20; render();
+
+  try {
+    const response = await fetch("https://api.anthropic.com/v1/messages", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        model: "claude-sonnet-4-6",
+        max_tokens: 4096,
+        messages: [{ role: "user", content: prompt }]
+      })
+    });
+
+    state.progress = 70; state.progressMsg = "Parsing response..."; render();
+
+    if(!response.ok){
+      const err = await response.text();
+      throw new Error("API error: " + response.status + " " + err);
+    }
+
+    const data = await response.json();
+    const text = data.content.map(b=>b.text||'').join('');
+    const clean = text.replace(/```json|```/g, '').trim();
+    const questions = JSON.parse(clean);
+
+    state.questions = questions;
+    state.progress = 100; state.progressMsg = "Done!";
+    state.generating = false;
+    render();
+    toast(`${questions.length} questions generated`);
+  } catch(e){
+    state.error = e.message;
+    state.generating = false;
+    render();
+  }
+}
+
+/* ─── Export: Copy as plain text ─── */
+function copyText(){
+  let text = `${getCourse().name} Quiz\n${'='.repeat(40)}\n\n`;
+  state.questions.forEach((q,i)=>{
+    const tn = Q_TYPES.find(t=>t.id===q.type)?.label||q.type;
+    text += `${i+1}. [${tn}] ${q.question}\n`;
+    if(q.type==='mc'){
+      q.choices.forEach((ch,j)=>{
+        text += `   ${String.fromCharCode(65+j)}) ${ch}${j===q.answer?' ✓':''}\n`;
+      });
+    } else if(q.type==='tf'){
+      text += `   Answer: ${q.answer?'True':'False'}\n`;
+    } else if(q.type==='fib'){
+      text += `   Answer: ${q.answer}\n`;
+    } else if(q.type==='short'){
+      text += `   Key concepts: ${q.keywords.join(', ')}\n`;
+      if(q.sampleAnswer) text += `   Sample: ${q.sampleAnswer}\n`;
+    }
+    if(q.explanation) text += `   Explanation: ${q.explanation}\n`;
+    text += '\n';
+  });
+  navigator.clipboard.writeText(text).then(()=>toast('Copied to clipboard'));
+}
+
+/* ─── Export: QTI XML for Canvas ─── */
+function downloadQTI(){
+  const esc = s => s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  let items = '';
+  state.questions.forEach((q,i)=>{
+    const qid = 'q_'+Date.now()+'_'+i;
+    if(q.type==='mc'){
+      const correct = 'ans_'+i+'_'+q.answer;
+      items += `
+    <item ident="${qid}" title="Question ${i+1}">
+      <itemmetadata><qtimetadata>
+        <qtimetadatafield><fieldlabel>question_type</fieldlabel><fieldentry>multiple_choice_question</fieldentry></qtimetadatafield>
+      </qtimetadata></itemmetadata>
+      <presentation><material><mattext texttype="text/html">${esc(q.question)}</mattext></material>
+        <response_lid ident="response1" rcardinality="Single">
+          <render_choice>${q.choices.map((ch,j)=>`
+            <response_label ident="ans_${i}_${j}"><material><mattext texttype="text/plain">${esc(ch)}</mattext></material></response_label>`).join('')}
+          </render_choice>
+        </response_lid>
+      </presentation>
+      <resprocessing><outcomes><decvar maxvalue="100" minvalue="0" varname="SCORE" vartype="Decimal"/></outcomes>
+        <respcondition continue="No"><conditionvar><varequal respident="response1">${correct}</varequal></conditionvar>
+          <setvar action="Set" varname="SCORE">100</setvar></respcondition>
+      </resprocessing>
+      <itemfeedback ident="general_fb"><flow_mat><material><mattext texttype="text/plain">${esc(q.explanation||'')}</mattext></material></flow_mat></itemfeedback>
+    </item>`;
+    } else if(q.type==='tf'){
+      items += `
+    <item ident="${qid}" title="Question ${i+1}">
+      <itemmetadata><qtimetadata>
+        <qtimetadatafield><fieldlabel>question_type</fieldlabel><fieldentry>true_false_question</fieldentry></qtimetadatafield>
+      </qtimetadata></itemmetadata>
+      <presentation><material><mattext texttype="text/html">${esc(q.question)}</mattext></material>
+        <response_lid ident="response1" rcardinality="Single"><render_choice>
+          <response_label ident="true"><material><mattext>True</mattext></material></response_label>
+          <response_label ident="false"><material><mattext>False</mattext></material></response_label>
+        </render_choice></response_lid>
+      </presentation>
+      <resprocessing><outcomes><decvar maxvalue="100" minvalue="0" varname="SCORE" vartype="Decimal"/></outcomes>
+        <respcondition continue="No"><conditionvar><varequal respident="response1">${q.answer?'true':'false'}</varequal></conditionvar>
+          <setvar action="Set" varname="SCORE">100</setvar></respcondition>
+      </resprocessing>
+      <itemfeedback ident="general_fb"><flow_mat><material><mattext texttype="text/plain">${esc(q.explanation||'')}</mattext></material></flow_mat></itemfeedback>
+    </item>`;
+    } else if(q.type==='fib'){
+      items += `
+    <item ident="${qid}" title="Question ${i+1}">
+      <itemmetadata><qtimetadata>
+        <qtimetadatafield><fieldlabel>question_type</fieldlabel><fieldentry>fill_in_multiple_blanks_question</fieldentry></qtimetadatafield>
+      </qtimetadata></itemmetadata>
+      <presentation><material><mattext texttype="text/html">${esc(q.question.replace(/_+/,'[blank1]'))}</mattext></material>
+        <response_str ident="response_blank1" rcardinality="Single"><render_fib><response_label ident="answer1"/></render_fib></response_str>
+      </presentation>
+      <resprocessing><outcomes><decvar maxvalue="100" minvalue="0" varname="SCORE" vartype="Decimal"/></outcomes>
+        <respcondition continue="No"><conditionvar><varequal respident="response_blank1">${esc(q.answer)}</varequal></conditionvar>
+          <setvar action="Set" varname="SCORE">100</setvar></respcondition>
+      </resprocessing>
+      <itemfeedback ident="general_fb"><flow_mat><material><mattext texttype="text/plain">${esc(q.explanation||'')}</mattext></material></flow_mat></itemfeedback>
+    </item>`;
+    } else if(q.type==='short'){
+      items += `
+    <item ident="${qid}" title="Question ${i+1}">
+      <itemmetadata><qtimetadata>
+        <qtimetadatafield><fieldlabel>question_type</fieldlabel><fieldentry>essay_question</fieldentry></qtimetadatafield>
+      </qtimetadata></itemmetadata>
+      <presentation><material><mattext texttype="text/html">${esc(q.question)}</mattext></material>
+        <response_str ident="response1" rcardinality="Single"><render_fib><response_label ident="answer1"/></render_fib></response_str>
+      </presentation>
+      <itemfeedback ident="general_fb"><flow_mat><material><mattext texttype="text/plain">Key concepts: ${esc(q.keywords?.join(', ')||'')}. ${esc(q.explanation||'')}</mattext></material></flow_mat></itemfeedback>
+    </item>`;
+    }
+  });
+
+  const qti = `<?xml version="1.0" encoding="UTF-8"?>
+<questestinterop xmlns="http://www.imsglobal.org/xsd/ims_qtiasiv1p2">
+  <assessment ident="quiz_${Date.now()}" title="${esc(getCourse().name)} Quiz">
+    <section ident="root_section">${items}
+    </section>
+  </assessment>
+</questestinterop>`;
+
+  const blob = new Blob([qti], {type:'application/xml'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = getCourse().name.replace(/\s+/g,'_') + '_Quiz.qti.xml';
+  a.click();
+  URL.revokeObjectURL(url);
+  toast('QTI file downloaded');
+}
+
+/* ─── Init ─── */
+render();
+</script>
+</body>
+</html>
