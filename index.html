@@ -802,6 +802,9 @@ ul.ctrl li{margin:4px 0;color:var(--ink)}
   animation:prizeGlow 2.6s ease-in-out infinite}
 @keyframes prizeGlow{0%,100%{opacity:.5}50%{opacity:1}}
 </style>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
 </head>
 <body>
 <div id="certAsk" class="hidden"></div>
@@ -1470,7 +1473,96 @@ function load(){
   try{const a=localStorage.getItem(KEY_ART); if(a) ARTS=JSON.parse(a);}catch(e){}
   T_=T[S.lang]||T.en; document.documentElement.lang=S.lang;
 }
-function save(){ try{localStorage.setItem(KEY,JSON.stringify(S));}catch(e){} }
+function save(){ try{localStorage.setItem(KEY,JSON.stringify(S));}catch(e){} fbSave(); }
+
+/* ============================================================================
+   FIREBASE — auth + Firestore cloud save
+   ========================================================================== */
+const FB_CONFIG = {
+  apiKey: "AIzaSyDyiAi2gLxHLyaRzUxhwdMXqZgrOiugVCM",
+  authDomain: "classroo-4ef38.firebaseapp.com",
+  projectId: "classroo-4ef38",
+  storageBucket: "classroo-4ef38.firebasestorage.app",
+  messagingSenderId: "206122802704",
+  appId: "1:206122802704:web:6ba845834510d5ace9b495"
+};
+
+let FB = {app:null, db:null, auth:null, uid:null, ready:false, syncing:false};
+
+function fbInit(){
+  try {
+    if (typeof firebase === "undefined") return;
+    FB.app = firebase.initializeApp(FB_CONFIG);
+    FB.auth = firebase.auth();
+    FB.db = firebase.firestore();
+
+    /* Sign in anonymously — no login screen needed. Each browser gets a
+       persistent anonymous UID so progress saves across sessions. */
+    FB.auth.signInAnonymously().catch(e => console.warn("FB auth:", e.message));
+    FB.auth.onAuthStateChanged(user => {
+      if (user) {
+        FB.uid = user.uid;
+        FB.ready = true;
+        fbLoad();
+        console.log("Firebase connected:", FB.uid);
+      }
+    });
+  } catch(e){ console.warn("Firebase init failed:", e.message); }
+}
+
+/* Debounced save — don't hammer Firestore on every token click */
+let fbSaveTimer = null;
+function fbSave(){
+  if (!FB.ready || !FB.uid || !FB.db) return;
+  clearTimeout(fbSaveTimer);
+  fbSaveTimer = setTimeout(() => {
+    try {
+      const data = {
+        name: S.name || "",
+        tokens: S.tokens || 0,
+        prog: S.prog || {},
+        arcade: S.arcade || {},
+        cfg: S.cfg || {},
+        lang: S.lang || "en",
+        updated: firebase.firestore.FieldValue.serverTimestamp()
+      };
+      FB.db.collection("students").doc(FB.uid).set(data, {merge:true})
+        .catch(e => console.warn("FB save:", e.message));
+    } catch(e){}
+  }, 2000);
+}
+
+/* Load from Firestore on auth — merges cloud data with local, preferring
+   whichever has more progress */
+function fbLoad(){
+  if (!FB.ready || !FB.uid || !FB.db) return;
+  FB.db.collection("students").doc(FB.uid).get().then(doc => {
+    if (!doc.exists) { fbSave(); return; }  /* first visit: push local to cloud */
+    const cloud = doc.data();
+    /* Merge: keep whichever prog has more items seen */
+    const localSeen = Object.keys(S.prog||{}).length;
+    const cloudSeen = Object.keys(cloud.prog||{}).length;
+    if (cloudSeen > localSeen) {
+      S.prog = cloud.prog || S.prog;
+      S.tokens = Math.max(S.tokens||0, cloud.tokens||0);
+      S.arcade = cloud.arcade || S.arcade;
+      if (cloud.name) S.name = cloud.name;
+      save();  /* persist merged state locally */
+      if (typeof render === "function") render();
+    }
+  }).catch(e => console.warn("FB load:", e.message));
+}
+
+/* Teacher: pull class-wide data for a dashboard */
+function fbClassData(callback){
+  if (!FB.ready || !FB.db) return callback([]);
+  FB.db.collection("students").orderBy("updated","desc").limit(100).get()
+    .then(snap => {
+      const students = [];
+      snap.forEach(doc => students.push({uid:doc.id, ...doc.data()}));
+      callback(students);
+    }).catch(e => { console.warn("FB class:", e.message); callback([]); });
+}
 /* Old saves keep working: fill in anything a newer version added. */
 function upgrade(o){ const b=blank(); const out={...b,...o,cfg:{...b.cfg,...(o.cfg||{})}};
   out.prog=o.prog||{}; out.certs=o.certs||[]; out.best=o.best||{}; out.extraPacks=o.extraPacks||[];
@@ -1815,7 +1907,7 @@ function dock(){
      every one of them scroll past two classes they are not enrolled in. */
   const tabs=[["home","▣",T_.home]];
   allPacks().forEach(pk=>{ const ti=packTabInfo(pk); tabs.push(["pack:"+pk.id, ti.icon, ti.label]); });
-  tabs.push(["arcade","◕",T_.arcade],["art","✎",T_.art]);
+  tabs.push(["arcade","◕",T_.arcade],["assignments","📋",S.lang==="es"?"Tareas":"Assignments"],["art","✎",T_.art]);
   if(TEACHER_OK) tabs.push(["teacher","◈",T_.teacher]);
   const el=document.getElementById("dock");
   /* Hide the nav for the whole game show: it is a fixed bar over the lower
@@ -1825,11 +1917,8 @@ function dock(){
   const inShow=TAB==="gameshow";
   el.style.display=inShow?"none":"";
   if(inShow){ el.innerHTML=""; return; }
-  /* When viewing a unit detail page, highlight its parent pack in the dock */
-  const activeTab = TAB.indexOf("unit:")===0 ? (function(){
-    const u=findUnit(TAB.slice(5)); return u&&u.pack?"pack:"+u.pack.id:TAB; })() : TAB;
   el.innerHTML=tabs.map(([k,i,l])=>
-    `<button onclick="go('${k}')" ${activeTab===k?'aria-current="page"':''}><span class="ic">${i}</span>${l}</button>`).join("");
+    `<button onclick="go('${k}')" ${TAB===k?'aria-current="page"':''}><span class="ic">${i}</span>${l}</button>`).join("");
 }
 function esc(s){return String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));}
 
@@ -1839,12 +1928,13 @@ function render(){
   else if(TAB==="study") viewStudy();
   else if(TAB==="challenge") viewChallengePicker();
   else if(TAB==="arcade") viewArcade();
+  else if(TAB==="smittys") viewSmittys();
+  else if(TAB==="assignments") viewAssignments();
   else if(TAB==="showstudy") viewShowStudy();
   else if(TAB==="showprep") viewShowPrep();
   else if(TAB==="art") viewArt();
   else if(TAB==="teacher"&&TEACHER_OK) viewTeacher();
   else if(TAB==="gameshow"&&TEACHER_OK) viewGameShow();
-  else if(TAB&&TAB.indexOf("unit:")===0) viewUnit(TAB.slice(5));
   else if(TAB&&TAB.indexOf("pack:")===0) viewPack(TAB.slice(5));
   else { TAB="home"; viewHome(); }
 }
@@ -1946,27 +2036,47 @@ function viewPack(packId){
   const units = pack.units.map(u=>Object.assign({}, u, {pack:pack}));
   const done = units.filter(u=>unitChunksComplete(u.id)).length;
 
-  /* Compact unit row: tap to open unit detail page */
-  const unitRow = (u,i) => {
+  const unitCard = (u,i) => {
     const st = unitStats(u), prog = unitTopicProgress(u.id);
-    const complete = prog.total && prog.done===prog.total;
+    const rec = studyRec(u.id), unlocked = studyUnlocked(u);
     const set = spriteSetFor(u);
-    return `<button class="panel unitcard ${complete?'done':''}"
-      style="cursor:pointer;width:100%" onclick="go('unit:${u.id}')">
+    const complete = prog.total && prog.done===prog.total;
+    return `<section class="panel unitcard ${complete?'done':''}">
       <div class="unithead">
         <div class="unitart">${smitTag(set,"hero")}</div>
         <div class="unitmeta">
           <div class="eyebrow">${T_.unit} ${i+1}${complete?" · "+T_.completeWord:""}</div>
           <h3>${esc(L(u.title))}</h3>
           <div class="row">
-            <span class="chip ${st.mastery>=70?'on':''}">${st.mastery}% ${T_.mastery}</span>
+            <span class="chip">${vocabOf(u.id).length} ${T_.terms}</span>
             <span class="chip">${u.items.length} ${T_.items}</span>
+            <span class="chip ${st.mastery>=70?'on':''}">${st.mastery}% ${T_.mastery}</span>
           </div>
         </div>
-        <span class="ccgo">▸</span>
       </div>
-      ${prog.total?`<div class="meter" style="margin:8px 0 0"><i style="width:${prog.pct}%"></i></div>`:""}
-    </button>`;
+      ${prog.total?`<div class="meter" style="margin:12px 0 6px"><i style="width:${prog.pct}%"></i></div>
+        <p class="muted" style="font-size:12px;margin:0 0 12px">${prog.done}/${prog.total} ${T_.topicsDone}
+        · ${fmtMin(rec.sec||0)} ${T_.studyTime.toLowerCase()}</p>`:""}
+      <div class="bigbtns">
+        <button class="bigbtn go" onclick="viewTopics('${u.id}')">
+          <span class="bb-ico">▶</span>
+          <span class="bb-txt"><b>${prog.done?T_.continueUnit:T_.startShift}</b>
+            <small>${T_.bbLesson}</small></span></button>
+        <button class="bigbtn" onclick="startPractice('${u.id}')">
+          <span class="bb-ico">✎</span>
+          <span class="bb-txt"><b>${T_.practice}</b><small>${T_.bbPractice}</small></span></button>
+        <button class="bigbtn ${unlocked?'':'off'}" ${unlocked?'':'disabled'}
+          onclick="viewReviewHub('${u.id}')">
+          <span class="bb-ico">◈</span>
+          <span class="bb-txt"><b>${T_.reviewArcade}</b>
+            <small>${unlocked?T_.bbReview:T_.bbLocked}</small></span></button>
+        <button class="bigbtn ${unlocked?'':'off'}" ${unlocked?'':'disabled'}
+          onclick="startExam('${u.id}')">
+          <span class="bb-ico">★</span>
+          <span class="bb-txt"><b>${T_.testReview}</b>
+            <small>${unlocked?T_.bbTest:T_.bbLocked}</small></span></button>
+      </div>
+    </section>`;
   };
 
   V().innerHTML = `
@@ -1978,63 +2088,24 @@ function viewPack(packId){
       <span class="chip">${units.reduce((a,u)=>a+vocabOf(u.id).length,0)} ${T_.terms}</span>
       <span class="chip">${S.certs.filter(c=>c.course===L(pack.name)).length} ${T_.certsWord}</span>
     </div>
+  ${pack.id==="econ-h"?`
+    <section class="panel" style="border-left:4px solid var(--gold);margin-top:14px">
+      <div class="row spread">
+        <div>
+          <div class="eyebrow" style="color:var(--gold)">🍔 RPG Activity</div>
+          <h3 style="margin:4px 0">Smitty's Chill Grill</h3>
+          <p class="muted" style="font-size:13px;margin:2px 0">${S.lang==="es"
+            ?"RPG de estructuras empresariales — propiedad individual → sociedad → corporación → franquicia. ~30 min."
+            :"Business Structures RPG — sole proprietorship → partnership → corporation → franchise. ~30 min."}</p>
+        </div>
+        <button class="btn primary" onclick="TAB='smittys';render()">Play</button>
+      </div>
+    </section>`:""}
     ${pack.id!=="us-gov"?`<button class="btn ghost wide" style="margin-top:12px"
       onclick="viewRoutePicker(null,null)">${currentRoute().icon} ${T_.changeRoute} · ${
       esc(L(currentRoute().label))}</button>`:""}
   </section>
-  ${units.map(unitRow).join("")}`;
-  window.scrollTo(0,0);
-}
-
-/* ---- Unit detail page: the play/practice/review/test buttons for one unit ---- */
-function viewUnit(unitId){
-  const u = findUnit(unitId); if (!u) return go("home");
-  const pack = u.pack || allPacks().find(p=>p.units.some(x=>x.id===unitId));
-  const packId = pack ? pack.id : "ap-econ";
-  const st = unitStats(u), prog = unitTopicProgress(u.id);
-  const rec = studyRec(u.id), unlocked = studyUnlocked(u);
-  const set = spriteSetFor(u);
-  const complete = prog.total && prog.done===prog.total;
-  const idx = (pack?pack.units:[]).findIndex(x=>x.id===unitId);
-
-  V().innerHTML = `
-  <button class="btn ghost" style="margin:14px 0" onclick="go('pack:${packId}')">← ${T_.back}</button>
-  <section class="panel raised unitcard ${complete?'done':''}">
-    <div class="unithead">
-      <div class="unitart">${smitTag(set,"hero")}</div>
-      <div class="unitmeta">
-        <div class="eyebrow">${esc(L(pack?pack.name:{en:'',es:''}))} · ${T_.unit} ${idx+1}${complete?" · "+T_.completeWord:""}</div>
-        <h3>${esc(L(u.title))}</h3>
-        <div class="row">
-          <span class="chip">${vocabOf(u.id).length} ${T_.terms}</span>
-          <span class="chip">${u.items.length} ${T_.items}</span>
-          <span class="chip ${st.mastery>=70?'on':''}">${st.mastery}% ${T_.mastery}</span>
-        </div>
-      </div>
-    </div>
-    ${prog.total?`<div class="meter" style="margin:12px 0 6px"><i style="width:${prog.pct}%"></i></div>
-      <p class="muted" style="font-size:12px;margin:0 0 12px">${prog.done}/${prog.total} ${T_.topicsDone}
-      · ${fmtMin(rec.sec||0)} ${T_.studyTime.toLowerCase()}</p>`:""}
-    <div class="bigbtns">
-      <button class="bigbtn go" onclick="viewTopics('${u.id}')">
-        <span class="bb-ico">▶</span>
-        <span class="bb-txt"><b>${prog.done?T_.continueUnit:T_.startShift}</b>
-          <small>${T_.bbLesson}</small></span></button>
-      <button class="bigbtn" onclick="startPractice('${u.id}')">
-        <span class="bb-ico">✎</span>
-        <span class="bb-txt"><b>${T_.practice}</b><small>${T_.bbPractice}</small></span></button>
-      <button class="bigbtn ${unlocked?'':'off'}" ${unlocked?'':'disabled'}
-        onclick="viewReviewHub('${u.id}')">
-        <span class="bb-ico">◈</span>
-        <span class="bb-txt"><b>${T_.reviewArcade}</b>
-          <small>${unlocked?T_.bbReview:T_.bbLocked}</small></span></button>
-      <button class="bigbtn ${unlocked?'':'off'}" ${unlocked?'':'disabled'}
-        onclick="startExam('${u.id}')">
-        <span class="bb-ico">★</span>
-        <span class="bb-txt"><b>${T_.testReview}</b>
-          <small>${unlocked?T_.bbTest:T_.bbLocked}</small></span></button>
-    </div>
-  </section>`;
+  ${units.map(unitCard).join("")}`;
   window.scrollTo(0,0);
 }
 
@@ -2046,7 +2117,7 @@ function viewBrief(id){
   const missing=S.lang==="es"&&!(u.brief&&u.brief.es);
   const ep=buildEpisode(u);
   V().innerHTML=`
-  <button class="btn ghost" style="margin:14px 0" onclick="go('unit:${id}')">← ${T_.back}</button>
+  <button class="btn ghost" style="margin:14px 0" onclick="go('pack:'+findUnit('${unitId}').pack.id)">← ${T_.back}</button>
   <section class="panel raised epstage">
     <div class="epart">${smitTag(set,"hero")}</div>
     <div class="epbody">
@@ -2575,7 +2646,7 @@ function viewTopics(unitId){
   const set = spriteSetFor(u), frame = EPISODE_FRAME[set];
   const prog = unitTopicProgress(unitId);
   V().innerHTML = `
-  <button class="btn ghost" style="margin:14px 0" onclick="go('unit:${unitId}')">← ${T_.back}</button>
+  <button class="btn ghost" style="margin:14px 0" onclick="go('pack:'+findUnit('${unitId}').pack.id)">← ${T_.back}</button>
   <section class="panel raised epstage">
     <div class="epart">${smitTag(set,"hero")}</div>
     <div class="epbody">
@@ -7941,9 +8012,9 @@ function paintCert(c,print,mascot){
   else cv.toBlob(b=>download(`certificate-${c.code}.png`,b,"image/png"));
 }
 /* ============================================================================
-   9. ARCADE  —  five games, drawn with Coach Smith's own art.
-   Adapted from the Smith's Sprint / Smith's Brawl / Campus Taxi / Smith's
-   Quest / Chalk Brigade sources. Changes made on purpose, noted where they matter:
+   9. ARCADE  —  four games, drawn with Coach Smith's own art.
+   Adapted from the Smith's Sprint / Campus Shuttle / Campus Kart / Smith's
+   Quest sources. Changes made on purpose, noted where they matter:
      - rounds shortened to 90s so one token is one short break, not five minutes
      - all touch input measured against the canvas rect, not window.innerWidth,
        so it still aims correctly when the canvas is not full width
@@ -7983,38 +8054,30 @@ const GAMES=[
        es:"Seis mundos, una carrera. Corre solo: tú saltas, ruedas y lees el camino."},
   goal:{en:"You drive the pace and you're armed. Chain coins for a combo, throw chalk at hazards, grab power-ups. Six worlds.",
         es:"Tú marcas el ritmo y vas armado. Encadena monedas, lanza tiza a los peligros y toma potenciadores. Seis mundos."},
-  keys:{en:["↑ / W jump — hold longer to jump higher · tap again to double-jump",
+  keys:{en:["↑ / W jump — hold longer to jump higher",
             "← → set your pace: ease off or push ahead",
             "↓ roll — low, fast, and clears a hazard you touch",
             "Space throw chalk — takes a hazard out at range",
-            "Pick up ✦ chalk · ◈ shield · » boost · ◎ coin magnet",
-            "Watch for crumbling (red) and moving (purple) platforms, and spring pads"],
-        es:["↑ / W saltar; mantén para saltar más alto · toca otra vez para doble salto",
+            "Pick up ✦ chalk · ◈ shield · » boost · ◎ coin magnet"],
+        es:["↑ / W saltar; mantén para saltar más alto",
             "← → marca tu ritmo: frena o empuja",
             "↓ rodar: bajo, rápido y elimina el peligro que tocas",
             "Espacio lanzar tiza: elimina un peligro a distancia",
-            "Recoge ✦ tiza · ◈ escudo · » impulso · ◎ imán de monedas",
-            "Cuidado con plataformas frágiles (rojo) y móviles (morado), y trampolines"]},
+            "Recoge ✦ tiza · ◈ escudo · » impulso · ◎ imán de monedas"]},
   touch:{en:"Touch: tap the top to jump, bottom-left to roll, bottom-right to throw chalk.",
          es:"Táctil: arriba saltar, abajo-izquierda rodar, abajo-derecha lanzar tiza."}},
- {id:"brawl", color:"#F2B441", dur:90,
-  name:{en:"Smith's Brawl",es:"Pelea de Smith"},
-  tag:{en:"Platform fighter. Smash foes off the stage — higher damage means bigger knockback.",
-       es:"Pelea en plataformas. Lanza enemigos fuera del escenario: más daño = más empuje."},
-  goal:{en:"Rack up damage with attacks, then launch your opponents off-screen to KO them. You have 3 stocks — don't get launched yourself.",
-        es:"Acumula daño con ataques y lanza a tus oponentes fuera de la pantalla. Tienes 3 vidas — no dejes que te lancen a ti."},
-  keys:{en:["← → run · ↑ jump (tap again to double-jump) · ↓ fast-fall",
-            "J / Space attack — tap for a jab, hold for a charged smash",
-            "K / Shift special — fires a chalk projectile",
-            "Higher damage % = further you get launched when hit",
-            "KO an opponent by knocking them past the blast zone"],
-        es:["← → correr · ↑ saltar (otra vez para doble salto) · ↓ caída rápida",
-            "J / Espacio atacar — toca para golpe, mantén para smash cargado",
-            "K / Shift especial — dispara un proyectil de tiza",
-            "Mayor % de daño = más lejos te lanzan cuando te golpean",
-            "Noquea oponentes lanzándolos fuera de la zona de explosión"]},
-  touch:{en:"Touch: left side drag to move, top-right to jump, bottom-right to attack. Double-tap top-right to double-jump.",
-         es:"Táctil: arrastra lado izquierdo para moverte, arriba-derecha saltar, abajo-derecha atacar. Doble toque arriba-derecha para doble salto."}},
+ {id:"shuttle", color:"#F2B441", dur:90,
+  name:{en:"Campus Shuttle",es:"Transporte del campus"},
+  tag:{en:"Lane dodger. Pick up riders, drop them off, don't crash.",
+       es:"Esquiva carriles. Recoge pasajeros, déjalos y no choques."},
+  goal:{en:"Stop at a green marker to pick up a rider, then a gold marker to drop off. Faster drop-offs pay more.",
+        es:"Detente en la marca verde para recoger y en la dorada para dejar. Entregar rápido paga más."},
+  keys:{en:["↑ ↓ change lane","→ accelerate","← brake — you must slow below 3 to stop for a rider",
+            "Three crashes ends the run"],
+        es:["↑ ↓ cambiar de carril","→ acelerar","← frenar; baja de 3 para recoger pasajeros",
+            "Tres choques terminan la partida"]},
+  touch:{en:"Touch: swipe up or down to change lane, hold the right half to accelerate.",
+         es:"Táctil: desliza arriba o abajo para cambiar de carril; mantén la mitad derecha para acelerar."}},
  {id:"kart", color:"#FF4D9D", dur:90,
   name:{en:"Campus Taxi",es:"Taxi del campus"},
   tag:{en:"Crazy Taxi on campus. Pick students up, get them where they're going.",
@@ -8033,24 +8096,18 @@ const GAMES=[
             "Los viajes rapidos dan propina y suben la racha"]},
   touch:{en:"Touch: drag left or right to steer, hold the bottom of the screen to brake.",
          es:"Tactil: arrastra a los lados para girar, manten abajo para frenar."}},
- {id:"blocks", color:"#9B7BE0", dur:120,
-  name:{en:"Smith's Blocks",es:"Los bloques de Smith"},
-  tag:{en:"Drop tetrominoes, clear lines, survive the stack.",
-       es:"Deja caer tetrominós, limpia líneas, sobrevive la torre."},
-  goal:{en:"Rotate and drop blocks to fill complete rows. Clearing multiple lines at once scores big. Don't let the stack reach the top.",
-        es:"Gira y deja caer bloques para llenar filas completas. Limpiar varias líneas a la vez da más puntos. No dejes que la torre llegue arriba."},
-  keys:{en:["← → move the piece sideways",
-            "↑ / W rotate clockwise",
-            "↓ / S soft drop — pushes the piece down faster",
-            "Space hard drop — slams the piece to the bottom instantly",
-            "Clear 1 line = 100 · 2 = 300 · 3 = 500 · 4 (Tetris!) = 800"],
-        es:["← → mover la pieza a los lados",
-            "↑ / W rotar en sentido horario",
-            "↓ / S caída suave — empuja la pieza más rápido",
-            "Espacio caída fuerte — la pieza cae al fondo al instante",
-            "Limpiar 1 línea = 100 · 2 = 300 · 3 = 500 · 4 (¡Tetris!) = 800"]},
-  touch:{en:"Touch: tap left/right edges to move, tap center to rotate, swipe down to hard drop.",
-         es:"Táctil: toca los bordes para mover, centro para rotar, desliza abajo para caída fuerte."}},
+ {id:"quest", color:"#9B7BE0", dur:90,
+  name:{en:"Smith's Quest",es:"La misión de Smith"},
+  tag:{en:"Top-down survival. Swing at what chases you.",
+       es:"Supervivencia cenital. Golpea lo que te persiga."},
+  goal:{en:"Foes close in from every side. Each one you drop is 20 points and may leave a coin behind.",
+        es:"Los enemigos llegan por todos lados. Cada uno derrotado da 20 puntos y puede soltar una moneda."},
+  keys:{en:["Arrow keys move in eight directions","Space swings","A hit knocks you back and briefly speeds you up",
+            "Three hits ends the run"],
+        es:["Flechas para moverte en ocho direcciones","Espacio para golpear","Un golpe te empuja y te acelera un momento",
+            "Tres golpes terminan la partida"]},
+  touch:{en:"Touch: drag on the left half to move, tap the right half to swing.",
+         es:"Táctil: arrastra en la mitad izquierda para moverte; toca la derecha para golpear."}},
  {id:"gunner", color:"#7CE0FF", dur:120,
   name:{en:"Chalk Brigade",es:"Brigada de tiza"},
   tag:{en:"Run-and-gun the hallways. Real platform physics, chalk in hand.",
@@ -8124,10 +8181,413 @@ function formatTime(frames){
 }
 
 /* ---------- arcade menu ---------- */
+
+/* ============================================================================
+   ASSIGNMENTS TAB
+   ========================================================================== */
+function viewAssignments(){
+  const es = S.lang === "es";
+  V().innerHTML = `
+  <h1 class="big" style="margin:18px 0 4px">📋 ${es?"Tareas":"Assignments"}</h1>
+  <p class="muted" style="margin:0 0 14px">${es
+    ?"Actividades y proyectos asignados por Coach Smith."
+    :"Activities and projects assigned by Coach Smith."}</p>
+
+  <section class="panel" style="border-left:4px solid var(--gold)">
+    <div class="row spread">
+      <div>
+        <div class="eyebrow" style="color:var(--gold)">🍔 Econ Honors</div>
+        <h3 style="margin:4px 0">Smitty's Chill Grill</h3>
+        <p class="muted" style="font-size:13px;margin:2px 0">${es
+          ?"RPG de estructuras empresariales. Sole prop → Partnership → Corporation → Franchise. ~30 min."
+          :"Business Structures RPG. Sole prop → Partnership → Corporation → Franchise. ~30 min."}</p>
+        <div class="row" style="margin-top:6px">
+          <span class="chip ${window._SG&&window._SG.masteryPassed&&Object.keys(window._SG.masteryPassed).length>=4?'on':'warn'}">
+            ${window._SG&&window._SG.masteryPassed?Object.keys(window._SG.masteryPassed).length:0}/4 ${es?"niveles":"levels"}</span>
+          <span class="chip">~30 min</span>
+        </div>
+      </div>
+      <button class="btn primary" onclick="TAB='smittys';render()">${es?"Jugar":"Play"}</button>
+    </div>
+  </section>
+
+  <section class="panel" style="border-left:4px solid var(--line);opacity:.5">
+    <div class="eyebrow">${es?"Próximamente":"Coming soon"}</div>
+    <p class="muted" style="margin:4px 0">${es
+      ?"Más actividades interactivas serán agregadas aquí a medida que se asignen."
+      :"More interactive activities will appear here as they're assigned."}</p>
+  </section>`;
+}
+
+/* ============================================================================
+   SMITTY'S CHILL GRILL — embedded RPG
+   ========================================================================== */
+function viewSmittys(){
+  const es = S.lang === "es";
+  const SG = window._SG || (window._SG = {
+    biz:"", bizName:"Smitty's Chill Grill", cash:5000, rep:50, stress:20,
+    level:0, totalRight:0, totalWrong:0, masteryPassed:{}
+  });
+  const LEVELS=[
+    {id:"sole",title:es?"Propiedad individual":"Sole Proprietorship",icon:"🏪",color:"var(--crt)"},
+    {id:"part",title:es?"Sociedad":"Partnership",icon:"🤝",color:"var(--blue)"},
+    {id:"corp",title:es?"Corporación":"Corporation",icon:"🏢",color:"var(--gold)"},
+    {id:"fran",title:es?"Franquicia":"Franchise",icon:"👑",color:"var(--hot)"}
+  ];
+
+  function sgStats(){
+    return `<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:10px 0">
+      <div style="text-align:center;padding:10px;background:var(--cab2);border-radius:10px;border:1px solid var(--line)">
+        <div style="font-family:var(--mono);font-size:20px;font-weight:700;color:var(--gold)">$${SG.cash.toLocaleString()}</div>
+        <div style="font-size:12px;color:var(--dim)">${es?"Efectivo":"Cash"}</div></div>
+      <div style="text-align:center;padding:10px;background:var(--cab2);border-radius:10px;border:1px solid var(--line)">
+        <div style="font-family:var(--mono);font-size:20px;font-weight:700;color:var(--crt)">${SG.rep}</div>
+        <div style="font-size:12px;color:var(--dim)">${es?"Reputación":"Rep"}</div></div>
+      <div style="text-align:center;padding:10px;background:var(--cab2);border-radius:10px;border:1px solid var(--line)">
+        <div style="font-family:var(--mono);font-size:20px;font-weight:700;color:var(--hot)">${SG.stress}</div>
+        <div style="font-size:12px;color:var(--dim)">${es?"Estrés":"Stress"}</div></div>
+    </div>`;
+  }
+  function sgNpc(av,name,text){
+    return `<div class="coach" style="margin:12px 0"><div class="avatar" style="font-size:22px;width:42px;height:42px;
+      border-radius:50%;display:grid;place-items:center;background:var(--cab2);border:1px solid var(--line)">${av}</div>
+      <div class="bubble"><b style="color:var(--gold)">${esc(name)}:</b> ${text}</div></div>`;
+  }
+
+  /* ---- INTRO ---- */
+  function sgIntro(){
+    V().innerHTML = `
+    <div class="eprow"><button class="btn ghost" style="padding:8px 12px;min-height:0"
+      onclick="TAB='arcade';render()">← ${es?"Volver":"Back"}</button></div>
+    <div style="text-align:center;padding:20px 0 6px">
+      <div style="font-size:56px">🍔</div>
+      <h1 class="big" style="color:var(--gold);margin:6px 0">Smitty's Chill Grill</h1>
+      <p class="muted" style="max-width:380px;margin:0 auto">${es
+        ?"Un RPG de estructuras empresariales. Construye un negocio desde cero hasta una franquicia nacional."
+        :"A business structures RPG. Build from scratch to a national franchise."}</p>
+    </div>
+    <section class="panel">
+      <h3>${es?"Elige tu negocio":"Pick your business"}</h3>
+      <div id="sgConcepts" style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px">
+        ${[["🍔",es?"Restaurante":"Diner"],["💻",es?"Startup tech":"Tech Startup"],
+           ["👕",es?"Tienda de ropa":"Retail"],["🎮",es?"Café gaming":"Gaming Café"],
+           ["🚗",es?"Taller de autos":"Auto Shop"],["🎨",es?"Estudio creativo":"Creative Studio"]].map(([icon,label])=>
+          `<button class="opt" onclick="window._sgPick='${label}';
+            document.querySelectorAll('#sgConcepts .opt').forEach(b=>b.classList.remove('sel'));
+            this.classList.add('sel');document.getElementById('sgGo').disabled=false">${icon} ${label}</button>`).join("")}
+      </div>
+      <input id="sgName" type="text" value="${esc(SG.bizName)}" placeholder="Smitty's Chill Grill"
+        maxlength="30" style="margin-top:10px">
+      <button class="btn primary wide" id="sgGo" disabled style="margin-top:12px"
+        onclick="SG.biz=window._sgPick||'Diner';SG.bizName=document.getElementById('sgName').value.trim()||'Smitty\\'s Chill Grill';
+                 SG.cash=5000;SG.rep=50;SG.stress=20;SG.level=0;SG.totalRight=0;SG.totalWrong=0;SG.masteryPassed={};
+                 sgLevel(0)">${es?"Abrir el negocio":"Open for Business"} →</button>
+    </section>`;
+  }
+
+  /* ---- LEVELS ---- */
+  function sgLevel(n){ SG.level=n; sgNarrative[LEVELS[n].id](); }
+
+  const sgNarrative = {};
+
+  /* SOLE PROPRIETORSHIP */
+  sgNarrative.sole = function(){
+    V().innerHTML = `
+    <section class="panel"><div class="lvl-head" style="text-align:center;padding:20px 12px 12px;margin:-18px -18px 14px;
+      border-radius:14px 14px 0 0;background:linear-gradient(180deg,var(--cab2),transparent)">
+      <span class="chip on">Level 1</span>
+      <h2 style="color:var(--crt);margin:4px 0">🏪 ${LEVELS[0].title}</h2>
+      <p class="muted" style="font-size:14px">${esc(SG.bizName)} ${es?"abre sus puertas":"opens its doors"}</p>
+    </div>${sgStats()}
+    ${sgNpc("🧑‍🍳",es?"Tú":"You",es
+      ?`Inviertes tus ahorros en <b>${esc(SG.bizName)}</b>. Sin socios, sin inversores — solo tú. Cada decisión es tuya. Cada dólar de ganancia va directo a tu bolsillo.`
+      :`You pour your savings into <b>${esc(SG.bizName)}</b>. No partners, no investors — just you. Every decision is yours. Every dollar of profit goes straight into your pocket.`)}
+    ${sgNpc("📋",es?"Narrador":"Narrator",es
+      ?`Una <b>propiedad individual</b> es la estructura más simple. Tienes <b>control total</b>. Pero hay una trampa: también tienes <b>responsabilidad ilimitada</b>. Si alguien demanda al negocio, te demandan a <i>ti</i>. Tu auto, tus ahorros, tu casa — todo está en juego.`
+      :`A <b>sole proprietorship</b> is the simplest structure. You have <b>complete control</b>. But there's a catch: <b>unlimited liability</b>. If someone sues the business, they're suing <i>you</i>. Your car, savings, house — all fair game.`)}
+    <button class="btn primary wide" onclick="sgSoleLawsuit()">→</button></section>`;
+  };
+
+  window.sgSoleLawsuit = function(){
+    V().innerHTML = `
+    <section class="panel" style="border-color:rgba(255,77,157,.4)">
+      <div style="text-align:center;margin-bottom:10px"><span class="chip bad">⚠️ ${es?"Evento":"Event"}</span>
+        <h2 style="color:var(--hot);margin:4px 0">${es?"Demanda por resbalón":"Slip-and-Fall Lawsuit"}</h2></div>
+      ${sgNpc("⚖️",es?"Abogado":"Attorney",es
+        ?`Un cliente resbaló en un piso mojado en <b>${esc(SG.bizName)}</b>. Demandan por <b>$10,000</b>. Como propietario individual con <b>responsabilidad ilimitada</b>, pueden ir tras tus bienes personales.`
+        :`A customer slipped on a wet floor at <b>${esc(SG.bizName)}</b>. They're suing for <b>$10,000</b>. Because you're a sole proprietor with <b>unlimited liability</b>, they can go after your personal assets.`)}
+      <p style="margin:10px 0">${es?"Tienes":"You have"} <b>$${SG.cash.toLocaleString()}</b>. ${es?"¿Qué haces?":"What do you do?"}</p>
+      <button class="opt" onclick="sgSoleChoice(1)">💰 ${es?"Pagar los $10,000 de ahorros personales":"Pay $10,000 from personal savings"}</button>
+      <button class="opt" onclick="sgSoleChoice(2)">⚖️ ${es?"Pelear en corte ($3,000, 50/50)":"Fight in court ($3,000, 50/50 chance)"}</button>
+      <button class="opt" onclick="sgSoleChoice(3)">🏃 ${es?"Ignorar y esperar que desaparezca":"Ignore it and hope it goes away"}</button>
+    </section>`;
+  };
+
+  window.sgSoleChoice = function(c){
+    let result;
+    if(c===1){ SG.cash=Math.max(0,SG.cash-10000); SG.stress+=15;
+      result=es?"Pagaste $10,000 de tu propio bolsillo. Eso es <b>responsabilidad ilimitada</b> — el negocio y el dueño son la misma entidad legal."
+              :"You paid $10,000 from your own pocket. <b>That's unlimited liability</b> — the business and the owner are the same legal entity.";
+    } else if(c===2){
+      if(Math.random()>0.5){ SG.cash-=3000; SG.stress+=10;
+        result=es?"Contrataste un abogado por $3,000 y <b>ganaste</b>. Pero esos honorarios salieron de tus fondos personales."
+                :"You hired a lawyer for $3,000 and <b>won</b>. But those legal fees came out of your personal funds.";
+      } else { SG.cash=Math.max(0,SG.cash-13000); SG.stress+=25;
+        result=es?"Contrataste un abogado por $3,000 y <b>perdiste</b>. Costo total: $13,000 de tus bienes personales."
+                :"You hired a lawyer for $3,000 and <b>lost</b>. Total cost: $13,000 from your personal assets.";
+      }
+    } else { SG.cash=Math.max(0,SG.cash-15000); SG.stress+=30; SG.rep-=20;
+      result=es?"Ignorar una demanda no la hace desaparecer. El tribunal dictó una sentencia por defecto — $15,000."
+              :"Ignoring a lawsuit doesn't make it go away. The court entered a default judgment — $15,000.";
+    }
+    V().innerHTML = `<section class="panel"><span class="chip warn">${es?"Resultado":"Outcome"}</span>${sgStats()}
+      <p style="margin:12px 0">${result}</p>
+      <button class="btn primary wide" onclick="sgMastery('sole')">${es?"Verificación de dominio":"Mastery Check"} →</button></section>`;
+  };
+
+  /* PARTNERSHIP */
+  sgNarrative.part = function(){
+    SG.cash+=8000; SG.stress=Math.max(0,SG.stress-15);
+    V().innerHTML = `<section class="panel"><div style="text-align:center;margin-bottom:10px">
+      <span class="chip on">Level 2</span><h2 style="color:var(--blue);margin:4px 0">🤝 ${LEVELS[1].title}</h2></div>
+      ${sgStats()}
+      ${sgNpc("👩‍🍳","Chef Patty",es?`Te traigo $8,000 en capital y mis habilidades culinarias si me haces socia.`
+        :`I'll bring $8,000 and my cooking skills if you bring me in as an equal partner.`)}
+      ${sgNpc("📋",es?"Narrador":"Narrator",es
+        ?`Una <b>sociedad</b> comparte capital, decisiones y trabajo. Pero también comparte <b>responsabilidad ilimitada</b> — si Patty comete un error, <i>tú</i> también eres responsable. Un <b>acuerdo de sociedad</b> es esencial.`
+        :`A <b>partnership</b> shares capital, decisions, and workload. But it also shares <b>unlimited liability</b>. A <b>partnership agreement</b> is essential.`)}
+      <button class="btn primary wide" onclick="sgPartConflict()">→</button></section>`;
+  };
+  window.sgPartConflict = function(){
+    V().innerHTML = `<section class="panel" style="border-color:rgba(93,156,236,.4)">
+      <div style="text-align:center;margin-bottom:10px"><span class="chip" style="color:var(--blue)">🍔 vs 🥦</span>
+        <h2 style="color:var(--blue);margin:4px 0">${es?"La Guerra del Menú":"The Menu War"}</h2></div>
+      ${sgNpc("👩‍🍳","Chef Patty",es?`Necesitamos un menú vegano completo. Ahí va el mercado.`
+        :`We need a full vegan menu. That's where the market is heading.`)}
+      <button class="opt" onclick="sgPartResolve(1)">📝 ${es?"Redactar un acuerdo de sociedad":"Draft a partnership agreement"}</button>
+      <button class="opt" onclick="sgPartResolve(2)">👊 ${es?"Imponer tu autoridad":"Pull rank — your name is on the sign"}</button>
+      <button class="opt" onclick="sgPartResolve(3)">🤷 ${es?"Agregar ambos y ver qué vende":"Add both and see what sells"}</button></section>`;
+  };
+  window.sgPartResolve = function(c){
+    let result;
+    if(c===1){ SG.rep+=10; SG.stress-=5;
+      result=es?"Redactaron un acuerdo: división 50/50, votación mayoritaria para el menú, cláusula de salida. Compromiso: tres opciones veganas junto a los clásicos."
+              :"You drafted an agreement: 50/50 split, majority vote on menu, buyout clause. Compromise — three vegan items alongside the classics.";
+    } else if(c===2){ SG.rep-=10; SG.stress+=15;
+      result=es?"Patty está furiosa. En una sociedad general, ambos socios tienen <b>autoridad igual</b> a menos que el acuerdo diga lo contrario."
+              :"Patty is furious. In a general partnership, both partners have <b>equal authority</b> unless the agreement says otherwise.";
+    } else { SG.cash-=4000; SG.stress+=5;
+      result=es?"Agregar ambos costó $4,000 sin plan. Un acuerdo habría incluido un proceso para probar ideas nuevas."
+              :"Adding both cost $4,000 without a plan. An agreement would have included a process for testing new ideas.";
+    }
+    V().innerHTML = `<section class="panel"><span class="chip warn">${es?"Resultado":"Outcome"}</span>${sgStats()}
+      <p style="margin:12px 0">${result}</p>
+      <button class="btn primary wide" onclick="sgMastery('part')">${es?"Verificación":"Mastery Check"} →</button></section>`;
+  };
+
+  /* CORPORATION */
+  sgNarrative.corp = function(){
+    SG.cash+=25000;
+    V().innerHTML = `<section class="panel"><div style="text-align:center;margin-bottom:10px">
+      <span class="chip on">Level 3</span><h2 style="color:var(--gold);margin:4px 0">🏢 ${LEVELS[2].title}</h2></div>
+      ${sgStats()}
+      ${sgNpc("🧑‍💼",es?"Asesor":"Advisor",es
+        ?`Tu negocio crece demasiado rápido para una sociedad. Hora de <b>incorporar</b>. Una corporación es una entidad legal separada — protege tus bienes personales con <b>responsabilidad limitada</b>. Pero hay un costo: <b>doble tributación</b>.`
+        :`Your business is growing too fast for a partnership. Time to <b>incorporate</b>. A corporation is a separate legal entity — <b>limited liability</b> protects your personal assets. But: <b>double taxation</b>.`)}
+      <div class="panel" style="border-color:rgba(242,180,65,.3);font-family:var(--mono);font-size:13px;line-height:2">
+        ${es?"Ingresos":"Revenue"}: <b style="color:var(--crt)">$100,000</b><br>
+        − ${es?"Impuesto corporativo":"Corporate tax"} (21%): <b style="color:var(--hot)">−$21,000</b><br>
+        = ${es?"Ganancia después de impuestos":"After-tax profit"}: $79,000<br>
+        ${es?"Dividendos":"Dividends"}: $30,000<br>
+        − ${es?"Impuesto sobre dividendos":"Dividend tax"} (15%): <b style="color:var(--hot)">−$4,500</b><br>
+        = ${es?"Accionistas reciben":"Shareholders receive"}: $25,500
+      </div>
+      <button class="btn primary wide" onclick="sgMastery('corp')">${es?"Verificación":"Mastery Check"} →</button></section>`;
+  };
+
+  /* FRANCHISE */
+  sgNarrative.fran = function(){
+    SG.cash+=50000; SG.rep+=20;
+    V().innerHTML = `<section class="panel"><div style="text-align:center;margin-bottom:10px">
+      <span class="chip bad">Level 4 — Boss Battle</span><h2 style="color:var(--hot);margin:4px 0">👑 ${LEVELS[3].title}</h2></div>
+      ${sgStats()}
+      ${sgNpc("📋",es?"Narrador":"Narrator",es
+        ?`Como franquiciador, vendes el derecho a operar bajo tu marca. Los franquiciados pagan <b>regalías</b> (4-8% de ingresos) y deben seguir tus <b>reglas estrictas</b>.`
+        :`As a franchisor, you sell the right to operate under your brand. Franchisees pay <b>royalty fees</b> (4-8% of revenue) and must follow your <b>strict operating rules</b>.`)}
+      ${sgNpc("😈",es?"Franquiciado rebelde":"Rogue Franchisee",es
+        ?`Tu menú de hamburguesas es aburrido. Estoy cambiando mi local a tacos. ¿Qué vas a hacer?`
+        :`Your burger menu is boring. I'm switching my location to tacos. What are you gonna do about it?`)}
+      <button class="btn primary wide" onclick="sgMastery('fran')">${es?"Verificación final":"Final Mastery Check"} →</button></section>`;
+  };
+
+  /* ---- MASTERY CHECKS ---- */
+  const SG_MASTERY = {
+    sole:[
+      {q:{en:"You're a sole proprietor and your business can't pay a $20,000 debt. What happens?",
+          es:"Eres propietario individual y tu negocio no puede pagar una deuda de $20,000. ¿Qué pasa?"},
+       c:{en:["Your personal assets can be seized","The debt is forgiven","The government pays it","Nothing happens"],
+          es:["Tus bienes personales pueden ser embargados","La deuda se perdona","El gobierno la paga","No pasa nada"]},
+       a:0, why:{en:"Unlimited liability — the owner and business are the same entity. Personal assets are at risk.",
+                 es:"Responsabilidad ilimitada — el dueño y el negocio son la misma entidad."}},
+      {q:{en:"What is the biggest advantage of a sole proprietorship?",es:"¿Cuál es la mayor ventaja de una propiedad individual?"},
+       c:{en:["Complete control over all decisions","Limited liability","Ability to sell stock","Tax exemptions"],
+          es:["Control total sobre todas las decisiones","Responsabilidad limitada","Vender acciones","Exenciones fiscales"]},
+       a:0, why:{en:"Every decision is yours alone — that's the trade-off for unlimited liability.",
+                 es:"Cada decisión es solo tuya — ese es el intercambio por la responsabilidad ilimitada."}},
+      {q:{en:"Who receives the profits from a sole proprietorship?",es:"¿Quién recibe las ganancias de una propiedad individual?"},
+       c:{en:["The owner keeps all profits","Split with the government","Go to shareholders","Reinvested automatically"],
+          es:["El dueño se queda con todas las ganancias","Se dividen con el gobierno","Van a accionistas","Se reinvierten automáticamente"]},
+       a:0, why:{en:"No partners, no shareholders — every dollar goes to the sole owner (after taxes).",
+                 es:"Sin socios ni accionistas — cada dólar va al dueño (después de impuestos)."}}
+    ],
+    part:[
+      {q:{en:"Your partner takes out a business loan without telling you. Are you liable?",
+          es:"Tu socio pide un préstamo empresarial sin decirte. ¿Eres responsable?"},
+       c:{en:["Yes — all partners share unlimited liability","No — only the signer","Only if you co-signed","Depends on credit"],
+          es:["Sí — todos los socios comparten responsabilidad ilimitada","No — solo quien firmó","Solo si cofirmaste","Depende del crédito"]},
+       a:0, why:{en:"In a general partnership, every partner is personally liable for all partnership debts.",
+                 es:"En una sociedad general, cada socio es responsable de todas las deudas."}},
+      {q:{en:"What document should partners create BEFORE starting?",es:"¿Qué documento deben crear los socios ANTES de empezar?"},
+       c:{en:["A partnership agreement","A stock certificate","A franchise license","A corporate charter"],
+          es:["Un acuerdo de sociedad","Un certificado de acciones","Una licencia de franquicia","Una carta corporativa"]},
+       a:0, why:{en:"The agreement outlines profit sharing, decision-making, and exit procedures.",
+                 es:"El acuerdo establece división de ganancias, toma de decisiones y procedimientos de salida."}}
+    ],
+    corp:[
+      {q:{en:"What does 'double taxation' mean for a corporation?",es:"¿Qué significa 'doble tributación' para una corporación?"},
+       c:{en:["Profits taxed at corporate level, then dividends taxed again for shareholders",
+              "Tax rate is doubled","Pay taxes in two states","Employees and employers both pay SS"],
+          es:["Ganancias gravadas a nivel corporativo, luego dividendos gravados de nuevo",
+              "La tasa se duplica","Se pagan impuestos en dos estados","Empleados y empleadores pagan SS"]},
+       a:0, why:{en:"The same profit is taxed twice — once as corporate income, again as shareholder dividends.",
+                 es:"La misma ganancia se grava dos veces — como ingreso corporativo y como dividendos."}},
+      {q:{en:"What does limited liability protect?",es:"¿Qué protege la responsabilidad limitada?"},
+       c:{en:["Shareholders' personal assets from business debts","The corporation from being sued",
+              "Employees from being fired","Stock price from falling"],
+          es:["Los bienes personales de los accionistas","A la corporación de ser demandada",
+              "A los empleados de ser despedidos","El precio de las acciones"]},
+       a:0, why:{en:"Shareholders can lose their investment, but personal assets are protected.",
+                 es:"Los accionistas pueden perder su inversión, pero sus bienes personales están protegidos."}}
+    ],
+    fran:[
+      {q:{en:"A franchisee changes the menu without permission. What should happen?",
+          es:"Un franquiciado cambia el menú sin permiso. ¿Qué debería pasar?"},
+       c:{en:["Enforce the agreement — revert or lose the license","Let them experiment",
+              "Adopt the change everywhere","Let customers vote"],
+          es:["Hacer cumplir el acuerdo — revertir o perder la licencia","Dejarlos experimentar",
+              "Adoptar el cambio en todas partes","Dejar que los clientes voten"]},
+       a:0, why:{en:"Franchise agreements require strict adherence. Menu changes without approval violate the agreement.",
+                 es:"Los acuerdos de franquicia requieren cumplimiento estricto."}},
+      {q:{en:"What does a franchisee pay the franchisor?",es:"¿Qué paga un franquiciado al franquiciador?"},
+       c:{en:["Royalty fees, typically a % of revenue","Nothing","A one-time flat fee only","Whatever they want"],
+          es:["Regalías, típicamente un % de ingresos","Nada","Solo una cuota única","Lo que quieran"]},
+       a:0, why:{en:"Franchisees pay ongoing royalty fees (4-8% of revenue) plus an initial franchise fee.",
+                 es:"Los franquiciados pagan regalías continuas (4-8% de ingresos) más una cuota inicial."}}
+    ]
+  };
+
+  window.sgMastery = function(levelId){
+    const qs = SG_MASTERY[levelId];
+    let qi=0, right=0;
+    function drawQ(){
+      if(qi>=qs.length) return sgResult(levelId, right, qs.length);
+      const q=qs[qi];
+      V().innerHTML = `<section class="panel">
+        <div style="text-align:center;margin-bottom:10px"><span class="chip on">${es?"Verificación":"Mastery Check"}</span>
+          <h3>${es?"Pregunta":"Question"} ${qi+1}/${qs.length}</h3></div>
+        <p style="font-size:16px;font-weight:600;margin:6px 0 14px">${esc(L(q.q))}</p>
+        <div id="sgOpts">${(L(q.c)).map((c,i)=>`<button class="opt" onclick="window._sgAns(${i})">${esc(c)}</button>`).join("")}</div>
+        <div id="sgFb"></div></section>`;
+      window._sgAns = function(i){
+        const ok=i===q.a; if(ok) right++;
+        ok ? SG.totalRight++ : SG.totalWrong++;
+        document.querySelectorAll("#sgOpts .opt").forEach((b,j)=>{b.disabled=true;
+          b.classList.add(j===q.a?"right":j===i?"wrong":"");});
+        document.getElementById("sgFb").innerHTML=`<div class="why ${ok?'':'bad'}">
+          <b>${ok?(es?"¡Correcto!":"Correct!"):(es?"No exactamente.":"Not quite.")}</b> ${esc(L(q.why))}</div>
+          <button class="btn primary wide" style="margin-top:12px"
+            onclick="window._sgNext()">${qi<qs.length-1?(es?"Siguiente":"Next"):(es?"Ver resultados":"See Results")}</button>`;
+      };
+      window._sgNext = function(){ qi++; drawQ(); };
+    }
+    drawQ();
+  };
+
+  function sgResult(levelId, right, total){
+    const passed = right >= Math.ceil(total*0.67);
+    const lvlIdx = LEVELS.findIndex(l=>l.id===levelId);
+    const isLast = lvlIdx >= LEVELS.length-1;
+    if(passed){ SG.cash+=5000; S.tokens=(S.tokens||0)+3; save(); }
+    SG.masteryPassed[levelId]=passed;
+
+    V().innerHTML = `<section class="panel" style="text-align:center">
+      <span class="chip ${passed?'on':'bad'}">${passed?(es?"Aprobado":"Passed"):(es?"Aún no":"Not Yet")}</span>
+      <h2 style="color:${passed?'var(--crt)':'var(--hot)'}">
+        ${passed?(es?"Nivel completo":"Level Complete"):(es?"Sigue intentando":"Keep Going")}</h2>
+      ${sgStats()}
+      <p style="font-family:var(--mono);font-size:28px;margin:10px 0">${right}/${total}</p>
+      <div class="meter"><i class="${passed?'g':'r'}" style="width:${right/total*100}%"></i></div>
+      ${!passed?`<p style="margin:14px 0">${es?"Necesitas":"Need"} ${Math.ceil(total*0.67)}/${total}</p>
+        <button class="btn primary wide" onclick="sgLevel(${lvlIdx})">${es?"Reintentar":"Retry"}</button>`
+       :isLast?`<p style="margin:14px 0">🎉 ${es
+          ?`¡Construiste <b>${esc(SG.bizName)}</b> de una tienda individual a una franquicia nacional!`
+          :`You built <b>${esc(SG.bizName)}</b> from a one-person shop to a national franchise!`}</p>
+        <p style="color:var(--gold)">+3 ${es?"fichas ganadas":"tokens earned"} ◎</p>
+        <button class="btn primary wide" onclick="sgFinalReport()">${es?"Ver reporte":"See Report"} →</button>`
+       :`<p style="margin:14px 0">+$5,000. → <b>${LEVELS[lvlIdx+1].title}</b></p>
+        <button class="btn primary wide" onclick="sgLevel(${lvlIdx+1})">Level ${lvlIdx+2} →</button>`}
+    </section>`;
+  }
+
+  window.sgFinalReport = function(){
+    const total=SG.totalRight+SG.totalWrong, pct=total?Math.round(SG.totalRight/total*100):0;
+    V().innerHTML = `<section class="panel" style="text-align:center">
+      <div style="font-size:56px;margin:8px 0">🏆</div>
+      <h1 class="big" style="color:var(--gold)">${esc(SG.bizName)}</h1>
+      <p class="muted">${es?"De propietario individual a imperio de franquicias":"From sole proprietor to franchise empire"}</p>
+      ${sgStats()}
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:16px 0">
+        <div style="text-align:center;padding:10px;background:var(--cab2);border-radius:10px">
+          <div style="font-family:var(--mono);font-size:22px;font-weight:700;color:var(--gold)">${pct}%</div>
+          <div style="font-size:12px;color:var(--dim)">${es?"Dominio":"Mastery"}</div></div>
+        <div style="text-align:center;padding:10px;background:var(--cab2);border-radius:10px">
+          <div style="font-family:var(--mono);font-size:22px;font-weight:700;color:var(--crt)">${SG.totalRight}</div>
+          <div style="font-size:12px;color:var(--dim)">${es?"Correctas":"Correct"}</div></div>
+        <div style="text-align:center;padding:10px;background:var(--cab2);border-radius:10px">
+          <div style="font-family:var(--mono);font-size:22px;font-weight:700">4/4</div>
+          <div style="font-size:12px;color:var(--dim)">${es?"Niveles":"Levels"}</div></div>
+      </div>
+      <div class="panel" style="text-align:left;border-color:rgba(77,224,177,.3)">
+        <h3 style="margin-bottom:8px">${es?"Lo que aprendiste":"What you learned"}</h3>
+        <p style="font-size:14px;line-height:1.8">
+          🏪 <b>${es?"Propiedad Individual":"Sole Prop"}:</b> ${es?"Control total, responsabilidad ilimitada.":"Full control, unlimited liability."}<br>
+          🤝 <b>${es?"Sociedad":"Partnership"}:</b> ${es?"Capital compartido, responsabilidad compartida, acuerdo necesario.":"Shared capital, shared liability, agreement required."}<br>
+          🏢 <b>${es?"Corporación":"Corporation"}:</b> ${es?"Entidad legal separada, responsabilidad limitada, doble tributación.":"Separate entity, limited liability, double taxation."}<br>
+          👑 <b>${es?"Franquicia":"Franchise"}:</b> ${es?"Marca establecida, regalías, reglas estrictas.":"Built-in brand, royalties, strict rules."}</p>
+      </div>
+      <button class="btn primary wide" style="margin-top:14px" onclick="TAB='arcade';render()">← ${es?"Volver al arcade":"Back to Arcade"}</button>
+    </section>`;
+  };
+
+  sgIntro();
+}
 function viewArcade(){
+  /* Also show Smitty's Chill Grill as a featured activity above the arcade */
+  const smittyCard = `<section class="panel" style="border-left:4px solid var(--gold);margin-bottom:14px">
+    <div class="row spread">
+      <div>
+        <div class="eyebrow" style="color:var(--gold)">🍔 RPG Activity</div>
+        <h3 style="margin:4px 0">Smitty's Chill Grill</h3>
+        <p class="muted" style="font-size:13px;margin:2px 0">Business Structures RPG — sole proprietorship → partnership → corporation → franchise. ~30 min.</p>
+      </div>
+      <button class="btn primary" onclick="TAB='smittys';render()">Play</button>
+    </div>
+  </section>`;
+  window._smittyCard = smittyCard;
   const free=TEACHER_OK;
   V().innerHTML=`<h1 class="big" style="margin:18px 0 4px">${T_.arcade}</h1>
   <p class="muted">${free?T_.freePlay:T_.cost+(S.tokens?"":" · "+T_.noTokens)}</p>
+  ${smittyCard}
   ${GAMES.map(g=>`<section class="panel" style="border-left:4px solid ${g.color}">
     <h3 style="font-size:19px">${esc(L(g.name))}</h3>
     <p class="muted" style="margin:4px 0 10px">${esc(L(g.tag))}</p>
@@ -8241,7 +8701,7 @@ function playGame(id){
     cv.width=Math.min(960,Math.max(360,Math.round(rw*2)));
     cv.height=Math.round(cv.width*0.6);
   }
-  ({sprint:gameSprint,brawl:gameBrawl,kart:gameKart,blocks:gameBlocks,gunner:gameGunner}[id])(cv,id,lvl,zone);
+  ({sprint:gameSprint,shuttle:gameShuttle,kart:gameKart,quest:gameQuest,gunner:gameGunner}[id])(cv,id,lvl,zone);
 }
 function setHUD(hp,tokens,frames,sc){
   const h=document.getElementById("hp"); if(h) h.textContent="♥".repeat(Math.max(0,hp))||"—";
@@ -8387,11 +8847,9 @@ function gameSprint(cv,id,lvl,zone){
 
   const p={x:120, y:GROUND_Y-90, vx:runSpeed, vy:0, w:40, h:80,
            grounded:true, coyote:0, buffer:0, roll:false, invuln:0, rot:0,
-           ammo:3, cool:0, shield:0, boost:0, magnet:0, face:1,
-           jumps:0, maxJumps:2, djFlash:0};
-  let shots=[], sparks=[], dusts=[], trails=[];
+           ammo:3, cool:0, shield:0, boost:0, magnet:0, face:1};
+  let shots=[], sparks=[];
   const AMMO_MAX=6;
-  let dist=0, nextMilestone=2000, milestone=null, milestoneT=0;
 
   /* Chalk shot. Limited ammo so it supplements reading the road instead of
      replacing it, and a cooldown so it can't be spammed through a wall. */
@@ -8484,24 +8942,7 @@ function gameSprint(cv,id,lvl,zone){
     y = Math.max(BAND_Y+70, Math.min(GROUND_Y+10, y));
     const w = 260 + Math.random()*420;
     const plat = {x:lastRight+gap, y:y, w:w};
-
-    /* platform varieties (only after the first few safe platforms) */
-    if(plats.length > 8 && Math.random()<0.18){
-      /* crumbling platform */
-      plat.crumble=true; plat.crumbleT=0;
-    }
-    if(plats.length > 6 && Math.random()<0.14){
-      /* moving platform (vertical oscillation) */
-      plat.move={dy:0.6+Math.random()*0.5, minY:y-50, maxY:y+50};
-    }
-
     plats.push(plat);
-
-    /* spring pad: a small platform in a gap, launches you high */
-    if(gap>MAX_GAP*0.6 && Math.random()<0.25){
-      const sp={x:lastRight+gap*0.45, y:y+20, w:60, spring:true};
-      plats.push(sp);
-    }
 
     /* coins arc over the gap, so collecting them teaches the jump */
     const n = 4+Math.floor(Math.random()*4);
@@ -8522,24 +8963,13 @@ function gameSprint(cv,id,lvl,zone){
     const room = w - 200;
     if(room > 120 && Math.random() < Math.min(0.72, 0.28+lvl*0.05)){
       const hx = plat.x + 100 + Math.random()*room;
-      /* 35% chance of a patrolling enemy instead of static */
-      const patrol = Math.random()<0.35;
       items.push({t:"foe", x:hx, y:y-52, w:48, h:52,
-                  k:Math.floor(Math.random()*Math.max(1,foes.length)),
-                  patrol:patrol, patrolDir:1, patrolMin:plat.x+60, patrolMax:plat.x+w-60, patrolSpd:1.2+Math.random()*1.2});
+                  k:Math.floor(Math.random()*Math.max(1,foes.length))});
     }
     /* a second hazard only on a long platform, and only far from the first */
     if(w > 520 && Math.random() < 0.3){
       items.push({t:"foe", x:plat.x+w-140, y:y-52, w:48, h:52,
-                  k:Math.floor(Math.random()*Math.max(1,foes.length)),
-                  patrol:false});
-    }
-    /* aerial enemy: floats in sine waves over a gap */
-    if(gap>MAX_GAP*0.4 && Math.random()<Math.min(0.45,0.15+lvl*0.04)){
-      const ax=lastRight+gap*0.5;
-      items.push({t:"aerial", x:ax, y:y-140-Math.random()*40, w:44, h:44,
-                  k:Math.floor(Math.random()*Math.max(1,foes.length)),
-                  baseY:y-140-Math.random()*40, amp:30+Math.random()*20, freq:0.03+Math.random()*0.015});
+                  k:Math.floor(Math.random()*Math.max(1,foes.length))});
     }
     /* scenery sits behind the platform, inside the band but never on the line */
     if(Math.random()<0.5)
@@ -8607,20 +9037,13 @@ function gameSprint(cv,id,lvl,zone){
       p.roll = keys.down && p.grounded;
       p.h = p.roll ? 46 : 80;
 
-      /* jump with coyote time, input buffer, and a double-jump.
-         The second jump is slightly weaker to keep the ceiling honest. */
+      /* jump with coyote time and an input buffer, so a jump pressed a frame
+         early or a step after the ledge still fires. Without these a runner
+         feels broken even when the numbers are right. */
       if(p.coyote>0) p.coyote--;
       if(p.buffer>0) p.buffer--;
       if(p.buffer>0 && (p.grounded||p.coyote>0)){
         p.vy = -JUMP_V; p.grounded=false; p.coyote=0; p.buffer=0;
-        p.jumps=1;
-        /* dust puff on jump */
-        for(let k=0;k<5;k++) dusts.push({x:p.x+p.w/2+rnd(-12,12), y:p.y+p.h, vx:rnd(-1.5,1.5), vy:rnd(-1,-0.3), life:16, s:rnd(3,7)});
-      } else if(p.buffer>0 && !p.grounded && p.jumps<p.maxJumps){
-        /* double jump */
-        p.vy = -JUMP_V*0.82; p.buffer=0; p.jumps++;
-        p.djFlash=14;
-        for(let k=0;k<8;k++) sparks.push({x:p.x+p.w/2+rnd(-14,14), y:p.y+p.h, life:14, c:E.accent});
       }
       p.vy += GRAV;
       if(p.vy>19) p.vy=19;
@@ -8629,42 +9052,12 @@ function gameSprint(cv,id,lvl,zone){
       /* land */
       const wasGrounded=p.grounded;
       p.grounded=false;
-      for(let ci=plats.length-1;ci>=0;ci--){
-        const c=plats[ci];
+      for(const c of plats){
         if(p.x+p.w>c.x && p.x<c.x+c.w){
-          /* moving platforms: update position */
-          if(c.move){
-            c.y += c.move.dy;
-            if(c.y<c.move.minY||c.y>c.move.maxY) c.move.dy*=-1;
-          }
           if(p.vy>=0 && p.y+p.h>=c.y && p.y+p.h-p.vy<=c.y+14){
-            p.y=c.y-p.h; p.vy=0; p.grounded=true; p.jumps=0;
-            if(c.move) p.x+=0; /* ride the platform */
-            /* crumbling platform */
-            if(c.crumble && !c.crumbleT){
-              c.crumbleT=45; /* frames before it breaks */
-            }
-            /* spring pad */
-            if(c.spring){
-              p.vy=-JUMP_V*1.55; p.grounded=false; p.jumps=0;
-              shake=4;
-              msg="SPRING!"; msgT=24;
-              for(let k=0;k<8;k++) sparks.push({x:p.x+p.w/2+rnd(-18,18), y:p.y+p.h, life:18, c:"#4DE0B1"});
-            }
+            p.y=c.y-p.h; p.vy=0; p.grounded=true;
           }
         }
-      }
-      /* update crumbling platforms */
-      for(let ci=plats.length-1;ci>=0;ci--){
-        const c=plats[ci];
-        if(c.crumbleT>0){
-          c.crumbleT--;
-          if(c.crumbleT<=0){ plats.splice(ci,1); continue; }
-        }
-      }
-      /* landing dust */
-      if(!wasGrounded && p.grounded && p.vy===0){
-        for(let k=0;k<6;k++) dusts.push({x:p.x+p.w/2+rnd(-16,16), y:p.y+p.h, vx:rnd(-2.5,2.5), vy:rnd(-1.2,-0.2), life:18, s:rnd(3,8)});
       }
       if(wasGrounded && !p.grounded && p.vy>=0) p.coyote=COYOTE;
 
@@ -8679,50 +9072,18 @@ function gameSprint(cv,id,lvl,zone){
       camTarget = p.x - W*0.26 + runSpeed*7;
       camX += (camTarget-camX)*0.12;
 
-      /* distance milestones */
-      dist += p.vx;
-      if(dist>=nextMilestone){
-        milestone=Math.floor(nextMilestone/100)+"m"; milestoneT=90;
-        sc+=200; nextMilestone+=2000;
-        flash=8;
-      }
-      if(milestoneT>0) milestoneT--;
-
-      /* trail behind the player */
-      if(f%2===0) trails.push({x:p.x+p.w/2, y:p.y+p.h/2, life:12, h:p.h*0.6});
-      for(const tr of trails) tr.life--;
-      trails=trails.filter(tr=>tr.life>0);
-
-      /* dust particles */
-      for(const d of dusts){ d.x+=d.vx; d.y+=d.vy; d.vy+=0.06; d.life--; }
-      dusts=dusts.filter(d=>d.life>0);
-
-      /* double-jump flash */
-      if(p.djFlash>0) p.djFlash--;
-
       /* world upkeep */
       while(nextX < camX + W*2.2) generate();
       plats = plats.filter(c=>c.x+c.w > camX-600);
       items = items.filter(i=>i.x > camX-600);
       props = props.filter(i=>i.x > camX-600);
 
-      /* update moving enemies */
-      for(const it of items){
-        if(it.t==="foe" && it.patrol){
-          it.x += it.patrolDir * (it.patrolSpd||1.5);
-          if(it.x<=it.patrolMin||it.x>=it.patrolMax) it.patrolDir*=-1;
-        }
-        if(it.t==="aerial"){
-          it.y = it.baseY + Math.sin(f*it.freq)*it.amp;
-        }
-      }
-
       /* a chalk shot clears a hazard outright */
       for(let si=shots.length-1;si>=0;si--){
         const sh=shots[si];
         for(let i=items.length-1;i>=0;i--){
           const it=items[i];
-          if(it.t!=="foe"&&it.t!=="aerial") continue;
+          if(it.t!=="foe") continue;
           if(sh.x>it.x && sh.x<it.x+it.w && sh.y>it.y && sh.y<it.y+it.h){
             items.splice(i,1); shots.splice(si,1);
             sc += 80; combo++; best=Math.max(best,combo);
@@ -8749,13 +9110,6 @@ function gameSprint(cv,id,lvl,zone){
             if(it.k==="magnet"){ p.magnet=540;  msg=T_.puMagnet; }
             msgT=44; sc+=25;
             for(let k=0;k<6;k++) sparks.push({x:it.x+15, y:it.y+15, life:16, c:E.coin});
-          } else if(it.t==="aerial"){
-            /* aerial enemies can only be cleared by shooting or rolling through */
-            if(p.roll || p.vy>6){
-              items.splice(i,1); sc+=80; p.vy=-9; shake=8; combo++; best=Math.max(best,combo);
-              msg=T_.runCleared; msgT=30;
-              for(let k=0;k<6;k++) sparks.push({x:it.x+it.w/2, y:it.y+it.h/2, life:14, c:"#FF4D9D"});
-            } else hurt(T_.runHit);
           } else {
             /* rolling or stomping clears a hazard; anything else costs a life */
             if(p.roll || p.vy>6){
@@ -8765,9 +9119,6 @@ function gameSprint(cv,id,lvl,zone){
           }
         }
       }
-
-      /* roll dust trail */
-      if(p.roll && f%3===0) dusts.push({x:p.x+p.w/2+rnd(-8,8), y:p.y+p.h, vx:rnd(-1,1), vy:rnd(-0.5,0), life:12, s:rnd(2,5)});
     }
 
     /* ====================== draw ====================== */
@@ -8836,23 +9187,7 @@ function gameSprint(cv,id,lvl,zone){
       const sx=c.x-camX;
       if(sx>W+80 || sx+c.w<-80) continue;
       const bodyH=H-c.y;
-      /* crumbling platform: shake and fade */
-      if(c.crumbleT>0){
-        x.save();
-        x.translate(rnd(-2,2),rnd(-1,1));
-        x.globalAlpha=Math.max(0.15, c.crumbleT/45);
-      }
-      if(c.spring){
-        /* spring pad: bright green */
-        x.fillStyle="#4DE0B1"; x.fillRect(sx,c.y,c.w,14);
-        x.fillStyle="#2A7A5A"; x.fillRect(sx+4,c.y+6,c.w-8,8);
-        /* spring coil lines */
-        x.strokeStyle="#8AF29E"; x.lineWidth=2;
-        for(let si=0;si<3;si++){
-          const sx2=sx+c.w*0.25+si*c.w*0.25;
-          x.beginPath(); x.moveTo(sx2,c.y+6); x.lineTo(sx2,c.y+14); x.stroke();
-        }
-      } else if(pat){
+      if(pat){
         x.save(); x.beginPath(); x.rect(sx,c.y,c.w,bodyH); x.clip();
         x.translate(-(camX%64),0);
         x.fillStyle=pat; x.fillRect(sx-64,c.y,c.w+128,bodyH);
@@ -8861,13 +9196,9 @@ function gameSprint(cv,id,lvl,zone){
       } else {
         x.fillStyle=E.ground; x.fillRect(sx,c.y,c.w,bodyH);
       }
-      if(!c.spring){
-        const capCol = c.crumble ? "#FF4D9D" : c.move ? "#9B7BE0" : E.groundTop;
-        x.fillStyle=capCol; x.fillRect(sx,c.y,c.w,6);
-        x.fillStyle="rgba(0,0,0,.55)";
-        x.fillRect(sx,c.y+6,3,bodyH); x.fillRect(sx+c.w-3,c.y+6,3,bodyH);
-      }
-      if(c.crumbleT>0) x.restore();
+      x.fillStyle=E.groundTop; x.fillRect(sx,c.y,c.w,6);
+      x.fillStyle="rgba(0,0,0,.55)";
+      x.fillRect(sx,c.y+6,3,bodyH); x.fillRect(sx+c.w-3,c.y+6,3,bodyH);
     }
 
     /* --- the landing shadow. The single biggest readability win in a
@@ -8885,37 +9216,6 @@ function gameSprint(cv,id,lvl,zone){
       x.beginPath();
       x.ellipse(p.x-camX+p.w/2, below.y+3, (p.w*0.6)*(1-t*0.4), 6*(1-t*0.4), 0,0,7);
       x.fill(); x.globalAlpha=1;
-    }
-
-    /* --- trail behind the player --- */
-    for(const tr of trails){
-      const sx=tr.x-camX;
-      x.globalAlpha=tr.life/14*0.18;
-      x.fillStyle=E.accent;
-      x.fillRect(sx-3, tr.y-tr.h/2, 6, tr.h);
-    }
-    x.globalAlpha=1;
-
-    /* --- dust particles --- */
-    for(const d of dusts){
-      const sx=d.x-camX;
-      x.globalAlpha=d.life/18*0.55;
-      x.fillStyle="#EFEAFB";
-      x.beginPath(); x.arc(sx, d.y, d.s, 0, 7); x.fill();
-    }
-    x.globalAlpha=1;
-
-    /* --- speed lines when boosting or fast --- */
-    if(p.boost>0 || p.vx>runSpeed*1.2){
-      const n=p.boost>0?8:4;
-      x.globalAlpha=0.22;
-      x.strokeStyle=E.accent; x.lineWidth=2;
-      for(let si=0;si<n;si++){
-        const ly=BAND_Y+30+((f*17+si*73)%(H-BAND_Y-60));
-        const lx=W*0.15+((f*31+si*97)%Math.round(W*0.7));
-        x.beginPath(); x.moveTo(lx,ly); x.lineTo(lx-35-Math.random()*40,ly); x.stroke();
-      }
-      x.globalAlpha=1;
     }
 
     /* --- shots and sparks --- */
@@ -8956,20 +9256,6 @@ function gameSprint(cv,id,lvl,zone){
         x.textAlign="center"; x.textBaseline="middle";
         x.fillText({ammo:"✦",shield:"◈",boost:"»",magnet:"◎"}[it.k]||"?", cx2, cy2+1);
         x.textAlign="left"; x.textBaseline="alphabetic";
-      } else if(it.t==="aerial"){
-        /* aerial enemy: floats with a pulsing danger aura */
-        const im=foes[it.k];
-        x.globalAlpha=0.30+Math.sin(f*0.12)*0.15;
-        x.fillStyle="#FF4D9D";
-        x.beginPath(); x.arc(sx+it.w/2, it.y+it.h/2, it.w*0.7, 0,7); x.fill();
-        x.globalAlpha=1;
-        if(drawable(im)) sprite(x, im, sx+it.w/2, it.y+it.h, 52);
-        else { x.fillStyle="#FF4D9D"; x.beginPath(); x.arc(sx+it.w/2, it.y+it.h/2, 20, 0, 7); x.fill(); }
-        /* wing flaps */
-        x.strokeStyle="rgba(255,77,157,.5)"; x.lineWidth=2;
-        const wing=Math.sin(f*0.15)*12;
-        x.beginPath(); x.moveTo(sx+it.w/2-16,it.y+it.h/2); x.lineTo(sx-8,it.y+it.h/2-wing); x.stroke();
-        x.beginPath(); x.moveTo(sx+it.w/2+16,it.y+it.h/2); x.lineTo(sx+it.w+8,it.y+it.h/2+wing); x.stroke();
       } else {
         const im=foes[it.k];
         /* glow ring first so a hazard pops against any backdrop */
@@ -8989,7 +9275,7 @@ function gameSprint(cv,id,lvl,zone){
     /* --- incoming-hazard warning at the right edge, so nothing arrives
            without notice even at the highest run speed --- */
     for(const it of items){
-      if(it.t!=="foe"&&it.t!=="aerial") continue;
+      if(it.t!=="foe") continue;
       const sx=it.x-camX;
       if(sx>W && sx<W+520){
         const a=1-((sx-W)/520);
@@ -9032,24 +9318,6 @@ function gameSprint(cv,id,lvl,zone){
       x.textAlign="center"; x.fillText(msg, W/2, BAND_Y-30);
       x.globalAlpha=1;
     }
-    /* milestone banner */
-    if(milestoneT>0 && milestone){
-      x.globalAlpha=Math.min(1,milestoneT/20);
-      x.fillStyle="rgba(11,15,31,.7)"; x.fillRect(W/2-90,BAND_Y+40,180,46);
-      x.fillStyle=E.accent; x.font="800 28px 'Trebuchet MS',sans-serif";
-      x.textAlign="center"; x.fillText(milestone, W/2, BAND_Y+72);
-      x.fillStyle="#EFEAFB"; x.font="bold 12px 'Courier New',monospace";
-      x.fillText("+200", W/2, BAND_Y+82);
-      x.globalAlpha=1;
-    }
-    /* double-jump flash ring */
-    if(p.djFlash>0){
-      const cx=p.x-camX+p.w/2;
-      x.globalAlpha=p.djFlash/14*0.5;
-      x.strokeStyle=E.accent; x.lineWidth=3;
-      x.beginPath(); x.arc(cx, p.y+p.h/2, 30+(14-p.djFlash)*3, 0, 7); x.stroke();
-      x.globalAlpha=1;
-    }
     /* ammo pips and active power-ups */
     x.fillStyle="rgba(11,15,31,.7)"; x.fillRect(10,H-34,130,26);
     for(let i=0;i<AMMO_MAX;i++){
@@ -9075,7 +9343,7 @@ function gameSprint(cv,id,lvl,zone){
       x.fillText("COMBO ×"+combo, 18, 28);
     }
     x.fillStyle="rgba(255,255,255,.35)"; x.font="11px 'Courier New',monospace";
-    x.textAlign="right"; x.fillText(L(E.name).toUpperCase()+"  ·  "+Math.floor(dist/100)+"m", W-12, 22);
+    x.textAlign="right"; x.fillText(L(E.name).toUpperCase(), W-12, 22);
 
     setHUD(hp, combo, framesLeft, Math.round(sc));
   });
@@ -9090,519 +9358,108 @@ function shadeMix(a,b,t){
 }
 
 /* ============================================================================
-   GAME 2 — SMITH'S BRAWL (platform fighter)
-   ----------------------------------------------------------------------------
-   Smash Bros on campus. Damage is tracked as a percentage; the higher the
-   percentage, the further a hit launches you. Cross the blast zone and you
-   lose a stock. Three stocks each.
-
-   KNOCKBACK MODEL
-     Every hit carries a base knockback and a growth factor. Final launch
-     speed = base + growth * (target.dmg / 100). Direction comes from the
-     attacker's facing and the attack type (jab = low angle, smash = 45°,
-     aerial = attacker-to-target). This is simpler than Smash's actual
-     formula but produces the same play pattern: early hits combo, late hits
-     kill.
-
-   AI
-     Opponents use a state machine: CHASE → ATTACK when in range, RECOVER
-     when off-stage, DODGE when a projectile is nearby. Chase speed and
-     reaction delay scale with level so higher difficulties feel smarter,
-     not just faster.
+   GAME 2 — CAMPUS SHUTTLE (lane dodger)
    ========================================================================== */
-function gameBrawl(cv,id,lvl,zone){
-  const x=cv.getContext("2d"), W=cv.width, H=cv.height;
-  const back=spriteOf(zone.bg), tile=spriteOf(zone.tile);
-  const heroIdle=spriteOf("idle"), heroRun=spriteOf("run"),
-        heroJump=spriteOf("walk"), heroAtk=spriteOf("point"),
-        heroCheer=spriteOf("cheer");
-  const foeImgs=FOES.map(spriteOf);
-  const coinIm=spriteOf("item_coin");
+function gameShuttle(cv,id,lvl,zone){
+  const x=cv.getContext("2d"),W=cv.width,H=cv.height;
+  let f=0,hp=3,sc=0,over=false,framesLeft=GAMES[1].dur*60;
+  let lane=1,speed=0,dist=0,invuln=90,hasPass=false,passTimer=0;
+  const maxSpeed=12+(lvl*0.8);
+  let traffic=[],stops=[],nextStop=800;
+  const laneH=Math.round(H/5), roadY=Math.round(H/2-laneH*1.5);
+  const back=spriteOf(zone.bg), kart=spriteOf("kart_player"), rivals=TRAFFIC.map(spriteOf);
 
-  /* ---- stage geometry ---- */
-  const FLOOR_Y=H*0.72, STAGE_L=W*0.12, STAGE_R=W*0.88;
-  const STAGE_W=STAGE_R-STAGE_L;
-  const plats=[
-    {x:STAGE_L, y:FLOOR_Y, w:STAGE_W},                            /* main stage  */
-    {x:STAGE_L+STAGE_W*0.08, y:FLOOR_Y-120, w:STAGE_W*0.28},     /* left plat   */
-    {x:STAGE_L+STAGE_W*0.64, y:FLOOR_Y-120, w:STAGE_W*0.28},     /* right plat  */
-    {x:STAGE_L+STAGE_W*0.32, y:FLOOR_Y-220, w:STAGE_W*0.36}      /* top plat    */
-  ];
-  const BLAST={l:-120, r:W+120, t:-160, b:H+140};
-
-  /* ---- physics ---- */
-  const GRAV=0.58, JUMP_V=-12.8, DJUMP_V=-11, FAST_FALL=8;
-  const RUN_SPD=5.2, AIR_SPD=4.2, FRIC=0.82, AIR_FRIC=0.96;
-
-  /* ---- attacks ---- */
-  const ATTACKS={
-    jab:    {frames:14, active:[4,8],  dmg:8,  base:3.5, growth:2.8, angle:25,  range:56, h:40},
-    smash:  {frames:28, active:[12,18],dmg:18, base:5,   growth:5.5, angle:45,  range:64, h:50},
-    aerial: {frames:16, active:[4,10], dmg:11, base:4,   growth:3.8, angle:55,  range:52, h:52},
-    special:{frames:20, active:[8,8],  dmg:6,  base:2,   growth:2,   angle:15,  range:0,  h:0}
-  };
-
-  /* ---- fighter factory ---- */
-  function makeFighter(fx,fy,isPlayer,foeIdx){
-    return {x:fx, y:fy, vx:0, vy:0, w:38, h:64, face:isPlayer?1:-1,
-            grounded:false, jumps:2, dmg:0, stocks:3, inv:0,
-            atk:null, atkF:0, charge:0, held:false, cooldown:0,
-            isPlayer:isPlayer, foeIdx:foeIdx,
-            aiState:"chase", aiTimer:0, aiReact:Math.max(8,40-lvl*4),
-            hitstun:0, hx:0, hy:0,
-            combo:0, lastHitBy:-1};
-  }
-
-  const fighters=[];
-  fighters.push(makeFighter(W*0.35, FLOOR_Y-100, true, -1));
-  const numFoes=Math.min(3, 1+Math.floor(lvl/2));
-  for(let i=0;i<numFoes;i++){
-    const fx=W*0.55 + i*60;
-    fighters.push(makeFighter(fx, FLOOR_Y-100, false, i % foeImgs.length));
-  }
-
-  let f=0, sc=0, kos=0, over=false, tokens=0;
-  let framesLeft=GAMES.find(g=>g.id==="brawl").dur*60;
-  let shake=0, flash=0;
-  let items=[], nextItem=180;
-  let projectiles=[];
-  const PROJ_SPD=9, PROJ_LIFE=55;
-
-  /* ---- input ---- */
-  const keys={left:false,right:false,up:false,down:false,atk:false,spec:false};
-  const kd=e=>{
-    if(e.code==="ArrowLeft"||e.code==="KeyA"){keys.left=true;e.preventDefault();}
-    if(e.code==="ArrowRight"||e.code==="KeyD"){keys.right=true;e.preventDefault();}
-    if(e.code==="ArrowUp"||e.code==="KeyW"){keys.up=true;e.preventDefault();}
-    if(e.code==="ArrowDown"||e.code==="KeyS"){keys.down=true;e.preventDefault();}
-    if(e.code==="Space"||e.code==="KeyJ"){keys.atk=true;e.preventDefault();}
-    if(e.code==="ShiftLeft"||e.code==="ShiftRight"||e.code==="KeyK"){keys.spec=true;e.preventDefault();}
-  };
-  const ku=e=>{
-    if(e.code==="ArrowLeft"||e.code==="KeyA")keys.left=false;
-    if(e.code==="ArrowRight"||e.code==="KeyD")keys.right=false;
-    if(e.code==="ArrowUp"||e.code==="KeyW")keys.up=false;
-    if(e.code==="ArrowDown"||e.code==="KeyS")keys.down=false;
-    if(e.code==="Space"||e.code==="KeyJ")keys.atk=false;
-    if(e.code==="ShiftLeft"||e.code==="ShiftRight"||e.code==="KeyK")keys.spec=false;
-  };
+  const keys={ArrowUp:false,ArrowDown:false,ArrowLeft:false,ArrowRight:false};
+  let prevUp=false,prevDown=false;
+  const kd=e=>{ if(keys[e.code]!==undefined){ keys[e.code]=true; e.preventDefault(); } };
+  const ku=e=>{ if(keys[e.code]!==undefined){ keys[e.code]=false; e.preventDefault(); } };
   window.addEventListener("keydown",kd); window.addEventListener("keyup",ku);
-
-  /* Touch: left half = movement joystick, top-right = jump, bottom-right = attack */
-  let joyX=0,joyY=0,joyActive=false,joyAnchorX=0,joyAnchorY=0;
-  const ts=e=>{
-    for(const t of e.touches){
-      const pt=canvasPoint(cv,t);
-      if(pt.x<0.5){ joyActive=true; joyAnchorX=t.clientX; joyAnchorY=t.clientY; joyX=0; joyY=0; }
-      else if(pt.y<0.5) keys.up=true;
-      else keys.atk=true;
-    }
-    e.preventDefault();
-  };
-  const tm=e=>{
-    for(const t of e.touches){
-      if(canvasPoint(cv,t).x<0.5&&joyActive){
-        joyX=(t.clientX-joyAnchorX); joyY=(t.clientY-joyAnchorY);
-      }
-    }
-    e.preventDefault();
-  };
-  const te=e=>{
-    let hasLeft=false,hasRight=false;
-    for(const t of e.touches){
-      const pt=canvasPoint(cv,t);
-      if(pt.x<0.5) hasLeft=true;
-      else hasRight=true;
-    }
-    if(!hasLeft){ joyActive=false; joyX=0; joyY=0; }
-    if(!hasRight){ keys.up=false; keys.atk=false; }
-    e.preventDefault();
-  };
+  let ty=0;
+  const ts=e=>{ const t=e.touches[0]; ty=t.clientY;
+    if(canvasPoint(cv,t).x>0.5) keys.ArrowRight=true; else keys.ArrowLeft=true; e.preventDefault(); };
+  const tm=e=>{ const nty=e.touches[0].clientY;
+    if(nty<ty-30){ keys.ArrowUp=true; keys.ArrowDown=false; ty=nty; }
+    else if(nty>ty+30){ keys.ArrowDown=true; keys.ArrowUp=false; ty=nty; }
+    e.preventDefault(); };
+  const te=e=>{ keys.ArrowUp=keys.ArrowDown=keys.ArrowRight=keys.ArrowLeft=false; e.preventDefault(); };
   cv.addEventListener("touchstart",ts,{passive:false});
   cv.addEventListener("touchmove",tm,{passive:false});
   cv.addEventListener("touchend",te,{passive:false});
-  cv.addEventListener("touchcancel",te,{passive:false});
-  cleanupInput=()=>{
-    window.removeEventListener("keydown",kd); window.removeEventListener("keyup",ku);
-    cv.removeEventListener("touchstart",ts); cv.removeEventListener("touchmove",tm);
-    cv.removeEventListener("touchend",te); cv.removeEventListener("touchcancel",te);
-  };
+  cleanupInput=()=>{ window.removeEventListener("keydown",kd); window.removeEventListener("keyup",ku);
+    cv.removeEventListener("touchstart",ts); cv.removeEventListener("touchmove",tm); cv.removeEventListener("touchend",te); };
 
-  /* ---- landing ---- */
-  function landCheck(ftr){
-    ftr.grounded=false;
-    if(ftr.vy<0) return; /* going up, can't land */
-    for(const pl of plats){
-      if(ftr.x+ftr.w>pl.x && ftr.x<pl.x+pl.w &&
-         ftr.y+ftr.h>=pl.y && ftr.y+ftr.h-ftr.vy<=pl.y+12){
-        ftr.y=pl.y-ftr.h; ftr.vy=0; ftr.grounded=true; ftr.jumps=2;
-        return;
-      }
-    }
-  }
-
-  /* ---- knockback ---- */
-  function launch(target,atk,face,angle){
-    const kb=atk.base + atk.growth*(target.dmg/80);
-    const rad=(angle||atk.angle)*Math.PI/180;
-    target.vx = Math.cos(rad)*kb*face;
-    target.vy = -Math.sin(rad)*kb;
-    target.hitstun=Math.min(30, Math.floor(kb*2.2));
-    target.grounded=false;
-    target.dmg+=atk.dmg;
-  }
-
-  /* ---- attack hitbox check ---- */
-  function hitboxActive(ftr){
-    if(!ftr.atk) return null;
-    const a=ATTACKS[ftr.atk];
-    if(ftr.atkF>=a.active[0] && ftr.atkF<=a.active[1]){
-      const hx=ftr.face>0 ? ftr.x+ftr.w : ftr.x-a.range;
-      return {x:hx, y:ftr.y+ftr.h/2-a.h/2, w:a.range, h:a.h, atk:a, face:ftr.face};
-    }
-    return null;
-  }
-
-  /* ---- respawn ---- */
-  function respawn(ftr){
-    ftr.stocks--;
-    if(ftr.isPlayer && ftr.stocks<=0){
-      over=true; endGame(id,sc,false); return;
-    }
-    if(!ftr.isPlayer && ftr.stocks<=0){
-      /* enemy eliminated: spawn a replacement if time remains */
-      ftr.stocks=2+Math.floor(lvl/3);
-      sc+=150;
-      kos++;
-    }
-    ftr.x=W*0.5-ftr.w/2; ftr.y=FLOOR_Y-200;
-    ftr.vx=0; ftr.vy=0; ftr.dmg=0; ftr.inv=120; ftr.hitstun=0;
-    ftr.atk=null; ftr.atkF=0;
-  }
-
-  /* ---- AI ---- */
-  function aiUpdate(ftr){
-    const p=fighters[0]; if(!p||p.stocks<=0) return;
-    if(ftr.hitstun>0) return;
-    ftr.aiTimer--;
-
-    /* recover: if off-stage, jump back */
-    if(ftr.x<STAGE_L-30 || ftr.x+ftr.w>STAGE_R+30 || ftr.y>FLOOR_Y+20){
-      ftr.aiState="recover";
-    }
-    /* dodge projectiles */
-    for(const pr of projectiles){
-      if(pr.owner===ftr) continue;
-      if(Math.abs(pr.y-(ftr.y+ftr.h/2))<50 && Math.abs(pr.x-ftr.x)<180 &&
-         Math.sign(pr.vx)===Math.sign(ftr.x-pr.x)*-1){
-        if(ftr.grounded && ftr.jumps>0){ ftr.vy=JUMP_V; ftr.jumps--; ftr.grounded=false; }
-      }
-    }
-
-    if(ftr.aiState==="recover"){
-      const cx=(STAGE_L+STAGE_R)/2;
-      ftr.vx+=(cx>ftr.x?1:-1)*AIR_SPD*0.15;
-      if(ftr.jumps>0 && ftr.vy>0 && ftr.y>FLOOR_Y-60){ ftr.vy=DJUMP_V; ftr.jumps--; }
-      if(ftr.grounded) ftr.aiState="chase";
-      return;
-    }
-
-    if(ftr.aiTimer>0) return;
-    ftr.aiTimer=ftr.aiReact+Math.floor(Math.random()*12);
-
-    const dx=p.x-ftr.x, dy=p.y-ftr.y, dist=Math.abs(dx);
-    ftr.face=dx>0?1:-1;
-
-    if(dist<70 && Math.abs(dy)<60){
-      /* in range: attack */
-      if(!ftr.atk && ftr.cooldown<=0){
-        if(p.dmg>80 && Math.random()<0.5) ftr.atk="smash";
-        else if(!ftr.grounded) ftr.atk="aerial";
-        else ftr.atk="jab";
-        ftr.atkF=0;
-      }
-    } else if(dist>200 && Math.random()<0.35 && ftr.cooldown<=0){
-      /* far away: fire a projectile sometimes */
-      ftr.atk="special"; ftr.atkF=0;
-    } else {
-      /* chase */
-      const spd=(ftr.grounded?RUN_SPD:AIR_SPD)*(0.55+lvl*0.05);
-      ftr.vx+=(dx>0?1:-1)*spd*0.18;
-      /* jump to reach higher platforms */
-      if(dy<-60 && ftr.grounded && ftr.jumps>0){ ftr.vy=JUMP_V; ftr.jumps--; ftr.grounded=false; }
-      /* jump gaps */
-      if(ftr.grounded){
-        let onPlat=false;
-        for(const pl of plats) if(ftr.x+ftr.w>pl.x && ftr.x<pl.x+pl.w && Math.abs(ftr.y+ftr.h-pl.y)<6) onPlat=true;
-        if(!onPlat && ftr.jumps>0){ ftr.vy=JUMP_V; ftr.jumps--; ftr.grounded=false; }
-      }
-    }
-  }
-
-  /* ---- main loop ---- */
   startLoop(function(){
     f++;
     if(!over){
       framesLeft--;
       if(framesLeft<=0){ over=true; endGame(id,sc,true); }
-      if(shake>0) shake--;
-      if(flash>0) flash--;
-
-      /* ---- player input ---- */
-      const me=fighters[0];
-      if(me.stocks>0 && me.hitstun<=0){
-        let dir=0;
-        if(keys.left) dir=-1;
-        if(keys.right) dir=1;
-        if(joyActive){
-          if(joyX<-18) dir=-1;
-          else if(joyX>18) dir=1;
-        }
-        if(dir!==0){
-          me.vx += dir*(me.grounded?RUN_SPD:AIR_SPD)*0.22;
-          me.face=dir;
-        }
-        if(keys.up && me.jumps>0 && !me.held){
-          me.vy = me.jumps===2 ? JUMP_V : DJUMP_V;
-          me.jumps--; me.grounded=false;
-        }
-        me.held=keys.up;
-        if(keys.down && !me.grounded && me.vy<FAST_FALL) me.vy=FAST_FALL;
-        /* attack */
-        if(keys.atk && !me.atk && me.cooldown<=0){
-          if(!me.grounded) me.atk="aerial";
-          else me.atk="jab";
-          me.atkF=0;
-        }
-        if(keys.spec && !me.atk && me.cooldown<=0){
-          me.atk="special"; me.atkF=0;
-        }
+      if(invuln>0) invuln--;
+      if(keys.ArrowUp&&!prevUp) lane=Math.max(0,lane-1);
+      if(keys.ArrowDown&&!prevDown) lane=Math.min(2,lane+1);
+      prevUp=keys.ArrowUp; prevDown=keys.ArrowDown;
+      if(keys.ArrowRight) speed=Math.min(speed+0.15,maxSpeed);
+      else if(keys.ArrowLeft) speed=Math.max(speed-0.4,0);
+      else speed=Math.max(speed-0.05,0);
+      dist+=speed;
+      if(dist>nextStop&&stops.length===0){
+        stops.push({x:W+200,lane:Math.random()>0.5?0:2,type:hasPass?"drop":"pick",active:true});
+        nextStop=dist+1000+Math.random()*2000;
       }
-
-      /* ---- update all fighters ---- */
-      for(const ftr of fighters){
-        if(ftr.stocks<=0) continue;
-        if(ftr.inv>0) ftr.inv--;
-        if(ftr.hitstun>0){ ftr.hitstun--; }
-        if(ftr.cooldown>0) ftr.cooldown--;
-
-        /* AI */
-        if(!ftr.isPlayer) aiUpdate(ftr);
-
-        /* physics */
-        ftr.vy+=GRAV;
-        if(ftr.vy>16) ftr.vy=16;
-        ftr.vx*=(ftr.grounded?FRIC:AIR_FRIC);
-        const maxVx=ftr.grounded?RUN_SPD*1.1:AIR_SPD*1.6;
-        if(Math.abs(ftr.vx)>maxVx) ftr.vx=maxVx*Math.sign(ftr.vx);
-        ftr.x+=ftr.vx; ftr.y+=ftr.vy;
-        landCheck(ftr);
-
-        /* attack progression */
-        if(ftr.atk){
-          ftr.atkF++;
-          const a=ATTACKS[ftr.atk];
-          /* special fires a projectile on the active frame */
-          if(ftr.atk==="special" && ftr.atkF===a.active[0]){
-            projectiles.push({x:ftr.x+ftr.w/2+ftr.face*20, y:ftr.y+ftr.h*0.35,
-                              vx:PROJ_SPD*ftr.face, vy:0, life:PROJ_LIFE,
-                              owner:ftr, dmg:a.dmg, base:a.base, growth:a.growth});
-          }
-          if(ftr.atkF>=a.frames){ ftr.atk=null; ftr.atkF=0; ftr.cooldown=8; }
+      stops.forEach(st=>{
+        st.x-=speed;
+        if(st.active&&lane===st.lane&&Math.abs((st.x+55)-160)<95&&speed<3){
+          st.active=false;
+          if(st.type==="pick"){ hasPass=true; passTimer=1000+(lvl*50); sc+=50; }
+          else { hasPass=false; sc+=200+Math.max(0,Math.floor(passTimer/5)); }
         }
-
-        /* hitbox vs other fighters */
-        const hb=hitboxActive(ftr);
-        if(hb){
-          for(const other of fighters){
-            if(other===ftr||other.stocks<=0||other.inv>0) continue;
-            if(other.x<hb.x+hb.w && other.x+other.w>hb.x &&
-               other.y<hb.y+hb.h && other.y+other.h>hb.y){
-              launch(other, hb.atk, hb.face, hb.atk.angle);
-              other.inv=12;
-              shake=6; flash=5;
-              if(ftr.isPlayer) sc+=hb.atk.dmg*3;
-            }
-          }
-        }
-
-        /* blast zone KO */
-        if(ftr.x<BLAST.l || ftr.x+ftr.w>BLAST.r || ftr.y<BLAST.t || ftr.y>BLAST.b){
-          if(ftr.isPlayer) shake=14;
-          else{ sc+=100; kos++; }
-          respawn(ftr);
-        }
+      });
+      stops=stops.filter(st=>st.x>-260);
+      if(hasPass&&passTimer>0) passTimer--;
+      if(f%Math.max(25,80-lvl*5)===0){
+        const tspd=3+Math.random()*5, fromBehind=speed<=tspd;
+        let tl=Math.floor(Math.random()*3);
+        if(fromBehind&&tl===lane) tl=(tl+1+Math.floor(Math.random()*2))%3;  /* never rear-end blind */
+        traffic.push({x:fromBehind?-200:W+200,lane:tl,speed:tspd,hit:false,
+                      k:Math.floor(Math.random()*rivals.length)});
       }
-
-      /* ---- projectiles ---- */
-      for(let i=projectiles.length-1;i>=0;i--){
-        const pr=projectiles[i];
-        pr.x+=pr.vx; pr.y+=pr.vy; pr.life--;
-        if(pr.life<=0||pr.x<-60||pr.x>W+60){ projectiles.splice(i,1); continue; }
-        for(const ftr of fighters){
-          if(ftr===pr.owner||ftr.stocks<=0||ftr.inv>0) continue;
-          if(pr.x>ftr.x && pr.x<ftr.x+ftr.w && pr.y>ftr.y && pr.y<ftr.y+ftr.h){
-            launch(ftr, {dmg:pr.dmg, base:pr.base, growth:pr.growth, angle:20},
-                   Math.sign(pr.vx), 20);
-            ftr.inv=10;
-            if(pr.owner.isPlayer) sc+=pr.dmg*3;
-            projectiles.splice(i,1); shake=4;
-            break;
-          }
+      traffic.forEach(t=>{
+        t.x+=(t.speed-speed);
+        if(!t.hit&&invuln<=0&&t.lane===lane&&Math.abs((t.x+50)-160)<88){
+          t.hit=true; hp--; invuln=60; speed*=0.2;
+          if(hp<=0){ over=true; endGame(id,sc,false); }
         }
-      }
-
-      /* ---- item coins ---- */
-      nextItem--;
-      if(nextItem<=0){
-        nextItem=120+Math.floor(Math.random()*180);
-        const px=STAGE_L+Math.random()*STAGE_W;
-        items.push({x:px, y:FLOOR_Y-160-Math.random()*100, vy:0, active:true});
-      }
-      for(let i=items.length-1;i>=0;i--){
-        const it=items[i];
-        it.vy+=0.2; it.y+=it.vy;
-        /* land on platform */
-        for(const pl of plats){
-          if(it.x>pl.x && it.x<pl.x+pl.w && it.y>=pl.y-12 && it.y-it.vy<pl.y){ it.y=pl.y-12; it.vy=0; }
-        }
-        /* player pickup */
-        const me2=fighters[0];
-        if(me2.stocks>0 && Math.abs(it.x-me2.x-me2.w/2)<36 && Math.abs(it.y-me2.y-me2.h/2)<40){
-          items.splice(i,1); tokens++; sc+=15; continue;
-        }
-        if(it.y>H+60) items.splice(i,1);
-      }
+      });
+      traffic=traffic.filter(t=>t.x>-300&&t.x<W+300);
     }
-
-    /* ======================== DRAW ======================== */
-    x.save();
-    if(shake>0){ const m=shake*0.7; x.translate((Math.random()-.5)*m*2,(Math.random()-.5)*m*2); }
-
-    /* sky */
-    drawBack(x,back,zone,W,H,f*0.3);
-    x.fillStyle="rgba(8,5,18,.5)"; x.fillRect(0,0,W,H);
-
-    /* platforms */
-    const pat=tilePattern(x,tile);
-    for(const pl of plats){
-      const isMain=pl.w===STAGE_W;
-      if(pat){
-        x.save(); x.beginPath(); x.rect(pl.x,pl.y,pl.w,isMain?H-pl.y:18); x.clip();
-        x.fillStyle=pat; x.fillRect(pl.x,pl.y,pl.w,isMain?H-pl.y:18); x.restore();
-        x.fillStyle="rgba(0,0,0,.4)"; x.fillRect(pl.x,pl.y,pl.w,isMain?H-pl.y:18);
-      } else {
-        x.fillStyle="#1C1142"; x.fillRect(pl.x,pl.y,pl.w,isMain?H-pl.y:18);
-      }
-      x.fillStyle="#F2B441"; x.fillRect(pl.x,pl.y,pl.w,4);
-      /* edge markers */
-      x.fillStyle="rgba(242,180,65,.3)";
-      x.fillRect(pl.x,pl.y,4,isMain?H-pl.y:18);
-      x.fillRect(pl.x+pl.w-4,pl.y,4,isMain?H-pl.y:18);
+    /* draw */
+    drawBack(x,back,zone,W,H,dist*0.35);
+    x.fillStyle="rgba(8,5,18,.45)"; x.fillRect(0,0,W,H);
+    x.fillStyle="#1b1b22"; x.fillRect(0,roadY,W,laneH*3);
+    x.fillStyle="rgba(255,255,255,.85)";
+    for(let i=1;i<3;i++) x.fillRect(0,roadY+i*laneH-1,W,2);
+    x.fillStyle="#F2B441"; x.fillRect(0,roadY-4,W,4); x.fillRect(0,roadY+laneH*3,W,4);
+    stops.forEach(st=>{
+      if(!st.active) return;
+      x.strokeStyle=st.type==="pick"?"#4DE0B1":"#F2B441"; x.lineWidth=5;
+      x.strokeRect(st.x-20,roadY+st.lane*laneH+6,150,laneH-12);
+      x.fillStyle=st.type==="pick"?"rgba(77,224,177,.18)":"rgba(242,180,65,.18)";
+      x.fillRect(st.x-20,roadY+st.lane*laneH+6,150,laneH-12);
+    });
+    traffic.forEach(t=>{
+      const im=rivals[t.k], by=roadY+t.lane*laneH+laneH-8;
+      if(drawable(im)) sprite(x,im,t.x+50,by,laneH-14);
+      else { x.fillStyle="#FF4D9D"; x.fillRect(t.x,roadY+t.lane*laneH+15,100,laneH-30); }
+    });
+    if(invuln%10<5){
+      const by=roadY+lane*laneH+laneH-6;
+      if(drawable(kart)) sprite(x,kart,160,by,laneH-10);
+      else { x.fillStyle="#2F6BD8"; x.fillRect(105,roadY+lane*laneH+10,110,laneH-20); }
+      if(hasPass){ x.fillStyle="#EFEAFB"; x.beginPath(); x.arc(160,by-laneH+6,12,0,7); x.fill(); }
     }
-
-    /* items */
-    for(const it of items){
-      const bob=Math.sin(f*0.1+it.x)*3;
-      if(drawable(coinIm)) x.drawImage(coinIm, it.x-11, it.y-11+bob, 22, 22);
-      else{ x.fillStyle="#F2B441"; x.beginPath(); x.arc(it.x,it.y+bob,11,0,7); x.fill(); }
-    }
-
-    /* projectiles */
-    for(const pr of projectiles){
-      x.fillStyle="rgba(255,255,255,.85)";
-      x.fillRect(pr.x-10, pr.y-3, 20, 6);
-      x.fillStyle="#F2B441";
-      x.fillRect(pr.x-6, pr.y-2, 12, 4);
-    }
-
-    /* fighters */
-    for(const ftr of fighters){
-      if(ftr.stocks<=0) continue;
-      if(ftr.inv>0 && f%8<3) continue; /* i-frame blink */
-
-      const cx=ftr.x+ftr.w/2, by=ftr.y+ftr.h;
-      let im;
-      if(ftr.isPlayer){
-        im = ftr.atk ? heroAtk : ftr.grounded ? (Math.abs(ftr.vx)>1.5?heroRun:heroIdle) : heroJump;
-      } else {
-        im = foeImgs[ftr.foeIdx];
-      }
-
-      x.save();
-      x.translate(cx, 0);
-      if(ftr.face<0) x.scale(-1,1);
-      if(drawable(im)){
-        const h=ftr.h*1.2, w=im.naturalWidth/im.naturalHeight*h;
-        /* rim glow: gold for player, red for enemies */
-        x.shadowColor=ftr.isPlayer?"#F2B441":"#FF4D9D";
-        x.shadowBlur=ftr.atk?18:8;
-        x.drawImage(im, -w/2, ftr.y+ftr.h-h, w, h);
-        x.shadowBlur=0;
-      } else {
-        x.fillStyle=ftr.isPlayer?"#F2B441":"#FF4D9D";
-        x.fillRect(-ftr.w/2, ftr.y, ftr.w, ftr.h);
-      }
-      x.restore();
-
-      /* attack arc */
-      if(ftr.atk && ftr.atk!=="special"){
-        const hb=hitboxActive(ftr);
-        if(hb){
-          x.globalAlpha=0.45;
-          x.strokeStyle=ftr.isPlayer?"#F2B441":"#FF4D9D";
-          x.lineWidth=6;
-          x.beginPath();
-          x.arc(cx+ftr.face*32, ftr.y+ftr.h*0.35, 36,
-                ftr.face>0?-1.2:Math.PI-1.2, ftr.face>0?1.2:Math.PI+1.2);
-          x.stroke();
-          x.globalAlpha=1;
-        }
-      }
-
-      /* damage percentage below each fighter */
-      const pctCol=ftr.dmg<50?"#EFEAFB":ftr.dmg<100?"#F2B441":"#FF4D9D";
-      x.fillStyle="rgba(11,15,31,.7)";
-      x.fillRect(cx-24, by+4, 48, 18);
-      x.fillStyle=pctCol; x.font="bold 12px 'Courier New',monospace"; x.textAlign="center";
-      x.fillText(Math.round(ftr.dmg)+"%", cx, by+16);
-      x.textAlign="left";
-
-      /* stock dots */
-      for(let s=0;s<Math.min(ftr.stocks,5);s++){
-        x.fillStyle=ftr.isPlayer?"#F2B441":"#FF4D9D";
-        x.beginPath(); x.arc(cx-10+s*8, by+28, 3, 0, 7); x.fill();
-      }
-    }
-
-    if(flash>0){
-      x.fillStyle="rgba(255,255,255,"+(flash/8*0.18)+")";
-      x.fillRect(0,0,W,H);
-    }
-    x.restore();
-
-    /* ---- HUD top bar ---- */
-    x.fillStyle="rgba(11,15,31,.7)"; x.fillRect(0,0,W,32);
-    x.fillStyle="#F2B441"; x.font="bold 14px 'Courier New',monospace";
-    x.fillText("KOs: "+kos, 12, 22);
-    x.fillStyle="#EFEAFB";
-    x.textAlign="center"; x.fillText("SMITH'S BRAWL", W/2, 22);
-    x.textAlign="right";
-    x.fillStyle="#4DE0B1"; x.fillText("♥".repeat(Math.max(0,fighters[0].stocks)), W-12, 22);
-    x.textAlign="left";
-
-    /* touch joystick overlay */
-    if(joyActive){
-      const r=cv.getBoundingClientRect();
-      const sx=(joyAnchorX-r.left)/r.width*W, sy=(joyAnchorY-r.top)/r.height*H;
-      x.fillStyle="rgba(255,255,255,.12)";
-      x.beginPath(); x.arc(sx,sy,44,0,7); x.fill();
-      x.fillStyle="rgba(255,255,255,.22)";
-      const nx=Math.max(-30,Math.min(30,joyX)), ny=Math.max(-30,Math.min(30,joyY));
-      x.beginPath(); x.arc(sx+nx,sy+ny,18,0,7); x.fill();
-    }
-
-    setHUD(fighters[0].stocks, tokens, framesLeft, sc);
+    x.fillStyle="#EFEAFB"; x.font="bold 20px 'Courier New',monospace";
+    x.fillText(Math.round(speed*8)+" km/h",16,30);
+    if(hasPass){ x.fillStyle="#4DE0B1"; x.fillText(T_.rider+" "+Math.ceil(passTimer/60)+"s",16,56); }
+    setHUD(hp,null,framesLeft,sc);
   });
 }
 
@@ -10878,366 +10735,134 @@ function gameGunner(cv,id,lvl,zone){
 }
 
 /* ============================================================================
-   GAME 4 — SMITH'S BLOCKS (line-clear puzzle)
-   ----------------------------------------------------------------------------
-   Classic Tetris on the Coach Smith arcade machine. Seven standard tetrominoes,
-   SRS-like rotation, soft/hard drop, ghost piece, a next-piece preview, and
-   scoring that rewards multi-line clears and combos.
-
-   GRID
-     10 columns x 20 rows. One cell = 1 unit. The playfield is centred on the
-     canvas and surrounded by a border drawn from the zone palette so every
-     zone skin still looks different.
-
-   SPEED
-     The drop interval starts at 48 frames (~0.8 s at 60 fps) and decreases
-     by 2 each level, capping at 6 frames. Soft drop moves at 3x speed; hard
-     drop is instant.
-
-   SCORING
-     Lines cleared -> [0, 100, 300, 500, 800]. Consecutive clears add a combo
-     multiplier (+50 per step). Hard drops score 2 points per row dropped.
+   GAME 4 — SMITH'S QUEST (top-down action survival)
    ========================================================================== */
-function gameBlocks(cv,id,lvl,zone){
-  const x=cv.getContext("2d"), W=cv.width, H=cv.height;
-  const back=spriteOf(zone.bg), tile=spriteOf(zone.tile);
+function gameQuest(cv,id,lvl,zone){
+  const x=cv.getContext("2d"),W=cv.width,H=cv.height;
+  let f=0,sc=0,over=false,framesLeft=GAMES[3].dur*60,hp=3,tokens=0;
+  let p={x:0,y:0,dx:0,dy:0,speed:6+(lvl*0.2),dir:0,swing:0,invuln:0};
+  let enemies=[],items=[];
+  const enemySpeed=2.5+(lvl*0.3), spawnRate=Math.max(30,90-(lvl*6));
+  const back=spriteOf(zone.bg), coin=spriteOf("item_coin");
+  const hero=spriteOf("idle"), foes=FOES.map(spriteOf);
 
-  /* ---- grid constants ---- */
-  const COLS=10, ROWS=20;
-  const CELL=Math.floor(Math.min((H-60)/ROWS, (W*0.5)/COLS));
-  const GRID_W=COLS*CELL, GRID_H=ROWS*CELL;
-  const OX=Math.floor((W-GRID_W)/2), OY=H-GRID_H-20;
-
-  /* ---- tetrominoes (SRS shapes, 4 rotations each) ---- */
-  const SHAPES={
-    I:{col:"#4DE0B1", r:[[[-1,0],[0,0],[1,0],[2,0]],[[0,-1],[0,0],[0,1],[0,2]],[[-1,0],[0,0],[1,0],[2,0]],[[0,-1],[0,0],[0,1],[0,2]]]},
-    O:{col:"#F2B441", r:[[[0,0],[1,0],[0,1],[1,1]],[[0,0],[1,0],[0,1],[1,1]],[[0,0],[1,0],[0,1],[1,1]],[[0,0],[1,0],[0,1],[1,1]]]},
-    T:{col:"#9B7BE0", r:[[[0,-1],[-1,0],[0,0],[1,0]],[[0,-1],[0,0],[1,0],[0,1]],[[-1,0],[0,0],[1,0],[0,1]],[[0,-1],[-1,0],[0,0],[0,1]]]},
-    S:{col:"#4DE07C", r:[[[0,-1],[1,-1],[-1,0],[0,0]],[[0,-1],[0,0],[1,0],[1,1]],[[0,-1],[1,-1],[-1,0],[0,0]],[[0,-1],[0,0],[1,0],[1,1]]]},
-    Z:{col:"#FF4D9D", r:[[[-1,-1],[0,-1],[0,0],[1,0]],[[1,-1],[0,0],[1,0],[0,1]],[[-1,-1],[0,-1],[0,0],[1,0]],[[1,-1],[0,0],[1,0],[0,1]]]},
-    J:{col:"#2F6BD8", r:[[[-1,-1],[-1,0],[0,0],[1,0]],[[0,-1],[1,-1],[0,0],[0,1]],[[-1,0],[0,0],[1,0],[1,1]],[[0,-1],[0,0],[-1,1],[0,1]]]},
-    L:{col:"#F0A15E", r:[[[1,-1],[-1,0],[0,0],[1,0]],[[0,-1],[0,0],[0,1],[1,1]],[[-1,0],[0,0],[1,0],[-1,1]],[[-1,-1],[0,-1],[0,0],[0,1]]]}
-  };
-  const PIECE_KEYS=Object.keys(SHAPES);
-
-  /* ---- SRS wall kick data ---- */
-  const KICKS=[
-    [[0,0],[-1,0],[-1,-1],[0,2],[-1,2]],
-    [[0,0],[1,0],[1,1],[0,-2],[1,-2]],
-    [[0,0],[1,0],[1,-1],[0,2],[1,2]],
-    [[0,0],[-1,0],[-1,1],[0,-2],[-1,-2]]
-  ];
-  const KICKS_I=[
-    [[0,0],[-2,0],[1,0],[-2,1],[1,-2]],
-    [[0,0],[2,0],[-1,0],[2,-1],[-1,2]],
-    [[0,0],[-1,0],[2,0],[-1,-2],[2,1]],
-    [[0,0],[1,0],[-2,0],[1,2],[-2,-1]]
-  ];
-
-  /* ---- grid state ---- */
-  const grid=Array.from({length:ROWS},()=>Array(COLS).fill(null));
-  let sc=0, linesCleared=0, combo=0, over=false, tokens=0;
-  let framesLeft=GAMES.find(g=>g.id==="blocks").dur*60;
-  let clearFlash=0, clearRows=[];
-  const gameLevel=()=>Math.floor(linesCleared/10)+lvl;
-  const dropInterval=()=>Math.max(6, 48 - gameLevel()*2);
-
-  /* ---- bag randomiser (7-bag) ---- */
-  let bag=[];
-  function nextPiece(){
-    if(!bag.length) bag=PIECE_KEYS.slice().sort(()=>Math.random()-0.5);
-    return bag.pop();
-  }
-
-  /* ---- active piece state ---- */
-  let cur={type:nextPiece(), rot:0, x:4, y:1};
-  let nxt=nextPiece();
-  let dropTimer=0, lockTimer=0, LOCK_DELAY=30;
-  let dasDir=0, dasTimer=0, arrTimer=0, DAS=10, ARR=3;
-
-  function cells(type,rot,px,py){
-    return SHAPES[type].r[rot].map(([dx,dy])=>({x:px+dx,y:py+dy}));
-  }
-  function valid(type,rot,px,py){
-    return cells(type,rot,px,py).every(c=>
-      c.x>=0 && c.x<COLS && c.y<ROWS && (c.y<0 || !grid[c.y][c.x]));
-  }
-
-  /* ---- rotation with wall kicks ---- */
-  function tryRotate(dir){
-    const newRot=(cur.rot+dir+4)%4;
-    const kicks = cur.type==="I" ? KICKS_I : KICKS;
-    const kickIdx = dir===1 ? cur.rot : newRot;
-    for(const [kx,ky] of kicks[kickIdx]){
-      const dx = dir===1 ? kx : -kx;
-      const dy = dir===1 ? -ky : ky;
-      if(valid(cur.type, newRot, cur.x+dx, cur.y+dy)){
-        cur.x+=dx; cur.y+=dy; cur.rot=newRot; return true;
-      }
-    }
-    return false;
-  }
-
-  /* ---- ghost piece ---- */
-  function ghostY(){
-    let gy=cur.y;
-    while(valid(cur.type, cur.rot, cur.x, gy+1)) gy++;
-    return gy;
-  }
-
-  /* ---- lock and line clear ---- */
-  function lockPiece(){
-    const cs=cells(cur.type, cur.rot, cur.x, cur.y);
-    for(const c of cs){
-      if(c.y<0){ over=true; endGame(id,sc,false); return; }
-      grid[c.y][c.x]=SHAPES[cur.type].col;
-    }
-    clearRows=[];
-    for(let r=ROWS-1;r>=0;r--){
-      if(grid[r].every(c=>c!==null)) clearRows.push(r);
-    }
-    if(clearRows.length){
-      const pts=[0,100,300,500,800][clearRows.length]||800;
-      sc += pts * (1 + combo*0.5);
-      combo++;
-      linesCleared+=clearRows.length;
-      clearFlash=18;
-      tokens+=clearRows.length;
-    } else { combo=0; }
-
-    cur={type:nxt, rot:0, x:4, y:0};
-    nxt=nextPiece();
-    lockTimer=0; dropTimer=0;
-    if(!valid(cur.type, cur.rot, cur.x, cur.y)){
-      over=true; endGame(id,sc,false);
-    }
-  }
-
-  function doClearLines(){
-    for(const r of clearRows.sort((a,b)=>a-b)){
-      grid.splice(r,1);
-      grid.unshift(Array(COLS).fill(null));
-    }
-    clearRows=[];
-  }
-
-  /* ---- input ---- */
-  const keys={left:false,right:false,down:false,up:false,space:false};
-  let rotTap=false, dropTap=false;
-  const kd=e=>{
-    if(e.code==="ArrowLeft"||e.code==="KeyA"){keys.left=true;e.preventDefault();}
-    if(e.code==="ArrowRight"||e.code==="KeyD"){keys.right=true;e.preventDefault();}
-    if(e.code==="ArrowDown"||e.code==="KeyS"){keys.down=true;e.preventDefault();}
-    if(e.code==="ArrowUp"||e.code==="KeyW"){if(!rotTap){rotTap=true;tryRotate(1);}e.preventDefault();}
-    if(e.code==="Space"){if(!dropTap){dropTap=true;
-      while(valid(cur.type,cur.rot,cur.x,cur.y+1)){cur.y++;sc+=2;}
-      lockPiece();}e.preventDefault();}
-  };
-  const ku=e=>{
-    if(e.code==="ArrowLeft"||e.code==="KeyA"){keys.left=false;dasDir=0;}
-    if(e.code==="ArrowRight"||e.code==="KeyD"){keys.right=false;dasDir=0;}
-    if(e.code==="ArrowDown"||e.code==="KeyS")keys.down=false;
-    if(e.code==="ArrowUp"||e.code==="KeyW")rotTap=false;
-    if(e.code==="Space")dropTap=false;
-  };
+  const keys={ArrowUp:false,ArrowDown:false,ArrowLeft:false,ArrowRight:false,Space:false};
+  const kd=e=>{ if(keys[e.code]!==undefined){ keys[e.code]=true; e.preventDefault(); } };
+  const ku=e=>{ if(keys[e.code]!==undefined){ keys[e.code]=false; e.preventDefault(); } };
   window.addEventListener("keydown",kd); window.addEventListener("keyup",ku);
-
-  /* Touch: left edge=move left, right edge=move right, center=rotate, swipe down=hard drop */
-  let touchY0=null;
+  let joyX=0,joyY=0,joyDx=0,joyDy=0,touchActive=false;
   const ts=e=>{
-    const t=e.touches[0]; const pt=canvasPoint(cv,t);
-    touchY0=t.clientY;
-    if(pt.x<0.3) keys.left=true;
-    else if(pt.x>0.7) keys.right=true;
-    else tryRotate(1);
-    e.preventDefault();
-  };
-  const tm=e=>{
-    if(touchY0!==null){
-      const dy=e.touches[0].clientY-touchY0;
-      if(dy>40){
-        while(valid(cur.type,cur.rot,cur.x,cur.y+1)){cur.y++;sc+=2;}
-        lockPiece(); touchY0=null;
-      } else if(dy>12) keys.down=true;
+    for(const t of e.touches){
+      const pt=canvasPoint(cv,t);
+      if(pt.x<0.5){ touchActive=true; joyX=t.clientX; joyY=t.clientY; joyDx=0; joyDy=0; }
+      else keys.Space=true;
     }
-    e.preventDefault();
-  };
-  const te=e=>{keys.left=false;keys.right=false;keys.down=false;dasDir=0;touchY0=null;e.preventDefault();};
+    e.preventDefault(); };
+  const tm=e=>{
+    for(const t of e.touches){
+      if(canvasPoint(cv,t).x<0.5&&touchActive){ joyDx=t.clientX-joyX; joyDy=t.clientY-joyY; }
+    }
+    e.preventDefault(); };
+  const te=e=>{
+    keys.Space=false;
+    let left=false;
+    for(const t of e.touches){ if(canvasPoint(cv,t).x<0.5) left=true; }
+    if(!left){ touchActive=false; joyDx=0; joyDy=0; }
+    e.preventDefault(); };
   cv.addEventListener("touchstart",ts,{passive:false});
   cv.addEventListener("touchmove",tm,{passive:false});
   cv.addEventListener("touchend",te,{passive:false});
-  cv.addEventListener("touchcancel",te,{passive:false});
-  cleanupInput=()=>{
-    window.removeEventListener("keydown",kd); window.removeEventListener("keyup",ku);
-    cv.removeEventListener("touchstart",ts); cv.removeEventListener("touchmove",tm);
-    cv.removeEventListener("touchend",te); cv.removeEventListener("touchcancel",te);
-  };
+  cleanupInput=()=>{ window.removeEventListener("keydown",kd); window.removeEventListener("keyup",ku);
+    cv.removeEventListener("touchstart",ts); cv.removeEventListener("touchmove",tm); cv.removeEventListener("touchend",te); };
 
-  /* ---- main loop ---- */
-  let f=0;
   startLoop(function(){
     f++;
     if(!over){
       framesLeft--;
       if(framesLeft<=0){ over=true; endGame(id,sc,true); }
-
-      if(clearFlash>0){ clearFlash--; if(clearFlash===0) doClearLines(); }
-
-      if(clearFlash<=0){
-        /* DAS (delayed auto shift) */
-        const dir = keys.left ? -1 : keys.right ? 1 : 0;
-        if(dir!==0){
-          if(dasDir!==dir){ dasDir=dir; dasTimer=0; arrTimer=0;
-            if(valid(cur.type,cur.rot,cur.x+dir,cur.y)) cur.x+=dir; }
-          else { dasTimer++;
-            if(dasTimer>=DAS){ arrTimer++;
-              if(arrTimer>=ARR){ arrTimer=0;
-                if(valid(cur.type,cur.rot,cur.x+dir,cur.y)) cur.x+=dir; }
-            }
-          }
-        } else { dasDir=0; dasTimer=0; }
-
-        /* gravity */
-        const interval = keys.down ? Math.max(2, Math.floor(dropInterval()/3)) : dropInterval();
-        dropTimer++;
-        if(dropTimer>=interval){
-          dropTimer=0;
-          if(valid(cur.type,cur.rot,cur.x,cur.y+1)){
-            cur.y++;
-            if(keys.down) sc+=1;
-            lockTimer=0;
-          } else {
-            lockTimer++;
-            if(lockTimer>=LOCK_DELAY) lockPiece();
-          }
+      if(p.invuln>0) p.invuln--;
+      if(p.swing>0) p.swing--;
+      p.dx=0; p.dy=0;
+      if(keys.ArrowUp) p.dy=-1;
+      if(keys.ArrowDown) p.dy=1;
+      if(keys.ArrowLeft) p.dx=-1;
+      if(keys.ArrowRight) p.dx=1;
+      if(touchActive){
+        const d=Math.sqrt(joyDx*joyDx+joyDy*joyDy);
+        if(d>10){ p.dx=joyDx/d; p.dy=joyDy/d; }
+      } else if(p.dx!==0&&p.dy!==0){ p.dx*=0.707; p.dy*=0.707; }
+      const boost=(p.invuln>60)?2:1;
+      p.x+=p.dx*p.speed*boost; p.y+=p.dy*p.speed*boost;
+      if(Math.abs(p.dx)>Math.abs(p.dy)) p.dir=(p.dx>0)?3:2;
+      else if(p.dy!==0) p.dir=(p.dy>0)?0:1;
+      if(keys.Space&&p.swing===0) p.swing=15;
+      let hbx=-1e5,hby=-1e5; const hbw=88,hbh=88;
+      if(p.swing>0){
+        if(p.dir===0){ hbx=p.x-44; hby=p.y+20; }
+        if(p.dir===1){ hbx=p.x-44; hby=p.y-108; }
+        if(p.dir===2){ hbx=p.x-108; hby=p.y-44; }
+        if(p.dir===3){ hbx=p.x+20; hby=p.y-44; }
+      }
+      if(f%spawnRate===0){
+        const ang=Math.random()*Math.PI*2, d=Math.max(W,H)/1.5;
+        enemies.push({x:p.x+Math.cos(ang)*d,y:p.y+Math.sin(ang)*d,active:true,
+                      k:Math.floor(Math.random()*foes.length)});
+      }
+      enemies.forEach(e=>{
+        if(!e.active) return;
+        const exDx=p.x-e.x, exDy=p.y-e.y, mag=Math.sqrt(exDx*exDx+exDy*exDy)||1;
+        e.x+=(exDx/mag)*enemySpeed; e.y+=(exDy/mag)*enemySpeed;
+        if(p.swing>0&&e.x>hbx&&e.x<hbx+hbw&&e.y>hby&&e.y<hby+hbh){
+          e.active=false; sc+=20;
+          if(Math.random()>0.5) items.push({x:e.x,y:e.y,active:true});
+        } else if(p.invuln<=0&&Math.abs(e.x-p.x)<44&&Math.abs(e.y-p.y)<44){
+          hp--; p.invuln=90; p.dx=-exDx/mag; p.dy=-exDy/mag;
+          if(hp<=0){ over=true; endGame(id,sc,false); }
         }
-        if(!valid(cur.type,cur.rot,cur.x,cur.y+1)){
-          lockTimer++;
-          if(lockTimer>=LOCK_DELAY) lockPiece();
-        }
+      });
+      enemies=enemies.filter(e=>e.active);
+      items.forEach(i=>{
+        if(i.active&&Math.abs(i.x-p.x)<50&&Math.abs(i.y-p.y)<50){ i.active=false; tokens++; sc+=10; }
+      });
+      items=items.filter(i=>i.active);
+    }
+    /* draw */
+    const camX=p.x-W/2, camY=p.y-H/2;
+    drawBack(x,back,zone,W,H,0);
+    x.fillStyle="rgba(10,7,22,.62)"; x.fillRect(0,0,W,H);
+    x.strokeStyle="rgba(255,255,255,.07)"; x.lineWidth=2;
+    for(let r=-(camY%110);r<H;r+=110){ x.beginPath(); x.moveTo(0,r); x.lineTo(W,r); x.stroke(); }
+    for(let c=-(camX%110);c<W;c+=110){ x.beginPath(); x.moveTo(c,0); x.lineTo(c,H); x.stroke(); }
+    x.save(); x.translate(-camX,-camY);
+    items.forEach(i=>{
+      if(drawable(coin)) x.drawImage(coin,i.x-16,i.y-16,32,32);
+      else { x.fillStyle="#F2B441"; x.beginPath(); x.arc(i.x,i.y,16,0,7); x.fill(); }
+    });
+    enemies.forEach(e=>{
+      const im=foes[e.k], wob=Math.sin((f+e.x)*0.2)*5;
+      if(drawable(im)) sprite(x,im,e.x,e.y+22+wob,64);
+      else { x.fillStyle="#FF4D9D"; x.beginPath(); x.arc(e.x,e.y+wob,20,0,7); x.fill(); }
+    });
+    if(p.invuln%10<5){
+      if(drawable(hero)) sprite(x,hero,p.x,p.y+44,92);
+      else { x.fillStyle="#2F6BD8"; x.fillRect(p.x-20,p.y-40,40,80); }
+      if(p.swing>0){
+        x.strokeStyle="rgba(255,255,255,.85)"; x.lineWidth=9; x.beginPath();
+        if(p.dir===0) x.arc(p.x,p.y+44,46,0,Math.PI);
+        if(p.dir===1) x.arc(p.x,p.y-44,46,Math.PI,Math.PI*2);
+        if(p.dir===2) x.arc(p.x-44,p.y,46,Math.PI/2,Math.PI*1.5);
+        if(p.dir===3) x.arc(p.x+44,p.y,46,-Math.PI/2,Math.PI/2);
+        x.stroke();
       }
     }
-
-    /* ======================== DRAW ======================== */
-    drawBack(x,back,zone,W,H,f*0.15);
-    x.fillStyle="rgba(8,5,18,.65)"; x.fillRect(0,0,W,H);
-
-    /* grid background */
-    x.fillStyle="rgba(11,8,28,.88)";
-    x.fillRect(OX-2, OY-2, GRID_W+4, GRID_H+4);
-    x.strokeStyle="rgba(255,255,255,.08)"; x.lineWidth=1;
-    for(let r=0;r<=ROWS;r++){
-      x.beginPath(); x.moveTo(OX,OY+r*CELL); x.lineTo(OX+GRID_W,OY+r*CELL); x.stroke();
+    x.restore();
+    if(touchActive){
+      const r=cv.getBoundingClientRect(), sx=(joyX-r.left)/r.width*W, sy=(joyY-r.top)/r.height*H;
+      x.fillStyle="rgba(255,255,255,.18)";
+      x.beginPath(); x.arc(sx,sy,44,0,7); x.fill();
+      x.beginPath(); x.arc(sx+joyDx,sy+joyDy,22,0,7); x.fill();
     }
-    for(let c=0;c<=COLS;c++){
-      x.beginPath(); x.moveTo(OX+c*CELL,OY); x.lineTo(OX+c*CELL,OY+GRID_H); x.stroke();
-    }
-    x.strokeStyle="#F2B441"; x.lineWidth=3;
-    x.strokeRect(OX-2, OY-2, GRID_W+4, GRID_H+4);
-
-    /* locked blocks */
-    for(let r=0;r<ROWS;r++){
-      for(let c=0;c<COLS;c++){
-        if(!grid[r][c]) continue;
-        const bx=OX+c*CELL, by=OY+r*CELL;
-        if(clearFlash>0 && clearRows.includes(r)){
-          x.fillStyle = clearFlash%4<2 ? "#FFFFFF" : grid[r][c];
-        } else { x.fillStyle=grid[r][c]; }
-        x.fillRect(bx+1, by+1, CELL-2, CELL-2);
-        x.fillStyle="rgba(255,255,255,.18)";
-        x.fillRect(bx+1, by+1, CELL-2, 3);
-        x.fillRect(bx+1, by+1, 3, CELL-2);
-        x.fillStyle="rgba(0,0,0,.2)";
-        x.fillRect(bx+1, by+CELL-3, CELL-2, 2);
-        x.fillRect(bx+CELL-3, by+1, 2, CELL-2);
-      }
-    }
-
-    /* ghost piece */
-    if(!over){
-      const gy=ghostY();
-      const gCells=cells(cur.type, cur.rot, cur.x, gy);
-      x.strokeStyle=SHAPES[cur.type].col; x.lineWidth=2; x.globalAlpha=0.35;
-      for(const c of gCells){
-        if(c.y<0) continue;
-        x.strokeRect(OX+c.x*CELL+2, OY+c.y*CELL+2, CELL-4, CELL-4);
-      }
-      x.globalAlpha=1;
-
-      /* active piece */
-      const aCells=cells(cur.type, cur.rot, cur.x, cur.y);
-      x.fillStyle=SHAPES[cur.type].col;
-      for(const c of aCells){
-        if(c.y<0) continue;
-        const bx=OX+c.x*CELL, by=OY+c.y*CELL;
-        x.fillRect(bx+1, by+1, CELL-2, CELL-2);
-        x.fillStyle="rgba(255,255,255,.22)";
-        x.fillRect(bx+1, by+1, CELL-2, 3);
-        x.fillRect(bx+1, by+1, 3, CELL-2);
-        x.fillStyle="rgba(0,0,0,.2)";
-        x.fillRect(bx+1, by+CELL-3, CELL-2, 2);
-        x.fillRect(bx+CELL-3, by+1, 2, CELL-2);
-        x.fillStyle=SHAPES[cur.type].col;
-      }
-    }
-
-    /* ---- NEXT piece preview ---- */
-    const NX=OX+GRID_W+18, NY=OY+8;
-    x.fillStyle="rgba(11,8,28,.75)"; x.fillRect(NX,NY,CELL*4+8,CELL*4+28);
-    x.strokeStyle="rgba(242,180,65,.5)"; x.lineWidth=1;
-    x.strokeRect(NX,NY,CELL*4+8,CELL*4+28);
-    x.fillStyle="#EFEAFB"; x.font="bold 11px 'Courier New',monospace";
-    x.fillText("NEXT",NX+6,NY+14);
-    const nCells=SHAPES[nxt].r[0];
-    x.fillStyle=SHAPES[nxt].col;
-    for(const [dx,dy] of nCells){
-      const bx=NX+12+(dx+1)*CELL, by=NY+22+(dy+1)*CELL;
-      x.fillRect(bx+1, by+1, CELL-2, CELL-2);
-    }
-
-    /* ---- SCORE / LEVEL / LINES sidebar ---- */
-    const SX=NX, SY=NY+CELL*4+44;
-    x.fillStyle="rgba(11,8,28,.75)"; x.fillRect(SX,SY,CELL*4+8,86);
-    x.strokeStyle="rgba(242,180,65,.5)"; x.lineWidth=1;
-    x.strokeRect(SX,SY,CELL*4+8,86);
-    const label=(txt,val,py)=>{
-      x.fillStyle="#EFEAFB"; x.font="bold 10px 'Courier New',monospace";
-      x.fillText(txt,SX+6,py);
-      x.fillStyle="#F2B441"; x.font="bold 16px 'Courier New',monospace";
-      x.fillText(String(val),SX+6,py+16);
-    };
-    label("LEVEL",gameLevel(),SY+14);
-    label("LINES",linesCleared,SY+44);
-    label("COMBO",combo>1?"×"+combo:"—",SY+74);
-
-    /* left sidebar: score */
-    const LX=OX-CELL*4-26, LY=OY+8;
-    x.fillStyle="rgba(11,8,28,.75)"; x.fillRect(LX,LY,CELL*4+8,52);
-    x.strokeStyle="rgba(242,180,65,.5)"; x.lineWidth=1;
-    x.strokeRect(LX,LY,CELL*4+8,52);
-    x.fillStyle="#EFEAFB"; x.font="bold 10px 'Courier New',monospace";
-    x.fillText("SCORE",LX+6,LY+14);
-    x.fillStyle="#4DE0B1"; x.font="bold 18px 'Courier New',monospace";
-    x.fillText(String(Math.floor(sc)),LX+6,LY+36);
-
-    /* time remaining */
-    x.fillStyle="rgba(11,8,28,.75)"; x.fillRect(LX,LY+62,CELL*4+8,42);
-    x.strokeStyle="rgba(242,180,65,.5)"; x.lineWidth=1;
-    x.strokeRect(LX,LY+62,CELL*4+8,42);
-    const secs=Math.ceil(framesLeft/60);
-    const low=secs<15;
-    x.fillStyle="#EFEAFB"; x.font="bold 10px 'Courier New',monospace";
-    x.fillText("TIME",LX+6,LY+76);
-    x.fillStyle=low?(f%30<15?"#FF4D9D":"#EFEAFB"):"#F2B441";
-    x.font="bold 18px 'Courier New',monospace";
-    x.fillText(secs+"s",LX+6,LY+96);
-
-    /* title */
-    x.fillStyle="#EFEAFB"; x.font="bold 14px 'Courier New',monospace";
-    x.textAlign="center"; x.fillText("SMITH'S BLOCKS", W/2, OY-10);
-    x.textAlign="left";
-
-    setHUD(null, tokens, framesLeft, Math.floor(sc));
+    setHUD(hp,tokens,framesLeft,sc);
   });
 }
 
@@ -11787,6 +11412,7 @@ document.getElementById("logoBtn").onclick=showTitle;
 document.getElementById("btnEN").onclick=()=>setLang("en");
 document.getElementById("btnES").onclick=()=>setLang("es");
 load();
+fbInit();
 document.getElementById("tagline").textContent=T_.tagline;
 installTileStyles();
 render();
