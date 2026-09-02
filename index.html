@@ -802,9 +802,6 @@ ul.ctrl li{margin:4px 0;color:var(--ink)}
   animation:prizeGlow 2.6s ease-in-out infinite}
 @keyframes prizeGlow{0%,100%{opacity:.5}50%{opacity:1}}
 </style>
-<script async src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
-<script async src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
-<script async src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
 </head>
 <body>
 <div id="certAsk" class="hidden"></div>
@@ -826,8 +823,8 @@ ul.ctrl li{margin:4px 0;color:var(--ink)}
 <!-- Art and course content live in their own files. Keeps this page small
      enough to read and upload, and lets the browser cache the two big
      payloads separately. Both must sit beside index.html. -->
-<script src="art.js"></script>
-<script src="content.js"></script>
+<script src="art.js" onerror="window.ARTS=window.ARTS||{}"></script>
+<script src="content.js" onerror="if(typeof PACKS==='undefined')window.PACKS=[]"></script>
 <script>
 /* ============================================================================
    1. CONTENT LAYER  —  everything a teacher edits lives in this one object.
@@ -1490,12 +1487,26 @@ const FB_CONFIG = {
 let FB = {app:null, db:null, auth:null, uid:null, ready:false, syncing:false};
 
 function fbInit(){
-  /* Firebase scripts load async — wait until the SDK is available */
-  if (typeof firebase === "undefined"){
-    setTimeout(fbInit, 500);  /* retry every 500ms */
-    return;
+  /* Load Firebase lazily — if the CDN is blocked (school networks), the app
+     works perfectly fine on localStorage alone. No blank screens. */
+  if (typeof firebase !== "undefined") return fbConnect();
+  const base = "https://www.gstatic.com/firebasejs/10.12.0/";
+  const scripts = ["firebase-app-compat.js","firebase-auth-compat.js","firebase-firestore-compat.js"];
+  let loaded = 0;
+  function next(){
+    if (loaded >= scripts.length){ fbConnect(); return; }
+    const s = document.createElement("script");
+    s.src = base + scripts[loaded];
+    s.onload = () => { loaded++; next(); };
+    s.onerror = () => { console.warn("Firebase CDN blocked — using localStorage only"); };
+    document.head.appendChild(s);
   }
+  /* Delay the first load so the page renders immediately */
+  setTimeout(next, 3000);
+}
+function fbConnect(){
   try {
+    if (typeof firebase === "undefined") return;
     FB.app = firebase.initializeApp(FB_CONFIG);
     FB.auth = firebase.auth();
     FB.db = firebase.firestore();
@@ -11474,12 +11485,29 @@ function packTemplate(){
 document.getElementById("logoBtn").onclick=showTitle;
 document.getElementById("btnEN").onclick=()=>setLang("en");
 document.getElementById("btnES").onclick=()=>setLang("es");
-load();
-fbInit();
-document.getElementById("tagline").textContent=T_.tagline;
-installTileStyles();
-render();
-if(S.langChosen) showTitle(); else showLangPick();
+try{
+  load();
+  fbInit();
+  document.getElementById("tagline").textContent=T_.tagline;
+  installTileStyles();
+  render();
+  if(S.langChosen) showTitle(); else showLangPick();
+}catch(e){
+  /* Never show a blank screen. If ANYTHING crashes during boot, show the error
+     so Coach Smith can report it instead of staring at purple. */
+  const v=document.getElementById("view")||document.body;
+  v.innerHTML='<div style="padding:30px;text-align:center;color:#EFEAFB">'+
+    '<h2 style="color:#F2B441;margin-bottom:12px">⚠️ Loading Error</h2>'+
+    '<p style="color:#9B92BE;margin-bottom:16px">Something went wrong during startup.</p>'+
+    '<pre style="text-align:left;background:#1A1430;padding:14px;border-radius:10px;font-size:12px;'+
+    'overflow-x:auto;color:#FF4D9D;max-width:600px;margin:0 auto">'+e.message+'\\n\\n'+
+    (e.stack||'').split('\\n').slice(0,5).join('\\n')+'</pre>'+
+    '<p style="color:#9B92BE;margin-top:16px;font-size:13px">Try a hard refresh (Ctrl+Shift+R). '+
+    'If this keeps happening, screenshot this error and send it to Coach Smith.</p>'+
+    '<button onclick="location.reload()" style="margin-top:12px;padding:10px 24px;background:#F2B441;'+
+    'color:#2A1D00;border:none;border-radius:10px;font-weight:700;cursor:pointer">Reload</button></div>';
+  console.error("Boot crash:", e);
+}
 window.addEventListener("beforeunload",save);
 window.addEventListener("resize",()=>{ const t=document.getElementById("title");
   if(t&&!t.classList.contains("hidden")) paintTitleScene(document.getElementById("titleCanvas")); });
