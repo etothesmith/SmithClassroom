@@ -1,0 +1,717 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Marginal Mastermind: Heist or Hustle</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+tailwind.config={theme:{extend:{fontFamily:{display:['Orbitron','sans-serif'],body:['Inter','sans-serif']},
+colors:{neon:'#00f0ff',vault:'#7c3aed',heist:'#f43f5e',hustle:'#10b981',gold:'#f59e0b',dark:'#0a0a1a'}}}}
+</script>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+body{background:#0a0a1a;font-family:'Inter',sans-serif}
+.glass{background:rgba(255,255,255,.06);backdrop-filter:blur(18px);border:1px solid rgba(255,255,255,.1);border-radius:16px}
+.glass-heist{background:rgba(244,63,94,.06);border-color:rgba(244,63,94,.2)}
+.glass-hustle{background:rgba(16,185,129,.06);border-color:rgba(16,185,129,.2)}
+.glow-neon{box-shadow:0 0 30px rgba(0,240,255,.15)}
+.glow-heist{box-shadow:0 0 30px rgba(244,63,94,.15)}
+.glow-hustle{box-shadow:0 0 30px rgba(16,185,129,.15)}
+.opt-btn{transition:all .15s}
+.opt-btn:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(0,0,0,.3)}
+.opt-btn:active{transform:translateY(0)}
+.data-row{transition:all .15s;cursor:pointer}
+.data-row:hover{background:rgba(255,255,255,.08)}
+.data-row.selected{background:rgba(0,240,255,.12);border:1px solid rgba(0,240,255,.4)}
+.data-row.correct{background:rgba(16,185,129,.15);border:1px solid rgba(16,185,129,.5)}
+.data-row.wrong{background:rgba(244,63,94,.15);border:1px solid rgba(244,63,94,.5)}
+.progress-dot{width:10px;height:10px;border-radius:50%;transition:all .3s}
+.cert{background:linear-gradient(135deg,#1a1a2e,#16213e);border:3px solid #f59e0b;border-radius:20px;position:relative;overflow:hidden}
+.cert::before{content:'';position:absolute;inset:8px;border:1px solid rgba(245,158,11,.3);border-radius:14px;pointer-events:none}
+.modal-bg{background:rgba(0,0,0,.75);backdrop-filter:blur(8px)}
+@keyframes slideIn{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.6}}
+.animate-in{animation:slideIn .4s ease-out}
+.pulse-slow{animation:pulse 2s infinite}
+</style>
+</head>
+<body class="min-h-screen text-white">
+
+<div id="app" class="max-w-3xl mx-auto px-4 py-6"></div>
+
+<!-- WRONG ANSWER MODAL -->
+<div id="modal" class="fixed inset-0 modal-bg z-50 hidden flex items-center justify-center p-4">
+  <div class="glass max-w-lg w-full p-6 animate-in" style="border-color:rgba(244,63,94,.4)">
+    <div class="text-center mb-4">
+      <div class="text-5xl mb-2">🚨</div>
+      <h2 class="font-display text-2xl font-bold text-heist">MISSION FAILED</h2>
+    </div>
+    <div id="modalBody" class="text-gray-300 text-sm leading-relaxed mb-6"></div>
+    <button onclick="restartPath()" class="w-full py-3 rounded-xl font-bold text-white bg-gradient-to-r from-heist to-vault hover:opacity-90 transition">
+      🔄 Restart from Stage 1
+    </button>
+  </div>
+</div>
+
+<script>
+/* ============================================================================
+   GAME STATE
+   ========================================================================== */
+let STATE = {name:"", path:"", stage:0, startTime:0, mistakes:0, maxMistakes:3};
+const $=id=>document.getElementById(id);
+const APP=()=>$("app");
+
+/* ============================================================================
+   HEIST PATH — 15 STAGES
+   The Midnight Heist: You're a master jewel thief in a high-security vault.
+   Each minute you stay, you grab more gems — but the risk (cost) rises.
+   ========================================================================== */
+const HEIST = [
+/* ── STAGES 1-4: BASICS OF MARGINAL ── */
+{
+  id:1, title:"The Vault Door Opens",
+  narrative:`You've cracked the vault at midnight. Every extra minute inside, you grab more jewels — but the security system gets closer to catching you. In economics, we call each additional unit <b>"marginal."</b>`,
+  type:"mcq",
+  question:`In economics, what does the word "marginal" mean?`,
+  choices:["The total amount accumulated","The average across all units","The additional or extra amount from one more unit","The minimum required amount"],
+  answer:2,
+  wrongTitle:"Not Quite, Thief",
+  wrongExplain:`<b>"Marginal" always means the ADDITIONAL or EXTRA amount from ONE MORE unit.</b> Not total, not average — just the change from doing one more. Think of it as: "What does the NEXT one add?" If you grab one more minute in the vault, the marginal benefit is what that one extra minute gives you — not everything you've grabbed so far.`
+},
+{
+  id:2, title:"Counting the Take",
+  narrative:`You need to think at the margin. Here's your vault intel — total gems grabbed at each minute mark. To find the <b>Marginal Benefit</b>, calculate how many NEW gems each additional minute gives you.`,
+  type:"table",
+  table:{
+    headers:["Minute","Total Gems","Marginal Benefit"],
+    rows:[
+      ["0","0","—"],
+      ["1","20","20"],
+      ["2","35","15"],
+      ["3","45","?"],
+      ["4","50","5"]
+    ]
+  },
+  question:`What is the Marginal Benefit of the 3rd minute? (Click the correct row)`,
+  targetRow:3,
+  targetValue:"10",
+  choices:["5","10","15","45"],
+  answer:1,
+  wrongTitle:"Miscalculation",
+  wrongExplain:`<b>Marginal Benefit = Change in Total Benefit.</b> To find the MB of minute 3: take Total Gems at minute 3 (45) minus Total Gems at minute 2 (35). That's 45 − 35 = <b>10 gems</b>. Always subtract the previous total from the current total to find the marginal value.`
+},
+{
+  id:3, title:"The Cost of Staying",
+  narrative:`Every minute also has a cost — the rising chance of getting caught. Here's the risk data:`,
+  type:"table",
+  table:{
+    headers:["Minute","Total Risk Cost","Marginal Cost"],
+    rows:[
+      ["0","0","—"],
+      ["1","5","5"],
+      ["2","12","7"],
+      ["3","21","?"],
+      ["4","34","13"]
+    ]
+  },
+  question:`What is the Marginal Cost of the 3rd minute?`,
+  choices:["21","7","9","12"],
+  answer:2,
+  wrongTitle:"Wrong Cost Calculation",
+  wrongExplain:`<b>Marginal Cost = Change in Total Cost.</b> MC of minute 3 = Total Cost at minute 3 (21) minus Total Cost at minute 2 (12) = 21 − 12 = <b>9</b>. The same formula as MB: subtract the previous total from the current total.`
+},
+{
+  id:4, title:"Reading the Full Table",
+  narrative:`Good. Here's the complete picture — both benefits AND costs at the margin:`,
+  type:"table",
+  table:{
+    headers:["Minute","MB (gems)","MC (risk)","MB − MC"],
+    rows:[
+      ["1","20","5","+15"],
+      ["2","15","7","+8"],
+      ["3","10","9","+1"],
+      ["4","5","13","−8"]
+    ]
+  },
+  question:`At which minute does the Marginal Benefit first become LESS than the Marginal Cost?`,
+  choices:["Minute 1","Minute 2","Minute 3","Minute 4"],
+  answer:3,
+  wrongTitle:"Read the Table Again",
+  wrongExplain:`Look at the MB − MC column. Minutes 1-3 all have positive values (MB > MC), meaning each minute is still worth it. At <b>Minute 4</b>, MB (5) is less than MC (13), so MB − MC = −8. That's the first minute where staying costs you more than it's worth.`
+},
+
+/* ── STAGES 5-8: THE GOLDEN RULE (MB ≥ MC) ── */
+{
+  id:5, title:"The Golden Rule",
+  narrative:`Here's the most important rule in economics: <b>Take an action if and only if Marginal Benefit ≥ Marginal Cost.</b> The moment MB drops below MC, stop. That's when the next unit costs you more than it gives you.`,
+  type:"mcq",
+  question:`According to the golden rule of marginal analysis, when should you STOP taking an action?`,
+  choices:["When Total Benefit equals Total Cost","When Marginal Benefit drops below Marginal Cost","When Marginal Cost equals zero","When you've maximized Total Cost"],
+  answer:1,
+  wrongTitle:"The Rule is Everything",
+  wrongExplain:`<b>The rule: continue an activity as long as MB ≥ MC. Stop when MB < MC.</b> We don't look at totals — we look at what the NEXT unit adds vs. what it costs. The optimal point is the last unit where MB ≥ MC. After that, each additional unit destroys more value than it creates.`
+},
+{
+  id:6, title:"Applying the Rule",
+  narrative:`Back to the vault. Using the data from before:`,
+  type:"table",
+  table:{
+    headers:["Minute","MB","MC"],
+    rows:[["1","20","5"],["2","15","7"],["3","10","9"],["4","5","13"],["5","2","18"]]
+  },
+  question:`How many minutes should you stay in the vault to maximize your net gain?`,
+  choices:["1 minute","2 minutes","3 minutes","4 minutes","5 minutes"],
+  answer:2,
+  wrongTitle:"Wrong Stopping Point",
+  wrongExplain:`Apply the rule: MB ≥ MC? <b>Minute 1:</b> 20 ≥ 5 ✅ <b>Minute 2:</b> 15 ≥ 7 ✅ <b>Minute 3:</b> 10 ≥ 9 ✅ <b>Minute 4:</b> 5 < 13 ❌ — STOP. The optimal quantity is <b>3 minutes</b> — the last minute where MB still exceeds MC.`
+},
+{
+  id:7, title:"Net Benefit Proof",
+  narrative:`Let's prove why 3 minutes is optimal by calculating NET benefit (Total Benefit − Total Cost) at each point:`,
+  type:"table",
+  table:{
+    headers:["Minutes","Total Benefit","Total Cost","Net Benefit"],
+    rows:[["1","20","5","15"],["2","35","12","23"],["3","45","21","24"],["4","50","34","16"],["5","52","52","0"]]
+  },
+  question:`At which number of minutes is Net Benefit the HIGHEST?`,
+  choices:["1 minute","2 minutes","3 minutes","4 minutes","5 minutes"],
+  answer:2,
+  wrongTitle:"Check the Net Benefit Column",
+  wrongExplain:`Net Benefit = Total Benefit − Total Cost. The values are: 15, 23, <b>24</b>, 16, 0. The maximum is <b>24 at 3 minutes</b>. Notice: this is the SAME answer the MB = MC rule gave us. The marginal rule and the total net benefit approach always agree — but the marginal approach is faster because you just compare two numbers instead of computing full totals.`
+},
+{
+  id:8, title:"The Critical Mistake",
+  narrative:`A fellow thief brags: "I stay until I've grabbed every last gem — 5 full minutes. I maximize my TOTAL gems!" Is this smart?`,
+  type:"mcq",
+  question:`Why is staying 5 minutes a bad strategy even though you grab the most total gems?`,
+  choices:["Because 5 minutes is too long to hold your breath","Because the TOTAL COST at 5 minutes equals the total benefit, leaving zero net gain","Because marginal cost is always bad","Because total gems don't matter at all"],
+  answer:1,
+  wrongTitle:"Total ≠ Optimal",
+  wrongExplain:`At 5 minutes: Total Benefit (52) = Total Cost (52), so Net Benefit = 0. You grabbed the MOST gems but kept NONE of the value because the costs ate it all. <b>Maximizing total output is NOT the goal. Maximizing NET benefit is.</b> That happens at 3 minutes, where you keep 24 in net value.`
+},
+
+/* ── STAGES 9-11: DIMINISHING RETURNS ── */
+{
+  id:9, title:"The Shrinking Diamonds",
+  narrative:`Notice something about the vault? The first minute gave you 20 gems. The second gave you 15. The third, 10. The fourth, only 5. Each additional minute yields FEWER gems. This is the <b>Law of Diminishing Marginal Returns</b> — also called Diminishing Marginal Utility.`,
+  type:"mcq",
+  question:`The Law of Diminishing Marginal Returns states that:`,
+  choices:["Total benefit always decreases","Each additional unit of an activity tends to produce LESS additional benefit than the previous one","Marginal cost always increases","The first unit is always the least valuable"],
+  answer:1,
+  wrongTitle:"Diminishing ≠ Decreasing Totals",
+  wrongExplain:`<b>Diminishing marginal returns means each ADDITIONAL unit adds LESS than the one before.</b> Total benefit can still be INCREASING — it just increases at a slower rate. The 4th minute still adds 5 gems (total goes up), but that's less than the 10 the 3rd minute added. The MARGINAL benefit is falling even as the total grows.`
+},
+{
+  id:10, title:"Why Diamonds Shrink",
+  narrative:`Think about it logically: you grab the biggest, most valuable diamonds first (minute 1 = 20 gems). The second minute, the best ones are already in your bag, so you're picking up slightly smaller stones (15 gems). By minute 4, you're scraping the bottom of the vault.`,
+  type:"mcq",
+  question:`A thief's first minute in the vault yields 30 gems. If diminishing marginal returns apply, which set of values for minutes 2-4 is possible?`,
+  choices:["35, 40, 45","30, 30, 30","25, 18, 10","10, 25, 30"],
+  answer:2,
+  wrongTitle:"Diminishing Means Decreasing MB",
+  wrongExplain:`Diminishing marginal returns means each successive MB must be <b>lower</b> than the one before. Starting at 30: the next values must each be smaller than the previous one. Only <b>25, 18, 10</b> fits this pattern (each is less than the one before it). Values that stay constant (30, 30, 30) show constant returns, and values that increase show increasing returns — neither is diminishing.`
+},
+{
+  id:11, title:"Diminishing + The Rule",
+  narrative:`Diminishing MB is actually WHY the golden rule works so well. Because MB falls and MC typically rises, there's always a crossing point — the optimal quantity.`,
+  type:"table",
+  table:{
+    headers:["Unit","MB","MC"],
+    rows:[["1st","50","10"],["2nd","40","15"],["3rd","30","22"],["4th","20","28"],["5th","10","36"]]
+  },
+  question:`With diminishing MB and rising MC, what is the LAST unit worth taking?`,
+  choices:["1st","2nd","3rd","4th","5th"],
+  answer:2,
+  wrongTitle:"Find Where MB First Falls Below MC",
+  wrongExplain:`Check each: <b>1st:</b> 50 ≥ 10 ✅ <b>2nd:</b> 40 ≥ 15 ✅ <b>3rd:</b> 30 ≥ 22 ✅ <b>4th:</b> 20 < 28 ❌. The 3rd unit is the last one where MB ≥ MC. The 4th costs more than it's worth. Diminishing MB falling into rising MC creates a clean crossing point — that's the optimal quantity.`
+},
+
+/* ── STAGES 12-13: SUNK COSTS ── */
+{
+  id:12, title:"The Getaway Car",
+  narrative:`Before the heist, you paid $5,000 for a getaway car. Non-refundable. You're 2 minutes into the vault when you realize the security is tighter than expected — staying a 3rd minute now has MB = 8 but MC = 12. A voice in your head says: "But I already spent $5,000 on the car! I HAVE to make this worth it!"`,
+  type:"mcq",
+  question:`Should the $5,000 getaway car cost affect your decision to stay the 3rd minute?`,
+  choices:["Yes — you need to earn back that $5,000","Yes — include it in your Marginal Cost calculation","No — the $5,000 is a sunk cost and should be ignored","No — because $5,000 is too small to matter"],
+  answer:2,
+  wrongTitle:"The Sunk Cost Trap",
+  wrongExplain:`<b>A sunk cost is a cost that has already been paid and CANNOT be recovered.</b> The $5,000 is gone whether you stay 1 more minute or 0. It should NOT factor into your marginal decision. The only thing that matters RIGHT NOW is: does the next minute's MB (8) exceed its MC (12)? It doesn't (8 < 12), so you should leave — regardless of how much you spent getting here. Letting sunk costs influence decisions is called the <b>sunk cost fallacy</b>.`
+},
+{
+  id:13, title:"Sunk Cost Scenarios",
+  narrative:`Let's test this with another scenario. You bought a $200 non-refundable concert ticket. At showtime, you feel sick and going would give you $50 worth of enjoyment but cost $80 in misery and medicine.`,
+  type:"mcq",
+  question:`What should you do?`,
+  choices:["Go to the concert — you already paid $200 and shouldn't waste it","Skip the concert — MB ($50) is less than MC ($80), and the $200 is a sunk cost","Go because the $200 counts as a marginal benefit","Skip because $200 + $80 = $280 total cost"],
+  answer:1,
+  wrongTitle:"Ignore the Sunk Cost",
+  wrongExplain:`The $200 ticket is gone. You can't get it back whether you go or not. So the MARGINAL decision is: does going give you more benefit than cost? MB = $50 of enjoyment. MC = $80 in misery/medicine. Since MB ($50) < MC ($80), <b>skip the concert</b>. The $200 is a sunk cost — it's irrelevant to the decision you're making RIGHT NOW.`
+},
+
+/* ── STAGES 14-15: SHIFTING THE MARGINS ── */
+{
+  id:14, title:"New Security Guard",
+  narrative:`Plot twist: the vault owner just hired a faster security guard. Your original MC schedule was 5, 7, 9, 13. The new guard adds 4 risk units to EVERY minute's MC, making the new MC: 9, 11, 13, 17.`,
+  type:"table",
+  table:{
+    headers:["Minute","MB","Old MC","New MC"],
+    rows:[["1","20","5","9"],["2","15","7","11"],["3","10","9","13"],["4","5","13","17"]]
+  },
+  question:`With the new higher MC, how many minutes should you now stay?`,
+  choices:["1 minute","2 minutes","3 minutes","4 minutes"],
+  answer:1,
+  wrongTitle:"Recalculate with New Costs",
+  wrongExplain:`With the new MC: <b>Minute 1:</b> MB 20 ≥ MC 9 ✅ <b>Minute 2:</b> MB 15 ≥ MC 11 ✅ <b>Minute 3:</b> MB 10 < MC 13 ❌. The optimal is now <b>2 minutes</b>, down from 3. <b>When MC increases, the optimal quantity DECREASES.</b> Higher costs make earlier units unprofitable, pushing the MB=MC crossing point to the left.`
+},
+{
+  id:15, title:"Final Heist Decision",
+  narrative:`🎯 Final stage. A new vault opens with BETTER gems inside (MB increases by 8 for every minute). Your original MB was 20, 15, 10, 5. New MB: 28, 23, 18, 13. MC stays at: 5, 7, 9, 13.`,
+  type:"table",
+  table:{
+    headers:["Minute","New MB","MC","MB ≥ MC?"],
+    rows:[["1","28","5","✅"],["2","23","7","✅"],["3","18","9","✅"],["4","13","13","?"]]
+  },
+  question:`With the higher MB, what is the new optimal number of minutes?`,
+  choices:["2 minutes","3 minutes","4 minutes","5 minutes"],
+  answer:2,
+  wrongTitle:"One More Look",
+  wrongExplain:`<b>Minute 1:</b> 28 ≥ 5 ✅ <b>Minute 2:</b> 23 ≥ 7 ✅ <b>Minute 3:</b> 18 ≥ 9 ✅ <b>Minute 4:</b> 13 ≥ 13 ✅ (equal counts!) <b>Minute 5</b> would have MB < MC. The optimal is <b>4 minutes</b>, up from 3. <b>When MB increases, the optimal quantity INCREASES.</b> MB = MC means the benefit exactly covers the cost — still worth doing.`
+}
+];
+
+/* ============================================================================
+   HUSTLE PATH — 15 STAGES
+   The Startup Hustle: You're a CEO deciding how many hours to keep open
+   and how many workers to hire.
+   ========================================================================== */
+const HUSTLE = [
+/* ── STAGES 1-4: BASICS OF MARGINAL ── */
+{
+  id:1, title:"Grand Opening",
+  narrative:`You just launched your flagship tech store. Every additional hour you stay open brings in more revenue — but also costs more in wages, electricity, and overhead. In economics, every "one more" decision is a <b>marginal</b> decision.`,
+  type:"mcq",
+  question:`When an economist says "marginal revenue," they mean:`,
+  choices:["The total revenue earned so far","The average revenue per hour","The additional revenue from one more hour of operation","The revenue earned in the best hour"],
+  answer:2,
+  wrongTitle:"Marginal = Additional",
+  wrongExplain:`<b>"Marginal" always means the ADDITIONAL or EXTRA amount from ONE MORE unit.</b> Marginal revenue is the extra revenue earned by staying open one more hour — not the total, not the average, just the change from the next unit.`
+},
+{
+  id:2, title:"The Revenue Table",
+  narrative:`Here's your first day's data. Calculate the Marginal Benefit (additional revenue) for each hour:`,
+  type:"table",
+  table:{
+    headers:["Hour","Total Revenue","Marginal Benefit"],
+    rows:[["0","$0","—"],["1","$500","$500"],["2","$900","$400"],["3","$1,200","?"],["4","$1,400","$200"]]
+  },
+  question:`What is the Marginal Benefit of the 3rd hour of operation?`,
+  choices:["$1,200","$400","$300","$200"],
+  answer:2,
+  wrongTitle:"Subtract to Find Marginal",
+  wrongExplain:`<b>Marginal Benefit = Change in Total Benefit.</b> MB of hour 3 = Total Revenue at hour 3 ($1,200) minus Total Revenue at hour 2 ($900) = $1,200 − $900 = <b>$300</b>. Always subtract the previous total from the current total.`
+},
+{
+  id:3, title:"The Cost Side",
+  narrative:`Staying open costs money too — staff overtime, electricity, security. Here's the cost data:`,
+  type:"table",
+  table:{
+    headers:["Hour","Total Cost","Marginal Cost"],
+    rows:[["0","$0","—"],["1","$100","$100"],["2","$220","$120"],["3","$360","?"],["4","$540","$180"]]
+  },
+  question:`What is the Marginal Cost of the 3rd hour?`,
+  choices:["$360","$140","$120","$180"],
+  answer:1,
+  wrongTitle:"Apply the Same Formula",
+  wrongExplain:`<b>Marginal Cost = Change in Total Cost.</b> MC of hour 3 = Total Cost at hour 3 ($360) minus Total Cost at hour 2 ($220) = $360 − $220 = <b>$140</b>. Same method as MB — subtract the previous total.`
+},
+{
+  id:4, title:"The Full Picture",
+  narrative:`Let's put it all together:`,
+  type:"table",
+  table:{
+    headers:["Hour","MB","MC","MB − MC"],
+    rows:[["1","$500","$100","+$400"],["2","$400","$120","+$280"],["3","$300","$140","+$160"],["4","$200","$180","+$20"],["5","$80","$220","−$140"]]
+  },
+  question:`At which hour does Marginal Cost first EXCEED Marginal Benefit?`,
+  choices:["Hour 2","Hour 3","Hour 4","Hour 5"],
+  answer:3,
+  wrongTitle:"Check Each Row",
+  wrongExplain:`Hours 1-4 all have positive MB − MC values, meaning MB ≥ MC. At <b>Hour 5</b>, MB ($80) is less than MC ($220), giving MB − MC = −$140. That's the first hour where the cost of staying open exceeds the revenue it brings in.`
+},
+
+/* ── STAGES 5-8: THE GOLDEN RULE ── */
+{
+  id:5, title:"The CEO's Golden Rule",
+  narrative:`Every successful CEO knows this rule: <b>Keep operating as long as the Marginal Benefit ≥ Marginal Cost. Stop the moment MB < MC.</b> This maximizes your profit — not your revenue, your PROFIT.`,
+  type:"mcq",
+  question:`A CEO keeps the store open for an extra hour. MB = $150, MC = $200. Was this a good decision?`,
+  choices:["Yes — $150 in revenue is good","Yes — the store was already open anyway","No — MB ($150) < MC ($200), so this hour lost $50","No — because you should never stay open past 5pm"],
+  answer:2,
+  wrongTitle:"Apply the Rule",
+  wrongExplain:`MB ($150) < MC ($200). That hour <b>cost $50 more than it earned</b>. The store should NOT have stayed open that extra hour. The fact that it earned $150 is irrelevant — what matters is whether the benefit exceeds the cost of that SPECIFIC hour.`
+},
+{
+  id:6, title:"Finding the Sweet Spot",
+  narrative:`Using the earlier data, find the optimal number of hours:`,
+  type:"table",
+  table:{
+    headers:["Hour","MB","MC"],
+    rows:[["1","$500","$100"],["2","$400","$120"],["3","$300","$140"],["4","$200","$180"],["5","$80","$220"]]
+  },
+  question:`How many hours should the store stay open to maximize profit?`,
+  choices:["2 hours","3 hours","4 hours","5 hours"],
+  answer:2,
+  wrongTitle:"Walk Through It",
+  wrongExplain:`<b>Hour 1:</b> 500 ≥ 100 ✅ <b>Hour 2:</b> 400 ≥ 120 ✅ <b>Hour 3:</b> 300 ≥ 140 ✅ <b>Hour 4:</b> 200 ≥ 180 ✅ <b>Hour 5:</b> 80 < 220 ❌. Stay open <b>4 hours</b> — the last hour where MB still covers MC.`
+},
+{
+  id:7, title:"Profit Proof",
+  narrative:`Let's verify with total profit:`,
+  type:"table",
+  table:{
+    headers:["Hours","Total Revenue","Total Cost","Profit"],
+    rows:[["1","$500","$100","$400"],["2","$900","$220","$680"],["3","$1,200","$360","$840"],["4","$1,400","$540","$860"],["5","$1,480","$760","$720"]]
+  },
+  question:`At which number of hours is PROFIT maximized?`,
+  choices:["2 hours","3 hours","4 hours","5 hours"],
+  answer:2,
+  wrongTitle:"Find the Peak",
+  wrongExplain:`Profits: $400, $680, $840, <b>$860</b>, $720. The maximum profit is <b>$860 at 4 hours</b>. Notice: 5 hours generates the most REVENUE ($1,480) but NOT the most profit ($720) because costs grew faster than revenue. The marginal rule finds this peak without needing to calculate every total.`
+},
+{
+  id:8, title:"Revenue vs. Profit",
+  narrative:`Your marketing director says: "Let's stay open as long as possible to maximize revenue!" Your CFO says: "Let's close when profit peaks."`,
+  type:"mcq",
+  question:`Who is right, and why?`,
+  choices:["The marketing director — more revenue is always better","The CFO — maximizing profit (not revenue) is the goal because revenue ignores costs","Neither — you should minimize costs instead","Both — revenue and profit are maximized at the same point"],
+  answer:1,
+  wrongTitle:"Revenue ≠ Profit",
+  wrongExplain:`<b>The CFO is right.</b> Revenue is just income. Profit = Revenue − Cost. You can increase revenue by staying open longer, but if the extra costs exceed the extra revenue, profit actually FALLS. Hour 5 adds $80 revenue but $220 in costs — revenue goes up, but profit drops by $140. Always optimize for NET benefit.`
+},
+
+/* ── STAGES 9-11: DIMINISHING RETURNS ── */
+{
+  id:9, title:"The Morning Rush Fades",
+  narrative:`Your first hour brings $500. Why? Morning commuters, fresh demand, no competition nearby. The second hour? $400 — still great, but the rush is fading. By hour 5, only $80 trickles in. This is the <b>Law of Diminishing Marginal Returns</b>.`,
+  type:"mcq",
+  question:`Why does the 4th hour of business generate less marginal revenue than the 1st hour?`,
+  choices:["Because prices dropped","Because the most eager customers already bought in earlier hours, leaving fewer potential buyers","Because workers get lazy","Because the store runs out of products"],
+  answer:1,
+  wrongTitle:"Think About the Customers",
+  wrongExplain:`<b>Diminishing returns happen because the most valuable opportunities are captured first.</b> The first hour captures the biggest wave of eager customers. Each subsequent hour serves fewer, less urgent buyers. The product didn't change — the pool of willing customers at that price shrank. This is diminishing marginal benefit in action.`
+},
+{
+  id:10, title:"Hiring Workers",
+  narrative:`You're also deciding how many workers to hire. Each additional worker helps, but with a fixed store size, they eventually get in each other's way.`,
+  type:"table",
+  table:{
+    headers:["Workers","Total Output","Marginal Product"],
+    rows:[["1","30","30"],["2","55","25"],["3","75","20"],["4","90","15"],["5","100","10"]]
+  },
+  question:`Do these workers exhibit diminishing marginal returns?`,
+  choices:["No — total output keeps increasing","Yes — each additional worker adds LESS output than the previous one","No — all workers produce the same amount","Yes — because the 5th worker only produces 10"],
+  answer:1,
+  wrongTitle:"Diminishing ≠ Negative",
+  wrongExplain:`Total output IS still increasing (30, 55, 75, 90, 100 — always going up). But the MARGINAL product is falling: 30, 25, 20, 15, 10. Each additional worker adds less than the one before. <b>Diminishing returns means the marginal product is declining, NOT that total output is falling.</b> As long as MP > 0, total still rises — just more slowly.`
+},
+{
+  id:11, title:"Optimal Workers",
+  narrative:`Each worker costs $200 to hire. Their marginal product generates revenue:`,
+  type:"table",
+  table:{
+    headers:["Worker","Marginal Revenue Product","MC (wage)"],
+    rows:[["1st","$600","$200"],["2nd","$500","$200"],["3rd","$350","$200"],["4th","$180","$200"],["5th","$100","$200"]]
+  },
+  question:`How many workers should you hire?`,
+  choices:["2 workers","3 workers","4 workers","5 workers"],
+  answer:1,
+  wrongTitle:"MB ≥ MC for Workers Too",
+  wrongExplain:`Apply the golden rule to hiring: <b>1st:</b> $600 ≥ $200 ✅ <b>2nd:</b> $500 ≥ $200 ✅ <b>3rd:</b> $350 ≥ $200 ✅ <b>4th:</b> $180 < $200 ❌. Hire <b>3 workers</b>. The 4th worker's output ($180) doesn't cover their wage ($200). Same rule, different context.`
+},
+
+/* ── STAGES 12-13: SUNK COSTS ── */
+{
+  id:12, title:"The Lease You Can't Break",
+  narrative:`You signed a 1-year lease for $60,000 (non-refundable, non-breakable). After 3 months, a cheaper location opens up nearby. The new location would save you $2,000/month in variable costs, but moving costs $5,000.`,
+  type:"mcq",
+  question:`Should the $60,000 lease payment affect your decision to move?`,
+  choices:["Yes — you need to justify the $60,000 by staying","Yes — add $60,000 to the cost of staying","No — the $60,000 is a sunk cost; only compare moving benefits vs. moving costs going forward","No — because $60,000 is too large to factor in"],
+  answer:2,
+  wrongTitle:"Sunk Cost Alert",
+  wrongExplain:`<b>The $60,000 lease is a sunk cost — paid, non-refundable, gone regardless of what you decide.</b> The MARGINAL decision is: does moving save you more than it costs? Savings: $2,000/month × 9 remaining months = $18,000. Cost of moving: $5,000. Net benefit of moving: $13,000. So yes, move — but NOT because of the $60,000. That number is irrelevant.`
+},
+{
+  id:13, title:"The Failed Product Line",
+  narrative:`You spent $50,000 developing a phone case line. After launch, it only generates $200/month in revenue with $300/month in ongoing costs. Your partner says: "We can't stop now — we've invested $50,000!"`,
+  type:"mcq",
+  question:`What's the economically rational decision?`,
+  choices:["Keep selling — you need to earn back the $50,000","Keep selling — the revenue proves customers want it","Shut it down — MB ($200/month) < MC ($300/month), and the $50,000 is a sunk cost","Shut it down — because $50,000 was too much to spend"],
+  answer:2,
+  wrongTitle:"Don't Chase Sunk Costs",
+  wrongExplain:`The $50,000 development cost is <b>gone</b>. You cannot un-spend it. The ongoing decision: each month generates $200 but costs $300, losing $100/month. <b>MB ($200) < MC ($300), so shut it down.</b> Continuing doesn't "earn back" the $50,000 — it just adds $100/month in losses on top of it. The sunk cost fallacy is the #1 trap in business.`
+},
+
+/* ── STAGES 14-15: SHIFTING THE MARGINS ── */
+{
+  id:14, title:"The Viral TikTok",
+  narrative:`🎉 Your store goes viral on TikTok! Suddenly, demand for every hour increases. Your original MB was $500, $400, $300, $200, $80. The viral boost adds $150 to each hour: new MB = $650, $550, $450, $350, $230. MC stays the same: $100, $120, $140, $180, $220.`,
+  type:"table",
+  table:{
+    headers:["Hour","New MB","MC","MB ≥ MC?"],
+    rows:[["1","$650","$100","✅"],["2","$550","$120","✅"],["3","$450","$140","✅"],["4","$350","$180","✅"],["5","$230","$220","?"]]
+  },
+  question:`With the TikTok boost, how many hours should the store now stay open?`,
+  choices:["3 hours","4 hours","5 hours","6 hours"],
+  answer:2,
+  wrongTitle:"Check Every Hour",
+  wrongExplain:`<b>Hour 1:</b> 650 ≥ 100 ✅ <b>Hour 2:</b> 550 ≥ 120 ✅ <b>Hour 3:</b> 450 ≥ 140 ✅ <b>Hour 4:</b> 350 ≥ 180 ✅ <b>Hour 5:</b> 230 ≥ 220 ✅ All five hours are now profitable! The optimal is <b>5 hours</b>. <b>When MB increases, the optimal quantity increases.</b> The crossing point shifts right.`
+},
+{
+  id:15, title:"Final Business Decision",
+  narrative:`🎯 Final stage. A new competitor opens next door, stealing some of your customers. Your MB drops by $100 each hour. New MB: $400, $300, $200, $100, $0. Your MC stays: $100, $120, $140, $180, $220.`,
+  type:"table",
+  table:{
+    headers:["Hour","New MB","MC","MB ≥ MC?"],
+    rows:[["1","$400","$100","✅"],["2","$300","$120","✅"],["3","$200","$140","✅"],["4","$100","$180","?"],["5","$0","$220","❌"]]
+  },
+  question:`With the competitor stealing customers, how many hours should you now stay open?`,
+  choices:["1 hour","2 hours","3 hours","4 hours"],
+  answer:2,
+  wrongTitle:"One Last Check",
+  wrongExplain:`<b>Hour 1:</b> 400 ≥ 100 ✅ <b>Hour 2:</b> 300 ≥ 120 ✅ <b>Hour 3:</b> 200 ≥ 140 ✅ <b>Hour 4:</b> 100 < 180 ❌. Now only <b>3 hours</b> are profitable, down from 4. <b>When MB decreases (competition, fewer customers), the optimal quantity decreases.</b> The crossing point shifts left. Congratulations — you've mastered marginal analysis! 🎓`
+}
+];
+
+/* ============================================================================
+   RENDERING
+   ========================================================================== */
+function renderStart(){
+  APP().innerHTML = `
+  <div class="text-center py-8 animate-in">
+    <div class="text-6xl mb-4">🧠</div>
+    <h1 class="font-display text-3xl md:text-4xl font-black bg-gradient-to-r from-neon via-purple-400 to-heist bg-clip-text text-transparent mb-2">
+      MARGINAL MASTERMIND</h1>
+    <p class="text-gray-400 text-lg mb-8">Heist or Hustle — Master AP Econ Topic 1.5</p>
+
+    <div class="glass p-6 mb-6 text-left glow-neon">
+      <label class="text-sm text-gray-400 mb-1 block">Your full name (for the certificate)</label>
+      <input id="nameInput" type="text" placeholder="First Last" maxlength="40"
+        class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-gray-600 focus:outline-none focus:border-neon/50 mb-4">
+      <p class="text-xs text-gray-500">This will appear on your Certificate of Mastery.</p>
+    </div>
+
+    <p class="text-gray-400 mb-4 font-semibold">Choose your path:</p>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <button onclick="startPath('heist')" class="glass glass-heist p-6 text-left opt-btn glow-heist group">
+        <div class="text-4xl mb-3">🔐</div>
+        <h3 class="font-display text-lg font-bold text-heist mb-1">The Midnight Heist</h3>
+        <p class="text-sm text-gray-400">You're a master jewel thief. How many minutes do you stay in the vault?</p>
+        <div class="mt-3 text-xs text-heist/60">15 stages · Neon cyberpunk theme</div>
+      </button>
+      <button onclick="startPath('hustle')" class="glass glass-hustle p-6 text-left opt-btn glow-hustle group">
+        <div class="text-4xl mb-3">💼</div>
+        <h3 class="font-display text-lg font-bold text-hustle mb-1">The Startup Hustle</h3>
+        <p class="text-sm text-gray-400">You're a CEO. How many hours do you keep the store open?</p>
+        <div class="mt-3 text-xs text-hustle/60">15 stages · Modern corporate theme</div>
+      </button>
+    </div>
+
+    <div class="mt-8 glass p-4">
+      <p class="text-xs text-gray-500 leading-relaxed">
+        ⚠️ <b class="text-gray-400">25% Error Limit:</b> You can get up to 3 wrong before restarting.
+        Each wrong answer teaches you why — read carefully and keep going.</p>
+    </div>
+  </div>`;
+}
+
+function startPath(path){
+  const name = $("nameInput")?.value?.trim();
+  if(!name){ $("nameInput").style.borderColor="#f43f5e"; $("nameInput").placeholder="Enter your name first!"; return; }
+  STATE = {name, path, stage:0, startTime:Date.now(), mistakes:0, maxMistakes:3};
+  renderStage();
+}
+
+function restartPath(){
+  $("modal").classList.add("hidden");
+  STATE.stage = 0;
+  renderStage();
+}
+
+function renderStage(){
+  const stages = STATE.path === "heist" ? HEIST : HUSTLE;
+  const s = stages[STATE.stage];
+  const isHeist = STATE.path === "heist";
+  const themeClass = isHeist ? "glass-heist" : "glass-hustle";
+  const accentColor = isHeist ? "text-heist" : "text-hustle";
+  const glowClass = isHeist ? "glow-heist" : "glow-hustle";
+  const gradFrom = isHeist ? "from-heist" : "from-hustle";
+  const emoji = isHeist ? "🔐" : "💼";
+
+  // Progress dots
+  const dots = stages.map((_,i) =>
+    `<div class="progress-dot ${i<STATE.stage?'bg-green-500':i===STATE.stage?(isHeist?'bg-heist pulse-slow':'bg-hustle pulse-slow'):'bg-white/10'}"></div>`
+  ).join("");
+
+  // Table HTML
+  let tableHTML = "";
+  if(s.table){
+    tableHTML = `<div class="overflow-x-auto mb-4">
+      <table class="w-full text-sm">
+        <thead><tr>${s.table.headers.map(h=>`<th class="px-3 py-2 text-left text-gray-400 border-b border-white/10 font-semibold">${h}</th>`).join("")}</tr></thead>
+        <tbody>${s.table.rows.map((row,ri)=>`<tr class="data-row border-b border-white/5">${row.map(cell=>
+          `<td class="px-3 py-2 ${cell==='?'?'text-yellow-400 font-bold':'text-gray-300'}">${cell}</td>`).join("")}</tr>`).join("")}</tbody>
+      </table>
+    </div>`;
+  }
+
+  // Choices
+  const choiceLetters = ["A","B","C","D","E"];
+  const choicesHTML = s.choices.map((c,i) =>
+    `<button onclick="checkAnswer(${i})" class="opt-btn w-full text-left glass ${themeClass} p-4 mb-3 rounded-xl flex items-start gap-3 hover:border-white/30">
+      <span class="flex-shrink-0 w-8 h-8 rounded-lg bg-white/10 flex items-center justify-center font-display font-bold text-sm ${accentColor}">${choiceLetters[i]}</span>
+      <span class="text-gray-200">${c}</span>
+    </button>`
+  ).join("");
+
+  APP().innerHTML = `
+  <div class="animate-in">
+    <div class="flex items-center justify-between mb-4">
+      <button onclick="renderStart()" class="text-gray-500 hover:text-white text-sm transition">← Quit</button>
+      <div class="flex gap-1.5">${dots}</div>
+      <span class="text-xs text-gray-500 font-mono">${STATE.stage+1}/15 · ❌ ${STATE.mistakes}/${STATE.maxMistakes}</span>
+    </div>
+
+    <div class="glass ${themeClass} p-6 mb-4 ${glowClass}">
+      <div class="flex items-center gap-2 mb-1">
+        <span class="text-lg">${emoji}</span>
+        <span class="font-display text-xs ${accentColor} tracking-widest uppercase">Stage ${s.id}</span>
+      </div>
+      <h2 class="font-display text-xl font-bold text-white mb-3">${s.title}</h2>
+      <div class="text-sm text-gray-300 leading-relaxed">${s.narrative}</div>
+    </div>
+
+    ${tableHTML}
+
+    <div class="glass p-5 mb-4">
+      <p class="text-sm font-semibold text-white mb-4">❓ ${s.question}</p>
+      ${choicesHTML}
+    </div>
+  </div>`;
+}
+
+function checkAnswer(idx){
+  const stages = STATE.path === "heist" ? HEIST : HUSTLE;
+  const s = stages[STATE.stage];
+
+  if(idx === s.answer){
+    STATE.stage++;
+    if(STATE.stage >= stages.length){
+      renderCertificate();
+    } else {
+      renderStage();
+    }
+  } else {
+    STATE.mistakes++;
+    if(STATE.mistakes > STATE.maxMistakes){
+      showWrong(s, true);  /* fatal — restart */
+    } else {
+      showWrong(s, false); /* warning — learn and continue */
+    }
+  }
+}
+
+function showWrong(stage, fatal){
+  const remaining = STATE.maxMistakes - STATE.mistakes;
+  $("modalBody").innerHTML = `
+    <h3 class="font-bold text-heist text-lg mb-2">${stage.wrongTitle}</h3>
+    <div class="text-gray-300 leading-relaxed text-sm">${stage.wrongExplain}</div>
+    <div class="mt-4 p-3 rounded-lg bg-white/5 border border-white/10">
+      <p class="text-xs text-gray-400">📐 <b class="text-gray-300">AP Econ Rule:</b> Always compare Marginal Benefit to Marginal Cost. The optimal quantity is found where MB = MC. Ignore sunk costs. When MB or MC shifts, the optimal quantity shifts too.</p>
+    </div>
+    ${fatal
+      ? `<div class="mt-4 p-3 rounded-lg bg-red-500/10 border border-red-500/30">
+          <p class="text-sm text-red-300">🚨 That was mistake #${STATE.mistakes}. You've exceeded the 25% error limit (${STATE.maxMistakes} allowed). Restarting from Stage 1.</p>
+        </div>`
+      : `<div class="mt-4 p-3 rounded-lg bg-yellow-500/10 border border-yellow-500/30">
+          <p class="text-sm text-yellow-300">⚠️ Mistake ${STATE.mistakes} of ${STATE.maxMistakes} allowed. ${remaining === 0 ? "Next wrong answer sends you back to Stage 1!" : remaining + " more mistake" + (remaining>1?"s":"") + " before restart."}</p>
+        </div>`}`;
+
+  /* Change the button based on fatal or not */
+  const btn = $("modal").querySelector("button");
+  if(fatal){
+    btn.textContent = "🔄 Restart from Stage 1";
+    btn.onclick = function(){ restartPath(); };
+  } else {
+    btn.textContent = "✅ Got it — Continue to Stage " + (STATE.stage + 2);
+    btn.onclick = function(){
+      $("modal").classList.add("hidden");
+      STATE.stage++;
+      const stages = STATE.path === "heist" ? HEIST : HUSTLE;
+      if(STATE.stage >= stages.length) renderCertificate();
+      else renderStage();
+    };
+  }
+  $("modal").classList.remove("hidden");
+}
+
+/* ============================================================================
+   CERTIFICATE
+   ========================================================================== */
+function renderCertificate(){
+  const elapsed = Math.round((Date.now()-STATE.startTime)/60000);
+  const date = new Date().toLocaleDateString("en-US",{year:"numeric",month:"long",day:"numeric"});
+  const pathLabel = STATE.path==="heist" ? "The Midnight Heist" : "The Startup Hustle";
+  const pathEmoji = STATE.path==="heist" ? "🔐" : "💼";
+  const pathColor = STATE.path==="heist" ? "from-heist to-purple-500" : "from-hustle to-cyan-500";
+
+  APP().innerHTML = `
+  <div class="animate-in py-4">
+    <div class="cert p-8 md:p-12 text-center mb-6">
+      <div class="text-5xl mb-4">🏆</div>
+      <p class="text-xs text-yellow-600 tracking-[.3em] uppercase font-semibold mb-1">Certificate of Mastery</p>
+      <h1 class="font-display text-2xl md:text-3xl font-black bg-gradient-to-r ${pathColor} bg-clip-text text-transparent mb-1">
+        MARGINAL MASTERMIND</h1>
+      <p class="text-gray-400 text-sm mb-6">${pathEmoji} ${pathLabel} — 15/15 Stages Completed</p>
+
+      <div class="my-6">
+        <p class="text-xs text-gray-500 uppercase tracking-widest mb-2">This certifies that</p>
+        <h2 class="font-display text-2xl md:text-3xl font-bold text-white">${esc(STATE.name)}</h2>
+      </div>
+
+      <div class="max-w-md mx-auto text-sm text-gray-400 leading-relaxed mb-6">
+        has demonstrated mastery of <b class="text-gray-200">AP Economics Topic 1.5: Cost-Benefit Analysis & Marginal Analysis</b>,
+        including Marginal Benefit & Cost, the MB ≥ MC rule, Diminishing Marginal Returns, Sunk Costs, and Shifting Margins.
+      </div>
+
+      <div class="flex justify-center gap-8 text-xs text-gray-500">
+        <div><div class="text-gray-300 font-semibold">${date}</div>Date</div>
+        <div><div class="text-gray-300 font-semibold">${elapsed} min</div>Time</div>
+        <div><div class="text-gray-300 font-semibold">15/15</div>Stages</div>
+      </div>
+
+      <div class="mt-8 pt-4 border-t border-white/10">
+        <p class="text-[10px] text-gray-600">Smith's Classroom · AP Economics · Marginal Mastermind v1.0</p>
+      </div>
+    </div>
+
+    <div class="glass p-5 text-sm text-gray-400 leading-relaxed">
+      <h3 class="font-bold text-white mb-2">📸 How to screenshot this certificate:</h3>
+      <p class="mb-1"><b class="text-gray-200">Windows:</b> Press <kbd class="px-1.5 py-0.5 bg-white/10 rounded text-xs">Win</kbd> + <kbd class="px-1.5 py-0.5 bg-white/10 rounded text-xs">Shift</kbd> + <kbd class="px-1.5 py-0.5 bg-white/10 rounded text-xs">S</kbd> → drag over the certificate → paste into your Canvas submission.</p>
+      <p class="mb-1"><b class="text-gray-200">Mac:</b> Press <kbd class="px-1.5 py-0.5 bg-white/10 rounded text-xs">⌘ Cmd</kbd> + <kbd class="px-1.5 py-0.5 bg-white/10 rounded text-xs">Shift</kbd> + <kbd class="px-1.5 py-0.5 bg-white/10 rounded text-xs">4</kbd> → drag over the certificate.</p>
+      <p class="mb-1"><b class="text-gray-200">Chromebook:</b> Press <kbd class="px-1.5 py-0.5 bg-white/10 rounded text-xs">Ctrl</kbd> + <kbd class="px-1.5 py-0.5 bg-white/10 rounded text-xs">Shift</kbd> + <kbd class="px-1.5 py-0.5 bg-white/10 rounded text-xs">Show Windows</kbd> → select area.</p>
+      <p class="mt-2 text-gray-500">Submit your screenshot to Canvas as your assignment.</p>
+    </div>
+
+    <button onclick="renderStart()" class="mt-6 w-full py-3 rounded-xl font-bold text-white bg-gradient-to-r from-gray-700 to-gray-600 hover:opacity-90 transition">
+      ← Play the Other Path</button>
+  </div>`;
+}
+
+function esc(s){return String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));}
+
+/* ---- BOOT ---- */
+renderStart();
+</script>
+</body>
+</html>
