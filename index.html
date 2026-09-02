@@ -8255,7 +8255,7 @@ function viewSmittys(){
   }
 
   /* ---- INTRO ---- */
-  function sgIntro(){
+  window.sgIntro = function(){
     V().innerHTML = `
     <div class="eprow"><button class="btn ghost" style="padding:8px 12px;min-height:0"
       onclick="TAB='arcade';render()">← ${es?"Volver":"Back"}</button></div>
@@ -8279,14 +8279,19 @@ function viewSmittys(){
       <input id="sgName" type="text" value="${esc(SG.bizName)}" placeholder="Smitty's Chill Grill"
         maxlength="30" style="margin-top:10px">
       <button class="btn primary wide" id="sgGo" disabled style="margin-top:12px"
-        onclick="SG.biz=window._sgPick||'Diner';SG.bizName=document.getElementById('sgName').value.trim()||'Smitty\\'s Chill Grill';
-                 SG.cash=5000;SG.rep=50;SG.stress=20;SG.level=0;SG.totalRight=0;SG.totalWrong=0;SG.masteryPassed={};
-                 sgLevel(0)">${es?"Abrir el negocio":"Open for Business"} →</button>
+        onclick="window.sgBegin()">${es?"Abrir el negocio":"Open for Business"} →</button>
     </section>`;
+    window.sgBegin = function(){
+      SG.biz = window._sgPick || "Diner";
+      SG.bizName = document.getElementById("sgName").value.trim() || "Smitty's Chill Grill";
+      SG.cash=5000; SG.rep=50; SG.stress=20; SG.level=0;
+      SG.totalRight=0; SG.totalWrong=0; SG.masteryPassed={};
+      window.sgLevel(0);
+    };
   }
 
   /* ---- LEVELS ---- */
-  function sgLevel(n){ SG.level=n; sgNarrative[LEVELS[n].id](); }
+  window.sgLevel = function(n){ SG.level=n; sgNarrative[LEVELS[n].id](); };
 
   const sgNarrative = {};
 
@@ -8513,7 +8518,7 @@ function viewSmittys(){
     drawQ();
   };
 
-  function sgResult(levelId, right, total){
+  window.sgResult = function(levelId, right, total){
     const passed = right >= Math.ceil(total*0.67);
     const lvlIdx = LEVELS.findIndex(l=>l.id===levelId);
     const isLast = lvlIdx >= LEVELS.length-1;
