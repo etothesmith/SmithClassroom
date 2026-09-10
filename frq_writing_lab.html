@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>How to Crush an FRQ — Smith's Classroom</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>tailwind.config={theme:{extend:{fontFamily:{display:['Fredoka','system-ui'],body:['Inter','system-ui']},colors:{dark:'#0f172a',card:'#1e293b',mint:'#34d399',gold:'#fbbf24',hot:'#fb7185',sky:'#38bdf8',ink:'#f1f5f9',dim:'#94a3b8',purple:'#a78bfa'}}}}</script>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+body{background:#0f172a;font-family:'Inter',system-ui,sans-serif;color:#f1f5f9;min-height:100dvh}
+.glass{background:rgba(30,41,59,.85);backdrop-filter:blur(12px);border:1px solid rgba(255,255,255,.08);border-radius:16px}
+textarea{background:rgba(15,23,42,.6);border:2px solid rgba(255,255,255,.1);border-radius:12px;color:#f1f5f9;padding:14px;font:inherit;font-size:15px;line-height:1.7;resize:vertical;width:100%;transition:border-color .2s}
+textarea:focus{outline:none;border-color:#38bdf8}
+textarea::placeholder{color:#64748b}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border-radius:12px;padding:12px 20px;font-weight:600;transition:all .15s;border:none;cursor:pointer}
+.btn:hover{transform:translateY(-1px)}.btn:active{transform:translateY(0)}
+.btn-primary{background:linear-gradient(135deg,#38bdf8,#818cf8);color:#fff}
+.btn-hint{background:rgba(251,191,36,.15);color:#fbbf24;border:1px solid rgba(251,191,36,.3)}
+.btn-ghost{background:rgba(255,255,255,.06);color:#94a3b8;border:1px solid rgba(255,255,255,.1)}
+.btn-success{background:linear-gradient(135deg,#34d399,#38bdf8);color:#0f172a}
+.btn[disabled]{opacity:.4;cursor:not-allowed;transform:none}
+.teacher{display:flex;gap:14px;align-items:flex-start;margin:16px 0}
+.teacher .av{flex:0 0 52px;height:52px;border-radius:50%;background:linear-gradient(135deg,#38bdf8,#818cf8);display:grid;place-items:center;font-size:24px;border:2px solid rgba(255,255,255,.2)}
+.teacher .bubble{flex:1;background:rgba(56,189,248,.08);border:1px solid rgba(56,189,248,.2);border-radius:14px 14px 14px 4px;padding:14px 16px;font-size:15px;line-height:1.6}
+.teacher .bubble b{color:#38bdf8}
+.ri{display:flex;gap:10px;align-items:flex-start;padding:8px 12px;border-radius:10px;border:1px solid rgba(255,255,255,.06);margin:4px 0;font-size:14px}
+.ri.hit{background:rgba(52,211,153,.08);border-color:rgba(52,211,153,.3)}
+.ri.miss{background:rgba(251,113,133,.06);border-color:rgba(251,113,133,.2)}
+.dot{flex:0 0 24px;height:24px;border-radius:50%;display:grid;place-items:center;font-size:13px}
+.fb{border-radius:12px;padding:14px 16px;margin:12px 0;font-size:14px;line-height:1.6}
+.fb.pass{background:rgba(52,211,153,.1);border:1px solid rgba(52,211,153,.3);color:#6ee7b7}
+.fb.fail{background:rgba(251,113,133,.1);border:1px solid rgba(251,113,133,.3);color:#fda4af}
+.hint-box{background:rgba(251,191,36,.08);border:1px solid rgba(251,191,36,.2);border-radius:12px;padding:14px;margin:10px 0;font-size:14px;color:#fde68a;display:none}
+.ex-bad{background:rgba(251,113,133,.08);border:1px solid rgba(251,113,133,.25);border-radius:12px;padding:12px 14px;margin:6px 0}
+.ex-good{background:rgba(52,211,153,.08);border:1px solid rgba(52,211,153,.25);border-radius:12px;padding:12px 14px;margin:6px 0}
+.sb{width:80px;height:80px;border-radius:50%;display:grid;place-items:center;font-family:'Fredoka';font-size:36px;font-weight:700;margin:0 auto 12px}
+.pb{height:6px;background:rgba(255,255,255,.08);border-radius:99px;overflow:hidden;margin:12px 0}
+.pb .f{height:100%;border-radius:99px;transition:width .5s}
+.badge{font-family:'Fredoka';font-size:11px;letter-spacing:.12em;text-transform:uppercase;padding:4px 10px;border-radius:999px;display:inline-block}
+.sd{width:12px;height:12px;border-radius:50%;transition:all .3s}
+.pc{cursor:pointer;transition:all .15s;border:2px solid transparent}
+.pc:hover{border-color:rgba(56,189,248,.4);transform:translateY(-2px)}
+.pc.sel{border-color:#38bdf8;box-shadow:0 0 20px rgba(56,189,248,.15)}
+@keyframes su{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+.ai{animation:su .35s ease-out}
+#cc{display:none}
+</style>
+</head>
+<body>
+<div class="max-w-2xl mx-auto px-4 py-6" id="app"></div>
+<canvas id="cc" width="1200" height="800"></canvas>
+<script>
+const APP=()=>document.getElementById("app"),esc=s=>String(s||"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const ST={step:0,name:"",pid:0,texts:{a:"",c:"",e:"",final:""},passed:{a:false,c:false,e:false},att:{a:0,c:0,e:0},hints:{a:false,c:false,e:false},apScore:3,scoreLabel:"",scoreColor:""};
+
+const P=[
+{id:0,em:"🌭",t:"Are hot dogs considered sandwiches?",
+ctx:"The USDA classifies a hot dog as a sandwich. The National Hot Dog and Sausage Council disagrees. New York State taxes hot dogs as sandwiches.",
+q:"Are hot dogs considered sandwiches? Explain your reasoning.",
+r:{a:{kw:[{w:["should","should not","is a","is not","are not","are a","yes","no","classified","consider","sandwich"],l:"Clear stance",v:2},{w:["hot dog","hotdog"],l:"Addresses prompt",v:1},{w:["because","since","due to","therefore","as a"],l:"Signals reasoning",v:1}],
+min:12,pass:3,hint:'💡 "No, a hot dog is not a sandwich." — direct, clear, done. Don\'t start with "I think" or "It depends."',
+bad:"Whether or not a hot dog is a sandwich is an interesting debate...",good:"No, a hot dog is not a sandwich."},
+c:{kw:[{w:["bread","bun","slices","structure","enclosed","filling","between","connected","single piece","two pieces"],l:"Structural evidence",v:2},{w:["definition","define","usda","dictionary","tax","regulation","law"],l:"Source/definition",v:2},{w:["for example","for instance","such as","according to","specifically"],l:"Evidence language",v:1},{w:["taco","burrito","sub","wrap","category"],l:"Comparison",v:1}],
+min:20,pass:3,hint:'💡 "A sandwich requires two distinct slices of bread, while a hot dog bun is a single, connected piece." Use definitions and structure!',
+bad:"Because I said so and it doesn't look like one.",good:"A sandwich requires two distinct slices of bread enclosing a filling, while a hot dog bun is a single, connected piece of bread."},
+e:{kw:[{w:["this means","this shows","this proves","this demonstrates","this matters","which means","this is why","that is why"],l:"Connection language",v:3},{w:["therefore","thus","consequently","as a result","because of this","in conclusion","ultimately","so"],l:"Logical conclusion",v:2},{w:["structure","category","classification","classify","distinct","different"],l:"Classification reasoning",v:1},{w:["if","would","could","making","placing","puts","makes","lacks"],l:"Causal reasoning",v:1}],
+min:20,pass:4,hint:'💡 "Because the bread is connected at the base, a hot dog lacks the disconnected bread structure required to be a sandwich, placing it in its own distinct culinary category."',
+bad:"So yeah, that's why I'm right.",good:"Because the bread is connected at the base, a hot dog lacks the disconnected bread structure required to be a sandwich, placing it in its own distinct category."}}},
+
+{id:1,em:"🥣",t:"Is cereal considered a soup?",ctx:"Soup is defined as 'a liquid food made by boiling ingredients.' Cereal involves liquid (milk) and solids (cereal) in a bowl.",q:"Is cereal considered a soup? Explain your reasoning.",
+r:{a:{kw:[{w:["is a","is not","should","should not","yes","no","considered","classified","cereal","soup"],l:"Clear stance",v:2},{w:["because","since","due to","therefore"],l:"Signals reasoning",v:1},{w:["cereal"],l:"Addresses cereal",v:1}],min:12,pass:3,hint:'💡 "No, cereal is not a soup because..."',bad:"This is a really hard question...",good:"No, cereal is not a soup."},
+c:{kw:[{w:["definition","define","boil","boiling","cooked","cooking","heated","heat","broth","stock"],l:"Definition evidence",v:2},{w:["milk","liquid","bowl","cold","temperature","grain","served","raw"],l:"Structural comparison",v:2},{w:["for example","according to","specifically","such as"],l:"Evidence language",v:1},{w:["chicken","tomato","stew"],l:"Comparison",v:1}],min:20,pass:3,hint:'💡 "Soup is defined as a liquid food made by BOILING ingredients, while cereal is served cold with uncooked milk."',bad:"Because cereal doesn't taste like soup.",good:"Soup is defined as a liquid food made by boiling ingredients in broth, while cereal is a cold dish of uncooked grain served with milk."},
+e:{kw:[{w:["this means","this shows","this proves","this demonstrates","which means","this is why"],l:"Connection language",v:3},{w:["therefore","thus","consequently","as a result","in conclusion","so"],l:"Logical conclusion",v:2},{w:["process","preparation","cooking","temperature","criteria","requirement"],l:"Process reasoning",v:1},{w:["classify","category","classification","distinct","different"],l:"Classification",v:1}],min:20,pass:4,hint:'💡 "Because soup requires cooking/boiling and cereal involves no heat, cereal fails the fundamental definition of soup."',bad:"So that proves my point.",good:"Because soup requires a cooking process involving heat and cereal involves none, cereal fails the fundamental criteria of what defines a soup."}}},
+
+{id:2,em:"🍅",t:"Is ketchup a smoothie?",ctx:"Botanically, a tomato is a fruit. Ketchup is made primarily from tomatoes, vinegar, and sugar.",q:"If a tomato is a fruit, does that make ketchup a smoothie? Explain your reasoning.",
+r:{a:{kw:[{w:["is a","is not","should","should not","yes","no","ketchup","smoothie","considered"],l:"Clear stance",v:2},{w:["because","since","due to","therefore"],l:"Signals reasoning",v:1},{w:["tomato","fruit","ketchup"],l:"Addresses prompt",v:1}],min:12,pass:3,hint:'💡 "No, ketchup is not a smoothie even though tomatoes are technically fruit."',bad:"This is a tricky question because it depends...",good:"No, ketchup is not a smoothie despite tomatoes being classified as a fruit."},
+c:{kw:[{w:["definition","blend","blended","raw","fresh","processed","cooked","vinegar","sugar","preservative","ingredient"],l:"Definition/ingredient evidence",v:2},{w:["smoothie","drink","beverage","liquid","consistency","preparation"],l:"Smoothie characteristics",v:2},{w:["for example","according to","specifically","such as"],l:"Evidence language",v:1},{w:["fruit","botanical","seed"],l:"Botanical reference",v:1}],min:20,pass:3,hint:'💡 "A smoothie is a blended drink made from raw, fresh fruits, while ketchup is a cooked, processed condiment."',bad:"Ketchup just doesn't look like a smoothie.",good:"A smoothie is a beverage made by blending raw, fresh fruits, while ketchup is a heavily processed condiment cooked with vinegar and preservatives."},
+e:{kw:[{w:["this means","this shows","this proves","this demonstrates","which means","this is why"],l:"Connection language",v:3},{w:["therefore","thus","consequently","as a result","in conclusion","so"],l:"Logical conclusion",v:2},{w:["process","preparation","transform","change","alter","different","fundamental"],l:"Process reasoning",v:1},{w:["classify","category","condiment"],l:"Classification",v:1}],min:20,pass:4,hint:'💡 "Because ketchup undergoes extensive cooking that transforms the raw fruit, it no longer meets the criteria of a smoothie."',bad:"And that's why ketchup isn't a smoothie.",good:"Because the manufacturing process fundamentally transforms the tomato through cooking, ketchup no longer qualifies as a blended fruit drink."}}},
+
+{id:3,em:"👍",t:"Is a thumb a finger?",ctx:"A thumb has two phalanges (bones) while fingers have three. The thumb opposes the other digits, enabling gripping.",q:"Is a thumb considered a finger? Explain your reasoning.",
+r:{a:{kw:[{w:["is a","is not","should","should not","yes","no","thumb","finger","considered","classified"],l:"Clear stance",v:2},{w:["because","since","due to","therefore"],l:"Signals reasoning",v:1},{w:["thumb"],l:"Addresses thumb",v:1}],min:12,pass:3,hint:'💡 "No, a thumb is not technically a finger because..."',bad:"Well, this depends on who you ask...",good:"No, a thumb is not a finger."},
+c:{kw:[{w:["bone","bones","phalanges","joint","joints","two","three","anatomy","skeletal","structure"],l:"Anatomical evidence",v:2},{w:["oppos","grip","grasp","rotate","movement","motion","unique","different","distinct"],l:"Functional evidence",v:2},{w:["for example","according to","specifically","scientifically","such as"],l:"Evidence language",v:1},{w:["digit","hand","medical"],l:"Scientific reference",v:1}],min:20,pass:3,hint:'💡 "A thumb has only two phalanges while fingers have three, and it is the only digit capable of opposition."',bad:"Because thumbs look different from fingers.",good:"A thumb contains only two phalanges while fingers contain three, and the thumb is the only digit capable of opposition."},
+e:{kw:[{w:["this means","this shows","this proves","this demonstrates","which means","this is why"],l:"Connection language",v:3},{w:["therefore","thus","consequently","as a result","in conclusion","so"],l:"Logical conclusion",v:2},{w:["structure","function","anatomy","category","classification"],l:"Reasoning",v:1},{w:["different","distinct","separate","unique","unlike"],l:"Distinction",v:1}],min:20,pass:4,hint:'💡 "Because the thumb differs both structurally and functionally from the other four digits, it constitutes a distinct type of digit."',bad:"So yeah, thumbs are different.",good:"Because the thumb differs both structurally and functionally, it qualifies as its own distinct category rather than a true finger."}}},
+
+{id:4,em:"🎮",t:"Are video games a sport?",ctx:"Sport is defined as 'an activity involving physical exertion and skill.' Esports generate $1.8B+ revenue and are watched by 500M+ viewers.",q:"Are video games considered a sport? Explain your reasoning.",
+r:{a:{kw:[{w:["is a","is not","are a","are not","should","should not","yes","no","sport","considered","esport","video game"],l:"Clear stance",v:2},{w:["because","since","due to","therefore"],l:"Signals reasoning",v:1},{w:["game","gaming","esport"],l:"Addresses gaming",v:1}],min:12,pass:3,hint:'💡 "Yes, competitive video gaming should be classified as a sport because..."',bad:"Whether video games are a sport is debatable...",good:"Yes, competitive gaming (esports) should be classified as a sport."},
+c:{kw:[{w:["definition","define","physical","exertion","skill","competition","competitive","athlete","training"],l:"Definition evidence",v:2},{w:["billion","million","revenue","viewer","audience","olympic","tournament","league","professional","prize"],l:"Data/industry",v:2},{w:["for example","according to","specifically","such as","data"],l:"Evidence language",v:1},{w:["chess","poker","darts","archery","motorsport","mental"],l:"Comparison sports",v:1}],min:20,pass:3,hint:'💡 "Esports require elite hand-eye coordination, strategy, and 10+ hours of daily practice, generating $1.8 billion annually."',bad:"Because lots of people play them.",good:"Esports demand elite hand-eye coordination and strategic thinking, similar to chess (recognized by the IOC), and generate $1.8 billion in annual revenue."},
+e:{kw:[{w:["this means","this shows","this proves","this demonstrates","which means","this is why"],l:"Connection language",v:3},{w:["therefore","thus","consequently","as a result","in conclusion","so"],l:"Logical conclusion",v:2},{w:["skill","competition","dedication","training","mental","criteria"],l:"Sport-criteria reasoning",v:1},{w:["evolution","evolve","expand","redefine","modern","broader","include","changing"],l:"Evolution of definition",v:1}],min:20,pass:4,hint:'💡 "This demonstrates that the definition of sport should evolve to include elite mental competition, not just physical exertion."',bad:"So video games are basically sports.",good:"This demonstrates that competitive gaming meets the core criteria of sport — skill, competition, and dedication — and the definition should evolve accordingly."}}}
+];
+
+const TR=["however","moreover","furthermore","additionally","in contrast","nevertheless","consequently","therefore","thus","similarly","likewise","in addition","as a result","in conclusion","ultimately","first","second","specifically","notably","most importantly","finally","for this reason"];
+function t(m){return '<div class="teacher ai"><div class="av">🎓</div><div class="bubble">'+m+'</div></div>';}
+function pb(){const s=["Intro","Learn","Pick","Assert","Cite","Explain","Combine","Score"],p=(ST.step/7)*100;
+return '<div class="flex items-center justify-between mb-2"><div class="flex gap-1.5">'+s.map((_,i)=>'<div class="sd '+(i<ST.step?'bg-mint':i===ST.step?'bg-sky':'bg-white/10')+'"></div>').join("")+'</div><span class="text-xs text-dim font-mono">'+(s[ST.step]||"")+'</span></div><div class="pb"><div class="f bg-gradient-to-r from-sky to-purple" style="width:'+p+'%"></div></div>';}
+function ex(b,g){return '<div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-3"><div class="ex-bad"><div class="text-xs font-bold text-hot mb-1">❌ BAD:</div><p class="text-sm text-red-200">"'+esc(b)+'"</p></div><div class="ex-good"><div class="text-xs font-bold text-mint mb-1">✅ GOOD:</div><p class="text-sm text-green-200">"'+esc(g)+'"</p></div></div>';}
+
+function viewIntro(){ST.step=0;APP().innerHTML='<div class="ai"><div class="text-center py-8"><div class="text-6xl mb-3">📝</div><h1 class="font-display text-4xl font-bold bg-gradient-to-r from-sky via-purple to-hot bg-clip-text text-transparent mb-2">How to Crush an FRQ</h1><p class="text-dim text-lg">The Ultimate Guide (Without the Tears 😭➡😎)</p></div>'+t('An FRQ is a <b>Free Response Question</b>. Think of it as a chance to show off your brain power! Today I\'ll teach you the <b>A.C.E. secret formula</b> for getting full points.')+'<div class="glass p-5 mb-4"><label class="text-sm text-dim block mb-2">Your name (for the certificate)</label><input id="ni" type="text" maxlength="40" placeholder="First Last" class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-slate-600 focus:outline-none focus:border-sky/50"></div><button onclick="sL()" class="btn btn-primary w-full text-lg py-4">Let\'s Crush It 🔥</button></div>';}
+
+function sL(){var n=document.getElementById("ni");if(!n||!n.value.trim()){n.style.borderColor="#fb7185";n.placeholder="Name first!";return;}ST.name=n.value.trim();ST.step=1;viewLesson();}
+
+function viewLesson(){ST.step=1;APP().innerHTML='<div class="ai">'+pb()+'<div class="glass p-6 mb-4"><h2 class="font-display text-2xl font-bold text-white mb-4">The 3 Golden Rules</h2><div class="grid grid-cols-1 sm:grid-cols-3 gap-3"><div class="bg-yellow-500/10 border border-yellow-500/20 rounded-xl p-4 text-center"><div class="text-3xl mb-2">🎯</div><h3 class="font-display font-bold text-gold">Be Direct</h3><p class="text-sm text-dim mt-1">No fluff. Get straight to the point.</p></div><div class="bg-sky/10 border border-sky/20 rounded-xl p-4 text-center"><div class="text-3xl mb-2">🚫</div><h3 class="font-display font-bold text-sky">No Essays!</h3><p class="text-sm text-dim mt-1">No hook, intro, or conclusion. Just answer.</p></div><div class="bg-pink-500/10 border border-pink-500/20 rounded-xl p-4 text-center"><div class="text-3xl mb-2">🔢</div><h3 class="font-display font-bold text-hot">Label It</h3><p class="text-sm text-dim mt-1">Parts A, B, C? Label them A, B, C!</p></div></div></div><div class="glass p-6 mb-4"><h2 class="font-display text-xl font-bold text-white mb-2">The Secret Formula: A.C.E.</h2><div class="space-y-3"><div class="flex gap-3 items-start"><div class="flex-shrink-0 w-10 h-10 rounded-xl bg-pink-500/20 flex items-center justify-center text-hot font-display font-bold">A</div><div><b class="text-hot">Answer</b> — Direct, one-sentence answer.'+ex("Whether or not a hot dog is a sandwich is an interesting debate...","No, a hot dog is not a sandwich.")+'</div></div><div class="flex gap-3 items-start"><div class="flex-shrink-0 w-10 h-10 rounded-xl bg-gold/20 flex items-center justify-center text-gold font-display font-bold">C</div><div><b class="text-gold">Cite</b> — Back it up with evidence.'+ex("Because I said so.","A sandwich requires two distinct slices of bread, while a hot dog bun is a single piece.")+'</div></div><div class="flex gap-3 items-start"><div class="flex-shrink-0 w-10 h-10 rounded-xl bg-sky/20 flex items-center justify-center text-sky font-display font-bold">E</div><div><b class="text-sky">Explain</b> — Connect it. The "So What?"'+ex("So yeah, that's why I'm right.","Because the bread is connected at the base, a hot dog lacks the structure required to be a sandwich.")+'</div></div></div></div>'+t('See the pattern? <b>A</b> = claim. <b>C</b> = receipts. <b>E</b> = "so what?" Most students lose points skipping E. Let\'s practice!')+'<button onclick="viewPick()" class="btn btn-primary w-full text-lg py-4">Time to Practice! 🚀</button></div>';}
+
+function viewPick(){ST.step=2;APP().innerHTML='<div class="ai">'+pb()+'<h2 class="font-display text-2xl font-bold text-center text-white mb-2">Choose Your Prompt 🥊</h2><p class="text-dim text-center text-sm mb-4">Pick a very serious, highly academic, completely essential question.</p><div class="space-y-3">'+P.map(p=>'<button class="pc glass p-4 w-full text-left flex items-center gap-4" onclick="pick('+p.id+')"><div class="text-4xl flex-shrink-0">'+p.em+'</div><div><h3 class="font-display font-bold text-white">'+esc(p.t)+'</h3><p class="text-xs text-dim mt-1">'+esc(p.ctx).slice(0,90)+'...</p></div></button>').join("")+'</div></div>';}
+
+function pick(id){ST.pid=id;ST.texts={a:"",c:"",e:"",final:""};ST.passed={a:false,c:false,e:false};ST.att={a:0,c:0,e:0};ST.hints={a:false,c:false,e:false};ST.step=3;vS("a");}
+
+function vS(s){var p=P[ST.pid],r=p.r[s],col=s==="a"?"hot":s==="c"?"gold":"sky",let2=s==="a"?"A":s==="c"?"C":"E",lab=s==="a"?"Answer":s==="c"?"Cite":"Explain";
+ST.step=s==="a"?3:s==="c"?4:5;
+APP().innerHTML='<div class="ai">'+pb()+t(s==="a"?'Here\'s your prompt: <b>"'+esc(p.q)+'"</b> Start with <b>A — Answer</b>. Pick a side. Be direct. Do NOT re-write the prompt!':s==="c"?'Great claim! Now <b>C — Cite</b>. Bring the receipts! 🧾 Definitions, facts, data — not opinions.':'Almost there! <b>E — Explain</b> is the "So What?" Connect your evidence to your answer. This is where the points live!')+'<div class="glass p-6 mb-4" style="border-color:rgba('+(col==="hot"?"251,113,133":col==="gold"?"251,191,36":"56,189,248")+',.25)"><div class="flex items-center gap-3 mb-2"><div class="w-10 h-10 rounded-xl bg-'+col+'/20 flex items-center justify-center text-'+col+' font-display font-bold">'+let2+'</div><div><h3 class="font-display text-lg font-bold">'+lab+'</h3></div></div>'+ex(r.bad,r.good)+'<textarea id="si" rows="4" placeholder="Write your '+lab.toLowerCase()+' here..." class="mt-3">'+esc(ST.texts[s])+'</textarea><div class="flex gap-3 mt-4"><button onclick="sub(\''+s+'\')" class="btn btn-primary flex-1">✅ Submit</button><button onclick="hint(\''+s+'\')" class="btn btn-hint">💡 Hint</button></div><div id="hb" class="hint-box">'+r.hint+'</div><div id="fb"></div></div><div class="glass p-4"><div class="text-xs text-dim mb-2">What I\'m looking for:</div><div class="space-y-1" id="rc">'+r.kw.map(function(k,i){return '<div class="ri" id="ri'+i+'"><div class="dot bg-white/10 text-dim">○</div><span class="text-dim">'+k.l+'</span></div>';}).join("")+'</div></div></div>';
+if(ST.hints[s])document.getElementById("hb").style.display="block";}
+
+function hint(s){ST.hints[s]=true;var b=document.getElementById("hb");if(b)b.style.display=b.style.display==="block"?"none":"block";}
+
+function sub(s){var p=P[ST.pid],r=p.r[s],tx=(document.getElementById("si")||{}).value||"";tx=tx.trim();ST.texts[s]=tx;ST.att[s]++;
+var lo=tx.toLowerCase(),ws=lo.split(/\s+/).filter(Boolean),sc=0,hits=[],miss=[];
+if(ws.length<r.min){sfb("fail","<b>Too short!</b> "+ws.length+" words, need "+r.min+". "+(s==="a"?"A strong claim needs a full sentence.":s==="c"?"Evidence needs specifics.":"Don't shortchange the explanation!"));return;}
+var real=ws.filter(function(w){return w.length>1&&/[aeiouy]/i.test(w);});
+if(real.length<ws.length*0.5){sfb("fail","<b>Write real sentences.</b>");return;}
+r.kw.forEach(function(k,i){if(k.w.some(function(w){return lo.indexOf(w)>=0;})){sc+=k.v;hits.push(i);}else miss.push(i);});
+r.kw.forEach(function(k,i){var el=document.getElementById("ri"+i);if(!el)return;
+if(hits.indexOf(i)>=0){el.className="ri hit";el.querySelector(".dot").textContent="✓";el.querySelector(".dot").className="dot bg-mint/20 text-mint";el.querySelector("span").className="text-mint";}
+else{el.className="ri miss";el.querySelector(".dot").textContent="✗";el.querySelector(".dot").className="dot bg-hot/15 text-hot";el.querySelector("span").className="text-hot";}});
+if(sc>=r.pass){ST.passed[s]=true;var praise=["Solid! 🔥","Nice! 💪","That's it! ✨","AP-quality! 🎯","Getting it! 🧠"][Math.floor(Math.random()*5)];
+var d="<b>"+praise+"</b> "+hits.length+"/"+r.kw.length+" items.";
+if(miss.length)d+=" Could improve: "+miss.map(function(i){return r.kw[i].l;}).join(", ")+".";
+var nx=s==="a"?"c":s==="c"?"e":null;
+sfb("pass",d+(nx?'<br><br><button onclick="vS(\''+nx+'\')" class="btn btn-success mt-3">→ '+(nx==="c"?"C — Cite":"E — Explain")+"</button>":'<br><br><button onclick="vComb()" class="btn btn-success mt-3">→ Put It All Together</button>'));}
+else{var fb="<b>Not quite.</b> "+sc+"/"+r.pass+" needed. Missing: "+miss.map(function(i){return "<b>"+r.kw[i].l+"</b>";}).join(", ")+".";
+fb+=s==="a"?" Take a clearer side!":s==="c"?" Use specific facts!":" Use 'this means' or 'this shows' to connect.";
+sfb("fail",fb+" Try the hint!");}}
+function sfb(type,html){var el=document.getElementById("fb");if(el)el.innerHTML='<div class="fb '+type+' ai">'+html+'</div>';}
+
+function vComb(){ST.step=6;var draft=[ST.texts.a,ST.texts.c,ST.texts.e].filter(Boolean).join(" ");var p=P[ST.pid];
+APP().innerHTML='<div class="ai">'+pb()+t('All three pieces done! Now combine into <b>one smooth paragraph</b>. Add transitions, polish the flow. This is your final masterpiece. ✨')+'<div class="glass p-5 mb-4"><div class="badge bg-purple/20 text-purple mb-3">Your Sections</div><div class="space-y-2 text-sm"><div class="bg-hot/5 border border-hot/20 rounded-lg p-3"><span class="text-hot font-bold text-xs">A:</span> <span class="text-dim">'+esc(ST.texts.a)+'</span></div><div class="bg-gold/5 border border-gold/20 rounded-lg p-3"><span class="text-gold font-bold text-xs">C:</span> <span class="text-dim">'+esc(ST.texts.c)+'</span></div><div class="bg-sky/5 border border-sky/20 rounded-lg p-3"><span class="text-sky font-bold text-xs">E:</span> <span class="text-dim">'+esc(ST.texts.e)+'</span></div></div></div><div class="glass p-6 mb-4" style="border-color:rgba(167,139,250,.25)"><h3 class="font-display text-lg font-bold mb-2">📝 The Final Masterpiece</h3><textarea id="fi" rows="8" placeholder="Combine into one paragraph...">'+esc(ST.texts.final||draft)+'</textarea><button onclick="subF()" class="btn btn-primary w-full mt-4 text-lg py-4">📊 Submit for AP Score</button><div id="ffb"></div></div></div>';}
+
+function subF(){var tx=(document.getElementById("fi")||{}).value||"";tx=tx.trim();ST.texts.final=tx;
+var lo=tx.toLowerCase(),ws=lo.split(/\s+/).filter(Boolean);
+if(ws.length<15){document.getElementById("ffb").innerHTML='<div class="fb fail ai"><b>Too short!</b> '+ws.length+' words.</div>';return;}
+var p=P[ST.pid],pts=0,bd=[];
+var cl=["should","should not","is a","is not","are not","are a","yes","no","classified","considered"];
+var fs=lo.split(/[.!?]/)[0]||"";
+if(cl.some(function(w){return fs.indexOf(w)>=0;})){pts+=20;bd.push({h:true,l:"Clear claim in opening",p:20});}
+else if(cl.some(function(w){return lo.indexOf(w)>=0;})){pts+=10;bd.push({h:true,l:"Claim present but not leading",p:10});}
+else bd.push({h:false,l:"No clear claim",p:0});
+var ek=p.r.c.kw,ev=0;ek.forEach(function(k){if(k.w.some(function(w){return lo.indexOf(w)>=0;})){ev+=k.v*4;bd.push({h:true,l:k.l,p:k.v*4});}else bd.push({h:false,l:k.l,p:0});});pts+=Math.min(25,ev);
+var cn=["this means","this shows","this proves","this demonstrates","this matters","which means","this is why","because of this"];
+if(cn.some(function(w){return lo.indexOf(w)>=0;})){pts+=12;bd.push({h:true,l:"Connection language",p:12});}else bd.push({h:false,l:"Missing connection language",p:0});
+var lg=["therefore","thus","consequently","as a result","in conclusion","ultimately"];
+if(lg.some(function(w){return lo.indexOf(w)>=0;})){pts+=8;bd.push({h:true,l:"Logical conclusion",p:8});}else bd.push({h:false,l:"Missing conclusion",p:0});
+var tc=TR.filter(function(w){return lo.indexOf(w)>=0;}).length;
+if(tc>=3){pts+=8;bd.push({h:true,l:"Strong transitions ("+tc+")",p:8});}else if(tc>=1){pts+=4;bd.push({h:true,l:"Some transitions ("+tc+")",p:4});}else bd.push({h:false,l:"No transitions",p:0});
+if(ws.length>=80){pts+=7;bd.push({h:true,l:"Good length ("+ws.length+")",p:7});}else if(ws.length>=40){pts+=4;bd.push({h:true,l:"Adequate ("+ws.length+" words)",p:4});}else bd.push({h:false,l:"Short ("+ws.length+")",p:0});
+var sn=tx.split(/[.!?]+/).filter(function(s){return s.trim().length>5;});
+if(sn.length>=3){pts+=5;bd.push({h:true,l:sn.length+" sentences",p:5});}else bd.push({h:false,l:"Only "+sn.length+" sentence(s)",p:0});
+if(ST.att.a===1&&ST.att.c===1&&ST.att.e===1){pts+=10;bd.push({h:true,l:"Bonus: all first try!",p:10});}
+pts=Math.min(110,Math.max(0,pts));
+var ap,col,lab;
+if(pts>=85){ap=5;col="from-mint to-sky";lab="Extremely Well Qualified";}
+else if(pts>=68){ap=4;col="from-sky to-purple";lab="Well Qualified";}
+else if(pts>=48){ap=3;col="from-gold to-orange-400";lab="Qualified";}
+else if(pts>=28){ap=2;col="from-orange-400 to-hot";lab="Possibly Qualified";}
+else{ap=1;col="from-hot to-red-600";lab="No Recommendation";}
+ST.step=7;ST.apScore=ap;ST.scoreColor=col;ST.scoreLabel=lab;vScore(ap,col,lab,pts,bd);}
+
+function vScore(ap,col,lab,pts,bd){var date=new Date().toLocaleDateString("en-US",{year:"numeric",month:"long",day:"numeric"}),p=P[ST.pid];
+APP().innerHTML='<div class="ai">'+pb()+'<div class="text-center py-6"><div class="sb bg-gradient-to-br '+col+' text-dark">'+ap+'</div><h2 class="font-display text-2xl font-bold">'+lab+'</h2><p class="text-dim text-sm">'+esc(ST.name)+' · '+date+'</p><p class="text-dim text-xs mt-1">'+pts+'/100 · '+p.em+' '+esc(p.t)+'</p></div>'+t(ap>=4?'<b>Outstanding, '+esc(ST.name)+'!</b> AP-caliber writing. Clear claim, specific evidence, and you explained WHY. 🏆':ap===3?'<b>Solid, '+esc(ST.name)+'.</b> Hit the structure. Add stronger "this demonstrates..." language and more transitions to reach a 4!':'<b>Good start, '+esc(ST.name)+'.</b> Clearer claim, specific evidence, and always explain WHY. Use the hints next time!')+'<div class="glass p-5 mb-4"><div class="badge bg-purple/20 text-purple mb-3">Breakdown</div>'+bd.map(function(b){return '<div class="ri '+(b.h?"hit":"miss")+'"><div class="dot '+(b.h?"bg-mint/20 text-mint":"bg-hot/15 text-hot")+'">'+(b.h?"✓":"✗")+'</div><span class="'+(b.h?"text-mint":"text-hot")+' flex-1">'+b.l+'</span><span class="font-mono text-xs '+(b.h?"text-mint":"text-hot")+'">'+(b.h?"+":"")+b.p+'</span></div>';}).join("")+'</div><div class="glass p-5 mb-4"><div class="badge bg-sky/20 text-sky mb-3">Your Response</div><p class="text-sm text-dim">"'+esc(ST.texts.final)+'"</p></div><div class="flex gap-3 mb-4"><button onclick="dlCert()" class="btn btn-success flex-1 text-lg py-4">📜 Download Certificate</button></div><div class="glass p-4 mb-4"><p class="text-xs text-dim"><b class="text-ink">Can\'t download?</b> Win+Shift+S (Win) · ⌘+Shift+4 (Mac) · Ctrl+Shift+ShowWindows (Chromebook)</p></div><div class="flex gap-3"><button onclick="viewPick()" class="btn btn-ghost flex-1">🔄 Another Prompt</button><button onclick="vComb()" class="btn btn-primary flex-1">✏️ Revise</button></div></div>';}
+
+function dlCert(){var cv=document.getElementById("cc"),x=cv.getContext("2d"),W=1200,H=800;cv.width=W;cv.height=H;
+var p=P[ST.pid],date=new Date().toLocaleDateString("en-US",{year:"numeric",month:"long",day:"numeric"});
+var bg=x.createLinearGradient(0,0,W,H);bg.addColorStop(0,"#0f172a");bg.addColorStop(1,"#1e293b");x.fillStyle=bg;x.fillRect(0,0,W,H);
+x.strokeStyle="#fbbf24";x.lineWidth=6;x.beginPath();x.roundRect(20,20,W-40,H-40,20);x.stroke();
+x.strokeStyle="rgba(251,191,36,.3)";x.lineWidth=1;x.beginPath();x.roundRect(36,36,W-72,H-72,14);x.stroke();
+x.font="60px serif";x.textAlign="center";x.fillText("🏆",W/2,100);
+x.font="bold 16px sans-serif";x.fillStyle="#fbbf24";x.fillText("CERTIFICATE OF MASTERY",W/2,145);
+x.font="bold 40px Fredoka,sans-serif";x.fillStyle="#f1f5f9";x.fillText("How to Crush an FRQ",W/2,200);
+x.font="16px sans-serif";x.fillStyle="#94a3b8";x.fillText("A.C.E. Method · Free Response Question Writing",W/2,235);
+x.font="14px sans-serif";x.fillStyle="#64748b";x.fillText("This certifies that",W/2,300);
+x.font="bold 36px Fredoka,sans-serif";x.fillStyle="#f1f5f9";x.fillText(ST.name,W/2,350);
+x.font="15px sans-serif";x.fillStyle="#94a3b8";x.fillText("has demonstrated mastery of FRQ writing using the A.C.E. method:",W/2,410);
+x.fillText("Answer (clear claim) · Cite (specific evidence) · Explain (reasoning)",W/2,435);
+x.fillText("Prompt: "+p.em+" "+p.t,W/2,480);
+var sc={5:"#34d399",4:"#38bdf8",3:"#fbbf24",2:"#fb923c",1:"#fb7185"};
+x.beginPath();x.arc(W/2,560,45,0,Math.PI*2);x.fillStyle=sc[ST.apScore]||"#fbbf24";x.fill();
+x.font="bold 40px Fredoka,sans-serif";x.fillStyle="#0f172a";x.fillText(String(ST.apScore),W/2,575);
+x.font="14px sans-serif";x.fillStyle="#94a3b8";x.fillText("AP Score",W/2,625);x.fillText(ST.scoreLabel,W/2,645);
+x.font="13px sans-serif";x.fillStyle="#64748b";x.fillText(date,W/2,710);
+x.font="11px sans-serif";x.fillStyle="#475569";x.fillText("Smith's Classroom · AP Economics · How to Crush an FRQ v1.0",W/2,745);
+var a=document.createElement("a");a.download=ST.name.replace(/\s+/g,"_")+"_FRQ_Certificate.png";a.href=cv.toDataURL("image/png");a.click();}
+
+viewIntro();
+</script>
+</body>
+</html>
