@@ -1,0 +1,773 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Assignment — Market Structures at Smitty's Chill Grill (SS.912.E.1.6)</title>
+<style>
+:root{
+  --night:#141a2e;--night2:#1e2742;--neon:#3fe0c8;--mustard:#ffc247;
+  --ketchup:#e8453c;--paper:#fdf6e7;--ink:#151515;--grease:#8a93ad;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{background:var(--night);color:var(--paper);
+  font-family:"Trebuchet MS",Verdana,sans-serif;font-size:17px;line-height:1.5;
+  -webkit-text-size-adjust:100%}
+.head{position:fixed;top:0;left:0;right:0;z-index:30;
+  background:linear-gradient(180deg,#0f1424 74%,rgba(15,20,36,0));padding:9px 14px 16px}
+.headrow{display:flex;align-items:center;gap:10px;max-width:760px;margin:0 auto}
+.sign{font-family:"Arial Black",sans-serif;font-size:13px;letter-spacing:.4px;
+  color:var(--mustard);text-shadow:0 0 12px rgba(255,194,71,.4);white-space:nowrap}
+.sign span{color:var(--neon)}
+.bar{flex:1;height:8px;background:#2a3454;border-radius:99px;overflow:hidden}
+.fill{height:100%;width:0;background:linear-gradient(90deg,var(--neon),var(--mustard));transition:width .35s}
+.phase{font-size:12px;color:var(--grease);white-space:nowrap}
+.stage{max-width:760px;margin:0 auto;padding:70px 16px 130px}
+.screen{display:none}.screen.on{display:block}
+.slide{display:none}.slide.on{display:block}
+
+h1{font-family:"Arial Black",sans-serif;font-size:clamp(27px,7vw,42px);line-height:1.04;
+  margin:0 0 13px;color:var(--mustard);text-shadow:0 0 16px rgba(255,194,71,.33)}
+h2{font-family:"Arial Black",sans-serif;font-size:clamp(22px,5.4vw,30px);line-height:1.12;margin:0 0 12px}
+h3{font-size:19px;margin:20px 0 8px;color:var(--neon)}
+p{margin:0 0 12px}
+.lede{font-size:19px;color:#e8e2d2}
+.dim{color:var(--grease);font-size:15px}
+ul{margin:0 0 12px;padding-left:20px}li{margin-bottom:7px}
+
+.ticket{background:var(--paper);color:var(--ink);border-radius:4px;padding:16px 18px;
+  margin:14px 0;box-shadow:0 10px 0 -4px #cbbf9f}
+.ticket h3{color:#7a1f1a;margin-top:0}
+.ticket b{color:#7a1f1a}
+.ticket p{font-size:17px}
+.neonbox{border:2px solid var(--neon);border-radius:10px;padding:14px 16px;margin:14px 0;
+  background:rgba(63,224,200,.07)}
+.warn{border-color:var(--ketchup);background:rgba(232,69,60,.1)}
+.warn h3{color:#ff9d97;margin-top:0}
+
+.spectrum{display:flex;gap:4px;margin:18px 0 6px}
+.spectrum div{flex:1;padding:10px 5px;text-align:center;font-size:12px;font-weight:bold;
+  background:var(--mustard);color:#22190a;border-radius:6px;line-height:1.2}
+.axis{display:flex;justify-content:space-between;font-size:12px;color:var(--grease)}
+.stat{display:flex;gap:9px;flex-wrap:wrap;margin:12px 0}
+.chip{background:var(--night2);border:1px solid #33406b;border-radius:99px;padding:6px 13px;font-size:14px}
+.chip b{color:var(--neon)}
+table{width:100%;border-collapse:collapse;font-size:14px;margin:10px 0}
+th,td{border:1px solid #33406b;padding:8px 7px;text-align:left;vertical-align:top}
+th{background:var(--night2);color:var(--mustard);font-size:13px}
+td:first-child{color:var(--neon);font-weight:bold}
+
+.q{font-size:20px;font-weight:bold;margin:6px 0 14px;line-height:1.3}
+.opts{display:grid;gap:9px}
+.opt{background:var(--night2);border:2px solid #39456f;color:var(--paper);border-radius:9px;
+  padding:13px 15px;text-align:left;font-size:16px;font-family:inherit;cursor:pointer;line-height:1.35}
+.opt:hover:enabled{border-color:var(--neon)}
+.opt.right{border-color:var(--neon);background:rgba(63,224,200,.2)}
+.opt.wrong{border-color:var(--ketchup);background:rgba(232,69,60,.16);opacity:.8}
+.opt:disabled{cursor:default}
+.opt:focus-visible{outline:3px solid var(--mustard);outline-offset:2px}
+.picks{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:16px}
+.pick{background:var(--night2);border:2px solid #39456f;color:var(--paper);border-radius:10px;
+  padding:14px 10px;font-family:inherit;font-size:15px;font-weight:bold;cursor:pointer;line-height:1.25}
+.pick:hover:enabled{border-color:var(--neon)}
+.pick.right{border-color:var(--neon);background:rgba(63,224,200,.2)}
+.pick.wrong{border-color:var(--ketchup);background:rgba(232,69,60,.18)}
+.pick:focus-visible{outline:3px solid var(--mustard);outline-offset:2px}
+
+.fb{margin-top:13px;padding:12px 15px;border-radius:9px;display:none;font-size:16px}
+.fb.show{display:block}
+.fb.good{background:rgba(63,224,200,.14);border-left:5px solid var(--neon)}
+.fb.bad{background:rgba(232,69,60,.14);border-left:5px solid var(--ketchup)}
+.hintbtn{margin-top:13px;background:none;border:1px dashed var(--mustard);color:var(--mustard);
+  border-radius:99px;padding:7px 15px;font-family:inherit;font-size:14px;cursor:pointer}
+.hint{display:none;margin-top:10px;font-size:15px;color:var(--mustard);
+  border-left:3px solid var(--mustard);padding-left:12px}
+.hint.show{display:block}
+
+.card{background:var(--paper);color:var(--ink);border-radius:5px;padding:18px;
+  box-shadow:0 10px 0 -4px #cbbf9f;margin-bottom:4px}
+.card .tag{font-size:13px;color:#7a1f1a;font-weight:bold;margin-bottom:8px}
+.card p{font-size:18px;margin:0}
+
+label{display:block;margin:16px 0 6px;font-size:15px;color:var(--neon)}
+input[type=text],textarea{width:100%;background:var(--night2);border:2px solid #39456f;
+  color:var(--paper);border-radius:9px;padding:12px;font-family:inherit;font-size:16px}
+textarea{min-height:120px;resize:vertical}
+input:focus,textarea:focus{outline:none;border-color:var(--neon)}
+.wc{font-size:13px;color:var(--grease);margin-top:5px}
+.err{color:#ff9d97;font-size:15px;margin-top:9px;display:none}
+.err.show{display:block}
+
+.nav{position:fixed;left:0;right:0;bottom:0;z-index:30;
+  background:linear-gradient(0deg,#0f1424 74%,rgba(15,20,36,0));padding:14px;text-align:center}
+.btn{font-family:"Arial Black",sans-serif;font-size:15px;border:none;border-radius:99px;
+  padding:13px 26px;cursor:pointer;background:var(--mustard);color:#22190a;margin:0 5px}
+.btn.ghost{background:#2a3454;color:var(--paper)}
+.btn:disabled{opacity:.4;cursor:not-allowed}
+.btn:focus-visible{outline:3px solid var(--neon);outline-offset:2px}
+.gatenote{font-size:13px;color:var(--grease);margin-top:8px;min-height:18px}
+canvas{max-width:100%;height:auto;border-radius:6px;margin-top:16px;display:block}
+.steps{counter-reset:s;list-style:none;padding:0}
+.steps li{counter-increment:s;position:relative;padding-left:36px;margin-bottom:11px}
+.steps li::before{content:counter(s);position:absolute;left:0;top:1px;width:25px;height:25px;
+  background:var(--neon);color:#0d2b26;border-radius:50%;font-weight:bold;font-size:14px;
+  display:flex;align-items:center;justify-content:center}
+</style>
+</head>
+<body>
+
+<div class="head">
+  <div class="headrow">
+    <div class="sign">SMITTY'S <span>CHILL GRILL</span></div>
+    <div class="bar"><div class="fill" id="fill"></div></div>
+    <div class="phase" id="phase">Start</div>
+  </div>
+</div>
+
+<div class="stage">
+
+<!-- ============ START ============ -->
+<section class="screen on" id="s-start">
+  <h1>Assignment: Who sets the price?</h1>
+  <p class="lede">Economics Honors · SS.912.E.1.6 · Comparing the four market structures</p>
+  <div class="neonbox">
+    <strong>How this assignment works.</strong>
+    <ul>
+      <li>Part 1 is the lesson. Each page has a short reading timer — the Next button unlocks when you've actually had time to read it.</li>
+      <li>Six understanding checks are built in. You have to answer them <em>correctly</em> to move forward. Miss one and you'll get an explanation, then try again.</li>
+      <li>Part 2 is fifteen business decisions. You need 12 of 15 to pass. Anything you miss comes back in a review round.</li>
+      <li>Part 3 is two written answers, graded on your economics vocabulary and reasoning.</li>
+      <li>The certificate only appears after all three parts. It records your score and your time on task.</li>
+    </ul>
+  </div>
+  <p class="dim">Plan on 25–35 minutes. Don't refresh the page — your progress isn't saved. The timer pauses if you switch tabs.</p>
+  <label for="name">Your full name (exactly as it appears in Canvas)</label>
+  <input type="text" id="name" placeholder="First Last" autocomplete="off">
+  <label for="period">Class period</label>
+  <input type="text" id="period" placeholder="e.g. 3rd" autocomplete="off">
+  <p class="err" id="e-start">Enter your full name and your class period to begin.</p>
+</section>
+
+<!-- ============ LESSON ============ -->
+<section class="screen" id="s-lesson">
+
+<div class="slide" data-read="20">
+  <h2>Two burgers. Two prices. Same city.</h2>
+  <div class="ticket">
+    <h3>Receipt #1 — Water Street</h3>
+    <p><b>Smitty's Double Chill</b> ........ $8.50<br>
+    Five burger joints on one block. Smitty's tries $12. Customers walk 40 feet to Burger Barn.</p>
+  </div>
+  <div class="ticket">
+    <h3>Receipt #2 — Inside the stadium</h3>
+    <p><b>Smitty's Double Chill</b> ........ $17.00<br>
+    Smitty's is the only food stand allowed in the building. Nobody walks 40 feet to anywhere.</p>
+  </div>
+  <p>Same burger, same cook, same sauce. The difference isn't the beef — it's the <strong>market structure</strong>: the kind of competition surrounding the seller.</p>
+</div>
+
+<div class="slide" data-read="25">
+  <h2>The four questions on the order pad</h2>
+  <p>Economists name any market by asking the same four questions. Memorize these and you can classify anything.</p>
+  <div class="ticket">
+    <h3>Smitty's order pad</h3>
+    <p><b>1. How many sellers?</b> A ton, many, a few, or just one?<br><br>
+    <b>2. Same product or different?</b> Identical (a pound of ground beef) or unique (nobody else has our chili sauce)?<br><br>
+    <b>3. How easy is it to open up shop?</b> Can someone start tomorrow, or are there walls in the way? These walls are called <b>barriers to entry</b>.<br><br>
+    <b>4. Who controls the price?</b> Does the seller set it, or does the market hand it over?</p>
+  </div>
+  <p class="dim">Question 4 is really questions 1, 2, and 3 added together.</p>
+</div>
+
+<div class="slide" data-read="20">
+  <h2>The competition dial</h2>
+  <p>Picture a dial. On the left, sellers are everywhere and have zero say over price. On the right, one seller runs the entire show.</p>
+  <div class="spectrum">
+    <div>Pure<br>competition</div><div>Monopolistic<br>competition</div><div>Oligopoly</div><div>Monopoly</div>
+  </div>
+  <div class="axis"><span>many sellers · no price power</span><span>one seller · most price power</span></div>
+  <h3>Reading it left to right</h3>
+  <ul>
+    <li>Sellers get <strong>fewer</strong>.</li>
+    <li>Price control gets <strong>stronger</strong>.</li>
+    <li>Getting in the door gets <strong>harder</strong>.</li>
+  </ul>
+</div>
+
+<div class="slide" data-read="26">
+  <h2>Stop 1: Pure competition</h2>
+  <p>Smitty's buys ground beef. Three hundred suppliers sell the exact same grade, and every pound is interchangeable.</p>
+  <div class="stat">
+    <span class="chip"><b>Sellers:</b> very many</span>
+    <span class="chip"><b>Product:</b> identical</span>
+    <span class="chip"><b>Entry:</b> easy</span>
+    <span class="chip"><b>Price power:</b> none</span>
+  </div>
+  <p>One supplier asks $4.10 when everyone else charges $4.00. Smitty buys from literally anyone else, and that supplier sells nothing.</p>
+  <div class="neonbox"><strong>Price taker.</strong> The market announces the price; the seller accepts it. That's the whole job.</div>
+  <p class="dim">Close real examples: wheat, corn, currency exchange, fish at the dock. Perfect purity is rare — treat it as the far left end of the dial.</p>
+</div>
+
+<div class="slide" data-check="1">
+  <h2>Understanding check 1</h2>
+  <p class="q">A farmer selling sweet corn at the state market raises her price 30 cents a bushel. What happens?</p>
+  <div class="opts">
+    <button class="opt" data-c="1">Buyers go to any of the other sellers and she sells almost nothing.</button>
+    <button class="opt" data-c="0">She simply earns 30 cents more per bushel.</button>
+    <button class="opt" data-c="0">The other farmers are forced to raise their prices too.</button>
+    <button class="opt" data-c="0">The state sets a new legal price for corn.</button>
+  </div>
+  <button class="hintbtn">Need a hint?</button>
+  <p class="hint">Her corn is identical to everyone else's and there are hundreds of sellers. What would you do as a buyer?</p>
+  <div class="fb" data-good="Right. In pure competition the seller is a price taker — identical product plus many sellers means raising your price just hands customers to the next stall."
+       data-bad="Not yet. Her corn is identical to everyone else's and there are hundreds of sellers, so buyers walk to the next stall. She is a price taker. Read the options again and pick that one."></div>
+</div>
+
+<div class="slide" data-read="28">
+  <h2>Stop 2: Monopolistic competition</h2>
+  <p>This is where Smitty's Chill Grill actually lives. Water Street has Smitty's, Burger Barn, El Fuego, Wing Shack, and a food truck. All sell food. None sell the same food.</p>
+  <div class="stat">
+    <span class="chip"><b>Sellers:</b> many</span>
+    <span class="chip"><b>Product:</b> differentiated</span>
+    <span class="chip"><b>Entry:</b> fairly easy</span>
+    <span class="chip"><b>Price power:</b> a little</span>
+  </div>
+  <h3>The magic word: differentiation</h3>
+  <p>The chili sauce, the neon sign, the playlist, the free refills — these make people choose Smitty's even at 75 cents more. That is real price power, but it's small. Try $18 and everyone eats at Wing Shack.</p>
+  <div class="neonbox"><strong>Why the name confuses people:</strong> "monopolistic" sounds enormous. It only means each seller has a tiny monopoly on <em>its own version</em>. Nobody else can sell a Smitty's Double Chill.</div>
+  <p class="dim">Real examples: restaurants, salons, clothing brands, gyms, sneakers.</p>
+</div>
+
+<div class="slide" data-check="2">
+  <h2>Understanding check 2</h2>
+  <p class="q">Smitty's charges $8.50 while Burger Barn charges $7.75 — and Smitty's still has a line out the door. Why?</p>
+  <div class="opts">
+    <button class="opt" data-c="0">Smitty's is the only burger seller in the city.</button>
+    <button class="opt" data-c="1">Smitty's product is different enough that some customers prefer it.</button>
+    <button class="opt" data-c="0">Burger Barn and Smitty's agreed on their prices together.</button>
+    <button class="opt" data-c="0">The city gave Smitty's permission to charge more.</button>
+  </div>
+  <button class="hintbtn">Need a hint?</button>
+  <p class="hint">Think about the chili sauce and the atmosphere. What was the magic word on the last page?</p>
+  <div class="fb" data-good="Exactly — product differentiation. In monopolistic competition you earn a small amount of price power by being different, not by being the only one."
+       data-bad="Look again. Smitty's isn't alone on the block and nobody agreed on anything. The answer is differentiation — being different is what earns a little price power here."></div>
+</div>
+
+<div class="slide" data-read="28">
+  <h2>Stop 3: Oligopoly</h2>
+  <p>Smitty's needs soda syrup. Three companies supply the entire state. Whatever Smitty's does, it's buying from one of those three.</p>
+  <div class="stat">
+    <span class="chip"><b>Sellers:</b> a few big ones</span>
+    <span class="chip"><b>Product:</b> identical or differentiated</span>
+    <span class="chip"><b>Entry:</b> hard</span>
+    <span class="chip"><b>Price power:</b> large</span>
+  </div>
+  <h3>The key word: interdependence</h3>
+  <p>Each of the three watches the other two constantly. Supplier A cuts its price and B and C know within a day and cut theirs too. That's a <strong>price war</strong>, and nobody wins it.</p>
+  <p>So they often hold prices high instead. If they actually meet and agree to do it, that's <strong>collusion</strong>, and it's illegal in the United States.</p>
+  <div class="neonbox"><strong>Test tip:</strong> if firms are reacting to each other's moves, it's an oligopoly. No other structure behaves that way.</div>
+  <p class="dim">Real examples: airlines, cell carriers, soda, game consoles, large banks.</p>
+</div>
+
+<div class="slide" data-check="3">
+  <h2>Understanding check 3</h2>
+  <p class="q">Smitty's syrup supplier cuts prices Monday. By Tuesday the other two have matched it exactly. What does that tell you?</p>
+  <div class="opts">
+    <button class="opt" data-c="0">Pure competition, because all the prices are the same.</button>
+    <button class="opt" data-c="1">Oligopoly — a few firms watching and reacting to each other.</button>
+    <button class="opt" data-c="0">Monopoly, because a price changed.</button>
+    <button class="opt" data-c="0">Monopolistic competition, because there are three brands.</button>
+  </div>
+  <button class="hintbtn">Need a hint?</button>
+  <p class="hint">Which is the only structure where firms plan around each other's decisions?</p>
+  <div class="fb" data-good="Correct. Interdependence is the fingerprint of oligopoly — with only a few large sellers, one firm's move forces the others to respond."
+       data-bad="Focus on the word 'matched.' Firms reacting to each other's pricing is interdependence, and only an oligopoly does that: a few large sellers, each watching the others."></div>
+</div>
+
+<div class="slide" data-read="28">
+  <h2>Stop 4: Monopoly</h2>
+  <p>Smitty's wins the contract to be the only food vendor inside the stadium. Twenty thousand hungry people. One grill.</p>
+  <div class="stat">
+    <span class="chip"><b>Sellers:</b> one</span>
+    <span class="chip"><b>Product:</b> no close substitute</span>
+    <span class="chip"><b>Entry:</b> blocked</span>
+    <span class="chip"><b>Price power:</b> greatest</span>
+  </div>
+  <h3>Price maker — with a leash</h3>
+  <p>Smitty's now sets the price instead of taking it. But charge $40 and people eat before the game or bring nothing at all. Even a monopolist can't force anyone to buy. <strong>Demand is the limit.</strong></p>
+  <h3>What blocks the door?</h3>
+  <ul>
+    <li>A government license or exclusive contract (the stadium deal)</li>
+    <li>Control of a resource nobody else can get</li>
+    <li>A patent on the product</li>
+    <li>Startup costs so huge nobody can enter — like a water company laying pipe to every house</li>
+  </ul>
+</div>
+
+<div class="slide" data-check="4">
+  <h2>Understanding check 4</h2>
+  <p class="q">A monopoly has the most price power of any structure. What still limits how high it can go?</p>
+  <div class="opts">
+    <button class="opt" data-c="0">Rival sellers will undercut the price.</button>
+    <button class="opt" data-c="0">Nothing — a monopoly can charge literally any price.</button>
+    <button class="opt" data-c="1">Demand — customers stop buying or find a way around it.</button>
+    <button class="opt" data-c="0">The many close substitutes available to buyers.</button>
+  </div>
+  <button class="hintbtn">Need a hint?</button>
+  <p class="hint">There are no rival sellers, so whatever limits the price has to come from the buyer's side of the market.</p>
+  <div class="fb" data-good="Yes. Demand is the leash. A monopolist chooses the price, but customers still choose whether it's worth paying."
+       data-bad="Careful — in a monopoly there are no rivals and no close substitutes, so neither of those can be the limit. The limit comes from buyers: demand."></div>
+</div>
+
+<div class="slide" data-read="22">
+  <h2>Price taker vs. price maker</h2>
+  <div class="ticket">
+    <h3>Price taker</h3>
+    <p>The market hands you a price. Your product is identical to everyone else's and there are far too many sellers to matter. <b>Pure competition only.</b></p>
+  </div>
+  <div class="ticket">
+    <h3>Price maker</h3>
+    <p>You choose the price, within limits. The more different or the more alone you are, the more you choose.<br><b>Monopolistic competition (a little) → oligopoly (a lot) → monopoly (the most).</b></p>
+  </div>
+  <p>When a question asks how much control a firm has over price, it is really asking you to name the structure.</p>
+</div>
+
+<div class="slide" data-read="25">
+  <h2>The whole menu, one table</h2>
+  <table>
+    <tr><th>Structure</th><th>Sellers</th><th>Product</th><th>Entry</th><th>Price power</th></tr>
+    <tr><td>Pure competition</td><td>Very many</td><td>Identical</td><td>Easy</td><td>None</td></tr>
+    <tr><td>Monopolistic competition</td><td>Many</td><td>Differentiated</td><td>Fairly easy</td><td>Some</td></tr>
+    <tr><td>Oligopoly</td><td>Few</td><td>Either</td><td>Hard</td><td>Large</td></tr>
+    <tr><td>Monopoly</td><td>One</td><td>Unique</td><td>Blocked</td><td>Greatest</td></tr>
+  </table>
+  <p class="dim">Copy this into your notes now. It answers more questions on this standard than anything else.</p>
+</div>
+
+<div class="slide" data-check="5">
+  <h2>Understanding check 5</h2>
+  <p class="q">Smitty's opens a second location in a mall food court with eleven other restaurants, all selling different kinds of food. Which structure?</p>
+  <div class="opts">
+    <button class="opt" data-c="0">Pure competition</button>
+    <button class="opt" data-c="0">Oligopoly</button>
+    <button class="opt" data-c="1">Monopolistic competition</button>
+    <button class="opt" data-c="0">Monopoly</button>
+  </div>
+  <button class="hintbtn">Need a hint?</button>
+  <p class="hint">Count the sellers first, then ask whether the products are identical or different.</p>
+  <div class="fb" data-good="Right. Many sellers plus differentiated products equals monopolistic competition — the food court is the textbook example."
+       data-bad="Use the two clues: many sellers rules out oligopoly and monopoly; different products rules out pure competition. What's left is monopolistic competition."></div>
+</div>
+
+<div class="slide" data-read="24">
+  <h2>Three mix-ups that cost points</h2>
+  <div class="neonbox warn">
+    <h3>1. "Monopolistic competition means monopoly"</h3>
+    <p>It doesn't. Monopolistic competition has <strong>many</strong> sellers. A monopoly has <strong>one</strong>. The names are similar on purpose.</p>
+  </div>
+  <div class="neonbox warn">
+    <h3>2. Judging by company size</h3>
+    <p>A huge company is not automatically a monopoly. Ask how many <em>competitors</em> exist, not how much money the firm makes.</p>
+  </div>
+  <div class="neonbox warn">
+    <h3>3. Skipping the entry question</h3>
+    <p>Barriers to entry separate oligopoly from monopolistic competition faster than anything else. Anyone can open a taco truck. Nobody casually starts an airline.</p>
+  </div>
+</div>
+
+<div class="slide" data-check="6">
+  <h2>Understanding check 6</h2>
+  <p class="q">Four companies in the country make commercial fryers. Starting a fifth would cost hundreds of millions, and when one raises prices the others follow. Which structure?</p>
+  <div class="opts">
+    <button class="opt" data-c="0">Monopoly</button>
+    <button class="opt" data-c="0">Monopolistic competition</button>
+    <button class="opt" data-c="0">Pure competition</button>
+    <button class="opt" data-c="1">Oligopoly</button>
+  </div>
+  <button class="hintbtn">Need a hint?</button>
+  <p class="hint">Three clues are stacked here: how few sellers, how expensive entry is, and the price-following.</p>
+  <div class="fb" data-good="All three clues agree: few sellers, huge barriers to entry, interdependent pricing. Oligopoly."
+       data-bad="Four sellers is 'a few,' the startup cost is a barrier to entry, and following each other's prices is interdependence. Every clue points to oligopoly."></div>
+</div>
+
+<div class="slide" data-read="18">
+  <h2>Say it in one breath</h2>
+  <div class="ticket">
+    <p><b>Pure competition:</b> very many sellers, identical product, no price power.<br><br>
+    <b>Monopolistic competition:</b> many sellers, differentiated product, a little price power.<br><br>
+    <b>Oligopoly:</b> a few big sellers watching each other, hard to enter, a lot of price power.<br><br>
+    <b>Monopoly:</b> one seller, no substitute, entry blocked, the most price power — limited only by demand.</p>
+  </div>
+  <p>Part 2 starts next. Fifteen decisions, and you need 12 right.</p>
+</div>
+
+</section>
+
+<!-- ============ MANAGER ============ -->
+<section class="screen" id="s-quiz">
+  <p class="dim" id="counter"></p>
+  <div class="card"><div class="tag" id="tag"></div><p id="scenario"></p></div>
+  <div class="picks">
+    <button class="pick" data-a="pure">Pure competition</button>
+    <button class="pick" data-a="mono">Monopolistic competition</button>
+    <button class="pick" data-a="oligo">Oligopoly</button>
+    <button class="pick" data-a="monop">Monopoly</button>
+  </div>
+  <button class="hintbtn" id="qhintbtn">Need a hint?</button>
+  <p class="hint" id="qhint"></p>
+  <div class="fb" id="qfb"></div>
+</section>
+
+<!-- ============ REVIEW GATE ============ -->
+<section class="screen" id="s-gate">
+  <h2 id="gate-h"></h2>
+  <p id="gate-p"></p>
+  <div class="neonbox" id="gate-box"></div>
+</section>
+
+<!-- ============ WRITTEN ============ -->
+<section class="screen" id="s-write">
+  <h2>Part 3: Two questions from the owner</h2>
+  <p class="dim">Write in complete sentences and use the vocabulary from the lesson. Your answers are checked for the structure name <em>and</em> the reasoning behind it — one without the other doesn't earn full credit.</p>
+
+  <label for="w1">1. Smitty's on Water Street competes with four other restaurants, all selling different food. Name that market structure, and explain how Smitty's can charge more than Burger Barn and still keep customers.</label>
+  <textarea id="w1"></textarea>
+  <div class="wc" id="wc1">0 words</div>
+
+  <label for="w2">2. Smitty's wins the contract to be the only food vendor inside the stadium. Explain how Smitty's price power changes, and explain what still stops Smitty's from charging $40 a burger.</label>
+  <textarea id="w2"></textarea>
+  <div class="wc" id="wc2">0 words</div>
+
+  <p class="err" id="e-write"></p>
+</section>
+
+<!-- ============ REVISION ============ -->
+<section class="screen" id="s-revise">
+  <h2>One more pass before you turn it in</h2>
+  <p>Your written answers are missing something. Fix them and resubmit — this doesn't count against your score.</p>
+  <div class="neonbox" id="rev-notes"></div>
+</section>
+
+<!-- ============ DONE ============ -->
+<section class="screen" id="s-done">
+  <h1 id="grade-head"></h1>
+  <p id="summary"></p>
+  <div class="neonbox" id="feedback"></div>
+  <canvas id="cert" width="1000" height="660"></canvas>
+  <p class="dim">Download the certificate and upload the image to the Canvas assignment. If the download is blocked on your device, screenshot the certificate instead.</p>
+</section>
+
+</div>
+
+<div class="nav">
+  <button class="btn ghost" id="back" style="display:none">Back</button>
+  <button class="btn" id="go">Begin assignment</button>
+  <div class="gatenote" id="gatenote"></div>
+</div>
+
+<script>
+(function(){
+  var $=function(id){return document.getElementById(id)};
+  var SC=[
+    {t:"SUPPLY RUN",s:"Smitty's buys ground beef wholesale. About 300 suppliers sell the exact same grade, and any of them will sell at today's going rate.",a:"pure",
+     h:"Huge number of sellers, identical product.",
+     g:"Pure competition. Many sellers plus an identical product makes every seller a price taker.",
+     b:"Pure competition. Hundreds of sellers offering an identical product means no single seller can move the price."},
+    {t:"THE BLOCK",s:"Water Street has Smitty's, Burger Barn, El Fuego, Wing Shack and a food truck. All sell food, none sell the same food, and a new place could open next month.",a:"mono",
+     h:"Many sellers, but every product is different.",
+     g:"Monopolistic competition. Many sellers, differentiated products, easy entry, a small amount of price power.",
+     b:"Monopolistic competition. Many sellers with different products and easy entry — not a monopoly and not an oligopoly."},
+    {t:"FOUNTAIN DRINKS",s:"Only three companies supply soda syrup in the state. When one lowers its price, the other two match within a day.",a:"oligo",
+     h:"Firms reacting to each other's moves is the fingerprint of one structure.",
+     g:"Oligopoly. A few large sellers who are interdependent, each planning around the others.",
+     b:"Oligopoly. Three sellers matching each other's prices is interdependence, which happens in no other structure."},
+    {t:"GAME NIGHT",s:"Smitty's wins the contract to be the only food vendor allowed inside the stadium. No other food is sold in the building.",a:"monop",
+     h:"How many sellers are inside that building?",
+     g:"Monopoly. One seller, no close substitute inside the building, and a contract blocking everyone else.",
+     b:"Monopoly. One seller with a contract that blocks competitors — Smitty's is now a price maker."},
+    {t:"UTILITIES",s:"Water for the Smitty's kitchen comes from the city water company. There is no second water company, and a rival pipe network would cost a fortune.",a:"monop",
+     h:"Enormous startup costs can block the door completely.",
+     g:"Monopoly. One provider, no substitute, and cost barriers so large that entry is effectively blocked.",
+     b:"Monopoly. One provider plus a cost barrier that stops anyone else from entering."},
+    {t:"FRY OIL",s:"Smitty's sells used fry oil to biodiesel buyers. Used oil is used oil — hundreds of restaurants sell it and buyers pay everyone the same posted rate.",a:"pure",
+     h:"Identical product, many sellers, one posted market rate.",
+     g:"Pure competition. When your product is identical to everyone else's, the market hands you the price.",
+     b:"Pure competition. An identical product and a huge number of sellers makes Smitty's a price taker here."},
+    {t:"UNIFORMS",s:"Smitty's buys staff shirts. Dozens of shops print shirts, each with its own style, quality and turnaround. Smitty's pays a little extra for the best printing.",a:"mono",
+     h:"Many sellers — but Smitty's pays extra for one of them. Why?",
+     g:"Monopolistic competition. Many sellers, but differentiation lets the better shop charge a bit more.",
+     b:"Monopolistic competition. Paying extra for a shop that's different from the rest is exactly that small price power."},
+    {t:"DELIVERY APPS",s:"Four delivery apps handle nearly every food order in the city. A new one would need millions and a driver network. When one raises its fee, the others follow.",a:"oligo",
+     h:"Count the sellers, then look at the barriers and the price-following.",
+     g:"Oligopoly. Few sellers, high barriers to entry, firms following each other's pricing.",
+     b:"Oligopoly. Four dominant firms, high barriers and price-following all point the same direction."},
+    {t:"THE SAUCE",s:"Smitty's patents its chili sauce recipe. For the life of the patent no other company can legally make or sell that exact sauce.",a:"monop",
+     h:"A patent is a legal wall built around one product.",
+     g:"Monopoly on that product. A patent is a legal barrier to entry — a classic monopoly source.",
+     b:"Monopoly. A patent legally blocks every other seller of that product."},
+    {t:"FOOD COURT",s:"Smitty's opens in a mall food court beside eleven other restaurants. Every stall sells something different and stalls open and close regularly.",a:"mono",
+     h:"Many sellers, different products, easy in and out.",
+     g:"Monopolistic competition — the food court is the textbook picture of it.",
+     b:"Monopolistic competition. Many sellers with differentiated products and easy entry."},
+    {t:"AIR TRAVEL",s:"Smitty's flies its managers to a conference. Three airlines fly that route. Starting an airline needs planes, gates and federal approval.",a:"oligo",
+     h:"Very few sellers and an extremely hard door to get through.",
+     g:"Oligopoly. A few large firms protected by serious barriers to entry.",
+     b:"Oligopoly. Three sellers on the route plus enormous barriers to entry — not a monopoly, since more than one seller exists."},
+    {t:"PRODUCE AUCTION",s:"Smitty's buys tomatoes at auction. Every crate is the same grade, sellers are everywhere, and a seller asking above the going rate simply doesn't sell.",a:"pure",
+     h:"What happens to a seller who asks above the going rate?",
+     g:"Pure competition. If asking for more means selling nothing, you're a price taker.",
+     b:"Pure competition. Identical crates, many sellers and no ability to price above the market rate."},
+    {t:"GYM BENEFIT",s:"Smitty's offers staff a gym benefit. Nine gyms compete in town with different equipment, classes and hours, and prices vary by about $20 a month.",a:"mono",
+     h:"Different features are what allow the prices to differ here.",
+     g:"Monopolistic competition. Nine sellers with different offerings, so prices can differ without anyone losing every customer.",
+     b:"Monopolistic competition. Many gyms offering differentiated services — the differences are what allow the price gaps."},
+    {t:"BACK OFFICE",s:"The Smitty's office signs up for internet. In that part of the county exactly one provider has lines running to the building.",a:"monop",
+     h:"One provider, no alternative at that address.",
+     g:"Monopoly. One seller and no substitute available to that buyer.",
+     b:"Monopoly. One provider with no alternative at that location, even though providers exist elsewhere."},
+    {t:"PHONE PLANS",s:"Smitty's puts managers on a business phone plan. Three carriers own nearly all the coverage, and each watches the other two before announcing pricing.",a:"oligo",
+     h:"Three sellers, each planning around the other two.",
+     g:"Oligopoly. Few sellers and interdependent pricing decisions.",
+     b:"Oligopoly. Three dominant carriers watching each other before pricing is textbook interdependence."}
+  ];
+  var NAMES={pure:"Pure competition",mono:"Monopolistic competition",oligo:"Oligopoly",monop:"Monopoly"};
+  var PASS=12;
+
+  var student="",period="",startTime=0,activeMs=0,lastTick=0,visible=true;
+  var slides=[].slice.call(document.querySelectorAll('#s-lesson .slide'));
+  var li=0, order=[], qi=0, score=0, missed=[], round=1, checkTries=0, totalCheckTries=0;
+  var wScore=0, wNotes=[], revised=false;
+  var go=$('go'), back=$('back'), note=$('gatenote'), fill=$('fill'), phase=$('phase');
+  var readTimer=null, readLeft=0;
+
+  function shuffle(a){for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=a[i];a[i]=a[j];a[j]=t}return a}
+  function screen(id){
+    ['s-start','s-lesson','s-quiz','s-gate','s-write','s-revise','s-done'].forEach(function(s){
+      $(s).classList.toggle('on',s===id)});
+    window.scrollTo(0,0);
+  }
+  function tick(){
+    var now=Date.now();
+    if(visible) activeMs+=now-lastTick;
+    lastTick=now;
+  }
+  document.addEventListener('visibilitychange',function(){
+    tick(); visible=!document.hidden;
+    if(!visible && readTimer){ /* reading timer pauses via visible flag */ }
+  });
+  setInterval(tick,1000);
+
+  // ---------- START ----------
+  go.onclick=function(){ handler(); };
+  var handler=function(){
+    student=$('name').value.trim(); period=$('period').value.trim();
+    if(student.length<3||!period){$('e-start').classList.add('show');return}
+    $('e-start').classList.remove('show');
+    startTime=Date.now(); lastTick=Date.now();
+    order=shuffle(SC.map(function(_,i){return i}));
+    screen('s-lesson'); loadSlide();
+  };
+
+  // ---------- LESSON ----------
+  function loadSlide(){
+    slides.forEach(function(s,n){s.classList.toggle('on',n===li)});
+    fill.style.width=(li/slides.length*35)+'%';
+    phase.textContent='Part 1 · '+(li+1)+'/'+slides.length;
+    back.style.display = li>0 ? 'inline-block':'none';
+    back.onclick=function(){ if(li>0){li--;loadSlide()} };
+    var s=slides[li];
+    clearInterval(readTimer);
+    if(s.hasAttribute('data-check')){
+      go.style.display='none'; note.textContent='Answer correctly to continue.';
+      resetCheck(s);
+    } else {
+      go.style.display='inline-block';
+      go.textContent='Next';
+      readLeft=parseInt(s.getAttribute('data-read'),10);
+      go.disabled=true;
+      go.onclick=function(){ li++; if(li<slides.length){loadSlide()} else {startQuiz()} };
+      readTimer=setInterval(function(){
+        if(!visible) return;
+        readLeft--;
+        if(readLeft<=0){clearInterval(readTimer);go.disabled=false;note.textContent='';}
+        else{note.textContent='Reading time: '+readLeft+'s';}
+      },1000);
+      note.textContent='Reading time: '+readLeft+'s';
+    }
+  }
+  function resetCheck(s){
+    checkTries=0;
+    var fb=s.querySelector('.fb'); fb.className='fb';
+    var hb=s.querySelector('.hintbtn'); hb.style.display='inline-block';
+    s.querySelector('.hint').classList.remove('show');
+    hb.onclick=function(){s.querySelector('.hint').classList.add('show');hb.style.display='none'};
+    var opts=shuffle([].slice.call(s.querySelectorAll('.opt')));
+    var box=s.querySelector('.opts');
+    opts.forEach(function(o){o.disabled=false;o.className='opt';box.appendChild(o)});
+    opts.forEach(function(o){
+      o.onclick=function(){
+        checkTries++; totalCheckTries++;
+        var ok=o.getAttribute('data-c')==='1';
+        if(ok){
+          opts.forEach(function(x){x.disabled=true;if(x.getAttribute('data-c')==='1')x.classList.add('right')});
+          fb.textContent=fb.getAttribute('data-good'); fb.className='fb show good';
+          go.style.display='inline-block'; go.disabled=false; go.textContent='Next'; note.textContent='';
+          go.onclick=function(){ li++; if(li<slides.length){loadSlide()} else {startQuiz()} };
+        } else {
+          o.disabled=true; o.classList.add('wrong');
+          fb.textContent=fb.getAttribute('data-bad'); fb.className='fb show bad';
+          note.textContent='Try again — read the explanation first.';
+          s.querySelector('.hint').classList.add('show');
+          s.querySelector('.hintbtn').style.display='none';
+        }
+      };
+    });
+  }
+
+  // ---------- MANAGER ----------
+  function startQuiz(){ qi=0; screen('s-quiz'); back.style.display='none'; loadQ(); }
+  function loadQ(){
+    var it=SC[order[qi]];
+    phase.textContent=(round===1?'Part 2':'Review')+' · '+(qi+1)+'/'+order.length;
+    fill.style.width=(35+(qi/order.length*40))+'%';
+    $('counter').textContent=(round===1?'Decision ':'Review decision ')+(qi+1)+' of '+order.length;
+    $('tag').textContent=it.t; $('scenario').textContent=it.s;
+    $('qhint').textContent=it.h; $('qhint').classList.remove('show');
+    $('qhintbtn').style.display='inline-block';
+    $('qfb').className='fb';
+    go.style.display='none'; note.textContent='Choose a structure.';
+    var box=document.querySelector('.picks');
+    var picks=shuffle([].slice.call(document.querySelectorAll('.pick')));
+    picks.forEach(function(p){p.disabled=false;p.className='pick';box.appendChild(p)});
+    picks.forEach(function(p){
+      p.onclick=function(){
+        var ok=p.getAttribute('data-a')===it.a;
+        picks.forEach(function(x){x.disabled=true;
+          if(x.getAttribute('data-a')===it.a)x.classList.add('right');
+          else if(x===p)x.classList.add('wrong')});
+        if(round===1){ if(ok){score++} else {missed.push(order[qi])} }
+        $('qfb').textContent = ok?it.g:it.b;
+        $('qfb').className='fb show '+(ok?'good':'bad');
+        go.style.display='inline-block'; go.disabled=false;
+        go.textContent = (qi===order.length-1)?'Finish part 2':'Next decision';
+        note.textContent = ok?'':'Read the explanation before you continue.';
+        go.onclick=function(){ qi++; if(qi<order.length){loadQ()} else {afterQuiz()} };
+      };
+    });
+  }
+  $('qhintbtn').onclick=function(){$('qhint').classList.add('show');this.style.display='none'};
+
+  function afterQuiz(){
+    if(round===1 && missed.length){
+      round=2; order=shuffle(missed.slice()); qi=0;
+      screen('s-gate'); phase.textContent='Review';
+      $('gate-h').textContent='Review round';
+      $('gate-p').textContent='You got '+score+' of '+SC.length+'. Before Part 3 you have to work back through the '+missed.length+' you missed. These don\'t change your score — they make sure you\'ve got it.';
+      $('gate-box').innerHTML='<strong>Coming back around:</strong><ul><li>'+
+        missed.map(function(i){return SC[i].t+' — the answer was '+NAMES[SC[i].a]}).join('</li><li>')+'</li></ul>';
+      go.style.display='inline-block'; go.disabled=false; go.textContent='Start review round'; note.textContent='';
+      go.onclick=function(){screen('s-quiz');loadQ()};
+      return;
+    }
+    screen('s-write'); phase.textContent='Part 3';
+    fill.style.width='80%'; setupWrite();
+  }
+
+  // ---------- WRITTEN ----------
+  function words(t){return t.trim()?t.trim().split(/\s+/).length:0}
+  function sentences(t){return t.split(/[.!?]/).filter(function(x){return x.trim().split(/\s+/).length>4}).length}
+  function counter(ta,el){
+    var f=function(){ $(el).textContent=words($(ta).value)+' words'+(words($(ta).value)<40?' (40 minimum)':'') };
+    $(ta).addEventListener('input',f); f();
+  }
+  function setupWrite(){
+    counter('w1','wc1'); counter('w2','wc2');
+    go.style.display='inline-block'; go.disabled=false; go.textContent='Submit answers'; note.textContent='';
+    go.onclick=grade;
+  }
+  function grade(){
+    var a=$('w1').value.trim(), b=$('w2').value.trim();
+    var la=a.toLowerCase(), lb=b.toLowerCase();
+    var e=$('e-write');
+    if(words(a)<40||words(b)<40||sentences(a)<2||sentences(b)<2){
+      e.textContent='Each answer needs at least two full sentences and 40 words. Explain your reasoning, don\'t just name the structure.';
+      e.classList.add('show'); return;
+    }
+    if(la===lb){e.textContent='Your two answers are identical. They\'re asking about two different situations.';e.classList.add('show');return}
+    e.classList.remove('show');
+    wScore=0; wNotes=[];
+    if(/monopolistic/.test(la)) wScore++;
+    else wNotes.push('Question 1 has to name the structure by name: monopolistic competition.');
+    if(/differen|unique|special|stand out|brand|loyal|quality|recipe|sauce|variet/.test(la)) wScore++;
+    else wNotes.push('Question 1 has to explain <em>why</em> Smitty\'s can charge more — product differentiation.');
+    if(/monopol|only seller|one seller|sole|price maker|more power|price power|increase|greater|higher/.test(lb)) wScore++;
+    else wNotes.push('Question 2 has to say Smitty\'s becomes a monopoly and gains price power — a price maker.');
+    if(/demand|customers|buyers|stop buying|won'?t pay|too expensive|eat before|bring|substitut|leave|walk away/.test(lb)) wScore++;
+    else wNotes.push('Question 2 has to name what limits a monopoly: demand. Buyers stop buying or find a way around it.');
+
+    if(wScore<3 && !revised){
+      revised=true; screen('s-revise'); phase.textContent='Part 3';
+      $('rev-notes').innerHTML='<ul><li>'+wNotes.join('</li><li>')+'</li></ul>';
+      go.textContent='Back to my answers'; go.disabled=false;
+      go.onclick=function(){screen('s-write');setupWrite()};
+      return;
+    }
+    finish();
+  }
+
+  // ---------- DONE ----------
+  function finish(){
+    tick();
+    var total=score+wScore, max=SC.length+4, pct=Math.round(total/max*100);
+    var mins=Math.max(1,Math.round(activeMs/60000));
+    phase.textContent='Complete'; fill.style.width='100%';
+    $('grade-head').textContent = pct>=90?'Manager of the month':(score>=PASS?'Assignment complete':'Assignment complete — see your review list');
+    $('summary').textContent='Scenarios '+score+' of '+SC.length+' · Written '+wScore+' of 4 · Total '+total+' of '+max+' ('+pct+'%) · Time on task '+mins+' min';
+    var h='';
+    if(missed.length) h+='<strong>Structures to study again:</strong><ul><li>'+
+      missed.map(function(i){return SC[i].t+' — '+NAMES[SC[i].a]}).join('</li><li>')+'</li></ul>';
+    if(wNotes.length) h+='<strong>On your written answers:</strong><ul><li>'+wNotes.join('</li><li>')+'</li></ul>';
+    if(!h) h='Clean shift. Every scenario named correctly and both written answers used the right economics reasoning.';
+    $('feedback').innerHTML=h;
+    drawCert(pct,total,max,mins);
+    screen('s-done');
+    go.style.display='inline-block'; go.disabled=false; go.textContent='Download certificate';
+    go.onclick=function(){
+      var a=document.createElement('a');
+      a.download='Econ_MarketStructures_'+student.replace(/[^A-Za-z0-9]/g,'')+'.png';
+      a.href=$('cert').toDataURL('image/png'); a.click();
+    };
+    back.style.display='none';
+  }
+
+  function drawCert(pct,total,max,mins){
+    var c=$('cert'),x=c.getContext('2d');
+    x.fillStyle='#141a2e';x.fillRect(0,0,1000,660);
+    x.strokeStyle='#ffc247';x.lineWidth=6;x.strokeRect(24,24,952,612);
+    x.strokeStyle='#3fe0c8';x.lineWidth=2;x.strokeRect(40,40,920,580);
+    x.textAlign='center';
+    x.fillStyle='#ffc247';x.font='bold 44px Arial Black, Arial';
+    x.fillText("SMITTY'S CHILL GRILL",500,116);
+    x.fillStyle='#3fe0c8';x.font='bold 23px Trebuchet MS, Arial';
+    x.fillText('Market Structures — Assignment Complete',500,157);
+    x.fillStyle='#8a93ad';x.font='16px Trebuchet MS, Arial';
+    x.fillText('Economics Honors · SS.912.E.1.6 · Coach Smith',500,190);
+    x.fillStyle='#fdf6e7';x.font='bold 42px Trebuchet MS, Arial';
+    x.fillText(student,500,266);
+    x.fillStyle='#8a93ad';x.font='18px Trebuchet MS, Arial';
+    x.fillText('Period '+period,500,300);
+    x.fillStyle='#fdf6e7';x.font='bold 70px Arial Black, Arial';
+    x.fillText(pct+'%',500,398);
+    x.fillStyle='#3fe0c8';x.font='19px Trebuchet MS, Arial';
+    x.fillText(total+' of '+max+' points  ·  scenarios '+score+'/'+SC.length+'  ·  written '+wScore+'/4',500,436);
+    x.fillStyle='#8a93ad';x.font='17px Trebuchet MS, Arial';
+    x.fillText('Time on task: '+mins+' minutes  ·  understanding-check attempts: '+totalCheckTries,500,470);
+    x.fillText(new Date().toLocaleString(),500,536);
+    x.fillStyle='#ffc247';x.font='italic 17px Trebuchet MS, Arial';
+    x.fillText('Verified completion of all three parts',500,578);
+  }
+})();
+</script>
+</body>
+</html>
