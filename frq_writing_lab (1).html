@@ -1,0 +1,1017 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AP Econ FRQ Writing Lab</title>
+<link href="https://cdn.tailwindcss.com" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap');
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Inter',sans-serif;background:#0f0a1e;color:#e8e0f0;min-height:100vh}
+.glass{background:rgba(255,255,255,0.06);backdrop-filter:blur(12px);border:1px solid rgba(255,255,255,0.1);border-radius:16px}
+.glass-strong{background:rgba(255,255,255,0.1);backdrop-filter:blur(16px);border:1px solid rgba(255,255,255,0.15);border-radius:16px}
+.glow-blue{box-shadow:0 0 30px rgba(59,130,246,0.3)}
+.glow-green{box-shadow:0 0 30px rgba(34,197,94,0.3)}
+.glow-pink{box-shadow:0 0 30px rgba(236,72,153,0.3)}
+.glow-purple{box-shadow:0 0 30px rgba(139,92,246,0.3)}
+.btn{padding:12px 28px;border-radius:12px;font-weight:700;cursor:pointer;transition:all 0.3s;border:none;font-size:1rem}
+.btn-primary{background:linear-gradient(135deg,#3b82f6,#8b5cf6);color:#fff}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 8px 25px rgba(59,130,246,0.4)}
+.btn-success{background:linear-gradient(135deg,#22c55e,#10b981);color:#fff}
+.btn-success:hover{transform:translateY(-2px);box-shadow:0 8px 25px rgba(34,197,94,0.4)}
+.btn-danger{background:linear-gradient(135deg,#ef4444,#ec4899);color:#fff}
+.btn-danger:hover{transform:translateY(-2px);box-shadow:0 8px 25px rgba(239,68,68,0.4)}
+.btn-outline{background:transparent;border:2px solid rgba(255,255,255,0.3);color:#e8e0f0}
+.btn-outline:hover{background:rgba(255,255,255,0.1);border-color:rgba(255,255,255,0.5)}
+textarea{background:rgba(0,0,0,0.3);border:2px solid rgba(255,255,255,0.15);border-radius:12px;color:#e8e0f0;padding:16px;font-size:1rem;font-family:'Inter',sans-serif;resize:vertical;transition:border-color 0.3s}
+textarea:focus{outline:none;border-color:#8b5cf6}
+.score-ring{width:120px;height:120px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:2.5rem;font-weight:900}
+.topic-card{cursor:pointer;transition:all 0.3s}
+.topic-card:hover{transform:translateY(-4px);border-color:rgba(139,92,246,0.5)}
+.topic-card.selected{border-color:#8b5cf6;background:rgba(139,92,246,0.15)}
+.fade-in{animation:fadeIn 0.5s ease}
+@keyframes fadeIn{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+.progress-bar{height:8px;border-radius:4px;background:rgba(255,255,255,0.1);overflow:hidden}
+.progress-fill{height:100%;border-radius:4px;transition:width 0.5s ease}
+.rubric-item{transition:all 0.3s}
+.rubric-item.earned{border-color:#22c55e;background:rgba(34,197,94,0.1)}
+.rubric-item.missed{border-color:#ef4444;background:rgba(239,68,68,0.1)}
+.example-good{border-left:4px solid #22c55e;background:rgba(34,197,94,0.08);padding:16px;border-radius:0 12px 12px 0}
+.example-bad{border-left:4px solid #ef4444;background:rgba(239,68,68,0.08);padding:16px;border-radius:0 12px 12px 0}
+#certCanvas{display:none}
+.ace-label{display:inline-block;width:36px;height:36px;border-radius:50%;text-align:center;line-height:36px;font-weight:900;font-size:0.9rem}
+.ace-a{background:linear-gradient(135deg,#ec4899,#f43f5e);color:#fff}
+.ace-c{background:linear-gradient(135deg,#f59e0b,#f97316);color:#fff}
+.ace-e{background:linear-gradient(135deg,#3b82f6,#6366f1);color:#fff}
+</style>
+</head>
+<body>
+<div id="app" class="max-w-4xl mx-auto px-4 py-8">
+<!-- HEADER -->
+<div class="text-center mb-8">
+<h1 class="text-4xl md:text-5xl font-black bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent mb-2">AP Econ FRQ Writing Lab</h1>
+<p class="text-lg text-gray-400">Master the A.C.E. Method for Free Response Questions</p>
+<div class="mt-3 text-sm text-gray-500">Coach Smith's Classroom</div>
+</div>
+
+<!-- PROGRESS BAR -->
+<div id="progressArea" class="mb-6 glass p-4" style="display:none">
+<div class="flex justify-between text-sm mb-2"><span id="stepLabel">Step 1 of 5</span><span id="stepPct">0%</span></div>
+<div class="progress-bar"><div id="stepBar" class="progress-fill bg-gradient-to-r from-blue-500 to-purple-500" style="width:0%"></div></div>
+</div>
+
+<!-- SCREENS -->
+<div id="screenIntro"></div>
+<div id="screenLearn" style="display:none"></div>
+<div id="screenPick" style="display:none"></div>
+<div id="screenWrite" style="display:none"></div>
+<div id="screenGrade" style="display:none"></div>
+<div id="screenCert" style="display:none"></div>
+</div>
+
+<canvas id="certCanvas" width="1200" height="800"></canvas>
+
+<script>
+// ===== AP ECON FRQ PROMPTS =====
+const PROMPTS = [
+{
+  id: 'sd1',
+  title: 'Supply & Demand: Oil Price Shock',
+  unit: 'Unit 1',
+  topic: 'Supply & Demand',
+  difficulty: 'Medium',
+  scenario: 'A major hurricane disrupts oil production in the Gulf of Mexico, significantly reducing the supply of crude oil.',
+  parts: [
+    {
+      label: 'A',
+      prompt: 'Using a correctly labeled supply and demand graph for crude oil, show the effect of the hurricane on the equilibrium price and quantity of crude oil.',
+      aceHints: {
+        a: 'State what happens to equilibrium price and quantity directly.',
+        c: 'Reference the specific shift (supply decreases/shifts left) and use the graph as evidence.',
+        e: 'Explain WHY a leftward supply shift causes price to rise and quantity to fall.'
+      },
+      required: ['supply decreases','shifts left','price increases','quantity decreases','shortage'],
+      accepted: {
+        'supply decreases': ['supply decreases','supply shifts left','decrease in supply','supply curve shifts leftward','reduction in supply','supply falls'],
+        'shifts left': ['shifts left','leftward shift','shift to the left','moves left'],
+        'price increases': ['price increases','price rises','higher price','equilibrium price increases','price goes up'],
+        'quantity decreases': ['quantity decreases','quantity falls','lower quantity','equilibrium quantity decreases','less quantity','quantity drops'],
+        'shortage': ['shortage','excess demand','quantity demanded exceeds','not enough supply']
+      },
+      badExample: 'The hurricane is bad for oil prices because it makes things more expensive and people can\'t afford gas anymore.',
+      goodExample: 'The hurricane causes a decrease in the supply of crude oil, shifting the supply curve to the left. As a result, the equilibrium price of crude oil increases while the equilibrium quantity decreases. This occurs because at the original price, there is now a shortage, which drives the price upward until a new equilibrium is reached.'
+    },
+    {
+      label: 'B',
+      prompt: 'Explain how the increase in oil prices would affect the market for gasoline, a product made from crude oil.',
+      aceHints: {
+        a: 'State what happens to the gasoline market directly.',
+        c: 'Identify crude oil as an input/resource for gasoline production.',
+        e: 'Connect: higher input costs reduce supply of gasoline, raising its price.'
+      },
+      required: ['input cost','supply of gasoline decreases','price of gasoline increases'],
+      accepted: {
+        'input cost': ['input cost','cost of production','resource cost','production cost','cost of inputs increases','higher production costs'],
+        'supply of gasoline decreases': ['supply of gasoline decreases','gasoline supply decreases','supply shifts left','decrease in supply of gasoline','less gasoline supplied'],
+        'price of gasoline increases': ['price of gasoline increases','gasoline price rises','higher gas prices','price goes up','gasoline becomes more expensive']
+      },
+      badExample: 'Gas prices go up because oil is expensive now.',
+      goodExample: 'Because crude oil is a key input in the production of gasoline, the increase in oil prices raises the cost of production for gasoline producers. This causes a decrease in the supply of gasoline, shifting the supply curve to the left. Consequently, the equilibrium price of gasoline increases as producers pass higher input costs on to consumers.'
+    }
+  ]
+},
+{
+  id: 'fiscal1',
+  title: 'Fiscal Policy: Recession Response',
+  unit: 'Unit 3',
+  topic: 'Fiscal Policy',
+  difficulty: 'Medium',
+  scenario: 'The economy of Country X is currently experiencing a recessionary gap with high unemployment and real GDP below potential output.',
+  parts: [
+    {
+      label: 'A',
+      prompt: 'Identify ONE specific fiscal policy action the government of Country X could take to close the recessionary gap.',
+      aceHints: {
+        a: 'Name the specific policy action clearly (increase government spending OR decrease taxes).',
+        c: 'Define the policy or reference how it works as a fiscal tool.',
+        e: 'Explain why this tool addresses the recessionary gap specifically.'
+      },
+      required: ['increase government spending','aggregate demand'],
+      accepted: {
+        'increase government spending': ['increase government spending','increase spending','expansionary fiscal policy','decrease taxes','cut taxes','tax cuts','increase transfer payments'],
+        'aggregate demand': ['aggregate demand','AD increases','AD shifts right','increase in AD','boost aggregate demand','stimulate demand']
+      },
+      badExample: 'The government should fix the economy by spending more money on stuff.',
+      goodExample: 'The government of Country X should implement expansionary fiscal policy by increasing government spending. Government spending is a component of aggregate demand (AD = C + I + G + NX), so an increase in G directly shifts the AD curve to the right, helping to close the recessionary gap.'
+    },
+    {
+      label: 'B',
+      prompt: 'Explain how the fiscal policy action you identified in part (A) would affect real GDP and the unemployment rate.',
+      aceHints: {
+        a: 'State the direction of change for both real GDP and unemployment.',
+        c: 'Reference the multiplier effect or the AD/AS model.',
+        e: 'Connect: more spending creates more output, which requires more workers.'
+      },
+      required: ['real GDP increases','unemployment decreases','multiplier'],
+      accepted: {
+        'real GDP increases': ['real GDP increases','GDP rises','output increases','real GDP goes up','higher real GDP','economic growth'],
+        'unemployment decreases': ['unemployment decreases','unemployment falls','lower unemployment','unemployment drops','unemployment rate decreases'],
+        'multiplier': ['multiplier','multiplier effect','spending multiplier','ripple effect','additional rounds of spending','marginal propensity to consume']
+      },
+      badExample: 'GDP goes up and unemployment goes down because the government spent money.',
+      goodExample: 'The increase in government spending shifts aggregate demand to the right, increasing real GDP. Through the multiplier effect, the initial increase in spending generates additional rounds of consumption as workers earn income and spend a portion of it. As real GDP rises toward potential output, firms hire more workers to meet increased demand, causing the unemployment rate to decrease.'
+    },
+    {
+      label: 'C',
+      prompt: 'Identify one potential negative consequence of the fiscal policy action you described.',
+      aceHints: {
+        a: 'Name the specific negative consequence (crowding out, inflation, budget deficit).',
+        c: 'Define the concept or mechanism.',
+        e: 'Explain why this is a tradeoff the government faces.'
+      },
+      required: ['crowding out','interest rates','deficit'],
+      accepted: {
+        'crowding out': ['crowding out','crowd out','crowding-out','private investment decreases','less private investment'],
+        'interest rates': ['interest rates increase','higher interest rates','interest rates rise','borrowing costs increase'],
+        'deficit': ['budget deficit','government debt','national debt','deficit spending','government borrowing increases','inflation','price level increases','demand-pull inflation']
+      },
+      badExample: 'It could cause problems for the economy.',
+      goodExample: 'A potential negative consequence is the crowding-out effect. When the government borrows to finance increased spending, it increases the demand for loanable funds, which raises real interest rates. Higher interest rates discourage private investment, partially offsetting the initial increase in aggregate demand and reducing the overall effectiveness of the fiscal policy.'
+    }
+  ]
+},
+{
+  id: 'money1',
+  title: 'Monetary Policy: Fighting Inflation',
+  unit: 'Unit 4',
+  topic: 'Monetary Policy',
+  difficulty: 'Hard',
+  scenario: 'The Federal Reserve observes that the inflation rate has risen significantly above its 2% target, and the economy is operating beyond full employment (an inflationary gap).',
+  parts: [
+    {
+      label: 'A',
+      prompt: 'Identify the open market operation the Federal Reserve should use to address the inflationary gap.',
+      aceHints: {
+        a: 'State the specific action: sell government bonds/securities.',
+        c: 'Define what happens when the Fed sells bonds.',
+        e: 'Connect the bond sale to the money supply and interest rates.'
+      },
+      required: ['sell bonds','money supply decreases','interest rates increase'],
+      accepted: {
+        'sell bonds': ['sell bonds','sell government bonds','sell securities','sell government securities','sell treasuries','open market sale'],
+        'money supply decreases': ['money supply decreases','money supply contracts','less money','reduce money supply','decrease in money supply','monetary contraction'],
+        'interest rates increase': ['interest rates increase','interest rates rise','higher interest rates','federal funds rate increases','nominal interest rate rises']
+      },
+      badExample: 'The Fed should raise interest rates to stop inflation.',
+      goodExample: 'The Federal Reserve should conduct an open market sale of government bonds. When the Fed sells bonds, it takes money out of circulation as buyers pay for the bonds, decreasing the money supply. With less money available in the banking system, the federal funds rate and other interest rates increase.'
+    },
+    {
+      label: 'B',
+      prompt: 'Explain how the Federal Reserve\'s action would ultimately reduce the inflation rate.',
+      aceHints: {
+        a: 'State that the policy reduces aggregate demand, which lowers the price level.',
+        c: 'Trace the chain: higher interest rates reduce investment and consumption.',
+        e: 'Connect back to the AD/AS model and the price level.'
+      },
+      required: ['investment decreases','aggregate demand decreases','price level'],
+      accepted: {
+        'investment decreases': ['investment decreases','less investment','investment falls','borrowing decreases','consumption decreases','spending decreases','less borrowing'],
+        'aggregate demand decreases': ['aggregate demand decreases','AD shifts left','AD decreases','aggregate demand falls','decrease in aggregate demand','AD shifts leftward'],
+        'price level': ['price level decreases','price level falls','lower price level','inflation decreases','inflation rate falls','reduces inflation','disinflation']
+      },
+      badExample: 'Higher interest rates make inflation go down because things cost less.',
+      goodExample: 'Higher interest rates increase the cost of borrowing, which discourages consumer spending on interest-sensitive goods (like cars and houses) and reduces business investment. This causes aggregate demand to decrease, shifting the AD curve to the left. As aggregate demand falls, the price level decreases (or rises more slowly), reducing the inflation rate and moving the economy back toward full employment output.'
+    }
+  ]
+},
+{
+  id: 'trade1',
+  title: 'Comparative Advantage & Trade',
+  unit: 'Unit 2',
+  topic: 'Trade & Comparative Advantage',
+  difficulty: 'Medium',
+  scenario: 'Two countries, Alpha and Beta, can produce only two goods: wheat and cloth. Using all of its resources, Alpha can produce 100 units of wheat OR 50 units of cloth. Beta can produce 80 units of wheat OR 40 units of cloth.',
+  parts: [
+    {
+      label: 'A',
+      prompt: 'Calculate the opportunity cost of producing one unit of wheat for each country. Which country has the comparative advantage in wheat production?',
+      aceHints: {
+        a: 'State the opportunity costs and which country has the comparative advantage.',
+        c: 'Show the calculation: what you give up / what you get.',
+        e: 'The country with the LOWER opportunity cost has the comparative advantage.'
+      },
+      required: ['opportunity cost','alpha wheat','beta wheat','comparative advantage'],
+      accepted: {
+        'opportunity cost': ['opportunity cost','trade-off','what you give up','foregone'],
+        'alpha wheat': ['0.5 cloth','1/2 cloth','half a cloth','0.5 units of cloth'],
+        'beta wheat': ['0.5 cloth','1/2 cloth','half a cloth','0.5 units of cloth'],
+        'comparative advantage': ['neither','same opportunity cost','equal opportunity cost','no comparative advantage in wheat','both have the same','tied']
+      },
+      badExample: 'Alpha is better at wheat because it makes more.',
+      goodExample: 'For Alpha, the opportunity cost of 1 unit of wheat is 50/100 = 0.5 units of cloth. For Beta, the opportunity cost of 1 unit of wheat is 40/80 = 0.5 units of cloth. Since both countries have the same opportunity cost of producing wheat (0.5 cloth), neither country has a comparative advantage in wheat production.'
+    },
+    {
+      label: 'B',
+      prompt: 'Does Alpha have an absolute advantage in wheat production? Explain.',
+      aceHints: {
+        a: 'Yes or No, stated directly.',
+        c: 'Compare the total output numbers.',
+        e: 'Define absolute advantage and apply it.'
+      },
+      required: ['absolute advantage','more output','alpha produces more'],
+      accepted: {
+        'absolute advantage': ['absolute advantage','produce more with same resources','more productive','greater output'],
+        'more output': ['100 vs 80','100 compared to 80','100 units','more units','higher output'],
+        'alpha produces more': ['alpha produces more','alpha can produce more','alpha has absolute advantage','yes']
+      },
+      badExample: 'Alpha is better because it has more stuff.',
+      goodExample: 'Yes, Alpha has an absolute advantage in wheat production. Absolute advantage means being able to produce more of a good using the same amount of resources. Alpha can produce 100 units of wheat compared to Beta\'s 80 units, meaning Alpha is more productive in wheat production.'
+    }
+  ]
+},
+{
+  id: 'gdp1',
+  title: 'GDP & Economic Indicators',
+  unit: 'Unit 2',
+  topic: 'GDP & Measurement',
+  difficulty: 'Easy',
+  scenario: 'Country Z reports the following economic data for 2024: Consumer spending = $8 trillion, Business investment = $3 trillion, Government spending = $4 trillion, Exports = $2 trillion, Imports = $3 trillion.',
+  parts: [
+    {
+      label: 'A',
+      prompt: 'Calculate the GDP of Country Z using the expenditure approach. Show your work.',
+      aceHints: {
+        a: 'State the GDP value directly.',
+        c: 'Write out the GDP formula and plug in the numbers.',
+        e: 'Explain what each component represents.'
+      },
+      required: ['GDP formula','14 trillion','net exports'],
+      accepted: {
+        'GDP formula': ['C + I + G + NX','C + I + G + (X-M)','consumption + investment + government + net exports','expenditure approach'],
+        '14 trillion': ['14 trillion','$14 trillion','14,000','14T'],
+        'net exports': ['net exports','exports minus imports','X - M','2 - 3','negative 1','-1 trillion','trade deficit']
+      },
+      badExample: 'You add everything up and get the GDP number.',
+      goodExample: 'Using the expenditure approach, GDP = C + I + G + NX. GDP = $8T + $3T + $4T + ($2T - $3T) = $8T + $3T + $4T + (-$1T) = $14 trillion. Net exports are negative because imports ($3T) exceed exports ($2T), meaning Country Z has a trade deficit of $1 trillion.'
+    },
+    {
+      label: 'B',
+      prompt: 'If the nominal GDP in 2024 is $14 trillion and the GDP deflator is 112, calculate the real GDP. Explain what this tells us.',
+      aceHints: {
+        a: 'State the real GDP value.',
+        c: 'Show the formula: Real GDP = (Nominal GDP / GDP Deflator) x 100.',
+        e: 'Explain what the GDP deflator above 100 means for price levels.'
+      },
+      required: ['real GDP formula','12.5 trillion','prices have risen'],
+      accepted: {
+        'real GDP formula': ['nominal GDP divided by GDP deflator times 100','(nominal/deflator) x 100','nominal GDP / price index'],
+        '12.5 trillion': ['12.5 trillion','$12.5 trillion','12.5T','approximately 12.5','12,500'],
+        'prices have risen': ['prices have risen','inflation','prices increased','price level is higher','12% higher','above 100 means inflation','purchasing power']
+      },
+      badExample: 'Real GDP is less than nominal GDP because of inflation.',
+      goodExample: 'Real GDP = (Nominal GDP / GDP Deflator) x 100 = ($14 trillion / 112) x 100 = $12.5 trillion. Because the GDP deflator is 112 (above the base year value of 100), this tells us that prices have risen approximately 12% since the base year. Real GDP is lower than nominal GDP, indicating that part of the nominal GDP growth is due to inflation rather than actual increases in output.'
+    }
+  ]
+},
+{
+  id: 'phillips1',
+  title: 'Phillips Curve & Inflation-Unemployment Tradeoff',
+  unit: 'Unit 5',
+  topic: 'Phillips Curve',
+  difficulty: 'Hard',
+  scenario: 'The economy is currently at point A on the short-run Phillips curve (SRPC), experiencing 6% unemployment and 2% inflation.',
+  parts: [
+    {
+      label: 'A',
+      prompt: 'If the government implements expansionary fiscal policy, explain what happens to inflation and unemployment in the short run. Reference the Phillips curve in your answer.',
+      aceHints: {
+        a: 'State: unemployment falls, inflation rises - movement along the SRPC.',
+        c: 'Reference the inverse relationship shown by the Phillips curve.',
+        e: 'Explain WHY: more demand means more jobs but also higher prices.'
+      },
+      required: ['unemployment decreases','inflation increases','movement along','inverse relationship'],
+      accepted: {
+        'unemployment decreases': ['unemployment decreases','unemployment falls','lower unemployment','unemployment drops'],
+        'inflation increases': ['inflation increases','inflation rises','higher inflation','price level rises','inflation goes up'],
+        'movement along': ['movement along','move along the SRPC','slide along','move up along','shift along the curve'],
+        'inverse relationship': ['inverse relationship','tradeoff','trade-off','negative relationship','as one goes up the other goes down']
+      },
+      badExample: 'The Phillips curve shows that inflation and unemployment are related.',
+      goodExample: 'Expansionary fiscal policy increases aggregate demand, creating a movement along the short-run Phillips curve from point A to a new point. The economy moves up and to the left on the SRPC, meaning unemployment decreases (as firms hire more workers to meet increased demand) while inflation increases (as greater demand puts upward pressure on prices). This demonstrates the short-run inverse relationship, or tradeoff, between inflation and unemployment shown by the Phillips curve.'
+    },
+    {
+      label: 'B',
+      prompt: 'Explain what happens in the long run according to the long-run Phillips curve (LRPC). Will the tradeoff between inflation and unemployment persist?',
+      aceHints: {
+        a: 'State that the economy returns to the natural rate of unemployment in the long run.',
+        c: 'Reference the LRPC being vertical at the natural rate.',
+        e: 'Explain: expectations adjust, SRPC shifts, no long-run tradeoff.'
+      },
+      required: ['natural rate','LRPC vertical','expectations adjust','no long-run tradeoff'],
+      accepted: {
+        'natural rate': ['natural rate','natural rate of unemployment','NRU','full employment','NAIRU'],
+        'LRPC vertical': ['LRPC is vertical','vertical line','long-run Phillips curve is vertical','vertical at natural rate'],
+        'expectations adjust': ['expectations adjust','inflationary expectations','expected inflation rises','workers demand higher wages','expectations increase'],
+        'no long-run tradeoff': ['no long-run tradeoff','tradeoff does not persist','no permanent tradeoff','only short-run tradeoff','SRPC shifts']
+      },
+      badExample: 'In the long run, everything goes back to normal.',
+      goodExample: 'In the long run, the tradeoff between inflation and unemployment does not persist. The LRPC is vertical at the natural rate of unemployment, meaning that in the long run, unemployment returns to its natural rate regardless of the inflation rate. This occurs because workers and firms adjust their inflation expectations upward, causing the SRPC to shift to the right. The economy ends up at the natural rate of unemployment but with a permanently higher inflation rate.'
+    }
+  ]
+},
+{
+  id: 'exchange1',
+  title: 'Exchange Rates & International Finance',
+  unit: 'Unit 6',
+  topic: 'Exchange Rates',
+  difficulty: 'Hard',
+  scenario: 'The United States Federal Reserve raises the federal funds rate significantly while the European Central Bank keeps its interest rates unchanged.',
+  parts: [
+    {
+      label: 'A',
+      prompt: 'Explain the effect of the U.S. interest rate increase on the international value of the U.S. dollar relative to the euro.',
+      aceHints: {
+        a: 'State that the U.S. dollar will appreciate relative to the euro.',
+        c: 'Explain the capital flow mechanism: higher returns attract foreign investment.',
+        e: 'Connect: increased demand for dollars in forex market drives up dollar\'s value.'
+      },
+      required: ['dollar appreciates','capital inflows','demand for dollars increases'],
+      accepted: {
+        'dollar appreciates': ['dollar appreciates','dollar strengthens','dollar increases in value','dollar rises','value of dollar increases','dollar gets stronger'],
+        'capital inflows': ['capital inflows','foreign investment','investors move money','financial capital flows','attracted to higher returns','higher return on investment'],
+        'demand for dollars increases': ['demand for dollars increases','demand for USD rises','more people want dollars','increased demand for dollars','buy dollars','need dollars to invest']
+      },
+      badExample: 'The dollar gets more valuable because interest rates went up.',
+      goodExample: 'The U.S. dollar will appreciate relative to the euro. Higher U.S. interest rates attract foreign investors seeking higher returns on financial assets such as U.S. bonds. European investors must purchase U.S. dollars to invest in American financial markets, increasing the demand for dollars in the foreign exchange market. This increased demand for dollars causes the dollar to appreciate (increase in value) relative to the euro.'
+    },
+    {
+      label: 'B',
+      prompt: 'Explain how the change in the exchange rate would affect U.S. net exports.',
+      aceHints: {
+        a: 'State that U.S. net exports will decrease.',
+        c: 'Explain the mechanism: stronger dollar makes U.S. goods more expensive abroad.',
+        e: 'Connect both effects: exports fall AND imports rise = lower net exports.'
+      },
+      required: ['exports decrease','imports increase','net exports decrease'],
+      accepted: {
+        'exports decrease': ['exports decrease','exports fall','U.S. goods more expensive','less competitive abroad','fewer exports','exports decline'],
+        'imports increase': ['imports increase','imports rise','foreign goods cheaper','more imports','imports go up'],
+        'net exports decrease': ['net exports decrease','net exports fall','trade deficit','NX decreases','trade balance worsens','net exports decline']
+      },
+      badExample: 'Trade gets worse because the dollar is too strong.',
+      goodExample: 'The appreciation of the U.S. dollar causes U.S. net exports to decrease. A stronger dollar makes American goods relatively more expensive for foreign buyers, reducing the quantity of U.S. exports. Simultaneously, foreign goods become relatively cheaper for American consumers, increasing imports. The combination of decreased exports and increased imports causes net exports (X - M) to decrease, potentially widening the U.S. trade deficit.'
+    }
+  ]
+},
+{
+  id: 'loanable1',
+  title: 'Loanable Funds Market',
+  unit: 'Unit 4',
+  topic: 'Loanable Funds',
+  difficulty: 'Medium',
+  scenario: 'The government of Country Y announces a significant increase in deficit spending to fund a new infrastructure program, financed entirely by borrowing.',
+  parts: [
+    {
+      label: 'A',
+      prompt: 'Using a correctly labeled graph of the loanable funds market, explain the effect of the government\'s borrowing on real interest rates and the quantity of loanable funds.',
+      aceHints: {
+        a: 'State: real interest rates increase, quantity of loanable funds may increase or effect is ambiguous.',
+        c: 'Identify the shift: demand for loanable funds increases (shifts right).',
+        e: 'Explain: government competes with private borrowers for available savings.'
+      },
+      required: ['demand for loanable funds increases','real interest rate increases','government borrowing'],
+      accepted: {
+        'demand for loanable funds increases': ['demand for loanable funds increases','demand shifts right','DLF increases','demand curve shifts right','borrowing increases demand'],
+        'real interest rate increases': ['real interest rate increases','interest rate rises','higher real interest rate','real interest rate goes up','cost of borrowing increases'],
+        'government borrowing': ['government borrowing','government is a borrower','deficit spending','government demands loanable funds','government enters the market as a borrower']
+      },
+      badExample: 'Interest rates go up because the government needs to borrow money.',
+      goodExample: 'When the government increases deficit spending, it must borrow funds from the loanable funds market, increasing the demand for loanable funds. The demand curve shifts to the right. Because the supply of loanable funds (determined by national saving) does not change, the real interest rate increases as the government competes with private borrowers for a limited pool of savings.'
+    },
+    {
+      label: 'B',
+      prompt: 'Explain the concept of "crowding out" and how it relates to the government\'s deficit spending in this scenario.',
+      aceHints: {
+        a: 'Define crowding out directly.',
+        c: 'Connect it to the higher interest rates from part A.',
+        e: 'Explain why this reduces the effectiveness of the fiscal stimulus.'
+      },
+      required: ['crowding out definition','private investment decreases','less effective'],
+      accepted: {
+        'crowding out definition': ['crowding out','private sector is crowded out','government borrowing displaces','reduces private borrowing','pushes out private investment'],
+        'private investment decreases': ['private investment decreases','less private investment','businesses invest less','firms reduce investment','investment falls','business spending falls'],
+        'less effective': ['less effective','partially offsets','reduces effectiveness','diminishes impact','undermines','net effect is smaller','dampens']
+      },
+      badExample: 'Crowding out is when the government takes money away from businesses.',
+      goodExample: 'Crowding out occurs when increased government borrowing drives up real interest rates, which discourages private investment spending. In this scenario, as the government borrows heavily to fund infrastructure, the higher interest rates make it more expensive for businesses to borrow for capital investment and for consumers to finance major purchases. This decrease in private investment partially offsets the initial increase in government spending, making the expansionary fiscal policy less effective at stimulating the economy than the simple multiplier would suggest.'
+    }
+  ]
+}
+];
+
+// ===== STATE =====
+let state = {
+  screen: 'intro',
+  selectedPrompt: null,
+  currentPart: 0,
+  responses: {},
+  grades: {},
+  totalScore: 0,
+  maxScore: 0,
+  startTime: null
+};
+
+// ===== RENDER FUNCTIONS =====
+function showScreen(name) {
+  ['Intro','Learn','Pick','Write','Grade','Cert'].forEach(s => {
+    document.getElementById('screen'+s).style.display = 'none';
+  });
+  document.getElementById('screen'+name.charAt(0).toUpperCase()+name.slice(1)).style.display = 'block';
+  state.screen = name;
+  updateProgress();
+}
+
+function updateProgress() {
+  const area = document.getElementById('progressArea');
+  if (state.screen === 'intro') { area.style.display = 'none'; return; }
+  area.style.display = 'block';
+  const steps = {learn:1,pick:2,write:3,grade:4,cert:5};
+  const s = steps[state.screen] || 1;
+  const pct = Math.round((s/5)*100);
+  document.getElementById('stepLabel').textContent = `Step ${s} of 5`;
+  document.getElementById('stepPct').textContent = pct+'%';
+  document.getElementById('stepBar').style.width = pct+'%';
+}
+
+// ===== INTRO SCREEN =====
+function renderIntro() {
+  document.getElementById('screenIntro').innerHTML = `
+  <div class="glass p-8 mb-6 text-center fade-in">
+    <div class="text-6xl mb-4">&#9997;&#65039;</div>
+    <h2 class="text-3xl font-black mb-3">How to Crush an FRQ</h2>
+    <p class="text-gray-400 text-lg mb-6">The Ultimate Guide to Free Response Questions<br>(Without the Tears)</p>
+    <button class="btn btn-primary text-lg px-10" onclick="startLearn()">Let's Go!</button>
+  </div>
+  <div class="grid md:grid-cols-3 gap-4 mb-6 fade-in">
+    <div class="glass p-6 text-center">
+      <div class="text-3xl mb-2">&#127919;</div>
+      <h3 class="font-bold text-lg mb-1">Learn A.C.E.</h3>
+      <p class="text-sm text-gray-400">Master the foolproof formula for full points</p>
+    </div>
+    <div class="glass p-6 text-center">
+      <div class="text-3xl mb-2">&#128221;</div>
+      <h3 class="font-bold text-lg mb-1">Practice</h3>
+      <p class="text-sm text-gray-400">Write responses to real AP Econ prompts</p>
+    </div>
+    <div class="glass p-6 text-center">
+      <div class="text-3xl mb-2">&#127942;</div>
+      <h3 class="font-bold text-lg mb-1">Earn Your Score</h3>
+      <p class="text-sm text-gray-400">Get graded and earn your certificate</p>
+    </div>
+  </div>`;
+}
+
+// ===== LEARN SCREEN =====
+function startLearn() {
+  showScreen('learn');
+  renderLearn();
+}
+
+function renderLearn() {
+  document.getElementById('screenLearn').innerHTML = `
+  <div class="fade-in">
+    <!-- What is an FRQ -->
+    <div class="glass p-6 mb-6">
+      <h2 class="text-2xl font-black mb-3 text-yellow-400">What is an FRQ?</h2>
+      <p class="text-lg">It stands for <strong>Free Response Question</strong>. Think of it as a chance to show off your brain power, not a trap to trick you!</p>
+    </div>
+
+    <!-- 3 Golden Rules -->
+    <div class="glass p-6 mb-6">
+      <h2 class="text-2xl font-black mb-4">The 3 Golden Rules</h2>
+      <div class="grid md:grid-cols-3 gap-4">
+        <div class="glass-strong p-5 text-center glow-blue">
+          <div class="text-3xl mb-2">&#127919;</div>
+          <h3 class="text-xl font-black text-yellow-400 mb-2">Be Direct</h3>
+          <p class="text-sm text-gray-300">No fluff. No beating around the bush. Get straight to the point immediately.</p>
+        </div>
+        <div class="glass-strong p-5 text-center glow-pink">
+          <div class="text-3xl mb-2">&#128683;</div>
+          <h3 class="text-xl font-black text-blue-400 mb-2">No Essays!</h3>
+          <p class="text-sm text-gray-300">You don't need a hook, intro, or conclusion. Just answer the prompt directly.</p>
+        </div>
+        <div class="glass-strong p-5 text-center glow-purple">
+          <div class="text-3xl mb-2">&#128221;</div>
+          <h3 class="text-xl font-black text-pink-400 mb-2">Label It</h3>
+          <p class="text-sm text-gray-300">If the question asks for parts A, B, and C, label your answers A, B, and C!</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ACE Method -->
+    <div class="glass p-6 mb-6">
+      <h2 class="text-2xl font-black mb-2">The Secret Formula: A.C.E.</h2>
+      <p class="text-gray-400 mb-4">The foolproof formula for getting full points on almost any FRQ.</p>
+      <div class="grid md:grid-cols-3 gap-4">
+        <div class="glass-strong p-5">
+          <div class="flex items-center gap-3 mb-3">
+            <span class="ace-label ace-a">A</span>
+            <h3 class="text-lg font-bold text-pink-400">Answer</h3>
+          </div>
+          <p class="text-sm text-gray-300">Give a direct, clear, one-sentence answer to the specific question asked.</p>
+        </div>
+        <div class="glass-strong p-5">
+          <div class="flex items-center gap-3 mb-3">
+            <span class="ace-label ace-c">C</span>
+            <h3 class="text-lg font-bold text-yellow-400">Cite</h3>
+          </div>
+          <p class="text-sm text-gray-300">Back it up! Give an example, piece of data, or an exact vocabulary definition.</p>
+        </div>
+        <div class="glass-strong p-5">
+          <div class="flex items-center gap-3 mb-3">
+            <span class="ace-label ace-e">E</span>
+            <h3 class="text-lg font-bold text-blue-400">Explain</h3>
+          </div>
+          <p class="text-sm text-gray-300">Connect your evidence back to your answer. Tell the grader <em>why</em> it matters!</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Good vs Bad Examples (Econ-themed) -->
+    <div class="glass p-6 mb-6">
+      <h2 class="text-2xl font-black mb-4">Good vs. Bad: Econ Edition</h2>
+      <p class="text-gray-400 mb-4"><strong>Prompt:</strong> "Explain how an increase in the money supply affects interest rates."</p>
+
+      <div class="space-y-4">
+        <div>
+          <p class="text-sm font-bold text-red-400 mb-1">&#10060; BAD (Fluffy & Vague):</p>
+          <div class="example-bad">
+            <p class="text-sm italic">"The money supply and interest rates have an interesting relationship in the economy. When one changes, the other tends to change too, which affects many things..."</p>
+          </div>
+        </div>
+        <div>
+          <p class="text-sm font-bold text-green-400 mb-1">&#9989; GOOD (A.C.E. Method):</p>
+          <div class="example-good">
+            <p class="text-sm italic">"An increase in the money supply causes nominal interest rates to decrease. <strong>[A]</strong> According to the money market model, when the Fed increases the money supply, the supply curve shifts to the right, creating a surplus of money at the current interest rate. <strong>[C]</strong> Because there is excess money in the market, people use the surplus to buy bonds, driving bond prices up and interest rates down until a new equilibrium is reached. <strong>[E]</strong>"</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="text-center">
+      <button class="btn btn-primary text-lg px-10" onclick="startPick()">I'm Ready - Pick a Prompt!</button>
+    </div>
+  </div>`;
+}
+
+// ===== PICK SCREEN =====
+function startPick() {
+  showScreen('pick');
+  renderPick();
+}
+
+function renderPick() {
+  const cards = PROMPTS.map((p,i) => {
+    const diffColor = p.difficulty === 'Easy' ? 'text-green-400' : p.difficulty === 'Medium' ? 'text-yellow-400' : 'text-red-400';
+    return `
+    <div class="topic-card glass p-5 ${state.selectedPrompt===i?'selected':''}" onclick="selectPrompt(${i})">
+      <div class="flex justify-between items-start mb-2">
+        <span class="text-xs font-bold text-purple-400">${p.unit}</span>
+        <span class="text-xs font-bold ${diffColor}">${p.difficulty}</span>
+      </div>
+      <h3 class="font-bold text-lg mb-1">${p.title}</h3>
+      <p class="text-sm text-gray-400">${p.topic} &bull; ${p.parts.length} part${p.parts.length>1?'s':''}</p>
+    </div>`;
+  }).join('');
+
+  document.getElementById('screenPick').innerHTML = `
+  <div class="fade-in">
+    <div class="glass p-6 mb-6">
+      <h2 class="text-2xl font-black mb-2">Choose Your FRQ Prompt</h2>
+      <p class="text-gray-400">Select a real AP Economics topic to practice. Each prompt has multiple parts, just like the real exam.</p>
+    </div>
+    <div class="grid md:grid-cols-2 gap-4 mb-6">${cards}</div>
+    <div class="text-center">
+      <button class="btn btn-success text-lg px-10 ${state.selectedPrompt===null?'opacity-50 cursor-not-allowed':''}"
+        onclick="${state.selectedPrompt!==null?'startWrite()':''}"
+        ${state.selectedPrompt===null?'disabled':''}>
+        Start Writing
+      </button>
+    </div>
+  </div>`;
+}
+
+function selectPrompt(i) {
+  state.selectedPrompt = i;
+  state.responses = {};
+  state.grades = {};
+  state.currentPart = 0;
+  renderPick();
+}
+
+// ===== WRITE SCREEN =====
+function startWrite() {
+  state.startTime = Date.now();
+  showScreen('write');
+  renderWrite();
+}
+
+function renderWrite() {
+  const prompt = PROMPTS[state.selectedPrompt];
+  const part = prompt.parts[state.currentPart];
+  const resp = state.responses[state.currentPart] || {a:'',c:'',e:''};
+
+  const partTabs = prompt.parts.map((p,i) => {
+    const done = state.responses[i] && (state.responses[i].a || state.responses[i].c || state.responses[i].e);
+    const active = i === state.currentPart;
+    return `<button class="px-4 py-2 rounded-lg font-bold text-sm transition-all ${active?'bg-purple-600 text-white':'glass text-gray-400 hover:text-white'} ${done&&!active?'border border-green-500/50':''}"
+      onclick="switchPart(${i})">Part ${p.label}</button>`;
+  }).join('');
+
+  document.getElementById('screenWrite').innerHTML = `
+  <div class="fade-in">
+    <!-- Scenario -->
+    <div class="glass p-6 mb-4">
+      <div class="flex items-center gap-2 mb-2">
+        <span class="text-xs font-bold text-purple-400 bg-purple-400/20 px-2 py-1 rounded">${prompt.unit}</span>
+        <span class="text-xs font-bold text-gray-500">${prompt.topic}</span>
+      </div>
+      <h2 class="text-xl font-black mb-3">${prompt.title}</h2>
+      <p class="text-gray-300"><strong>Scenario:</strong> ${prompt.scenario}</p>
+    </div>
+
+    <!-- Part Tabs -->
+    <div class="flex gap-2 mb-4 flex-wrap">${partTabs}</div>
+
+    <!-- Current Part -->
+    <div class="glass p-6 mb-4">
+      <h3 class="text-lg font-bold mb-2 text-yellow-400">Part (${part.label})</h3>
+      <p class="text-gray-200 mb-4">${part.prompt}</p>
+
+      <!-- ACE Hints -->
+      <div class="glass-strong p-4 mb-4">
+        <p class="text-xs font-bold text-purple-400 mb-2">A.C.E. HINTS FOR THIS PART:</p>
+        <div class="space-y-1 text-xs text-gray-400">
+          <p><span class="ace-label ace-a text-xs" style="width:22px;height:22px;line-height:22px;font-size:0.65rem">A</span> ${part.aceHints.a}</p>
+          <p><span class="ace-label ace-c text-xs" style="width:22px;height:22px;line-height:22px;font-size:0.65rem">C</span> ${part.aceHints.c}</p>
+          <p><span class="ace-label ace-e text-xs" style="width:22px;height:22px;line-height:22px;font-size:0.65rem">E</span> ${part.aceHints.e}</p>
+        </div>
+      </div>
+
+      <!-- Writing Areas -->
+      <div class="space-y-4">
+        <div>
+          <label class="flex items-center gap-2 mb-2 font-bold">
+            <span class="ace-label ace-a">A</span> Answer <span class="text-xs text-gray-500 font-normal">- State your answer directly</span>
+          </label>
+          <textarea rows="3" class="w-full" placeholder="Give a direct, clear answer. No fluff!"
+            oninput="saveResponse(${state.currentPart},'a',this.value)">${resp.a}</textarea>
+        </div>
+        <div>
+          <label class="flex items-center gap-2 mb-2 font-bold">
+            <span class="ace-label ace-c">C</span> Cite <span class="text-xs text-gray-500 font-normal">- Back it up with evidence</span>
+          </label>
+          <textarea rows="3" class="w-full" placeholder="Provide a definition, data, or economic concept as evidence."
+            oninput="saveResponse(${state.currentPart},'c',this.value)">${resp.c}</textarea>
+        </div>
+        <div>
+          <label class="flex items-center gap-2 mb-2 font-bold">
+            <span class="ace-label ace-e">E</span> Explain <span class="text-xs text-gray-500 font-normal">- Connect it back, say WHY</span>
+          </label>
+          <textarea rows="3" class="w-full" placeholder="Connect your evidence to your answer. Why does this matter?"
+            oninput="saveResponse(${state.currentPart},'e',this.value)">${resp.e}</textarea>
+        </div>
+      </div>
+    </div>
+
+    <!-- Good / Bad Examples -->
+    <details class="glass p-4 mb-4 cursor-pointer">
+      <summary class="font-bold text-sm text-purple-400">Show Example Responses for Part ${part.label}</summary>
+      <div class="mt-3 space-y-3">
+        <div>
+          <p class="text-xs font-bold text-red-400 mb-1">&#10060; BAD Example:</p>
+          <div class="example-bad"><p class="text-sm italic">"${part.badExample}"</p></div>
+        </div>
+        <div>
+          <p class="text-xs font-bold text-green-400 mb-1">&#9989; GOOD Example:</p>
+          <div class="example-good"><p class="text-sm italic">"${part.goodExample}"</p></div>
+        </div>
+      </div>
+    </details>
+
+    <!-- Navigation -->
+    <div class="flex justify-between items-center">
+      <button class="btn btn-outline" onclick="${state.currentPart>0?`switchPart(${state.currentPart-1})`:'startPick()'}">
+        ${state.currentPart>0?'Previous Part':'Back to Prompts'}
+      </button>
+      ${state.currentPart < prompt.parts.length - 1
+        ? `<button class="btn btn-primary" onclick="switchPart(${state.currentPart+1})">Next Part &rarr;</button>`
+        : `<button class="btn btn-success" onclick="submitAll()">Submit for Grading</button>`
+      }
+    </div>
+  </div>`;
+}
+
+function switchPart(i) {
+  state.currentPart = i;
+  renderWrite();
+}
+
+function saveResponse(part, section, val) {
+  if (!state.responses[part]) state.responses[part] = {a:'',c:'',e:''};
+  state.responses[part][section] = val;
+}
+
+// ===== GRADING =====
+function submitAll() {
+  const prompt = PROMPTS[state.selectedPrompt];
+  let totalEarned = 0;
+  let totalPossible = 0;
+
+  prompt.parts.forEach((part, pi) => {
+    const resp = state.responses[pi] || {a:'',c:'',e:''};
+    const fullText = (resp.a + ' ' + resp.c + ' ' + resp.e).toLowerCase();
+
+    let partGrade = { earned: 0, possible: 0, details: [] };
+
+    // Grade each required concept
+    part.required.forEach(req => {
+      const acceptedPhrases = part.accepted[req] || [req];
+      const found = acceptedPhrases.some(phrase => fullText.includes(phrase.toLowerCase()));
+      partGrade.possible += 1;
+      if (found) partGrade.earned += 1;
+      partGrade.details.push({
+        concept: req,
+        found: found,
+        accepted: acceptedPhrases
+      });
+    });
+
+    // Bonus: check ACE structure
+    const hasA = resp.a.trim().length > 15;
+    const hasC = resp.c.trim().length > 15;
+    const hasE = resp.e.trim().length > 15;
+
+    partGrade.possible += 1;
+    if (hasA && hasC && hasE) {
+      partGrade.earned += 1;
+      partGrade.details.push({concept:'A.C.E. Structure (all 3 sections completed)',found:true,accepted:['Complete A, C, and E sections']});
+    } else {
+      partGrade.details.push({concept:'A.C.E. Structure (all 3 sections completed)',found:false,accepted:['Complete A, C, and E sections']});
+    }
+
+    // Penalty: check for fluff phrases
+    const fluff = ['i think','in my opinion','it depends','interesting','well,','this is a topic','many people'];
+    const hasFluff = fluff.some(f => fullText.includes(f));
+    if (hasFluff) {
+      partGrade.details.push({concept:'Directness (no fluff/opinion phrases)',found:false,accepted:['Avoid: "I think", "In my opinion", "It depends"'],penalty:true});
+    }
+
+    state.grades[pi] = partGrade;
+    totalEarned += partGrade.earned;
+    totalPossible += partGrade.possible;
+  });
+
+  state.totalScore = totalEarned;
+  state.maxScore = totalPossible;
+  showScreen('grade');
+  renderGrade();
+}
+
+function renderGrade() {
+  const prompt = PROMPTS[state.selectedPrompt];
+  const pct = Math.round((state.totalScore / state.maxScore) * 100);
+  const apScore = pct >= 90 ? 5 : pct >= 75 ? 4 : pct >= 60 ? 3 : pct >= 40 ? 2 : 1;
+  const ringColor = apScore >= 4 ? 'from-green-500 to-emerald-400' : apScore >= 3 ? 'from-yellow-500 to-amber-400' : 'from-red-500 to-pink-400';
+  const timeMin = Math.round((Date.now() - state.startTime) / 60000);
+
+  let partsHTML = '';
+  prompt.parts.forEach((part, pi) => {
+    const grade = state.grades[pi];
+    const resp = state.responses[pi] || {a:'',c:'',e:''};
+
+    const detailsHTML = grade.details.map(d => `
+      <div class="rubric-item ${d.found?'earned':'missed'} glass p-3 rounded-lg border">
+        <div class="flex items-center gap-2">
+          <span class="text-lg">${d.found?'&#9989;':'&#10060;'}</span>
+          <div>
+            <p class="font-bold text-sm">${d.concept.replace(/^\w/,c=>c.toUpperCase())}</p>
+            ${!d.found ? `<p class="text-xs text-gray-400 mt-1">Try including: ${d.accepted.slice(0,3).join(', ')}</p>` : ''}
+          </div>
+        </div>
+      </div>`).join('');
+
+    partsHTML += `
+    <div class="glass p-5 mb-4">
+      <div class="flex justify-between items-center mb-3">
+        <h3 class="font-bold text-lg">Part (${part.label}): ${grade.earned}/${grade.possible} points</h3>
+        <span class="text-sm font-bold ${grade.earned===grade.possible?'text-green-400':grade.earned>=grade.possible/2?'text-yellow-400':'text-red-400'}">
+          ${Math.round((grade.earned/grade.possible)*100)}%
+        </span>
+      </div>
+      <div class="grid gap-2 mb-4">${detailsHTML}</div>
+
+      <details class="cursor-pointer">
+        <summary class="text-sm text-purple-400 font-bold">View Your Response</summary>
+        <div class="mt-2 space-y-2 text-sm">
+          <div class="glass-strong p-3 rounded-lg"><span class="ace-label ace-a text-xs" style="width:20px;height:20px;line-height:20px;font-size:0.6rem">A</span> ${resp.a||'<em class="text-gray-500">(empty)</em>'}</div>
+          <div class="glass-strong p-3 rounded-lg"><span class="ace-label ace-c text-xs" style="width:20px;height:20px;line-height:20px;font-size:0.6rem">C</span> ${resp.c||'<em class="text-gray-500">(empty)</em>'}</div>
+          <div class="glass-strong p-3 rounded-lg"><span class="ace-label ace-e text-xs" style="width:20px;height:20px;line-height:20px;font-size:0.6rem">E</span> ${resp.e||'<em class="text-gray-500">(empty)</em>'}</div>
+        </div>
+      </details>
+
+      <details class="cursor-pointer mt-2">
+        <summary class="text-sm text-green-400 font-bold">View Model Answer</summary>
+        <div class="mt-2 example-good"><p class="text-sm italic">"${part.goodExample}"</p></div>
+      </details>
+    </div>`;
+  });
+
+  document.getElementById('screenGrade').innerHTML = `
+  <div class="fade-in">
+    <div class="glass p-8 text-center mb-6">
+      <h2 class="text-2xl font-black mb-4">Your FRQ Results</h2>
+      <div class="score-ring mx-auto mb-4 bg-gradient-to-br ${ringColor}" style="font-size:3rem">${apScore}</div>
+      <p class="text-xl font-bold">AP Score: ${apScore}/5</p>
+      <p class="text-gray-400">${state.totalScore}/${state.maxScore} rubric points (${pct}%) &bull; ${timeMin} min</p>
+      <p class="text-sm text-gray-500 mt-2">${prompt.title}</p>
+    </div>
+
+    <h3 class="text-xl font-bold mb-4">Detailed Rubric Breakdown</h3>
+    ${partsHTML}
+
+    <div class="flex flex-wrap gap-3 justify-center mt-6">
+      ${apScore >= 3 ? `<button class="btn btn-success" onclick="showCert()">Download Certificate</button>` : ''}
+      <button class="btn btn-primary" onclick="retryPrompt()">Try Again</button>
+      <button class="btn btn-outline" onclick="startPick()">Pick New Prompt</button>
+    </div>
+  </div>`;
+}
+
+function retryPrompt() {
+  state.responses = {};
+  state.grades = {};
+  state.currentPart = 0;
+  startWrite();
+}
+
+// ===== CERTIFICATE =====
+function showCert() {
+  showScreen('cert');
+  renderCert();
+}
+
+function renderCert() {
+  const prompt = PROMPTS[state.selectedPrompt];
+  const pct = Math.round((state.totalScore / state.maxScore) * 100);
+  const apScore = pct >= 90 ? 5 : pct >= 75 ? 4 : pct >= 60 ? 3 : pct >= 40 ? 2 : 1;
+  const today = new Date().toLocaleDateString('en-US',{year:'numeric',month:'long',day:'numeric'});
+
+  // Draw certificate on canvas
+  const cv = document.getElementById('certCanvas');
+  const ctx = cv.getContext('2d');
+
+  // Background
+  const bg = ctx.createLinearGradient(0,0,1200,800);
+  bg.addColorStop(0,'#0f0a1e');
+  bg.addColorStop(0.5,'#1a1040');
+  bg.addColorStop(1,'#0f0a1e');
+  ctx.fillStyle = bg;
+  ctx.fillRect(0,0,1200,800);
+
+  // Border
+  ctx.strokeStyle = '#8b5cf6';
+  ctx.lineWidth = 4;
+  ctx.strokeRect(30,30,1140,740);
+  ctx.strokeStyle = '#3b82f6';
+  ctx.lineWidth = 2;
+  ctx.strokeRect(40,40,1120,720);
+
+  // Corner decorations
+  const corners = [[50,50],[1150,50],[50,750],[1150,750]];
+  corners.forEach(([cx,cy]) => {
+    ctx.fillStyle = '#8b5cf6';
+    ctx.beginPath(); ctx.arc(cx,cy,8,0,Math.PI*2); ctx.fill();
+  });
+
+  // Title
+  ctx.fillStyle = '#e8e0f0';
+  ctx.font = 'bold 48px Inter, sans-serif';
+  ctx.textAlign = 'center';
+  ctx.fillText('CERTIFICATE OF ACHIEVEMENT', 600, 130);
+
+  // Divider
+  const divGrad = ctx.createLinearGradient(200,0,1000,0);
+  divGrad.addColorStop(0,'transparent');
+  divGrad.addColorStop(0.3,'#8b5cf6');
+  divGrad.addColorStop(0.7,'#3b82f6');
+  divGrad.addColorStop(1,'transparent');
+  ctx.strokeStyle = divGrad;
+  ctx.lineWidth = 2;
+  ctx.beginPath(); ctx.moveTo(200,155); ctx.lineTo(1000,155); ctx.stroke();
+
+  // AP Score badge
+  const scoreGrad = ctx.createLinearGradient(520,180,680,320);
+  scoreGrad.addColorStop(0, apScore>=4?'#22c55e':'#f59e0b');
+  scoreGrad.addColorStop(1, apScore>=4?'#10b981':'#f97316');
+  ctx.fillStyle = scoreGrad;
+  ctx.beginPath(); ctx.arc(600,260,65,0,Math.PI*2); ctx.fill();
+  ctx.fillStyle = '#fff';
+  ctx.font = 'bold 72px Inter, sans-serif';
+  ctx.fillText(apScore, 600, 285);
+  ctx.font = 'bold 16px Inter, sans-serif';
+  ctx.fillText('AP SCORE', 600, 340);
+
+  // Prompt title
+  ctx.fillStyle = '#c4b5fd';
+  ctx.font = '24px Inter, sans-serif';
+  ctx.fillText(prompt.title, 600, 400);
+
+  // Topic & Score
+  ctx.fillStyle = '#9ca3af';
+  ctx.font = '18px Inter, sans-serif';
+  ctx.fillText(`${prompt.topic} | ${state.totalScore}/${state.maxScore} points (${pct}%)`, 600, 440);
+
+  // Achievement text
+  ctx.fillStyle = '#e8e0f0';
+  ctx.font = '22px Inter, sans-serif';
+  ctx.fillText('Has demonstrated proficiency in AP Economics', 600, 500);
+  ctx.fillText('Free Response writing using the A.C.E. method', 600, 530);
+
+  // Date & Teacher
+  ctx.fillStyle = '#9ca3af';
+  ctx.font = '18px Inter, sans-serif';
+  ctx.fillText(today, 600, 600);
+
+  // Signature line
+  ctx.strokeStyle = '#6b7280';
+  ctx.lineWidth = 1;
+  ctx.beginPath(); ctx.moveTo(400,670); ctx.lineTo(800,670); ctx.stroke();
+  ctx.fillStyle = '#c4b5fd';
+  ctx.font = 'italic 20px Inter, sans-serif';
+  ctx.fillText('Coach Smith', 600, 660);
+  ctx.fillStyle = '#6b7280';
+  ctx.font = '14px Inter, sans-serif';
+  ctx.fillText("Coach Smith's Classroom | AP Econ FRQ Writing Lab", 600, 700);
+
+  // Show preview and download
+  const dataUrl = cv.toDataURL('image/png');
+  document.getElementById('screenCert').innerHTML = `
+  <div class="fade-in text-center">
+    <h2 class="text-2xl font-black mb-4">Your Certificate!</h2>
+    <img src="${dataUrl}" class="max-w-full rounded-xl border border-purple-500/30 mb-6 mx-auto" style="max-height:500px">
+    <div class="flex flex-wrap gap-3 justify-center">
+      <a href="${dataUrl}" download="FRQ_Certificate_${prompt.id}.png" class="btn btn-success">Download Certificate</a>
+      <button class="btn btn-primary" onclick="startPick()">Try Another Prompt</button>
+      <button class="btn btn-outline" onclick="renderIntro();showScreen('intro')">Back to Start</button>
+    </div>
+  </div>`;
+}
+
+// ===== INIT =====
+renderIntro();
+</script>
+</body>
+</html>
