@@ -8212,11 +8212,12 @@ function viewAssignments(){
         <div class="eyebrow" style="color:#2FBF71">💵 AP Econ · ${es?"Unidad 4":"Unit 4"}</div>
         <h3 style="margin:4px 0">Money Moves</h3>
         <p class="muted" style="font-size:13px;margin:2px 0">${es
-          ?"Juego de carrera: 6 trabajos, de cajero de banco a asesor del Tesoro, más un examen final. Toda la Unidad 4: dinero, bonos, bancos, mercado de dinero, política monetaria y fondos prestables. ~20 min por trabajo. (El juego está en inglés.)"
-          :"Career game: 6 jobs from Bank Teller to Treasury Advisor, plus a final exam. All of Unit 4: money, bonds, banking, the money market, monetary policy, and loanable funds. ~20 min per job."}</p>
+          ?"Juego de carrera: 6 trabajos, de cajero de banco a asesor del Tesoro, más un examen final. Toda la Unidad 4: dinero, bonos, bancos, mercado de dinero, política monetaria y fondos prestables. Nuevo en 2.0: arcade, tienda con autos y casas, estudio de avatar y quiz de práctica. ~20 min por trabajo. (El juego está en inglés.)"
+          :"Career game: 6 jobs from Bank Teller to Treasury Advisor, plus a final exam. All of Unit 4: money, bonds, banking, the money market, monetary policy, and loanable funds. New in 2.0: arcade, marketplace with cars and houses, avatar studio, and a practice quiz. ~20 min per job."}</p>
         <div class="row" style="margin-top:6px">
           <span class="chip ${mmPromotions()>=7?'on':'warn'}">${mmPromotions()}/7 ${es?"completados":"complete"}</span>
           <span class="chip">${es?"6 trabajos + examen":"6 jobs + exam"}</span>
+          <span class="chip">v2.0</span>
         </div>
       </div>
       <button class="btn primary" onclick="TAB='moneymoves';render()">${es?"Jugar":"Play"}</button>
@@ -8265,8 +8266,8 @@ const ASSIGNMENTS = [
     tab: "moneymoves", icon: "💵", color: "#2FBF71",
     title: "Money Moves",
     blurb: {
-      en: "Career game — 6 jobs from Bank Teller to Treasury Advisor, plus a final exam. All of Unit 4. ~20 min per job.",
-      es: "Juego de carrera — 6 trabajos, de cajero a asesor del Tesoro, más un examen final. Toda la Unidad 4. ~20 min por trabajo. (En inglés.)"
+      en: "Career game — 6 jobs from Bank Teller to Treasury Advisor, plus a final exam. All of Unit 4. New: arcade, marketplace, avatar studio. ~20 min per job.",
+      es: "Juego de carrera — 6 trabajos, de cajero a asesor del Tesoro, más un examen final. Toda la Unidad 4. Nuevo: arcade, tienda y estudio de avatar. ~20 min por trabajo. (En inglés.)"
     },
     tag: { en: "Unit 4 Game", es: "Juego Unidad 4" },
     done: () => mmPromotions() >= 7
