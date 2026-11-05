@@ -1871,7 +1871,7 @@ function dock(){
      the bottom strip of it. Answer options that scrolled into that strip
      could not be clicked at all — the click went to the nav. Both screens
      carry their own Back button, so nothing is stranded. */
-  const inShow=TAB==="gameshow"||TAB==="marginal";
+  const inShow=TAB==="gameshow"||TAB==="marginal"||TAB==="moneymoves";
   el.style.display=inShow?"none":"";
   if(inShow){ el.innerHTML=""; return; }
   el.innerHTML=tabs.map(([k,i,l])=>
@@ -1888,6 +1888,7 @@ function render(){
   else if(TAB==="smittys") viewSmittys();
   else if(TAB==="assignments") viewAssignments();
   else if(TAB==="marginal") viewMarginal();
+  else if(TAB==="moneymoves") viewMoneyMoves();
   else if(TAB.indexOf("unitwork:")===0) viewUnitAssignments(TAB.slice(9));
   else if(TAB.indexOf("coursework:")===0) viewCourseAssignments(TAB.slice(11));
   else if(TAB==="showstudy") viewShowStudy();
@@ -8205,6 +8206,23 @@ function viewAssignments(){
     </div>
   </section>
 
+  <section class="panel" style="border-left:4px solid #2FBF71">
+    <div class="row spread">
+      <div>
+        <div class="eyebrow" style="color:#2FBF71">💵 AP Econ · ${es?"Unidad 4":"Unit 4"}</div>
+        <h3 style="margin:4px 0">Money Moves</h3>
+        <p class="muted" style="font-size:13px;margin:2px 0">${es
+          ?"Juego de carrera: 6 trabajos, de cajero de banco a asesor del Tesoro, más un examen final. Toda la Unidad 4: dinero, bonos, bancos, mercado de dinero, política monetaria y fondos prestables. ~20 min por trabajo. (El juego está en inglés.)"
+          :"Career game: 6 jobs from Bank Teller to Treasury Advisor, plus a final exam. All of Unit 4: money, bonds, banking, the money market, monetary policy, and loanable funds. ~20 min per job."}</p>
+        <div class="row" style="margin-top:6px">
+          <span class="chip ${mmPromotions()>=7?'on':'warn'}">${mmPromotions()}/7 ${es?"completados":"complete"}</span>
+          <span class="chip">${es?"6 trabajos + examen":"6 jobs + exam"}</span>
+        </div>
+      </div>
+      <button class="btn primary" onclick="TAB='moneymoves';render()">${es?"Jugar":"Play"}</button>
+    </div>
+  </section>
+
   <section class="panel" style="border-left:4px solid var(--line);opacity:.5">
     <div class="eyebrow">${es?"Próximamente":"Coming soon"}</div>
     <p class="muted" style="margin:4px 0">${es
@@ -8241,6 +8259,17 @@ const ASSIGNMENTS = [
     },
     tag: { en: "Topic 1.5 Activity", es: "Actividad Tema 1.5" },
     done: () => !!(S.certs||[]).some(c => /Marginal Mastermind/i.test(c.unit||""))
+  },
+  {
+    pack: "ap-econ", unit: "ap-m4",
+    tab: "moneymoves", icon: "💵", color: "#2FBF71",
+    title: "Money Moves",
+    blurb: {
+      en: "Career game — 6 jobs from Bank Teller to Treasury Advisor, plus a final exam. All of Unit 4. ~20 min per job.",
+      es: "Juego de carrera — 6 trabajos, de cajero a asesor del Tesoro, más un examen final. Toda la Unidad 4. ~20 min por trabajo. (En inglés.)"
+    },
+    tag: { en: "Unit 4 Game", es: "Juego Unidad 4" },
+    done: () => mmPromotions() >= 7
   },
   {
     pack: "econ-h", unit: null,          /* course-wide, not tied to one unit */
@@ -8360,6 +8389,45 @@ function viewMarginal(){
   <p class="muted" style="font-size:12px;text-align:center;margin-top:8px">${es
     ?"Si no carga, abre marginal_mastermind.html directamente."
     :"If it doesn't load, open marginal_mastermind.html directly."}</p>`;
+}
+
+/* ============================================================================
+   MONEY MOVES — loads the standalone Unit 4 career game (money_moves.html)
+
+   The game is one self-contained file: fonts, art and code are all inside it,
+   so nothing loads from outside the site. It saves progress in this browser
+   under "money-moves-progress-v1"; the site reads that only to show how many
+   promotions the student has earned.
+   ========================================================================== */
+function mmPromotions(){
+  try {
+    const s = JSON.parse(localStorage.getItem("money-moves-progress-v1") || "null");
+    if (!s || !s.progress) return 0;
+    return ["teller","trader","loan","analyst","chair","treasury","final"].filter(k => s.progress[k] && s.progress[k].stage === "done").length;
+  } catch(e){ return 0; }
+}
+function viewMoneyMoves(){
+  const es = S.lang === "es";
+  V().innerHTML = `
+  <div class="eprow"><button class="btn ghost" style="padding:8px 12px;min-height:0"
+    onclick="TAB='${ASSIGN_UNIT?("unitwork:"+ASSIGN_UNIT)
+                    :ASSIGN_PACK?("coursework:"+ASSIGN_PACK)
+                    :"assignments"}';render()">← ${es?"Volver":"Back"}</button></div>
+  <div style="text-align:center;padding:16px 0 6px">
+    <div style="font-size:48px">💵</div>
+    <h1 class="big" style="margin:6px 0">Money Moves</h1>
+    <p class="muted">AP Econ Unit 4 · ${es?"El sector financiero":"The Financial Sector"}</p>
+  </div>
+  <div style="position:relative;width:100%;border-radius:14px;overflow:hidden;border:1px solid var(--line);background:#eaf3ee">
+    <iframe id="mmGame" src="money_moves.html" title="Money Moves"
+      style="width:100%;height:max(480px, min(85vh, calc(100vh - 210px)));border:none;display:block"
+      sandbox="allow-scripts allow-same-origin allow-downloads"></iframe>
+  </div>
+  <p class="muted" style="font-size:12px;text-align:center;margin-top:8px">${es
+    ?"Si no carga, abre money_moves.html directamente."
+    :"If it doesn't load, open money_moves.html directly."}
+    <a href="money_moves.html" target="_blank" rel="noopener">${es?"Abrir en pestaña nueva":"Open in a new tab"}</a></p>`;
+  window.scrollTo(0,0);
 }
 
 /* ============================================================================
