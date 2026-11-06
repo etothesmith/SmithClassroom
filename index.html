@@ -1871,7 +1871,7 @@ function dock(){
      the bottom strip of it. Answer options that scrolled into that strip
      could not be clicked at all — the click went to the nav. Both screens
      carry their own Back button, so nothing is stranded. */
-  const inShow=TAB==="gameshow"||TAB==="marginal"||TAB==="moneymoves";
+  const inShow=TAB==="gameshow"||TAB==="marginal"||TAB==="moneymoves"||TAB==="counsel2";
   el.style.display=inShow?"none":"";
   if(inShow){ el.innerHTML=""; return; }
   el.innerHTML=tabs.map(([k,i,l])=>
@@ -1889,6 +1889,7 @@ function render(){
   else if(TAB==="assignments") viewAssignments();
   else if(TAB==="marginal") viewMarginal();
   else if(TAB==="moneymoves") viewMoneyMoves();
+  else if(TAB==="counsel2") viewCounsel2();
   else if(TAB.indexOf("unitwork:")===0) viewUnitAssignments(TAB.slice(9));
   else if(TAB.indexOf("coursework:")===0) viewCourseAssignments(TAB.slice(11));
   else if(TAB==="showstudy") viewShowStudy();
@@ -8224,6 +8225,23 @@ function viewAssignments(){
     </div>
   </section>
 
+  <section class="panel" style="border-left:4px solid #1F3F8F">
+    <div class="row spread">
+      <div>
+        <div class="eyebrow" style="color:#5B7FD6">⚖️ ${es?"Gobierno · Unidad 5":"Government · Unit 5"}</div>
+        <h3 style="margin:4px 0">${es?"Abogados de la Defensa II":"Counsel for the Defense II"}</h3>
+        <p class="muted" style="font-size:13px;margin:2px 0">${es
+          ?"Juego de carrera en el tribunal: 6 trabajos, de asistente jurídico a abogado ante la Corte Suprema, más un examen final. Enmiendas 11–20 con repaso de la Carta de Derechos (1–10). Entrenamiento, días en el tribunal contra Tyler, revisiones y certificados de ascenso. En inglés y español. ~20 min por trabajo."
+          :"Courtroom career game: 6 jobs from Law Clerk to Supreme Court Advocate, plus a final exam. Amendments 11–20 with a Bill of Rights (1–10) review. Training, Court Days against Tyler, bar reviews, and promotion certificates. English and Spanish. ~20 min per job."}</p>
+        <div class="row" style="margin-top:6px">
+          <span class="chip ${cd2Promotions()>=7?'on':'warn'}">${cd2Promotions()}/7 ${es?"completados":"complete"}</span>
+          <span class="chip">${es?"6 trabajos + examen":"6 jobs + exam"}</span>
+        </div>
+      </div>
+      <button class="btn primary" onclick="TAB='counsel2';render()">${es?"Jugar":"Play"}</button>
+    </div>
+  </section>
+
   <section class="panel" style="border-left:4px solid var(--line);opacity:.5">
     <div class="eyebrow">${es?"Próximamente":"Coming soon"}</div>
     <p class="muted" style="margin:4px 0">${es
@@ -8271,6 +8289,17 @@ const ASSIGNMENTS = [
     },
     tag: { en: "Unit 4 Game", es: "Juego Unidad 4" },
     done: () => mmPromotions() >= 7
+  },
+  {
+    pack: "us-gov", unit: "gov-u5",
+    tab: "counsel2", icon: "⚖️", color: "#5B7FD6",
+    title: "Counsel for the Defense II",
+    blurb: {
+      en: "Courtroom career game — 6 jobs from Law Clerk to Supreme Court Advocate, plus a final exam. Amendments 11–20 with a Bill of Rights review. ~20 min per job.",
+      es: "Juego de carrera en el tribunal — 6 trabajos, de asistente jurídico a abogado ante la Corte Suprema, más un examen final. Enmiendas 11–20 con repaso de la Carta de Derechos. ~20 min por trabajo."
+    },
+    tag: { en: "Unit 5 Game", es: "Juego Unidad 5" },
+    done: () => cd2Promotions() >= 7
   },
   {
     pack: "econ-h", unit: null,          /* course-wide, not tied to one unit */
@@ -8428,6 +8457,50 @@ function viewMoneyMoves(){
     ?"Si no carga, abre money_moves.html directamente."
     :"If it doesn't load, open money_moves.html directly."}
     <a href="money_moves.html" target="_blank" rel="noopener">${es?"Abrir en pestaña nueva":"Open in a new tab"}</a></p>`;
+  window.scrollTo(0,0);
+}
+
+/* ============================================================================
+   COUNSEL FOR THE DEFENSE II — loads the standalone courtroom career game
+   (counsel_ii.html). Like Money Moves it is one self-contained file (fonts,
+   art and code inside), bilingual on its own toggle, and saves progress in
+   this browser under "cfd2-career-v1"; the site reads that only to count
+   finished jobs.
+   ========================================================================== */
+function cd2Promotions(){
+  try {
+    const s = JSON.parse(localStorage.getItem("cfd2-career-v1") || "null");
+    if (!s || !s.progress) return 0;
+    return ["clerk","pd","civil","election","solicitor","advocate","final"].filter(k => s.progress[k] && s.progress[k].stage === "done").length;
+  } catch(e){ return 0; }
+}
+function viewCounsel2(){
+  const es = S.lang === "es";
+  /* Start the game in the same language as the site, unless the student has
+     already picked one inside the game. */
+  try {
+    const k = "cfd2-career-v1", s = JSON.parse(localStorage.getItem(k) || "null") || {};
+    if (!s.player) { s.lang = es ? "es" : "en"; localStorage.setItem(k, JSON.stringify(s)); }
+  } catch(e){}
+  V().innerHTML = `
+  <div class="eprow"><button class="btn ghost" style="padding:8px 12px;min-height:0"
+    onclick="TAB='${ASSIGN_UNIT?("unitwork:"+ASSIGN_UNIT)
+                    :ASSIGN_PACK?("coursework:"+ASSIGN_PACK)
+                    :"assignments"}';render()">← ${es?"Volver":"Back"}</button></div>
+  <div style="text-align:center;padding:16px 0 6px">
+    <div style="font-size:48px">⚖️</div>
+    <h1 class="big" style="margin:6px 0">${es?"Abogados de la Defensa II":"Counsel for the Defense II"}</h1>
+    <p class="muted">${es?"Gobierno · Unidad 5 · Enmiendas 1–20":"Government · Unit 5 · Amendments 1–20"}</p>
+  </div>
+  <div style="position:relative;width:100%;border-radius:14px;overflow:hidden;border:1px solid var(--line);background:#edf0f6">
+    <iframe id="cd2Game" src="counsel_ii.html" title="Counsel for the Defense II"
+      style="width:100%;height:max(480px, min(85vh, calc(100vh - 210px)));border:none;display:block"
+      sandbox="allow-scripts allow-same-origin allow-downloads"></iframe>
+  </div>
+  <p class="muted" style="font-size:12px;text-align:center;margin-top:8px">${es
+    ?"Si no carga, abre counsel_ii.html directamente."
+    :"If it doesn't load, open counsel_ii.html directly."}
+    <a href="counsel_ii.html" target="_blank" rel="noopener">${es?"Abrir en pestaña nueva":"Open in a new tab"}</a></p>`;
   window.scrollTo(0,0);
 }
 
