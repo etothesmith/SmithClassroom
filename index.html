@@ -878,7 +878,7 @@ const T = {
     review:"Review your answers",yourAnswer:"You answered",correctAnswer:"Correct answer",
     pressStart:"Press start",options:"Options",transfer:"Transfer progress",
     titleSub:"Class is in session",tagline:"study · earn · play",
-    coachHi:"Pick a unit, read the notes, then take the 25-minute challenge. Every pass is a token.",
+    coachHi:"Pick a unit and work through its lesson. Once your study time is in, the 25-minute challenge unlocks. Every pass is a token.",
     coachRight:"That's it. Keep rolling.",coachWrong:"Read the explanation, then try the next one.",
     art:"Classroom art",
     artHelp:"One picture per slot, PNG with a transparent background works best.",
@@ -966,8 +966,8 @@ const T = {
     chooseRacer:"Choose your racer",
     racerHelp:"Pick who you drive. You can change every race — Coach Smith's roster keeps growing.",
     changeRacer:"Change racer",
-    kartControls:"Throttle is automatic. ← → or tap the sides to steer · ↓ to brake · Space or two-finger tap fires pizza · Shift drops bubblegum",
-    kartGoal:"Three laps. Grab item boxes, fire the pizza forward, drop bubblegum behind you. Finish in the top three to bank the level.",
+    kartControls:"Throttle is automatic. ← → steer · ↓ or Space to brake, keep holding to reverse · follow the arrow to your fare",
+    kartGoal:"Pick up students and drive them where they're going. Every drop-off pays and adds time to the clock — fast trips earn a tip and build your streak.",
     /* --- study RPG --- */
     understanding:"Understanding",standing:"Standing",
     gotIt:"Got it",readyToApply:"Now put it to work.",
@@ -1186,7 +1186,7 @@ const T = {
     review:"Revisa tus respuestas",yourAnswer:"Respondiste",correctAnswer:"Respuesta correcta",
     pressStart:"Presiona start",options:"Opciones",transfer:"Transferir progreso",
     titleSub:"La clase está en sesión",tagline:"estudia · gana · juega",
-    coachHi:"Elige una unidad, lee los apuntes y haz el reto de 25 minutos. Cada aprobado da una ficha.",
+    coachHi:"Elige una unidad y avanza en su lección. Cuando cumplas tu tiempo de estudio, se abre el reto de 25 minutos. Cada aprobado da una ficha.",
     coachRight:"Así es. Sigue adelante.",coachWrong:"Lee la explicación y pasa a la siguiente.",
     art:"Arte del salón",
     artHelp:"Una imagen por espacio; un PNG con fondo transparente funciona mejor.",
@@ -1274,8 +1274,8 @@ const T = {
     chooseRacer:"Elige tu piloto",
     racerHelp:"Elige quien maneja. Puedes cambiarlo antes de cada carrera.",
     changeRacer:"Cambiar piloto",
-    kartControls:"El acelerador es automatico. ← → o toca los lados para girar · ↓ para frenar · Espacio o dos dedos lanza pizza · Shift suelta chicle",
-    kartGoal:"Tres vueltas. Toma las cajas, lanza pizzas al frente, deja chicle atras. Termina en los tres primeros para subir de nivel.",
+    kartControls:"El acelerador es automático. ← → girar · ↓ o Espacio para frenar, mantén para retroceder · sigue la flecha hasta tu pasajero",
+    kartGoal:"Recoge estudiantes y llévalos a su destino. Cada entrega paga y suma tiempo al reloj; los viajes rápidos dan propina y suben tu racha.",
     /* --- RPG de estudio --- */
     understanding:"Comprension",standing:"Reputacion",
     gotIt:"Entendido",readyToApply:"Ahora aplicalo.",
@@ -1692,6 +1692,9 @@ function installTileStyles(){
   document.head.appendChild(el);
 }
 const zoneClass=z=>"tz-"+(((z&&z.tile)||"tile_campus").slice(5));
+/* The zone's own picture on top, its floor tile underneath in case it fails. */
+const zoneThumbStyle=z=>{ const b=z&&z.bg?art(z.bg):"", t=art((z&&z.tile)||"tile_campus");
+  return b?`background-image:url(${b}),url(${t});background-size:cover;background-position:center;image-rendering:auto`:""; };
 
 /* ============================================================================
    3c. LANGUAGE  —  asked once, in both languages, before anything else.
@@ -6430,6 +6433,7 @@ function epRec(uid){
 function epUnderstanding(){ return EP ? EP.und : 50; }
 
 function startEpisode(unitId, restart, topic){
+  resetOptOrder();
   const u = findUnit(unitId); if (!u) return go("study");
   /* first time through, let the student choose the world the examples live in */
   if (!S.route && !(u.pack && u.pack.id === "us-gov"))
@@ -6662,6 +6666,7 @@ function drawDecide(sc){
     <button class="btn primary wide" style="margin-top:14px" id="epGo" disabled>${T_.makeCall}</button>`,
     sc.art);
   const wrap = document.getElementById("opts"), go = document.getElementById("epGo");
+  mixOpts(wrap, it.id);
   EP.checked = false;                 /* see wireQuestion: never inherit it */
   wrap.onclick = e => {
     const b = e.target.closest(".opt"); if (!b || EP.checked) return;
@@ -6675,7 +6680,8 @@ function drawDecide(sc){
       const ok = EP.picked === it.a;
       epScore(ok, true);
       EP.rep = Math.max(0, Math.min(100, EP.rep + (ok ? 12 : -10)));
-      [...wrap.children].forEach((el,i) => {
+      [...wrap.children].forEach(el => {
+        const i = optIndex(el);
         el.disabled = true; el.classList.remove("sel");
         if (i === it.a) el.classList.add("right");
         else if (i === EP.picked) el.classList.add("wrong");
@@ -6811,6 +6817,30 @@ function drawWrap(){
    Shared question rendering, so a check, a boss round and the old quiz all
    look and behave the same.
    ------------------------------------------------------------------------- */
+/* Answer order. Every bank stores the correct choice first, and the choices
+   used to be drawn in that order — so the top button was always right and a
+   student could click it straight through a certificate. The buttons keep
+   their original index (data-i / id="oN") so grading is untouched; only their
+   position on screen is shuffled. The order is remembered per question until
+   the next episode, practice set or test starts, so a language switch or a
+   redraw does not move the answers around under the student. */
+const OPT_ORDER = new Map();
+function resetOptOrder(){ OPT_ORDER.clear(); }
+function optIndex(el){ return el.dataset.i != null ? +el.dataset.i : +String(el.id||"").replace(/^o/,""); }
+function mixOpts(wrap, key){
+  if (!wrap) return;
+  const els = [...wrap.children].filter(el => el.classList.contains("opt"));
+  if (els.length < 2) return;
+  const k = (key||"") + "#" + els.length;
+  let ord = key ? OPT_ORDER.get(k) : null;
+  if (!ord){
+    ord = els.map((_,i)=>i);
+    for (let i = ord.length-1; i > 0; i--){ const j = Math.floor(Math.random()*(i+1)); [ord[i],ord[j]] = [ord[j],ord[i]]; }
+    if (key) OPT_ORDER.set(k, ord);
+  }
+  ord.forEach(i => wrap.appendChild(els[i]));
+}
+
 function questionBody(it){
   if (it.type === "mcq" || it.type === "multi"){
     const ch = (it.c && (it.c[S.lang] || it.c.en)) || [];
@@ -6840,6 +6870,7 @@ function wireQuestion(it, onDone){
   let picked = (it.type === "multi") ? [] : null;
   const wrap = document.getElementById("opts");
   if (wrap){
+    mixOpts(wrap, it.id);
     wrap.onclick = e => {
       const b = e.target.closest(".opt"); if (!b || EP.checked) return;
       const i = +b.dataset.i;
@@ -6885,7 +6916,8 @@ function wireQuestion(it, onDone){
     }
     if (wrap){
       const arr = (it.type === "multi") ? it.a : [it.a];
-      [...wrap.querySelectorAll(".opt")].forEach((el,i)=>{
+      [...wrap.querySelectorAll(".opt")].forEach(el=>{
+        const i = optIndex(el);
         el.disabled = true; el.classList.remove("sel");
         if (arr.includes(i)) el.classList.add("right");
         else if ((it.type==="multi" ? (picked||[]) : [picked]).includes(i)) el.classList.add("wrong");
@@ -7565,7 +7597,7 @@ function pickItems(u,n){
   while(out.length<n && u.items.length) out.push(u.items[out.length%u.items.length]); // bank too small: repeat
   return out;
 }
-function startPractice(id){ const u=findUnit(id); studyStop();
+function startPractice(id){  resetOptOrder();const u=findUnit(id); studyStop();
   Q={list:pickItems(u,Math.min(10,u.items.length)),idx:0,answers:[],picks:[],mode:"practice",unit:u,endsAt:0,picked:null,checked:false}; drawQ(); }
 
 /* ============================================================================
@@ -7673,6 +7705,7 @@ function lockedScreen(u){
 }
 
 function startExam(id){
+  resetOptOrder();
   const u=findUnit(id); if(!u) return go("study");
   if(!studyUnlocked(u)) return lockedScreen(u);
   studyStop();
@@ -7701,6 +7734,7 @@ function beginExam(id){
 }
 
 function startChallenge(id){
+  resetOptOrder();
   const u=findUnit(id); if(!u) return go("study");
   if(!studyUnlocked(u)) return lockedScreen(u);
   studyStop();
@@ -7729,7 +7763,7 @@ function drawQ(){
   let body="";
   if(it.type==="mcq"||it.type==="multi"){
     const ch=(it.c&&(it.c[S.lang]||it.c.en))||[];
-    body=ch.map((t,i)=>`<button class="opt" id="o${i}" onclick="pick(${i})">${esc(t)}</button>`).join("");
+    body=`<div id="qOpts">${ch.map((t,i)=>`<button class="opt" id="o${i}" onclick="pick(${i})">${esc(t)}</button>`).join("")}</div>`;
     if(it.type==="multi") body=`<div class="eyebrow" style="margin-bottom:6px">${T_.selectAll}</div>`+body;
   } else if(it.type==="numeric"){
     body=`<input id="ans" type="number" inputmode="decimal" step="any" placeholder="${T_.typeAnswer}">`;
@@ -7753,6 +7787,7 @@ function drawQ(){
     <div id="fb"></div>
     <button class="btn primary wide" id="go" style="margin-top:14px" onclick="checkQ()">${T_.check}</button>
   </section>`;
+  mixOpts(document.getElementById("qOpts"), it.id);
   Q.picked=(it.type==="multi")?[]:null; Q.checked=false; Q.grade=null; Q.gradeSpec=null;
   if(timed){ tick=setInterval(()=>{const el=document.getElementById("clk"); if(!el)return clearInterval(tick);
     const left=Q.endsAt-Date.now(); el.textContent=fmt(left); el.classList.toggle("low",left<120000);
@@ -7793,7 +7828,7 @@ function checkQ(){
     if(S.session){S.session.answers=Q.answers;S.session.idx=Q.idx;} save();
     if(it.type==="mcq"||it.type==="multi"){
       const arr=(it.type==="multi")?it.a:[it.a];
-      document.querySelectorAll(".opt").forEach((el,j)=>{ el.classList.remove("sel");
+      document.querySelectorAll(".opt").forEach(el=>{ const j=optIndex(el); el.classList.remove("sel");
         if(arr.includes(j)) el.classList.add("right");
         else if((it.type==="multi"?(Q.picked||[]):[Q.picked]).includes(j)) el.classList.add("wrong"); });
     }
@@ -8059,21 +8094,21 @@ const GAMES=[
  {id:"kart", color:"#FF4D9D", dur:90,
   name:{en:"Campus Taxi",es:"Taxi del campus"},
   tag:{en:"Crazy Taxi on campus. Pick students up, get them where they're going.",
-       es:"Taxi loco en el campus. Recoge estudiantes y llevalos a su destino."},
+       es:"Taxi loco en el campus. Recoge estudiantes y llévalos a su destino."},
   goal:{en:"Every drop-off pays you and puts time back on the clock. Drive well and the shift never ends — there is no last place.",
-        es:"Cada entrega te paga y devuelve tiempo al reloj. Si manejas bien el turno no termina: aqui no hay ultimo lugar."},
+        es:"Cada entrega te paga y devuelve tiempo al reloj. Si manejas bien el turno no termina: aquí no hay último lugar."},
   keys:{en:["Throttle is automatic — you steer and brake",
             "← → steer  ·  ↓ / Space brake, then reverse to turn around",
             "The arrow at the top points at your fare, with the distance",
             "Green beam = pick up  ·  Gold beam = drop off",
             "Fast trips pay a tip and build a streak multiplier"],
-        es:["El acelerador es automatico: tu giras y frenas",
+        es:["El acelerador es automático: tú giras y frenas",
             "← → girar  ·  ↓ / Espacio frenar y luego retroceder",
             "La flecha de arriba apunta a tu pasajero, con la distancia",
             "Haz verde = recoger  ·  Haz dorado = dejar",
-            "Los viajes rapidos dan propina y suben la racha"]},
+            "Los viajes rápidos dan propina y suben la racha"]},
   touch:{en:"Touch: drag left or right to steer, hold the bottom of the screen to brake.",
-         es:"Tactil: arrastra a los lados para girar, manten abajo para frenar."}},
+         es:"Táctil: arrastra a los lados para girar, mantén abajo para frenar."}},
  {id:"quest", color:"#9B7BE0", dur:90,
   name:{en:"Smith's Quest",es:"La misión de Smith"},
   tag:{en:"Top-down survival. Swing at what chases you.",
@@ -8402,18 +8437,16 @@ function viewMarginal(){
     onclick="TAB='${ASSIGN_UNIT?("unitwork:"+ASSIGN_UNIT)
                     :ASSIGN_PACK?("coursework:"+ASSIGN_PACK)
                     :"assignments"}';render()">← ${es?"Volver":"Back"}</button></div>
-  <div style="text-align:center;padding:16px 0 6px">
-    <div style="font-size:48px">🧠</div>
-    <h1 class="big" style="margin:6px 0">Marginal Mastermind</h1>
-    <p class="muted">Heist or Hustle — AP Econ Topic 1.5</p>
-  </div>
+  <!-- The game draws its own title screen; a second title out here only
+       pushed the game down. -->
+  <div style="height:8px"></div>
   <div style="position:relative;width:100%;border-radius:14px;overflow:hidden;border:1px solid var(--line);background:#0a0a1a">
     <!-- Sized against the viewport rather than a flat 80vh, so the frame plus
          the header and title block above it fit on one screen instead of
          producing a second scrollbar inside the first on a laptop. The floor
          stops it collapsing on a short window. -->
     <iframe id="mmFrame" src="marginal_mastermind.html"
-      style="width:100%;height:max(420px, min(80vh, calc(100vh - 230px)));border:none;display:block"
+      style="width:100%;height:max(420px, min(88vh, calc(100vh - 130px)));border:none;display:block"
       sandbox="allow-scripts allow-same-origin"></iframe>
   </div>
   <p class="muted" style="font-size:12px;text-align:center;margin-top:8px">${es
@@ -8443,14 +8476,12 @@ function viewMoneyMoves(){
     onclick="TAB='${ASSIGN_UNIT?("unitwork:"+ASSIGN_UNIT)
                     :ASSIGN_PACK?("coursework:"+ASSIGN_PACK)
                     :"assignments"}';render()">← ${es?"Volver":"Back"}</button></div>
-  <div style="text-align:center;padding:16px 0 6px">
-    <div style="font-size:48px">💵</div>
-    <h1 class="big" style="margin:6px 0">Money Moves</h1>
-    <p class="muted">AP Econ Unit 4 · ${es?"El sector financiero":"The Financial Sector"}</p>
-  </div>
+  <!-- The game draws its own title screen; a second title out here only
+       pushed the game down. -->
+  <div style="height:8px"></div>
   <div style="position:relative;width:100%;border-radius:14px;overflow:hidden;border:1px solid var(--line);background:#eaf3ee">
     <iframe id="mmGame" src="money_moves.html" title="Money Moves"
-      style="width:100%;height:max(480px, min(85vh, calc(100vh - 210px)));border:none;display:block"
+      style="width:100%;height:max(480px, min(90vh, calc(100vh - 120px)));border:none;display:block"
       sandbox="allow-scripts allow-same-origin allow-downloads"></iframe>
   </div>
   <p class="muted" style="font-size:12px;text-align:center;margin-top:8px">${es
@@ -8788,8 +8819,9 @@ function viewSmittys(){
         <div style="text-align:center;margin-bottom:10px"><span class="chip on">${es?"Verificación":"Mastery Check"}</span>
           <h3>${es?"Pregunta":"Question"} ${qi+1}/${qs.length}</h3></div>
         <p style="font-size:16px;font-weight:600;margin:6px 0 14px">${esc(L(q.q))}</p>
-        <div id="sgOpts">${(L(q.c)).map((c,i)=>`<button class="opt" onclick="window._sgAns(${i})">${esc(c)}</button>`).join("")}</div>
+        <div id="sgOpts">${(L(q.c)).map((c,i)=>`<button class="opt" data-i="${i}" onclick="window._sgAns(${i})">${esc(c)}</button>`).join("")}</div>
         <div id="sgFb"></div></section>`;
+      mixOpts(document.getElementById("sgOpts"), "sg:"+(q.id||L(q.q)));
       window._sgAns = function(i){
         const ok=i===q.a; if(ok) right++;
         ok ? SG.totalRight++ : SG.totalWrong++;
@@ -8800,7 +8832,8 @@ function viewSmittys(){
            until something came back "Correct!", with each click adding to the
            right/wrong tallies. The mastery check scored nothing meaningful.
            Mark the class only when there is one to add. */
-        document.querySelectorAll("#sgOpts .opt").forEach((b,j)=>{
+        document.querySelectorAll("#sgOpts .opt").forEach(b=>{
+          const j=optIndex(b);
           b.disabled=true;
           const mark = j===q.a ? "right" : j===i ? "wrong" : "";
           if(mark) b.classList.add(mark);
@@ -8894,12 +8927,14 @@ function viewArcade(){
   ${GAMES.map(g=>`<section class="panel" style="border-left:4px solid ${g.color}">
     <h3 style="font-size:19px">${esc(L(g.name))}</h3>
     <p class="muted" style="margin:4px 0 10px">${esc(L(g.tag))}</p>
-    <div class="eyebrow">${T_.zone} — ${esc(L(zoneOf(g.id).name))}</div>
+    ${g.id==="sprint"
+      ? `<p class="muted" style="font-size:13px;margin:0 0 10px">${S.lang==="es"?"El mundo cambia mientras subes de nivel: Ciudad neón, Bosque místico y más.":"The world changes as you level up: Neon City, Mystic Forest and more."}</p>`
+      : `<div class="eyebrow">${T_.zone} — ${esc(L(zoneOf(g.id).name))}</div>
     <div class="zonestrip">${ZONES.map(z=>
       `<button class="zone ${zoneOf(g.id).k===z.k?"on":""}" title="${esc(L(z.name))}"
         onclick="setZone('${g.id}','${z.k}')">
-        <span class="zthumb ${zoneClass(z)}"></span>
-        <span>${esc(L(z.name))}</span></button>`).join("")}</div>
+        <span class="zthumb ${zoneClass(z)}" style="${zoneThumbStyle(z)}"></span>
+        <span>${esc(L(z.name))}</span></button>`).join("")}</div>`}
     <div class="row"><span class="chip">${T_.level} ${lvlOf(g.id)}</span>
       <span class="chip">${T_.bestScore} ${S.best[g.id]||0}</span>
       <span class="chip ${free?"on":"warn"}">${free?T_.freePlay:"◎ 1"}</span></div>
@@ -8945,8 +8980,8 @@ function kartMenu(g,z,free){
     <div class="row" style="margin-bottom:12px">
       <span class="chip">${T_.level} ${lvlOf("kart")}</span>
       <span class="chip">${T_.bestScore} ${S.best.kart||0}</span>
-      <span class="chip">3 ${T_.lap}s</span>
-      <span class="chip">6 ${T_.rider}s</span>
+      <span class="chip">${g.dur||90}s ${S.lang==="es"?"de turno":"shift"}</span>
+      <span class="chip">${S.lang==="es"?"Entregas = más tiempo":"Drop-offs add time"}</span>
     </div>
     <div class="eyebrow">${T_.controls}</div>
     <p style="font-size:14px;margin:6px 0 14px">${esc(T_.kartControls)}</p>
@@ -10717,6 +10752,7 @@ function gameGunner(cv,id,lvl,zone){
     a=Math.imul(a^(a>>>15),a|1); a^=a+Math.imul(a^(a>>>7),a|61);
     return ((a^(a>>>14))>>>0)/4294967296; })(90210);
   const sky1=zone.sky||"#14213A";
+  const zoneBack=spriteOf(zone.bg);    /* the picked zone, far behind the skyline */
   const far=[],mid=[];
   for(let i=0;i<70;i++) far.push({x:i*140+rnd()*60, w:70+rnd()*80, h:90+rnd()*170, lit:rnd()});
   for(let i=0;i<90;i++) mid.push({x:i*96, h:120+rnd()*40, tone:rnd()});
@@ -10726,6 +10762,10 @@ function gameGunner(cv,id,lvl,zone){
     const g=x.createLinearGradient(0,0,0,VH);
     g.addColorStop(0,sky1); g.addColorStop(0.62,"#2A2044"); g.addColorStop(1,"#3A2438");
     x.fillStyle=g; x.fillRect(0,0,VW,VH);
+    if(drawable(zoneBack)&&zoneBack.naturalWidth>=200){
+      x.globalAlpha=0.5; drawBack(x,zoneBack,zone,VW,VH,cam.x*0.08); x.globalAlpha=1;
+      x.fillStyle=g; x.globalAlpha=0.35; x.fillRect(0,0,VW,VH); x.globalAlpha=1;
+    }
     x.fillStyle="rgba(255,255,255,.5)";
     stars.forEach(s=>{ x.globalAlpha=0.25+0.35*Math.sin(t*1.3+s.x); x.beginPath();
       x.arc(s.x,s.y,s.r,0,6.283); x.fill(); });
