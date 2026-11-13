@@ -1752,6 +1752,7 @@ function hideTitle(){ clearInterval(titleAnim); titleAnim=null;
   const t=document.getElementById("title");
   t.classList.add("hidden"); t.scrollTop=0;
   window.scrollTo(0,0);
+  setTimeout(() => { try { mmNewsCheck(); } catch(e){} }, 400);
 }
 /* Built-in scene, in the spirit of the Smith's World art: sunset, gate, castle,
    and one floating island — drawn so the app still looks right with no files. */
@@ -8435,6 +8436,46 @@ function mmPromotions(){
     if (!s || !s.progress) return 0;
     return ["teller","trader","loan","analyst","chair","treasury","final"].filter(k => s.progress[k] && s.progress[k].stage === "done").length;
   } catch(e){ return 0; }
+}
+/* "What's new" for returning Money Moves players: shown once per game version, the first time
+   they come back to the site (after the title screen). New players see the NEW chip on the card instead. */
+const MM_VERSION = "3.1";
+function mmNewsCheck(){
+  let s = null;
+  try { s = JSON.parse(localStorage.getItem("money-moves-progress-v1") || "null"); } catch(e){}
+  if (!s || !s.player || S.mmNews === MM_VERSION || (s.seen === MM_VERSION)) return;
+  const es = S.lang === "es", name = esc((s.player && s.player.name) || S.name || "");
+  const items = es ? [
+    ["🧍", "Crea tu personaje", "4 tipos de cuerpo, 8 tonos de piel, 16 caras y 32 peinados y cubiertas para la cabeza, todos gratis."],
+    ["🏠", "Mi Vida", "Tu personaje tiene necesidades, un hogar, cuentas y ahorros. Cada lección es un mes nuevo."],
+    ["📰", "Fed Watch", "Noticias de la Reserva Federal con una pregunta de la Unidad 4 que cambia tus tasas de interés."],
+    ["🛍️", "Tienda nueva", "Ropa nueva, 24 accesorios, autos y casas."],
+    ["🎮", "Arcade y lista de exploración", "Juega Street Dash y Budget Blitz, y gana $300 por probar todo."],
+  ] : [
+    ["🧍", "Build your own character", "4 body shapes, 8 skin tones, 16 faces, and 32 hairstyles and head coverings, all free."],
+    ["🏠", "My Life", "Your character has needs, a home, bills, and savings. Every lesson you finish is a new month."],
+    ["📰", "Fed Watch", "Federal Reserve news with a Unit 4 question that moves your interest rates."],
+    ["🛍️", "New Marketplace items", "New clothes, 24 accessories, cars, and homes."],
+    ["🎮", "Arcade + Explorer checklist", "Play Street Dash and Budget Blitz, and earn $300 for trying everything new."],
+  ];
+  const box = document.getElementById("certAsk");
+  box.classList.remove("hidden");
+  box.innerHTML = `
+    <div class="certask" style="display:block;max-width:560px" role="dialog" aria-modal="true" aria-labelledby="mmNewsT">
+      <div class="eyebrow">${es ? "AP Macro · Unidad 4" : "AP Macro · Unit 4"}</div>
+      <h2 id="mmNewsT" style="margin:4px 0 6px">${es ? `¡Bienvenido de nuevo${name ? ", " + name : ""}! Money Moves ${MM_VERSION} ya está aquí` : `Welcome back${name ? ", " + name : ""}! Money Moves ${MM_VERSION} is here`}</h2>
+      <p style="margin:0 0 12px;opacity:.85">${es ? "Tu progreso y tus compras se guardaron. Esto es lo nuevo:" : "Your progress and purchases are saved. Here’s what’s new:"}</p>
+      <ul style="list-style:none;padding:0;margin:0 0 14px;display:grid;gap:10px">
+        ${items.map(([ic, t, d]) => `<li style="display:flex;gap:10px;align-items:flex-start"><span style="font-size:24px;line-height:1">${ic}</span><span><b>${t}</b><br><span style="opacity:.85">${d}</span></span></li>`).join("")}
+      </ul>
+      <button class="btn primary wide" onclick="mmNewsClose(true)">${es ? "Abrir Money Moves" : "Open Money Moves"}</button>
+      <button class="btn ghost wide" style="margin-top:8px" onclick="mmNewsClose(false)">${es ? "Más tarde" : "Later"}</button>
+    </div>`;
+}
+function mmNewsClose(open){
+  S.mmNews = MM_VERSION; save();
+  document.getElementById("certAsk").classList.add("hidden");
+  if (open) { TAB = "moneymoves"; render(); }
 }
 function viewMoneyMoves(){
   const es = S.lang === "es";
