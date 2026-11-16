@@ -1,0 +1,106 @@
+{
+ "map": "world/world_map.jpg",
+ "size": [
+  2400,
+  1600
+ ],
+ "note": "x,y,w are percent of the map; x,y = top-left of the building trimmed to its visible pixels",
+ "buildings": [
+  {
+   "id": "fed_tower",
+   "file": "world/buildings/bld_fed_tower.webp",
+   "x": 10.88,
+   "y": -2.62,
+   "w": 15.54,
+   "crop": "use the image's non-transparent bounding box"
+  },
+  {
+   "id": "econ_hall",
+   "file": "world/buildings/bld_econ_hall.webp",
+   "x": 32.0,
+   "y": -3.69,
+   "w": 15.58,
+   "crop": "use the image's non-transparent bounding box"
+  },
+  {
+   "id": "capitol",
+   "file": "world/buildings/bld_capitol.webp",
+   "x": 53.37,
+   "y": -5.06,
+   "w": 15.54,
+   "crop": "use the image's non-transparent bounding box"
+  },
+  {
+   "id": "supreme_court",
+   "file": "world/buildings/bld_supreme_court.webp",
+   "x": 73.46,
+   "y": 1.62,
+   "w": 15.5,
+   "crop": "use the image's non-transparent bounding box"
+  },
+  {
+   "id": "fieldhouse",
+   "file": "world/buildings/bld_fieldhouse.webp",
+   "x": 3.62,
+   "y": 38.12,
+   "w": 15.42,
+   "crop": "use the image's non-transparent bounding box"
+  },
+  {
+   "id": "locker_dorm",
+   "file": "world/buildings/bld_locker_dorm.webp",
+   "x": 24.12,
+   "y": 33.19,
+   "w": 14.71,
+   "crop": "use the image's non-transparent bounding box"
+  },
+  {
+   "id": "trophy_hall",
+   "file": "world/buildings/bld_trophy_hall.webp",
+   "x": 61.38,
+   "y": 32.62,
+   "w": 15.17,
+   "crop": "use the image's non-transparent bounding box"
+  },
+  {
+   "id": "market",
+   "file": "world/buildings/bld_market.webp",
+   "x": 80.58,
+   "y": 26.19,
+   "w": 15.29,
+   "crop": "use the image's non-transparent bounding box"
+  },
+  {
+   "id": "arcade",
+   "file": "world/buildings/bld_arcade.webp",
+   "x": 9.38,
+   "y": 65.19,
+   "w": 15.08,
+   "crop": "use the image's non-transparent bounding box"
+  },
+  {
+   "id": "writing_center",
+   "file": "world/buildings/bld_writing_center.webp",
+   "x": 31.29,
+   "y": 63.69,
+   "w": 15.0,
+   "crop": "use the image's non-transparent bounding box"
+  },
+  {
+   "id": "bulletin",
+   "file": "world/buildings/bld_bulletin.webp",
+   "x": 53.17,
+   "y": 67.0,
+   "w": 15.0,
+   "crop": "use the image's non-transparent bounding box"
+  },
+  {
+   "id": "principal",
+   "file": "world/buildings/bld_principal.webp",
+   "x": 75.08,
+   "y": 65.56,
+   "w": 15.08,
+   "crop": "use the image's non-transparent bounding box"
+  }
+ ]
+}
