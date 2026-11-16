@@ -849,7 +849,7 @@ const T = {
     welcome:"Pick a course, learn the unit, then earn your tokens.",
     yourName:"Your name",namePrompt:"Type the name that should appear on your certificates.",
     saveName:"Save name",course:"Course",units:"units",items:"questions",
-    readBrief:"Study notes",practice:"Practice (untimed)",startChallenge:"Start 25-minute challenge",
+    readBrief:"Study notes",practice:"Practice (untimed)",startChallenge:"Start the 15-question challenge",
     mastery:"Mastery",attempted:"attempted",correct:"correct",
     check:"Check",next:"Next",finish:"Finish",exit:"Exit",back:"Back",
     correctMsg:"Correct",wrongMsg:"Not quite",timeLeft:"Time left",
@@ -870,15 +870,15 @@ const T = {
     reset:"Erase all progress on this device",confirmReset:"This erases progress on this device. Continue?",
     certTitle:"Certificate of Completion",certLine:"has completed",certOn:"on",verify:"Verification code",
     noRepeat:"You have seen every question in this unit. Questions will now repeat.",
-    lowBank:"This unit has fewer than 15 questions, so a 25-minute challenge will repeat items.",
+    lowBank:"This unit has fewer than 15 questions, so the challenge will repeat some items.",
     langNote:"Spanish text is missing for this item; showing English.",
     beginner:"Warm-up",core:"Core",stretch:"Stretch",
-    challengeIntro:"25 minutes. 15 questions. You may leave and come back — the timer keeps running.",
+    challengeIntro:"15 questions, no clock. Study the unit first — the challenge unlocks once your study time is in. Take your time and read every choice.",
     resumeSession:"Resume unfinished challenge",abandon:"Discard it",
     review:"Review your answers",yourAnswer:"You answered",correctAnswer:"Correct answer",
     pressStart:"Press start",options:"Options",transfer:"Transfer progress",
     titleSub:"Class is in session",tagline:"study · earn · play",
-    coachHi:"Pick a unit, read the notes, then take the 25-minute challenge. Every pass is a token.",
+    coachHi:"Pick a unit, study each topic, then take the challenge. Every pass is a token.",
     coachRight:"That's it. Keep rolling.",coachWrong:"Read the explanation, then try the next one.",
     art:"Classroom art",
     artHelp:"One picture per slot, PNG with a transparent background works best.",
@@ -1157,7 +1157,7 @@ const T = {
     welcome:"Elige un curso, aprende la unidad y gana tus fichas.",
     yourName:"Tu nombre",namePrompt:"Escribe el nombre que aparecerá en tus certificados.",
     saveName:"Guardar nombre",course:"Curso",units:"unidades",items:"preguntas",
-    readBrief:"Apuntes de estudio",practice:"Práctica (sin tiempo)",startChallenge:"Iniciar reto de 25 minutos",
+    readBrief:"Apuntes de estudio",practice:"Práctica (sin tiempo)",startChallenge:"Iniciar el reto de 15 preguntas",
     mastery:"Dominio",attempted:"intentadas",correct:"correctas",
     check:"Comprobar",next:"Siguiente",finish:"Terminar",exit:"Salir",back:"Atrás",
     correctMsg:"Correcto",wrongMsg:"Casi",timeLeft:"Tiempo restante",
@@ -1181,12 +1181,12 @@ const T = {
     lowBank:"Esta unidad tiene menos de 15 preguntas, así que el reto repetirá algunas.",
     langNote:"Falta el texto en español para este elemento; se muestra en inglés.",
     beginner:"Calentamiento",core:"Base",stretch:"Desafío",
-    challengeIntro:"25 minutos. 15 preguntas. Puedes salir y volver: el reloj sigue corriendo.",
+    challengeIntro:"15 preguntas, sin reloj. Primero estudia la unidad: el reto se desbloquea cuando completes tu tiempo de estudio. Tómate tu tiempo y lee cada opción.",
     resumeSession:"Continuar reto sin terminar",abandon:"Descartarlo",
     review:"Revisa tus respuestas",yourAnswer:"Respondiste",correctAnswer:"Respuesta correcta",
     pressStart:"Presiona start",options:"Opciones",transfer:"Transferir progreso",
     titleSub:"La clase está en sesión",tagline:"estudia · gana · juega",
-    coachHi:"Elige una unidad, lee los apuntes y haz el reto de 25 minutos. Cada aprobado da una ficha.",
+    coachHi:"Elige una unidad, estudia cada tema y luego haz el reto. Cada aprobado da una ficha.",
     coachRight:"Así es. Sigue adelante.",coachWrong:"Lee la explicación y pasa a la siguiente.",
     art:"Arte del salón",
     artHelp:"Una imagen por espacio; un PNG con fondo transparente funciona mejor.",
@@ -1845,8 +1845,12 @@ function unlockTeacherSecret(){
 /* Short label for a course, so it fits in the dock. The teacher's own titles
    are long ("Unit 4 · Citizenship, Elections, Participation"), and a dock item
    has room for about ten characters. */
+/* Government courses share the statesman art, the Town Hall framing and the
+   "hall" route. AP Gov joined U.S. Government Honors in Nov 2026. */
+const GOV_PACKS=new Set(["us-gov","ap-gov"]);
 const PACK_TAB={ "ap-econ":{en:"AP Econ",es:"AP Econ",icon:"▤"},
                  "us-gov":{en:"Gov",es:"Gobierno",icon:"⚖"},
+                 "ap-gov":{en:"AP Gov",es:"Gob AP",icon:"🏛"},
                  "econ-h":{en:"Econ H",es:"Econ H",icon:"◱"} };
 function packTabInfo(pk){
   const t=PACK_TAB[pk.id];
@@ -2081,7 +2085,7 @@ function viewPack(packId){
           : left ? left+" "+(es?(left>1?"pendientes":"pendiente"):"to do")
                  : (es?"Completadas":"All done")}</small></span></button>`;
   })()}
-    ${pack.id!=="us-gov"?`<button class="btn ghost wide" style="margin-top:12px"
+    ${!GOV_PACKS.has(pack.id)?`<button class="btn ghost wide" style="margin-top:12px"
       onclick="viewRoutePicker(null,null)">${currentRoute().icon} ${T_.changeRoute} · ${
       esc(L(currentRoute().label))}</button>`:""}
   </section>
@@ -2489,7 +2493,7 @@ function currentRoute(){
 /* Government units always run in the town hall: a lesson about federalism set
    in a sneaker shop would be a costume, not a context. */
 function routeFor(u){
-  if (u && u.pack && u.pack.id === "us-gov") return ROUTES.find(r=>r.k==="hall");
+  if (u && u.pack && GOV_PACKS.has(u.pack.id)) return ROUTES.find(r=>r.k==="hall");
   const r = currentRoute();
   return r.k === "hall" ? ROUTES[0] : r;
 }
@@ -3389,7 +3393,14 @@ const TOPIC_LABEL = {
 const topicLabel = t => {
   if (isScen(t)) return topicLabel(scenBase(t)) +
     (S.lang === "es" ? " · Escenarios" : " Scenarios");
-  return TOPIC_LABEL[t] ? L(TOPIC_LABEL[t]) : t;
+  if (TOPIC_LABEL[t]) return L(TOPIC_LABEL[t]);
+  /* Units can name their own topics in content.js ("topics":[{id,en,es}]),
+     so a new unit never shows a raw id like "pc" on its topic cards. */
+  if (typeof allUnits === "function") for (const u of allUnits()) {
+    const hit = (u.topics || []).find(x => x && x.id === t);
+    if (hit) return L(hit);
+  }
+  return t;
 };
 
 /* ----------------------------------------------------------------------------
@@ -6271,7 +6282,7 @@ function showCredits(){
 /* Which sprite set an episode uses. Government units get the statesman art,
    everything else gets the chef art — the two sheets share a layout. */
 function spriteSetFor(u){
-  return (u.pack && u.pack.id === "us-gov") ? "gov" : "econ";
+  return (u.pack && GOV_PACKS.has(u.pack.id)) ? "gov" : "econ";
 }
 function smit(set, name){
   return (SMITTY_ART[set] && SMITTY_ART[set][name]) || "";
@@ -6335,7 +6346,7 @@ const WIDGET_RULES = [
    and a unit that scores below the threshold gets the decision scene rather
    than a tool that would misrepresent it. */
 function widgetFor(u){
-  const isGov = (u.pack && u.pack.id === "us-gov");
+  const isGov = (u.pack && GOV_PACKS.has(u.pack.id));
   const title = (L2(u.title,"en") + " " + L2(u.title,"es")).toLowerCase();
   const body  = (L2(u.brief,"en") + " " + L2(u.brief,"es")).toLowerCase();
   let best = null, bestScore = 0;
@@ -6367,7 +6378,7 @@ function buildEpisode(u, topic){
   const chunkName = topic ? topicLabel(topic) : L2(u.title,"en").replace(/^.*·\s*/,"");
   const rt0 = routeFor(u);
   scenes.push({t:"story", art:"hero", who:"hero",
-    title:(u.pack&&u.pack.id==="us-gov")?frame.place:rt0.label,
+    title:(u.pack&&GOV_PACKS.has(u.pack.id))?frame.place:rt0.label,
     text:{en:frame.role.en+" Today's job: "+chunkName+
              ". Read it, use it, then answer to the boss.",
           es:frame.role.es+" El trabajo de hoy: "+chunkName+
@@ -6433,7 +6444,7 @@ function epUnderstanding(){ return EP ? EP.und : 50; }
 function startEpisode(unitId, restart, topic){
   const u = findUnit(unitId); if (!u) return go("study");
   /* first time through, let the student choose the world the examples live in */
-  if (!S.route && !(u.pack && u.pack.id === "us-gov"))
+  if (!S.route && !(u.pack && GOV_PACKS.has(u.pack.id)))
     return viewRoutePicker(unitId, topic);
   const rec = epRec(unitId);
   const ep  = buildEpisode(u, topic);
@@ -7633,6 +7644,24 @@ function shuffled(arr){
   for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); const t=a[i]; a[i]=a[j]; a[j]=t; }
   return a;
 }
+/* Every bank question was written with the right answer first (a:0), and the
+   practice, challenge and test screens drew choices in stored order — so
+   "always pick the top one" scored 100%. Shuffle each question's choices once
+   per page load, English and Spanish together, and remap the answer key.
+   Progress is keyed by question id, never by choice position, so nothing
+   saved depends on the order. */
+function shuffleBankChoices(packs){
+  (packs||[]).forEach(p => (p.units||[]).forEach(u => (u.items||[]).forEach(it => {
+    if (it.__mixed || (it.type!=="mcq" && it.type!=="multi") || !it.c || !Array.isArray(it.c.en)) return;
+    const n = it.c.en.length; if (n < 2) return;
+    const order = shuffled([...Array(n).keys()]);
+    Object.keys(it.c).forEach(k => { const arr = it.c[k];
+      if (Array.isArray(arr) && arr.length === n) it.c[k] = order.map(i => arr[i]); });
+    const where = old => order.indexOf(old);
+    it.a = Array.isArray(it.a) ? it.a.map(where).sort((x,y)=>x-y) : where(it.a);
+    Object.defineProperty(it, "__mixed", {value:true, enumerable:false});
+  })));
+}
 function buildExam(u,n){
   const out=pickItems(u,Math.min(n,u.items.length)).slice();
   if(out.length<n){
@@ -7706,15 +7735,18 @@ function startChallenge(id){
   if(!studyUnlocked(u)) return lockedScreen(u);
   studyStop();
   const n=S.cfg.perChallenge||15;
+  /* No clock. The 25-minute timer was retired: students rushed it, and study
+     time now gates the challenge instead. The session record still lets a
+     student leave and resume the same 15 questions. */
   const untimed=TEACHER_OK;
-  Q={list:pickItems(u,n),idx:0,answers:[],picks:[],mode:"timed",unit:u,endsAt:untimed?Infinity:Date.now()+25*60000,picked:null,checked:false,streak:0,points:0};
+  Q={list:pickItems(u,n),idx:0,answers:[],picks:[],mode:"timed",unit:u,endsAt:Infinity,picked:null,checked:false,streak:0,points:0};
   if(!untimed){ S.session={unit:u.id,ids:Q.list.map(i=>i.id),endsAt:Q.endsAt,answers:[],idx:0}; save(); }
   drawQ();
 }
 function resumeSession(){
   const s=S.session,u=findUnit(s.unit); if(!u){S.session=null;save();return render();}
   const map={}; allUnits().forEach(x=>x.items.forEach(i=>map[i.id]=i));
-  Q={list:s.ids.map(i=>map[i]).filter(Boolean),idx:s.idx||0,answers:s.answers||[],picks:[],mode:"timed",unit:u,endsAt:s.endsAt,picked:null,checked:false};
+  Q={list:s.ids.map(i=>map[i]).filter(Boolean),idx:s.idx||0,answers:s.answers||[],picks:[],mode:"timed",unit:u,endsAt:Infinity,picked:null,checked:false};
   drawQ();
 }
 function fmt(ms){const t=Math.max(0,Math.round(ms/1000));return String(Math.floor(t/60)).padStart(2,"0")+":"+String(t%60).padStart(2,"0");}
@@ -8300,6 +8332,17 @@ const ASSIGNMENTS = [
       es: "Juego de carrera en el tribunal — 6 trabajos, de asistente jurídico a abogado ante la Corte Suprema, más un examen final. Enmiendas 11–20 con repaso de la Carta de Derechos. ~20 min por trabajo."
     },
     tag: { en: "Unit 5 Game", es: "Juego Unidad 5" },
+    done: () => cd2Promotions() >= 7
+  },
+  {
+    pack: "ap-gov", unit: "apg-u3",
+    tab: "counsel2", icon: "⚖️", color: "#B58CFF",
+    title: "Counsel for the Defense II",
+    blurb: {
+      en: "Courtroom career game — defend clients with the Bill of Rights and Amendments 11–20. Great practice for civil liberties, due process and incorporation. ~20 min per job.",
+      es: "Juego de carrera en el tribunal — defiende clientes con la Carta de Derechos y las Enmiendas 11–20. Buena práctica de libertades civiles, debido proceso e incorporación. ~20 min por trabajo."
+    },
+    tag: { en: "Unit 3 Game", es: "Juego Unidad 3" },
     done: () => cd2Promotions() >= 7
   },
   {
@@ -8939,7 +8982,7 @@ function viewArcade(){
     <div class="zonestrip">${ZONES.map(z=>
       `<button class="zone ${zoneOf(g.id).k===z.k?"on":""}" title="${esc(L(z.name))}"
         onclick="setZone('${g.id}','${z.k}')">
-        <span class="zthumb ${zoneClass(z)}"></span>
+        <span class="zthumb ${zoneClass(z)}" ${art(z.bg)?`style="background-image:url(${art(z.bg)});image-rendering:auto"`:""}></span>
         <span>${esc(L(z.name))}</span></button>`).join("")}</div>
     <div class="row"><span class="chip">${T_.level} ${lvlOf(g.id)}</span>
       <span class="chip">${T_.bestScore} ${S.best[g.id]||0}</span>
@@ -11756,6 +11799,7 @@ document.getElementById("logoBtn").onclick=showTitle;
 document.getElementById("btnEN").onclick=()=>setLang("en");
 document.getElementById("btnES").onclick=()=>setLang("es");
 load();
+shuffleBankChoices(allPacks());
 fbInit();
 document.getElementById("tagline").textContent=T_.tagline;
 installTileStyles();
