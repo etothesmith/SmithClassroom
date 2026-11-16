@@ -49,7 +49,28 @@ const DEFAULT_ART = {
  "tile_cosmic": "assets/tile_cosmic.png",
  "prop_hut": "assets/prop_hut.png",
  "prop_volcano": "assets/prop_volcano.png",
- "prop_deck": "assets/prop_deck.png"
+ "prop_deck": "assets/prop_deck.png",
+ /* Zone backdrops for the arcade zone picker and runner skies (repo root). */
+ "bg_bamboo": "bg_bamboo.jpg",
+ "bg_chasm": "bg_chasm.jpg",
+ "bg_cyber": "bg_cyber.jpg",
+ "bg_dcanyon": "bg_dcanyon.jpg",
+ "bg_dcontrol": "bg_dcontrol.jpg",
+ "bg_ddunes": "bg_ddunes.jpg",
+ "bg_dfort": "bg_dfort.jpg",
+ "bg_dhq": "bg_dhq.jpg",
+ "bg_dmine": "bg_dmine.jpg",
+ "bg_dmining": "bg_dmining.jpg",
+ "bg_doasis": "bg_doasis.jpg",
+ "bg_doutpost": "bg_doutpost.jpg",
+ "bg_dsteampunk": "bg_dsteampunk.jpg",
+ "bg_factory": "bg_factory.jpg",
+ "bg_gumdrop": "bg_gumdrop.jpg",
+ "bg_manor": "bg_manor.jpg",
+ "bg_port": "bg_port.jpg",
+ "bg_pyramid": "bg_pyramid.jpg",
+ "bg_swamp": "bg_swamp.jpg",
+ "bg_valley": "bg_valley.jpg"
 };
 
 /* Episode illustrations, one set per course. Loaded on demand as <img>. */
