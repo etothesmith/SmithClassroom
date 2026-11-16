@@ -1,0 +1,1154 @@
+[
+ {
+  "file": "ui/cert_frame.jpg",
+  "w": 2200,
+  "h": 1700,
+  "kind": "background",
+  "bytes": 216551,
+  "qa": ""
+ },
+ {
+  "file": "ui/emblem_crest.webp",
+  "w": 1024,
+  "h": 1024,
+  "kind": "sprite (magenta keyed)",
+  "bytes": 44144,
+  "qa": ""
+ },
+ {
+  "file": "ui/badges/badge_arcade_ace.webp",
+  "w": 256,
+  "h": 256,
+  "kind": "icon (white keyed)",
+  "bytes": 8634,
+  "qa": ""
+ },
+ {
+  "file": "ui/badges/badge_bilingual.webp",
+  "w": 256,
+  "h": 256,
+  "kind": "icon (white keyed)",
+  "bytes": 5572,
+  "qa": ""
+ },
+ {
+  "file": "ui/badges/badge_course_master.webp",
+  "w": 256,
+  "h": 256,
+  "kind": "icon (white keyed)",
+  "bytes": 6188,
+  "qa": ""
+ },
+ {
+  "file": "ui/badges/badge_explorer.webp",
+  "w": 256,
+  "h": 256,
+  "kind": "icon (white keyed)",
+  "bytes": 9370,
+  "qa": ""
+ },
+ {
+  "file": "ui/badges/badge_first_cert.webp",
+  "w": 256,
+  "h": 256,
+  "kind": "icon (white keyed)",
+  "bytes": 6892,
+  "qa": ""
+ },
+ {
+  "file": "ui/badges/badge_new_recruit.webp",
+  "w": 256,
+  "h": 256,
+  "kind": "icon (white keyed)",
+  "bytes": 9054,
+  "qa": ""
+ },
+ {
+  "file": "ui/badges/badge_perfect.webp",
+  "w": 256,
+  "h": 256,
+  "kind": "icon (white keyed)",
+  "bytes": 11668,
+  "qa": ""
+ },
+ {
+  "file": "ui/badges/badge_streak_3.webp",
+  "w": 256,
+  "h": 256,
+  "kind": "icon (white keyed)",
+  "bytes": 9274,
+  "qa": ""
+ },
+ {
+  "file": "ui/badges/badge_streak_30.webp",
+  "w": 256,
+  "h": 256,
+  "kind": "icon (white keyed)",
+  "bytes": 12872,
+  "qa": "removed 4 stray fragment(s); art touches the edge (may be cropped)"
+ },
+ {
+  "file": "ui/badges/badge_streak_7.webp",
+  "w": 256,
+  "h": 256,
+  "kind": "icon (white keyed)",
+  "bytes": 11938,
+  "qa": "removed 4 stray fragment(s)"
+ },
+ {
+  "file": "ui/badges/badge_study_hour.webp",
+  "w": 256,
+  "h": 256,
+  "kind": "icon (white keyed)",
+  "bytes": 8116,
+  "qa": ""
+ },
+ {
+  "file": "ui/badges/badge_team_player.webp",
+  "w": 256,
+  "h": 256,
+  "kind": "icon (white keyed)",
+  "bytes": 9410,
+  "qa": ""
+ },
+ {
+  "file": "ui/badges/tier_learning.webp",
+  "w": 256,
+  "h": 256,
+  "kind": "icon (white keyed)",
+  "bytes": 8906,
+  "qa": ""
+ },
+ {
+  "file": "ui/badges/tier_mastered.webp",
+  "w": 256,
+  "h": 256,
+  "kind": "icon (white keyed)",
+  "bytes": 15108,
+  "qa": "art touches the edge (may be cropped)"
+ },
+ {
+  "file": "ui/badges/tier_practiced.webp",
+  "w": 256,
+  "h": 256,
+  "kind": "icon (white keyed)",
+  "bytes": 8662,
+  "qa": ""
+ },
+ {
+  "file": "ui/badges/tier_proficient.webp",
+  "w": 256,
+  "h": 256,
+  "kind": "icon (white keyed)",
+  "bytes": 11194,
+  "qa": ""
+ },
+ {
+  "file": "ui/icons/ico_assignment.webp",
+  "w": 256,
+  "h": 256,
+  "kind": "icon (white keyed)",
+  "bytes": 7220,
+  "qa": ""
+ },
+ {
+  "file": "ui/icons/ico_certificate.webp",
+  "w": 256,
+  "h": 256,
+  "kind": "icon (white keyed)",
+  "bytes": 8396,
+  "qa": ""
+ },
+ {
+  "file": "ui/icons/ico_check.webp",
+  "w": 256,
+  "h": 256,
+  "kind": "icon (white keyed)",
+  "bytes": 6310,
+  "qa": ""
+ },
+ {
+  "file": "ui/icons/ico_classes.webp",
+  "w": 256,
+  "h": 256,
+  "kind": "icon (white keyed)",
+  "bytes": 9468,
+  "qa": "art touches the edge (may be cropped)"
+ },
+ {
+  "file": "ui/icons/ico_coin.webp",
+  "w": 256,
+  "h": 256,
+  "kind": "icon (white keyed)",
+  "bytes": 10060,
+  "qa": ""
+ },
+ {
+  "file": "ui/icons/ico_game.webp",
+  "w": 256,
+  "h": 256,
+  "kind": "icon (white keyed)",
+  "bytes": 8238,
+  "qa": ""
+ },
+ {
+  "file": "ui/icons/ico_lock.webp",
+  "w": 256,
+  "h": 256,
+  "kind": "icon (white keyed)",
+  "bytes": 5450,
+  "qa": ""
+ },
+ {
+  "file": "ui/icons/ico_locker.webp",
+  "w": 256,
+  "h": 256,
+  "kind": "icon (white keyed)",
+  "bytes": 6250,
+  "qa": "art touches the edge (may be cropped)"
+ },
+ {
+  "file": "ui/icons/ico_practice.webp",
+  "w": 256,
+  "h": 256,
+  "kind": "icon (white keyed)",
+  "bytes": 10162,
+  "qa": ""
+ },
+ {
+  "file": "ui/icons/ico_settings.webp",
+  "w": 256,
+  "h": 256,
+  "kind": "icon (white keyed)",
+  "bytes": 6814,
+  "qa": ""
+ },
+ {
+  "file": "ui/icons/ico_streak.webp",
+  "w": 256,
+  "h": 256,
+  "kind": "icon (white keyed)",
+  "bytes": 6580,
+  "qa": ""
+ },
+ {
+  "file": "ui/icons/ico_study.webp",
+  "w": 256,
+  "h": 256,
+  "kind": "icon (white keyed)",
+  "bytes": 8492,
+  "qa": ""
+ },
+ {
+  "file": "ui/icons/ico_teacher.webp",
+  "w": 256,
+  "h": 256,
+  "kind": "icon (white keyed)",
+  "bytes": 8856,
+  "qa": ""
+ },
+ {
+  "file": "ui/icons/ico_trophies.webp",
+  "w": 256,
+  "h": 256,
+  "kind": "icon (white keyed)",
+  "bytes": 7738,
+  "qa": "art touches the edge (may be cropped)"
+ },
+ {
+  "file": "ui/icons/ico_world.webp",
+  "w": 256,
+  "h": 256,
+  "kind": "icon (white keyed)",
+  "bytes": 7812,
+  "qa": "art touches the edge (may be cropped)"
+ },
+ {
+  "file": "ui/icons/ico_xp.webp",
+  "w": 256,
+  "h": 256,
+  "kind": "icon (white keyed)",
+  "bytes": 5964,
+  "qa": ""
+ },
+ {
+  "file": "ui/seals/seal_ap_gov.webp",
+  "w": 512,
+  "h": 512,
+  "kind": "icon (white keyed)",
+  "bytes": 24404,
+  "qa": ""
+ },
+ {
+  "file": "ui/seals/seal_ap_macro.webp",
+  "w": 512,
+  "h": 512,
+  "kind": "icon (white keyed)",
+  "bytes": 24946,
+  "qa": ""
+ },
+ {
+  "file": "ui/seals/seal_econ_h.webp",
+  "w": 512,
+  "h": 512,
+  "kind": "icon (white keyed)",
+  "bytes": 28720,
+  "qa": ""
+ },
+ {
+  "file": "ui/seals/seal_gov_h.webp",
+  "w": 512,
+  "h": 512,
+  "kind": "icon (white keyed)",
+  "bytes": 23640,
+  "qa": ""
+ },
+ {
+  "file": "ui/seals/seal_hope.webp",
+  "w": 512,
+  "h": 512,
+  "kind": "icon (white keyed)",
+  "bytes": 26188,
+  "qa": ""
+ },
+ {
+  "file": "ui/seals/seal_smiths.webp",
+  "w": 512,
+  "h": 512,
+  "kind": "icon (white keyed)",
+  "bytes": 24342,
+  "qa": ""
+ },
+ {
+  "file": "world/title_bg.jpg",
+  "w": 1920,
+  "h": 1080,
+  "kind": "background",
+  "bytes": 388474,
+  "qa": ""
+ },
+ {
+  "file": "world/world_map.jpg",
+  "w": 2400,
+  "h": 1600,
+  "kind": "background",
+  "bytes": 378086,
+  "qa": ""
+ },
+ {
+  "file": "world/buildings/bld_arcade.webp",
+  "w": 512,
+  "h": 512,
+  "kind": "sprite (magenta keyed)",
+  "bytes": 22864,
+  "qa": ""
+ },
+ {
+  "file": "world/buildings/bld_bulletin.webp",
+  "w": 512,
+  "h": 512,
+  "kind": "sprite (magenta keyed)",
+  "bytes": 15768,
+  "qa": ""
+ },
+ {
+  "file": "world/buildings/bld_capitol.webp",
+  "w": 512,
+  "h": 512,
+  "kind": "sprite (magenta keyed)",
+  "bytes": 27240,
+  "qa": "art touches the edge (may be cropped)"
+ },
+ {
+  "file": "world/buildings/bld_econ_hall.webp",
+  "w": 512,
+  "h": 512,
+  "kind": "sprite (magenta keyed)",
+  "bytes": 28522,
+  "qa": "art touches the edge (may be cropped)"
+ },
+ {
+  "file": "world/buildings/bld_fed_tower.webp",
+  "w": 512,
+  "h": 512,
+  "kind": "sprite (magenta keyed)",
+  "bytes": 29104,
+  "qa": "art touches the edge (may be cropped)"
+ },
+ {
+  "file": "world/buildings/bld_fieldhouse.webp",
+  "w": 512,
+  "h": 512,
+  "kind": "sprite (magenta keyed)",
+  "bytes": 25674,
+  "qa": "removed 1 stray fragment(s); art touches the edge (may be cropped)"
+ },
+ {
+  "file": "world/buildings/bld_locker_dorm.webp",
+  "w": 512,
+  "h": 512,
+  "kind": "sprite (magenta keyed)",
+  "bytes": 26602,
+  "qa": "removed 3 stray fragment(s)"
+ },
+ {
+  "file": "world/buildings/bld_market.webp",
+  "w": 512,
+  "h": 512,
+  "kind": "sprite (magenta keyed)",
+  "bytes": 28512,
+  "qa": "removed 1 stray fragment(s)"
+ },
+ {
+  "file": "world/buildings/bld_principal.webp",
+  "w": 512,
+  "h": 512,
+  "kind": "sprite (magenta keyed)",
+  "bytes": 24968,
+  "qa": ""
+ },
+ {
+  "file": "world/buildings/bld_supreme_court.webp",
+  "w": 512,
+  "h": 512,
+  "kind": "sprite (magenta keyed)",
+  "bytes": 28244,
+  "qa": "art touches the edge (may be cropped)"
+ },
+ {
+  "file": "world/buildings/bld_trophy_hall.webp",
+  "w": 512,
+  "h": 512,
+  "kind": "sprite (magenta keyed)",
+  "bytes": 30628,
+  "qa": "removed 1 stray fragment(s)"
+ },
+ {
+  "file": "world/buildings/bld_writing_center.webp",
+  "w": 512,
+  "h": 512,
+  "kind": "sprite (magenta keyed)",
+  "bytes": 25946,
+  "qa": ""
+ },
+ {
+  "file": "world/banners/banner_ap_gov.jpg",
+  "w": 1536,
+  "h": 512,
+  "kind": "background",
+  "bytes": 118085,
+  "qa": ""
+ },
+ {
+  "file": "world/banners/banner_ap_macro.jpg",
+  "w": 1536,
+  "h": 512,
+  "kind": "background",
+  "bytes": 109411,
+  "qa": ""
+ },
+ {
+  "file": "world/banners/banner_arcade.jpg",
+  "w": 1536,
+  "h": 512,
+  "kind": "background",
+  "bytes": 92341,
+  "qa": ""
+ },
+ {
+  "file": "world/banners/banner_bulletin.jpg",
+  "w": 1536,
+  "h": 512,
+  "kind": "background",
+  "bytes": 80938,
+  "qa": ""
+ },
+ {
+  "file": "world/banners/banner_econ_h.jpg",
+  "w": 1536,
+  "h": 512,
+  "kind": "background",
+  "bytes": 124158,
+  "qa": ""
+ },
+ {
+  "file": "world/banners/banner_gov_h.jpg",
+  "w": 1536,
+  "h": 512,
+  "kind": "background",
+  "bytes": 123475,
+  "qa": ""
+ },
+ {
+  "file": "world/banners/banner_hope.jpg",
+  "w": 1536,
+  "h": 512,
+  "kind": "background",
+  "bytes": 110476,
+  "qa": ""
+ },
+ {
+  "file": "world/banners/banner_locker.jpg",
+  "w": 1536,
+  "h": 512,
+  "kind": "background",
+  "bytes": 92447,
+  "qa": ""
+ },
+ {
+  "file": "world/banners/banner_market.jpg",
+  "w": 1536,
+  "h": 512,
+  "kind": "background",
+  "bytes": 111316,
+  "qa": ""
+ },
+ {
+  "file": "world/banners/banner_principal.jpg",
+  "w": 1536,
+  "h": 512,
+  "kind": "background",
+  "bytes": 60074,
+  "qa": ""
+ },
+ {
+  "file": "world/banners/banner_trophies.jpg",
+  "w": 1536,
+  "h": 512,
+  "kind": "background",
+  "bytes": 111742,
+  "qa": ""
+ },
+ {
+  "file": "world/banners/banner_writing.jpg",
+  "w": 1536,
+  "h": 512,
+  "kind": "background",
+  "bytes": 101442,
+  "qa": ""
+ },
+ {
+  "file": "avatar/acch/acch_beanie_red.webp",
+  "w": 256,
+  "h": 256,
+  "kind": "sprite (magenta keyed)",
+  "bytes": 5680,
+  "qa": "removed 1 stray fragment(s)"
+ },
+ {
+  "file": "avatar/acch/acch_fed_headset.webp",
+  "w": 256,
+  "h": 256,
+  "kind": "sprite (magenta keyed)",
+  "bytes": 5902,
+  "qa": ""
+ },
+ {
+  "file": "avatar/acch/acch_grenadier_bearskin.webp",
+  "w": 256,
+  "h": 256,
+  "kind": "sprite (magenta keyed)",
+  "bytes": 4578,
+  "qa": ""
+ },
+ {
+  "file": "avatar/acch/acch_laurel.webp",
+  "w": 256,
+  "h": 256,
+  "kind": "sprite (magenta keyed)",
+  "bytes": 11194,
+  "qa": ""
+ },
+ {
+  "file": "avatar/acch/acch_mortarboard.webp",
+  "w": 256,
+  "h": 256,
+  "kind": "sprite (magenta keyed)",
+  "bytes": 4308,
+  "qa": ""
+ },
+ {
+  "file": "avatar/acch/acch_powdered_wig.webp",
+  "w": 256,
+  "h": 256,
+  "kind": "sprite (magenta keyed)",
+  "bytes": 8382,
+  "qa": ""
+ },
+ {
+  "file": "avatar/acch/acch_sports_visor.webp",
+  "w": 256,
+  "h": 256,
+  "kind": "sprite (magenta keyed)",
+  "bytes": 3622,
+  "qa": ""
+ },
+ {
+  "file": "avatar/acch/acch_sweatband.webp",
+  "w": 256,
+  "h": 256,
+  "kind": "sprite (magenta keyed)",
+  "bytes": 3624,
+  "qa": ""
+ },
+ {
+  "file": "avatar/decor/deco_banner_star.webp",
+  "w": 256,
+  "h": 256,
+  "kind": "sprite (magenta keyed)",
+  "bytes": 5388,
+  "qa": "removed 8 stray fragment(s)"
+ },
+ {
+  "file": "avatar/decor/deco_beanbag.webp",
+  "w": 256,
+  "h": 256,
+  "kind": "sprite (magenta keyed)",
+  "bytes": 5378,
+  "qa": ""
+ },
+ {
+  "file": "avatar/decor/deco_bookshelf.webp",
+  "w": 256,
+  "h": 256,
+  "kind": "sprite (magenta keyed)",
+  "bytes": 6386,
+  "qa": ""
+ },
+ {
+  "file": "avatar/decor/deco_desk.webp",
+  "w": 256,
+  "h": 256,
+  "kind": "sprite (magenta keyed)",
+  "bytes": 5712,
+  "qa": ""
+ },
+ {
+  "file": "avatar/decor/deco_dumbbells.webp",
+  "w": 256,
+  "h": 256,
+  "kind": "sprite (magenta keyed)",
+  "bytes": 7880,
+  "qa": ""
+ },
+ {
+  "file": "avatar/decor/deco_fish_tank.webp",
+  "w": 256,
+  "h": 256,
+  "kind": "sprite (magenta keyed)",
+  "bytes": 7218,
+  "qa": ""
+ },
+ {
+  "file": "avatar/decor/deco_floor_lamp.webp",
+  "w": 256,
+  "h": 256,
+  "kind": "sprite (magenta keyed)",
+  "bytes": 3514,
+  "qa": ""
+ },
+ {
+  "file": "avatar/decor/deco_gaming_chair.webp",
+  "w": 256,
+  "h": 256,
+  "kind": "sprite (magenta keyed)",
+  "bytes": 7540,
+  "qa": ""
+ },
+ {
+  "file": "avatar/decor/deco_mini_fridge.webp",
+  "w": 256,
+  "h": 256,
+  "kind": "sprite (magenta keyed)",
+  "bytes": 3562,
+  "qa": ""
+ },
+ {
+  "file": "avatar/decor/deco_pennant.webp",
+  "w": 256,
+  "h": 256,
+  "kind": "sprite (magenta keyed)",
+  "bytes": 2878,
+  "qa": ""
+ },
+ {
+  "file": "avatar/decor/deco_plant.webp",
+  "w": 256,
+  "h": 256,
+  "kind": "sprite (magenta keyed)",
+  "bytes": 12134,
+  "qa": ""
+ },
+ {
+  "file": "avatar/decor/deco_poster_capitol.webp",
+  "w": 256,
+  "h": 256,
+  "kind": "sprite (magenta keyed)",
+  "bytes": 5822,
+  "qa": ""
+ },
+ {
+  "file": "avatar/decor/deco_poster_chart.webp",
+  "w": 256,
+  "h": 256,
+  "kind": "sprite (magenta keyed)",
+  "bytes": 4348,
+  "qa": ""
+ },
+ {
+  "file": "avatar/decor/deco_record_player.webp",
+  "w": 256,
+  "h": 256,
+  "kind": "sprite (magenta keyed)",
+  "bytes": 5782,
+  "qa": ""
+ },
+ {
+  "file": "avatar/decor/deco_rug.webp",
+  "w": 256,
+  "h": 256,
+  "kind": "sprite (magenta keyed)",
+  "bytes": 3860,
+  "qa": ""
+ },
+ {
+  "file": "avatar/decor/deco_trophy.webp",
+  "w": 256,
+  "h": 256,
+  "kind": "sprite (magenta keyed)",
+  "bytes": 4566,
+  "qa": ""
+ },
+ {
+  "file": "npc/npc_smith_cheer.webp",
+  "w": 512,
+  "h": 768,
+  "kind": "sprite (magenta keyed)",
+  "bytes": 25694,
+  "qa": ""
+ },
+ {
+  "file": "npc/npc_smith_clipboard.webp",
+  "w": 512,
+  "h": 768,
+  "kind": "sprite (magenta keyed)",
+  "bytes": 23572,
+  "qa": ""
+ },
+ {
+  "file": "npc/npc_smith_point.webp",
+  "w": 512,
+  "h": 768,
+  "kind": "sprite (magenta keyed)",
+  "bytes": 24844,
+  "qa": ""
+ },
+ {
+  "file": "npc/npc_smith_think.webp",
+  "w": 512,
+  "h": 768,
+  "kind": "sprite (magenta keyed)",
+  "bytes": 22058,
+  "qa": ""
+ },
+ {
+  "file": "npc/npc_smith_thumbs.webp",
+  "w": 512,
+  "h": 768,
+  "kind": "sprite (magenta keyed)",
+  "bytes": 24388,
+  "qa": ""
+ },
+ {
+  "file": "npc/npc_smith_wave.webp",
+  "w": 512,
+  "h": 768,
+  "kind": "sprite (magenta keyed)",
+  "bytes": 26124,
+  "qa": ""
+ },
+ {
+  "file": "games/quest/mon_couch_potato.webp",
+  "w": 256,
+  "h": 256,
+  "kind": "sprite (magenta keyed)",
+  "bytes": 9518,
+  "qa": ""
+ },
+ {
+  "file": "games/quest/mon_deficit_dragon.webp",
+  "w": 256,
+  "h": 256,
+  "kind": "sprite (magenta keyed)",
+  "bytes": 11548,
+  "qa": ""
+ },
+ {
+  "file": "games/quest/mon_fake_news_gremlin.webp",
+  "w": 256,
+  "h": 256,
+  "kind": "sprite (magenta keyed)",
+  "bytes": 10880,
+  "qa": ""
+ },
+ {
+  "file": "games/quest/mon_filibuster_sloth.webp",
+  "w": 256,
+  "h": 256,
+  "kind": "sprite (magenta keyed)",
+  "bytes": 7096,
+  "qa": ""
+ },
+ {
+  "file": "games/quest/mon_gerrymander_snake.webp",
+  "w": 256,
+  "h": 256,
+  "kind": "sprite (magenta keyed)",
+  "bytes": 9202,
+  "qa": ""
+ },
+ {
+  "file": "games/quest/mon_inflation_blob.webp",
+  "w": 256,
+  "h": 256,
+  "kind": "sprite (magenta keyed)",
+  "bytes": 6010,
+  "qa": ""
+ },
+ {
+  "file": "games/quest/mon_monopoly_moth.webp",
+  "w": 256,
+  "h": 256,
+  "kind": "sprite (magenta keyed)",
+  "bytes": 9078,
+  "qa": ""
+ },
+ {
+  "file": "games/quest/mon_tariff_troll.webp",
+  "w": 256,
+  "h": 256,
+  "kind": "sprite (magenta keyed)",
+  "bytes": 10974,
+  "qa": ""
+ },
+ {
+  "file": "games/kart/kart_bank.webp",
+  "w": 256,
+  "h": 256,
+  "kind": "sprite (magenta keyed)",
+  "bytes": 8580,
+  "qa": ""
+ },
+ {
+  "file": "games/kart/kart_bus.webp",
+  "w": 256,
+  "h": 256,
+  "kind": "sprite (magenta keyed)",
+  "bytes": 6852,
+  "qa": ""
+ },
+ {
+  "file": "games/kart/kart_couch.webp",
+  "w": 256,
+  "h": 256,
+  "kind": "sprite (magenta keyed)",
+  "bytes": 7020,
+  "qa": ""
+ },
+ {
+  "file": "games/kart/kart_gavel.webp",
+  "w": 256,
+  "h": 256,
+  "kind": "sprite (magenta keyed)",
+  "bytes": 7706,
+  "qa": ""
+ },
+ {
+  "file": "games/kart/kart_golfcart.webp",
+  "w": 256,
+  "h": 256,
+  "kind": "sprite (magenta keyed)",
+  "bytes": 9904,
+  "qa": ""
+ },
+ {
+  "file": "games/kart/kart_grenadier.webp",
+  "w": 256,
+  "h": 256,
+  "kind": "sprite (magenta keyed)",
+  "bytes": 8410,
+  "qa": ""
+ },
+ {
+  "file": "games/kart/kart_lawnmower.webp",
+  "w": 256,
+  "h": 256,
+  "kind": "sprite (magenta keyed)",
+  "bytes": 7538,
+  "qa": ""
+ },
+ {
+  "file": "games/kart/kart_sneaker.webp",
+  "w": 256,
+  "h": 256,
+  "kind": "sprite (magenta keyed)",
+  "bytes": 9304,
+  "qa": ""
+ },
+ {
+  "file": "games/covers/cover_archive_heist.jpg",
+  "w": 960,
+  "h": 540,
+  "kind": "background",
+  "bytes": 96387,
+  "qa": ""
+ },
+ {
+  "file": "games/covers/cover_bill_to_law.jpg",
+  "w": 960,
+  "h": 540,
+  "kind": "background",
+  "bytes": 113215,
+  "qa": ""
+ },
+ {
+  "file": "games/covers/cover_campaign_trail.jpg",
+  "w": 960,
+  "h": 540,
+  "kind": "background",
+  "bytes": 96502,
+  "qa": ""
+ },
+ {
+  "file": "games/covers/cover_campus_kart.jpg",
+  "w": 960,
+  "h": 540,
+  "kind": "background",
+  "bytes": 103811,
+  "qa": ""
+ },
+ {
+  "file": "games/covers/cover_counsel_defense.jpg",
+  "w": 960,
+  "h": 540,
+  "kind": "background",
+  "bytes": 74784,
+  "qa": ""
+ },
+ {
+  "file": "games/covers/cover_data_desk.jpg",
+  "w": 960,
+  "h": 540,
+  "kind": "background",
+  "bytes": 96472,
+  "qa": ""
+ },
+ {
+  "file": "games/covers/cover_fiscal_fix.jpg",
+  "w": 960,
+  "h": 540,
+  "kind": "background",
+  "bytes": 103240,
+  "qa": ""
+ },
+ {
+  "file": "games/covers/cover_frontier_lab.jpg",
+  "w": 960,
+  "h": 540,
+  "kind": "background",
+  "bytes": 106338,
+  "qa": ""
+ },
+ {
+  "file": "games/covers/cover_grenadier_run.jpg",
+  "w": 960,
+  "h": 540,
+  "kind": "background",
+  "bytes": 99478,
+  "qa": ""
+ },
+ {
+  "file": "games/covers/cover_mall_tycoon.jpg",
+  "w": 960,
+  "h": 540,
+  "kind": "background",
+  "bytes": 130829,
+  "qa": ""
+ },
+ {
+  "file": "games/covers/cover_marginal_mastermind.jpg",
+  "w": 960,
+  "h": 540,
+  "kind": "background",
+  "bytes": 113922,
+  "qa": ""
+ },
+ {
+  "file": "games/covers/cover_money_moves.jpg",
+  "w": 960,
+  "h": 540,
+  "kind": "background",
+  "bytes": 98773,
+  "qa": ""
+ },
+ {
+  "file": "games/covers/cover_port_authority.jpg",
+  "w": 960,
+  "h": 540,
+  "kind": "background",
+  "bytes": 82791,
+  "qa": ""
+ },
+ {
+  "file": "games/covers/cover_scotus_docket.jpg",
+  "w": 960,
+  "h": 540,
+  "kind": "background",
+  "bytes": 78535,
+  "qa": ""
+ },
+ {
+  "file": "games/covers/cover_smittys_grill.jpg",
+  "w": 960,
+  "h": 540,
+  "kind": "background",
+  "bytes": 111779,
+  "qa": ""
+ },
+ {
+  "file": "games/covers/cover_training_camp.jpg",
+  "w": 960,
+  "h": 540,
+  "kind": "background",
+  "bytes": 93664,
+  "qa": ""
+ },
+ {
+  "file": "games/run/run_backpacks.webp",
+  "w": 256,
+  "h": 256,
+  "kind": "sprite (magenta keyed)",
+  "bytes": 11448,
+  "qa": ""
+ },
+ {
+  "file": "games/run/run_book_stack.webp",
+  "w": 256,
+  "h": 256,
+  "kind": "sprite (magenta keyed)",
+  "bytes": 10400,
+  "qa": ""
+ },
+ {
+  "file": "games/run/run_coin.webp",
+  "w": 256,
+  "h": 256,
+  "kind": "sprite (magenta keyed)",
+  "bytes": 7644,
+  "qa": ""
+ },
+ {
+  "file": "games/run/run_cone.webp",
+  "w": 256,
+  "h": 256,
+  "kind": "sprite (magenta keyed)",
+  "bytes": 5846,
+  "qa": ""
+ },
+ {
+  "file": "games/run/run_dust.webp",
+  "w": 256,
+  "h": 256,
+  "kind": "sprite (magenta keyed)",
+  "bytes": 4904,
+  "qa": ""
+ },
+ {
+  "file": "games/run/run_gate_a.webp",
+  "w": 256,
+  "h": 256,
+  "kind": "sprite (magenta keyed)",
+  "bytes": 5034,
+  "qa": ""
+ },
+ {
+  "file": "games/run/run_gate_b.webp",
+  "w": 256,
+  "h": 256,
+  "kind": "sprite (magenta keyed)",
+  "bytes": 4214,
+  "qa": ""
+ },
+ {
+  "file": "games/run/run_gem.webp",
+  "w": 256,
+  "h": 256,
+  "kind": "sprite (magenta keyed)",
+  "bytes": 4864,
+  "qa": ""
+ },
+ {
+  "file": "games/run/run_hurdle.webp",
+  "w": 256,
+  "h": 256,
+  "kind": "sprite (magenta keyed)",
+  "bytes": 4518,
+  "qa": ""
+ },
+ {
+  "file": "games/run/run_locker_door.webp",
+  "w": 256,
+  "h": 256,
+  "kind": "sprite (magenta keyed)",
+  "bytes": 6744,
+  "qa": ""
+ },
+ {
+  "file": "games/run/run_magnet.webp",
+  "w": 256,
+  "h": 256,
+  "kind": "sprite (magenta keyed)",
+  "bytes": 6314,
+  "qa": ""
+ },
+ {
+  "file": "games/run/run_mop_bucket.webp",
+  "w": 256,
+  "h": 256,
+  "kind": "sprite (magenta keyed)",
+  "bytes": 9236,
+  "qa": ""
+ },
+ {
+  "file": "games/run/run_shield.webp",
+  "w": 256,
+  "h": 256,
+  "kind": "sprite (magenta keyed, bubble recoloured blue)",
+  "bytes": 6138,
+  "qa": ""
+ },
+ {
+  "file": "games/run/run_sparkle.webp",
+  "w": 256,
+  "h": 256,
+  "kind": "sprite (magenta keyed)",
+  "bytes": 3940,
+  "qa": ""
+ },
+ {
+  "file": "games/run/run_vending.webp",
+  "w": 256,
+  "h": 256,
+  "kind": "sprite (magenta keyed)",
+  "bytes": 6400,
+  "qa": ""
+ },
+ {
+  "file": "games/run/run_wet_floor.webp",
+  "w": 256,
+  "h": 256,
+  "kind": "sprite (magenta keyed)",
+  "bytes": 6676,
+  "qa": ""
+ }
+]
