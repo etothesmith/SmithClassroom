@@ -16,7 +16,8 @@ const WL = (en, es) => (S.lang === "es" ? es : en);
 const _o = {render: window.render, dock: window.dock, paintBar: window.paintBar, showTitle: window.showTitle,
   hideTitle: window.hideTitle, viewPack: window.viewPack, viewArcade: window.viewArcade, art: window.art,
   artTag: window.artTag, setLang: window.setLang, upgrade: window.upgrade, viewAssignments: window.viewAssignments,
-  showLangPick: window.showLangPick};
+  showLangPick: window.showLangPick, viewSmittys: window.viewSmittys, viewMoneyMoves: window.viewMoneyMoves,
+  viewCounsel2: window.viewCounsel2, viewMarginal: window.viewMarginal};
 
 /* ---------- courses: art and colour for each class ---------- */
 const COURSE_ART = {
@@ -125,7 +126,7 @@ const NAV = () => [
 function navSection(t){
   if (!t || t === "home" || t === "campus" || t === "assignments" || t === "showprep" || t === "showstudy") return "campus";
   if (t === "classes" || t.indexOf("pack:") === 0 || t.indexOf("unitwork:") === 0 || t.indexOf("coursework:") === 0 ||
-      t === "study" || t === "challenge" || ["marginal","moneymoves","counsel2","writing","marketlab","cfereview"].includes(t)) return "classes";
+      t === "study" || t === "challenge" || t.indexOf("ag:") === 0 || ["marginal","moneymoves","counsel2","writing","marketlab","cfereview"].includes(t)) return "classes";
   if (t === "locker" || t === "art") return "locker";
   if (t === "arcade" || t === "smittys") return "arcade";
   if (t === "trophies") return "trophies";
@@ -134,7 +135,7 @@ function navSection(t){
 }
 window.dock = function(){
   const el = document.getElementById("dock");
-  const full = ["gameshow","marginal","moneymoves","counsel2","writing","marketlab","cfereview"].includes(TAB);
+  const full = ["gameshow","marginal","moneymoves","counsel2","writing","marketlab","cfereview"].includes(TAB) || String(TAB).indexOf("ag:") === 0;
   el.style.display = full ? "none" : ""; if (full) { el.innerHTML = ""; return; }
   const cur = navSection(TAB);
   el.innerHTML = NAV().map(([k, ic, l]) =>
@@ -147,6 +148,7 @@ window.render = function(){
   const v2 = {campus:viewCampus, classes:viewClasses, locker:viewLocker, trophies:viewTrophies,
               writing:() => viewFrame("writing"), marketlab:() => viewFrame("marketlab"), cfereview:() => viewFrame("cfereview")}[TAB];
   if (v2) { paintBar(); dock(); v2(); return; }
+  if (String(TAB).indexOf("ag:") === 0) { paintBar(); dock(); viewAG(TAB.slice(3)); return; }
   _o.render();
 };
 window.viewHome = function(){ TAB = "campus"; viewCampus(); };
@@ -318,6 +320,47 @@ ASSIGNMENTS.push(
           es:"Repaso para el examen final de todas las unidades: tarjetas, batallas contra jefes, repaso inmediato y un Boleto de Salida para demostrar dominio. Un certificado por unidad y otro por el CFE de práctica final."},
    tag:{en:"CFE Review",es:"Repaso del CFE"}, done:() => cfeDone("gov")}
 );
+
+/* ---------- assignment games (ag.html?g=<id>) ---------- */
+const AG_GAMES = [
+  {id:"data_desk", icon:"📊", color:"#2F7FD8", en:"Data Desk", es:"Mesa de Datos", min:25,
+   units:[["ap-econ","ap-m2"]], b:["GDP, unemployment and inflation from a newsroom data desk.","PIB, desempleo e inflación desde una mesa de datos."]},
+  {id:"fiscal_fix", icon:"🏛️", color:"#1E9E5A", en:"Fiscal Fix", es:"Arreglo Fiscal", min:25,
+   units:[["ap-econ","ap-m3"]], b:["Close the gap with AD/AS, the multiplier and fiscal policy.","Cierra la brecha con DA/OA, el multiplicador y la política fiscal."]},
+  {id:"port_authority", icon:"🚢", color:"#0E8FA8", en:"Port Authority", es:"Autoridad Portuaria", min:25,
+   units:[["ap-econ","ap-m6"],["econ-h","eh-u3"]], b:["Trade, exchange rates and comparative advantage at the docks.","Comercio, tipos de cambio y ventaja comparativa en el puerto."]},
+  {id:"mall_tycoon", icon:"🛍️", color:"#F08C2E", en:"Mall Tycoon", es:"Magnate del Centro Comercial", min:25,
+   units:[["econ-h","eh-u1"]], b:["Run four shops: supply, demand, price controls and elasticity.","Dirige cuatro tiendas: oferta, demanda, controles de precios y elasticidad."]},
+  {id:"bill_to_law", icon:"📜", color:"#1F3F8F", en:"Bill to Law", es:"De Proyecto a Ley", min:25,
+   units:[["us-gov","gov-u3"],["ap-gov","apg-u2"]], b:["Steer a bill through committee, the floor and the president's desk.","Guía un proyecto por el comité, el pleno y el escritorio del presidente."]},
+  {id:"campaign_trail", icon:"🗳️", color:"#D8344A", en:"Campaign Trail", es:"En Campaña", min:25,
+   units:[["us-gov","gov-u4"],["ap-gov","apg-u5"]], b:["Primaries, polls, campaign finance and the road to 270.","Primarias, encuestas, financiamiento y el camino a 270."]},
+  {id:"scotus_docket", icon:"⚖️", color:"#8A5CD8", en:"SCOTUS Docket", es:"Expediente de la Corte", min:30,
+   units:[["ap-gov","apg-u3"],["us-gov","gov-u5"]], b:["Clerk for the Court: 14 landmark cases, clauses and principles.","Asiste a la Corte: 14 casos clave, cláusulas y principios."]},
+  {id:"archive_heist", icon:"🗝️", color:"#C9A227", en:"Archive Heist", es:"Golpe al Archivo", min:25,
+   units:[["ap-gov","apg-u1"]], b:["Recover the nine foundational documents before the doors open.","Recupera los nueve documentos fundacionales antes de que abra el museo."]}
+];
+const agDone = id => (S.certs || []).some(c => c.src === "ev:ag-" + id);
+AG_GAMES.forEach(g => g.units.forEach(([pack, unit]) => ASSIGNMENTS.push({
+  pack, unit, tab:"ag:" + g.id, icon:g.icon, color:g.color,
+  get title(){ return WL(g.en, g.es); },
+  blurb:{en:g.b[0] + " ~" + g.min + " min.", es:g.b[1] + " ~" + g.min + " min."},
+  tag:{en:"Assignment Game", es:"Juego de tarea"}, done:() => agDone(g.id)
+})));
+function viewAG(id){
+  const g = AG_GAMES.find(x => x.id === id);
+  if (!g) { TAB = "assignments"; return render(); }
+  const back = ASSIGN_UNIT ? "unitwork:" + ASSIGN_UNIT : ASSIGN_PACK ? "coursework:" + ASSIGN_PACK : "assignments";
+  const src = "ag.html?g=" + encodeURIComponent(id) + "&lang=" + (S.lang || "en");
+  V().innerHTML = `
+  <div class="eprow"><button class="btn ghost" style="padding:8px 12px;min-height:0" onclick="TAB='${back}';render()">← ${WL("Back","Volver")}</button>
+    <h2 style="font-size:22px;margin-left:6px">${g.icon} ${WL(g.en, g.es)}</h2></div>
+  <div style="border:2.5px solid var(--char);border-radius:16px;overflow:hidden;box-shadow:0 5px 0 var(--char);background:#fff">
+    <iframe src="${src}" title="${esc(WL(g.en, g.es))}" style="width:100%;height:max(520px,min(88vh,calc(100vh - 150px)));border:none;display:block"
+      sandbox="allow-scripts allow-same-origin allow-forms allow-downloads allow-popups allow-modals"></iframe></div>
+  <p class="muted" style="font-size:12px;text-align:center"><a href="${src}" target="_blank" rel="noopener">${WL("Open in a new tab","Abrir en pestaña nueva")}</a></p>`;
+  window.scrollTo(0, 0);
+}
 /* CFE Review Quest saves in this browser under "cfeReviewQuest_v2|<teacher>|<school>",
    one entry per "<student name>|<course>". Done = any student on this device passed that course's Final. */
 function cfeDone(course){
@@ -371,6 +414,14 @@ window.viewArcade = function(){
     ${S.avatar ? `<button class="chip" style="cursor:pointer" onclick="S.skin=S.skin==='me'?'smith':'me';save();render()">${S.skin === "me" ? WL("Switch to Coach Smith","Cambiar a Coach Smith") : WL("Play as my avatar","Jugar con mi avatar")}</button>` : `<button class="chip bad" style="cursor:pointer" onclick="go('locker')">${WL("Build your avatar to play as you","Crea tu avatar para jugar")}</button>`}</div></div>`;
   const first = v.querySelector("h1.big"); if (first) { first.closest("section") ? null : first.remove(); }
   v.prepend(head);
+  /* cover art on each game card */
+  const covers = {sprint:`<img src="${V2}games/covers/cover_grenadier_run.jpg" alt="">`, kart:`<img src="${V2}games/covers/cover_campus_kart.jpg" alt="">`,
+    gunner:`<div style="display:flex;justify-content:center;gap:4%;align-items:flex-end;height:100%;padding:8px;background:url(${banner("banner_arcade")}) center/cover">${monsterSet().slice(0,4).map(n => `<img src="${TRIM(n)}" alt="" style="height:80%;width:auto;filter:drop-shadow(0 4px 0 rgba(0,0,0,.3))">`).join("")}</div>`};
+  GAMES.filter(g => !g.hidden).forEach(g => {
+    const sec = [...v.querySelectorAll("section.panel")].find(x => x.querySelector("h3") && x.querySelector("h3").textContent === L(g.name));
+    if (sec && covers[g.id] && !sec.querySelector(".gcover")) sec.insertAdjacentHTML("afterbegin",
+      `<div class="gcover" style="margin:-18px -18px 14px;height:150px;overflow:hidden;border-bottom:2.5px solid var(--char);border-radius:16px 16px 0 0">${g.id === "gunner" ? covers[g.id] : covers[g.id].replace("<img ", '<img style="width:100%;height:100%;object-fit:cover" ')}</div>`);
+  });
 };
 
 /* ---------- locker: the avatar studio ---------- */
@@ -597,9 +648,274 @@ function closeWhatsNew(to){
   go(to);
 }
 
+
+/* ============================================================================
+   WORLD LINK — the big games pay out in Smith's Classroom.
+
+   Money Moves and Counsel for the Defense II are compiled apps that keep
+   their own saves in this browser. The hub reads those saves (they're on the
+   same site) and pays for each new promotion; the final exam becomes a real
+   certificate in the Trophy Hall. Smaller games (Marginal Mastermind) send
+   events through world-link.js. Every payout has a fixed id and is paid
+   exactly once, so replays and refreshes can't farm coins.
+   ========================================================================== */
+const CAREER = {
+  mm:  {key:"money-moves-progress-v1", pack:"ap-econ", jobs:["teller","trader","loan","analyst","chair","treasury"],
+        game:"Money Moves", unit:{en:"Money Moves · Unit 4: The Financial Sector", es:"Money Moves · Unidad 4: El sector financiero"},
+        job:{teller:["Bank Teller","Cajero"],trader:["Bond Trader","Operador de bonos"],loan:["Loan Officer","Oficial de préstamos"],
+             analyst:["Fed Analyst","Analista de la Fed"],chair:["Fed Chair","Presidente de la Fed"],treasury:["Treasury","Tesoro"]}},
+  cd2: {key:"cfd2-career-v1", pack:"us-gov", jobs:["clerk","pd","civil","election","solicitor","advocate"],
+        game:"Counsel for the Defense II", unit:{en:"Counsel for the Defense II · Constitutional Counsel", es:"Counsel for the Defense II · Abogacía constitucional"},
+        job:{clerk:["Law Clerk","Asistente legal"],pd:["Public Defender","Defensor público"],civil:["Civil Rights Lawyer","Abogado de derechos civiles"],
+             election:["Election Lawyer","Abogado electoral"],solicitor:["Solicitor","Procurador"],advocate:["Supreme Court Advocate","Abogado ante la Corte Suprema"]}}
+};
+const PAY = {job:[2, 100], final:[5, 250]};
+let _payNotes = [];
+function readJSON(k){ try { return JSON.parse(localStorage.getItem(k) || "null"); } catch(e){ return null; } }
+function pay(id, coins, xp, label){
+  S.worldPaid = S.worldPaid || {};
+  if (S.worldPaid[id]) return false;
+  S.worldPaid[id] = Date.now();
+  S.xp += Math.max(0, Math.min(400, xp | 0)); S.tokens += Math.max(0, Math.min(6, coins | 0));
+  _payNotes.push(`${label} · +${coins} ${WL("coins","monedas")} · +${xp} XP`);
+  return true;
+}
+function addGameCert(id, unitLabel, packId, score){
+  if (S.certs.some(c => c.src === id)) return false;
+  const p = allPacks().find(p => p.id === packId), sc = Math.max(0, Math.min(100, Math.round(score || 100)));
+  S.certs.push({code: certCode(S.name || "student", id, sc), name: S.name || "Student", unit: unitLabel,
+    course: p ? L(p.name) : "", score: sc, date: today(), kind: "game", src: id});
+  _payNotes.push("★ " + WL("New certificate in your Trophy Hall","Nuevo certificado en tu salón de trofeos"));
+  return true;
+}
+function accuracy(stats){
+  let r = 0, w = 0; Object.values(stats || {}).forEach(v => { r += (v && v.r) || 0; w += (v && v.w) || 0; });
+  return r + w ? Math.round(r / (r + w) * 100) : 100;
+}
+function syncCareer(tag){
+  const g = CAREER[tag], sv = readJSON(g.key); if (!sv || !sv.progress) return;
+  const passed = st => st && (st.stage === "promo" || st.stage === "done");
+  g.jobs.forEach(j => { if (passed(sv.progress[j])) pay(`${tag}:${j}`, PAY.job[0], PAY.job[1], `${g.game}: ${WL(...g.job[j])}`); });
+  if (passed(sv.progress.final)) {
+    pay(`${tag}:final`, PAY.final[0], PAY.final[1], `${g.game}: ${WL("Final exam","Examen final")}`);
+    addGameCert(`${tag}:final`, L(g.unit), g.pack, accuracy(sv.stats));
+  }
+}
+/* the avatar is shared with Money Moves both ways: the latest edit wins */
+function avNorm(eq){ return eq && eq.v === 3 ? {v:3, shape:eq.shape, skin:eq.skin, face:eq.face ?? 14, hair:eq.hair ?? null,
+  top:eq.top, bottom:eq.bottom, acc:(eq.acc || []).slice()} : null; }
+function pullAvatarFromMM(){
+  const sv = readJSON(CAREER.mm.key), eq = avNorm(sv && sv.inv && sv.inv.equip);
+  if (!eq || !AV3.b[eq.shape + "-" + eq.skin]) return false;
+  const k = avKey(eq);
+  if (k === S.avatarSynced || (S.avatar && k === avKey(S.avatar))) { S.avatarSynced = k; return false; }
+  if (!S.avatarSynced && S.avatar) { S.avatarSynced = avKey(S.avatar); return false; }  /* first run: keep the hub's */
+  S.avatar = eq; S.avatarSynced = k; if (S.skin !== "smith") S.skin = "me"; return true;
+}
+function pushAvatarToMM(){
+  if (!S.avatar) return;
+  const sv = readJSON(CAREER.mm.key); if (!sv || !sv.player) return;   /* only for students who already play */
+  sv.inv = sv.inv || {}; sv.inv.equip = JSON.parse(JSON.stringify(S.avatar));
+  const owned = sv.inv.owned = sv.inv.owned || {};
+  [S.avatar.top, S.avatar.bottom, ...(S.avatar.acc || [])].forEach(id => { if (id) owned[id] = true; });
+  try { localStorage.setItem(CAREER.mm.key, JSON.stringify(sv)); S.avatarSynced = avKey(S.avatar); } catch(e){}
+}
+function drainOutbox(){
+  const box = readJSON("world.outbox") || []; if (!box.length) return;
+  const done = new Set();
+  box.forEach(ev => {
+    const key = ev.type + ":" + ev.id;
+    if (ev.type === "award") pay("ev:" + ev.id, Math.min(5, ev.coins | 0), Math.min(300, ev.xp | 0), ev.label || ev.id);
+    else if (ev.type === "cert") addGameCert("ev:" + ev.id, String(ev.unit || ev.id).slice(0, 120), ev.course, +ev.score || 100);
+    else if (ev.type === "badge") { S.worldBadges = S.worldBadges || {}; S.worldBadges[ev.id] = 1; }
+    done.add(key);
+  });
+  /* remove only what we handled; a game may have added more meanwhile */
+  const now = readJSON("world.outbox") || [];
+  try { localStorage.setItem("world.outbox", JSON.stringify(now.filter(e => !done.has(e.type + ":" + e.id)))); } catch(e){}
+}
+let _syncing = false;
+function syncGames(){
+  if (_syncing) return; _syncing = true;
+  try {
+    const before = JSON.stringify([S.xp, S.tokens, S.certs.length, S.avatar]);
+    syncCareer("mm"); syncCareer("cd2"); drainOutbox();
+    const avChanged = pullAvatarFromMM();
+    if (JSON.stringify([S.xp, S.tokens, S.certs.length, S.avatar]) !== before || avChanged) { save(); paintBar(); }
+    if (avChanged) refreshMe();
+    if (_payNotes.length) { const n = _payNotes.splice(0); toast("🎉 " + n.slice(0, 2).join("  ·  ") + (n.length > 2 ? `  (+${n.length - 2})` : "")); }
+  } finally { _syncing = false; }
+}
+window.addEventListener("storage", e => { if (!e.key || [CAREER.mm.key, CAREER.cd2.key, "world.outbox"].includes(e.key)) syncGames(); });
+window.addEventListener("message", e => { if (e.origin === location.origin && e.data && e.data.world === "outbox") syncGames(); });
+window.addEventListener("focus", syncGames);
+document.addEventListener("visibilitychange", () => { if (!document.hidden) syncGames(); });
+
+/* a portrait-shaped copy of the avatar for games that show a character
+   picture (Counsel II, Marginal Mastermind), cached in browser storage */
+function cacheAvatarForGames(r){
+  if (!r || !r.canvas) return;
+  try {
+    const old = readJSON("world.avatar");
+    if (old && old.key === r.key && old.name === S.name) return;
+    const cv = r.canvas, c = cv.getContext("2d"), d = c.getImageData(0, 0, cv.width, cv.height).data;
+    let x0 = cv.width, y0 = cv.height, x1 = 0, y1 = 0;
+    for (let y = 0; y < cv.height; y += 2) for (let x = 0; x < cv.width; x += 2)
+      if (d[(y * cv.width + x) * 4 + 3] > 20) { x0 = Math.min(x0, x); x1 = Math.max(x1, x); y0 = Math.min(y0, y); y1 = Math.max(y1, y); }
+    const h = y1 - y0 + 6, w = Math.round(h * 0.615), o = document.createElement("canvas"); o.width = w; o.height = h;
+    o.getContext("2d").drawImage(cv, x0 - 3, y0 - 3, x1 - x0 + 6, h, Math.round((w - (x1 - x0 + 6)) / 2), 0, x1 - x0 + 6, h);
+    const fmt = o.toDataURL("image/webp", 0.9).indexOf("image/webp") > 0 ? "image/webp" : "image/png";
+    localStorage.setItem("world.avatar", JSON.stringify({key: r.key, name: S.name || "", full: o.toDataURL(fmt, 0.9),
+      head: r.head}));
+  } catch(e){}
+}
+const _refreshMe0 = refreshMe;
+refreshMe = async function(){ const r = await _refreshMe0(); cacheAvatarForGames(r); return r; };
+
+/* Money Moves: hand it the current avatar before it loads */
+window.viewMoneyMoves = function(){ pushAvatarToMM(); _o.viewMoneyMoves(); };
+
+/* Smitty's Chill Grill runs inside the hub. Its progress used to live only in
+   memory (gone on refresh, so the assignment never stayed done) and every
+   passed level paid 3 coins again on replay. Keep it in the save, pay once. */
+if (S.smittys && !window._SG) window._SG = JSON.parse(JSON.stringify(S.smittys));
+window.viewSmittys = function(){
+  _o.viewSmittys();
+  const res = window.sgResult, fin = window.sgFinalReport;
+  window.sgResult = function(levelId, right, total){
+    const tok = S.tokens; res(levelId, right, total); S.tokens = tok;       /* undo the old unconditional +3 */
+    const passed = right >= Math.ceil(total * 0.67);
+    const names = {sole:["Sole Proprietorship","Propiedad individual"], part:["Partnership","Sociedad"], corp:["Corporation","Corporación"], fran:["Franchise","Franquicia"]};
+    if (passed) {
+      pay("sg:" + levelId, 3, 100, "Smitty's: " + WL(...(names[levelId] || [levelId, levelId])));
+      if (levelId === "fran") { const SG = window._SG, t = SG.totalRight + SG.totalWrong;
+        addGameCert("sg:fran", WL("Smitty's Chill Grill · Business Structures","Smitty's Chill Grill · Estructuras empresariales"), "econ-h", t ? SG.totalRight / t * 100 : 100); }
+    }
+    S.smittys = JSON.parse(JSON.stringify(window._SG)); save(); paintBar();
+    if (_payNotes.length) { const n = _payNotes.splice(0); toast("🎉 " + n.join("  ·  ")); }
+    else if (passed) toast(WL("Level passed again. Coins were already paid for this one.","Nivel aprobado otra vez. Las monedas de este ya se pagaron."));
+  };
+  window.sgFinalReport = function(){
+    fin();
+    document.querySelectorAll("#view button").forEach(b => { if (/arcade/i.test(b.getAttribute("onclick") || "")) {
+      b.setAttribute("onclick", "go('trophies')"); b.textContent = "🏆 " + WL("See it in your Trophy Hall","Míralo en tu salón de trofeos"); } });
+  };
+};
+
+
+/* ============================================================================
+   ARCADE 2.0 — three games, the new art, and a bonus round of real questions.
+
+   Grenadier Run (the runner), Campus Kart (the driving game) and Hall Quest
+   (the side-scrolling brawler) replace the five classic games. Campus
+   Shuttle and the top-down Smith's Quest are retired from the list (their
+   code stays, so nothing else breaks). Hazards become "misconception
+   monsters", the karts and power-ups use the 2.0 art, and after every run a
+   short bonus round of class questions pays coins.
+   ========================================================================== */
+const TRIM = n => `${V2}games/trim/${n}.webp`;
+(function renameGames(){
+  const G = id => GAMES.find(g => g.id === id);
+  const run = G("sprint"), kart = G("kart"), hall = G("gunner"), sh = G("shuttle"), q = G("quest");
+  if (sh) sh.hidden = true; if (q) q.hidden = true;
+  if (run) { run.name = {en:"Grenadier Run", es:"Carrera Grenadier"}; run.color = "#C8102E";
+    run.tag = {en:"Sprint across campus as yourself. Jump the misconception monsters, grab power-ups, chain coins.",
+               es:"Corre por el campus como tú. Salta los monstruos de las ideas erróneas, toma potenciadores, encadena monedas."}; }
+  if (kart) { kart.name = {en:"Campus Kart", es:"Kart del campus"}; kart.color = "#F2B632";
+    kart.tag = {en:"Pick up classmates and race them across campus. Every drop-off puts time back on the clock.",
+                es:"Recoge compañeros y llévalos por el campus. Cada entrega te devuelve tiempo."}; }
+  if (hall) { hall.name = {en:"Hall Quest", es:"Misión en el pasillo"}; hall.color = "#5B3FA0";
+    hall.tag = {en:"Clear the halls of misconception monsters: the Inflation Blob, the Filibuster Sloth and friends.",
+                es:"Limpia los pasillos de monstruos de ideas erróneas: el Blob de la Inflación, el Perezoso del Filibusterismo y más."}; }
+})();
+/* which monsters show up depends on the student's classes */
+const MON_ECON = ["mon_inflation_blob","mon_tariff_troll","mon_deficit_dragon","mon_monopoly_moth","mon_couch_potato"];
+const MON_GOV  = ["mon_filibuster_sloth","mon_gerrymander_snake","mon_fake_news_gremlin","mon_deficit_dragon","mon_couch_potato"];
+function monsterSet(){
+  const mine = myCourses(), econ = mine.some(id => /econ/.test(id)), gov = mine.some(id => /gov/.test(id));
+  if (econ && gov) return ["mon_inflation_blob","mon_filibuster_sloth","mon_monopoly_moth","mon_gerrymander_snake","mon_fake_news_gremlin"];
+  return gov ? MON_GOV : MON_ECON;
+}
+const KART_TRAFFIC = ["kart_bus","kart_golfcart","kart_lawnmower","kart_bank","kart_gavel","kart_sneaker","kart_couch"];
+const _artArcade = window.art;
+window.art = function(k){
+  const fi = FOES.indexOf(k); if (fi >= 0) return TRIM(monsterSet()[fi]);
+  if (k === "item_coin") return TRIM("run_coin");
+  if (k === "kart_player") return TRIM(S.kart || "kart_grenadier");
+  const ti = TRAFFIC.indexOf(k); if (ti >= 0) return TRIM(KART_TRAFFIC[ti % KART_TRAFFIC.length]);
+  return _artArcade(k);
+};
+/* power-up art for Grenadier Run */
+window.ARC_PU = {};
+[["ammo","run_sparkle"],["shield","run_shield"],["boost","run_gem"],["magnet","run_magnet"]].forEach(([k, n]) => {
+  const im = new Image(); im.src = TRIM(n); ARC_PU[k] = im; });
+/* Campus Kart riders are other students: eight preset classmates */
+const _riders = [];
+for (let i = 0; i < 8; i++) composeAvatar(avStarter(i + 1)).then(r => { if (!r) return; const im = new Image(); im.src = r.full; _riders.push(im); });
+const _hallIms = {};
+window.hallMonsters = () => monsterSet().map(n => { if (!_hallIms[n]) { _hallIms[n] = new Image(); _hallIms[n].src = TRIM(n); } return _hallIms[n]; });
+window.arcadeRiders = () => _riders.length >= 4 ? _riders.slice() : null;
+
+/* ---- bonus round: three questions from your own classes after every run ---- */
+const BONUS_CAP = 6;  /* coins per day from bonus rounds */
+function bonusLeft(){ const d = today(); S.bonus = S.bonus && S.bonus.d === d ? S.bonus : {d, n:0}; return Math.max(0, BONUS_CAP - S.bonus.n); }
+function bonusPool(){
+  const mine = myCourses(), out = [];
+  allUnits().forEach(u => { if (!mine.includes(u.pack.id)) return;
+    u.items.forEach(it => { if (it.type === "mcq" && it.c && it.c.en && it.c.en.length > 1) out.push({it, u}); }); });
+  /* prefer questions the student has already met in their studies */
+  const seen = out.filter(o => S.prog[o.it.id]);
+  return shuffled(seen.length >= 6 ? seen : out).slice(0, 3);
+}
+let BONUS = null;
+function startBonus(){
+  BONUS = {qs: bonusPool(), i: 0, right: 0, paid: 0};
+  if (!BONUS.qs.length) return toast(WL("Pick your classes first.","Primero elige tus clases."));
+  showBonusQ();
+}
+function showBonusQ(){
+  let d = document.getElementById("bonus"); if (!d) { d = document.createElement("div"); d.id = "bonus"; document.body.appendChild(d); }
+  d.style.cssText = "position:fixed;inset:0;z-index:80;background:rgba(30,20,10,.6);display:grid;place-items:center;padding:16px;overflow-y:auto";
+  if (BONUS.i >= BONUS.qs.length) {
+    d.innerHTML = `<div class="panel" style="max-width:520px;width:100%;text-align:center">
+      <img src="${npc(BONUS.right ? "cheer" : "clipboard")}" alt="" style="height:140px">
+      <h2 style="font-size:30px;margin:6px 0">${BONUS.right}/3 ${WL("right","correctas")}</h2>
+      <p style="font-weight:700">+${BONUS.paid} ${WL("coins","monedas")}${bonusLeft() ? "" : " · " + WL("daily bonus limit reached","límite diario alcanzado")}</p>
+      <button class="btn primary wide" onclick="document.getElementById('bonus').remove();go('arcade')">${WL("Back to the arcade","Volver al arcade")}</button></div>`;
+    return;
+  }
+  const {it, u} = BONUS.qs[BONUS.i], c = (S.lang === "es" && it.c.es) ? it.c.es : it.c.en;
+  d.innerHTML = `<div class="panel" style="max-width:620px;width:100%">
+    <div class="row spread"><span class="eyebrow">⭐ ${WL("Bonus round","Ronda extra")} · ${BONUS.i + 1}/3</span>
+      <span class="chip warn">${bonusLeft()} ${WL("coins left today","monedas hoy")}</span></div>
+    <div class="muted" style="font-size:12px;font-weight:700;margin-top:6px">${esc(L(u.title))}</div>
+    <h3 style="font-size:20px;margin:6px 0 12px;font-family:var(--body)">${esc(L(it.q))}</h3>
+    <div class="opts" style="display:grid;gap:8px">${c.map((t, i) => `<button class="opt" onclick="answerBonus(${i})">${esc(t)}</button>`).join("")}</div>
+    <div id="bonusWhy"></div></div>`;
+}
+function answerBonus(i){
+  const {it} = BONUS.qs[BONUS.i], ok = i === it.a, btns = document.querySelectorAll("#bonus .opt");
+  btns.forEach((b, k) => { b.disabled = true; if (k === it.a) b.classList.add("right"); else if (k === i) b.classList.add("wrong"); });
+  S.prog[it.id] = S.prog[it.id] || {seen:0, right:0}; S.prog[it.id].seen++; if (ok) S.prog[it.id].right++;
+  if (ok) { BONUS.right++; if (bonusLeft()) { S.bonus.n++; S.tokens++; BONUS.paid++; } S.xp += 10; }
+  save(); paintBar();
+  document.getElementById("bonusWhy").innerHTML = `<div class="why" style="margin-top:12px;padding:10px 12px;border-radius:10px">
+    <b>${ok ? WL("Correct!","¡Correcto!") : WL("Not quite.","Casi.")}</b> ${esc(L(it.why || {en:"", es:""}))}</div>
+    <button class="btn primary wide" style="margin-top:10px" onclick="BONUS.i++;showBonusQ()">${WL("Next","Siguiente")} →</button>`;
+}
+const _endGameV2 = window.endGame;
+window.endGame = function(id, score, won){
+  const first = !GAME_OVER;
+  _endGameV2(id, score, won);
+  if (!first) return;
+  const el = document.getElementById("hint");
+  if (el) el.insertAdjacentHTML("beforeend", `<div style="margin-top:10px"><button class="btn primary" onclick="startBonus()">⭐ ${WL("Bonus round: 3 questions, up to +3 coins","Ronda extra: 3 preguntas, hasta +3 monedas")}</button></div>`);
+};
+
 /* ---------- boot ---------- */
 document.querySelector('meta[name="theme-color"]') && document.querySelector('meta[name="theme-color"]').setAttribute("content", "#FFF4DE");
 ensureAvatar();
 if (TAB === "home") TAB = "campus";
 bootSmiths();
 refreshMe();
+syncGames();
