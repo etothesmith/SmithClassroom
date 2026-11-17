@@ -303,7 +303,7 @@ function paintPlaza(el){
     "Toca a un compañero para saludar, visitar su casa o intercambiar. El chat usa frases listas y cada quien las ve en su idioma.")}</p>`;
   const cv = document.getElementById("plz"), cx = cv.getContext("2d");
   const bg = new Image(); bg.src = TA + "plaza_bg.jpg";
-  const me = {x:480 + (Math.random() * 120 - 60), y:400, tx:null, ty:null};
+  const me = {x:520 + (Math.random() * 160 - 80), y:440 + Math.random() * 50, tx:null, ty:null};
   PL = {cv, cx, bg, me, others:{}, lastSend:0, pending:false, raf:0, beat:0};
   const send = (extra) => { const t = Date.now(); PL.pending = true;
     if (t - PL.lastSend < (NET.plazaRealtime && NET.plazaRealtime() ? 600 : 2500) && !extra) return;
@@ -319,7 +319,7 @@ function paintPlaza(el){
     if (hit) return playerCard(hit[0]);
     const sign = SIGNS.find(s => Math.abs(s.x - x) < 60 && Math.abs(s.y - y) < 34);
     if (sign) return townTab(sign.go);
-    me.tx = Math.max(30, Math.min(PLAZA_W - 30, x)); me.ty = Math.max(150, Math.min(PLAZA_H - 12, y)); send();
+    [me.tx, me.ty] = clampWalk(x, y); send();
   };
   VIEW_SUBS.push(NET.watchPlaza(rows => { if (!rows) return;
     const cut = Date.now() - 3 * 60e3, seen = {};
@@ -341,8 +341,11 @@ function paintPlaza(el){
   })();
   PL.raf = requestAnimationFrame(loop);
 }
-const SIGNS = [{x:110, y:200, go:"homes", e:"🏡", l:["Homes","Casas"]}, {x:850, y:200, go:"market", e:"🛒", l:["Market","Mercado"]},
-               {x:480, y:175, go:"shop", e:"🎁", l:["Shop","Tienda"]}];
+/* sign spots match the painted plaza: street of houses (left), gift shop (top middle), market stalls (right) */
+const SIGNS = [{x:150, y:250, go:"homes", e:"🏡", l:["Homes","Casas"]}, {x:820, y:150, go:"market", e:"🛒", l:["Market","Mercado"]},
+               {x:500, y:178, go:"shop", e:"🎁", l:["Shop","Tienda"]}];
+/* walkable brick: right of the sidewalk and below the shops */
+const clampWalk = (x, y) => { y = Math.max(225, Math.min(PLAZA_H - 12, y)); x = Math.max(y < 330 ? 300 : 250, Math.min(PLAZA_W - 25, x)); return [x, y]; };
 function stepTo(o, dt, sp){ if (o.tx == null) return; const dx = o.tx - o.x, dy = o.ty - o.y, d = Math.hypot(dx, dy);
   if (d < 2) { o.x = o.tx; o.y = o.ty; o.moving = false; return; } const k = Math.min(1, sp * dt / d); o.x += dx * k; o.y += dy * k; o.moving = true; o.face = dx < 0 ? -1 : 1; }
 function drawPlaza(){
@@ -441,10 +444,10 @@ function paintHouse(el, sid){
   const h = p.house || {style:"cottage", slots:{}}, slots = h.slots || {};
   el.innerHTML = `<div class="eprow"><button class="btn ghost" onclick="townVisit(null)">← ${WL("Street","Calle")}</button>
       <h2 style="margin-left:8px">${mine ? WL("My house","Mi casa") : WL(`${esc(p.name)}'s house`, `Casa de ${esc(p.name)}`)}</h2></div>
-    <div class="troom" style="background-image:url(${TA}rooms/room_${h.style || "cottage"}.jpg)">
-      ${window.TOWN_SLOTS.map(([slot, nm, [x, y]]) => { const id = slots[slot];
-        return `<div class="tslot ${id ? "on" : ""} ${mine ? "edit" : ""}" style="left:${x}%;top:${y}%" ${mine ? `onclick="townPlace('${slot}')"` : ""} title="${esc(L2(nm))}">
-          ${id ? itemArt(id, slot === "rug" ? 92 : 70) : mine ? `<span class="tplus">+</span>` : ""}</div>`; }).join("")}
+    <div class="troom" style="background-image:url(${TA}rooms/room_${{farmhouse:"cottage"}[h.style] || h.style || "cottage"}.jpg)">
+      ${window.TOWN_SLOTS.slice().sort((p, q) => (p[0] === "rug" ? -1 : q[0] === "rug" ? 1 : p[2][1] - q[2][1])).map(([slot, nm, [x, y], w, an]) => { const id = slots[slot];
+        return `<div class="tslot ${an} ${id ? "on" : ""} ${mine ? "edit" : ""}" style="left:${x}%;top:${y}%;--w:${w}%" ${mine ? `onclick="townPlace('${slot}')"` : ""} title="${esc(L2(nm))}">
+          ${id ? `<span class="troomi">${artImg(`${TA}items/${id}.webp`, ITEMS[id] ? ITEMS[id].e : "?")}</span>` : mine ? `<span class="tplus">+</span>` : ""}</div>`; }).join("")}
       <img class="towner" data-eqk="${esc(sid)}" alt="">
     </div>
     ${mine ? `<section class="panel"><div class="eyebrow">${WL("House style","Estilo de casa")}</div><div class="tstyles">${HOUSES.map(hs => {
