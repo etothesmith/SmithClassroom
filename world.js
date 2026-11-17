@@ -35,7 +35,9 @@ const banner = n => `${V2}world/banners/${n}.jpg`;
 const seal = n => `${V2}ui/seals/${n}.webp`;
 const icon = n => `${V2}ui/icons/ico_${n}.webp`;
 const badgeImg = n => `${V2}ui/badges/${n}.webp`;
-const npc = p => `${V2}npc/npc_smith_${p}.webp`;
+/* Coach Smith appears as his own sprites from before 2.0 (blue robe, pink tee) */
+const COACH_POSE = {wave:"idle", point:"point", cheer:"cheer", think:"hmm", clipboard:"idle", thumbs:"cheer"};
+const npc = p => `assets/smith_${COACH_POSE[p] || "idle"}.png`;
 const myCourses = () => { const all = allPacks().map(p => p.id);
   const m = (S.myCourses || []).filter(id => all.includes(id)); return m.length ? m : all; };
 
