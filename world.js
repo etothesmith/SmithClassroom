@@ -126,7 +126,7 @@ const NAV = () => [
 function navSection(t){
   if (!t || t === "home" || t === "campus" || t === "assignments" || t === "showprep" || t === "showstudy") return "campus";
   if (t === "classes" || t.indexOf("pack:") === 0 || t.indexOf("unitwork:") === 0 || t.indexOf("coursework:") === 0 ||
-      t === "study" || t === "challenge" || t.indexOf("ag:") === 0 || ["marginal","moneymoves","counsel2","writing","marketlab"].includes(t)) return "classes";
+      t === "study" || t === "challenge" || t.indexOf("ag:") === 0 || ["marginal","moneymoves","counsel2","writing","marketlab","cfereview"].includes(t)) return "classes";
   if (t === "locker" || t === "art") return "locker";
   if (t === "arcade" || t === "smittys") return "arcade";
   if (t === "trophies") return "trophies";
@@ -135,7 +135,7 @@ function navSection(t){
 }
 window.dock = function(){
   const el = document.getElementById("dock");
-  const full = ["gameshow","marginal","moneymoves","counsel2","writing","marketlab"].includes(TAB) || String(TAB).indexOf("ag:") === 0;
+  const full = ["gameshow","marginal","moneymoves","counsel2","writing","marketlab","cfereview"].includes(TAB) || String(TAB).indexOf("ag:") === 0;
   el.style.display = full ? "none" : ""; if (full) { el.innerHTML = ""; return; }
   const cur = navSection(TAB);
   el.innerHTML = NAV().map(([k, ic, l]) =>
@@ -146,7 +146,7 @@ window.dock = function(){
 window.render = function(){
   if (!TAB || TAB === "home") TAB = "campus";
   const v2 = {campus:viewCampus, classes:viewClasses, locker:viewLocker, trophies:viewTrophies,
-              writing:() => viewFrame("writing"), marketlab:() => viewFrame("marketlab")}[TAB];
+              writing:() => viewFrame("writing"), marketlab:() => viewFrame("marketlab"), cfereview:() => viewFrame("cfereview")}[TAB];
   if (v2) { paintBar(); dock(); v2(); return; }
   if (String(TAB).indexOf("ag:") === 0) { paintBar(); dock(); viewAG(TAB.slice(3)); return; }
   _o.render();
@@ -310,7 +310,15 @@ ASSIGNMENTS.push(
   {pack:"econ-h", unit:"eh-u1", tab:"marketlab", icon:"🏬", color:"#F08C2E", title:"Who Sets the Price? Market Structures",
    blurb:{en:"Perfect competition, monopolistic competition, oligopoly and monopoly. Sort real businesses and explain why.",
           es:"Competencia perfecta, competencia monopolística, oligopolio y monopolio. Clasifica negocios reales y explica por qué."},
-   tag:{en:"Unit 1 Lab",es:"Laboratorio Unidad 1"}, done:() => false}
+   tag:{en:"Unit 1 Lab",es:"Laboratorio Unidad 1"}, done:() => false},
+  {pack:"econ-h", unit:null, tab:"cfereview", icon:"🎟️", color:"#F5C542", title:"CFE Review Quest",
+   blurb:{en:"Final exam review for every unit: study cards, boss battles, instant reteaching, and an Exit Ticket to prove mastery. A certificate for each unit and one for the Final Mock CFE.",
+          es:"Repaso para el examen final de todas las unidades: tarjetas, batallas contra jefes, repaso inmediato y un Boleto de Salida para demostrar dominio. Un certificado por unidad y otro por el CFE de práctica final."},
+   tag:{en:"CFE Review",es:"Repaso del CFE"}, done:() => cfeDone("econ")},
+  {pack:"us-gov", unit:null, tab:"cfereview", icon:"🎟️", color:"#F5C542", title:"CFE Review Quest",
+   blurb:{en:"Final exam review for every unit: study cards, boss battles, instant reteaching, and an Exit Ticket to prove mastery. A certificate for each unit and one for the Final Mock CFE.",
+          es:"Repaso para el examen final de todas las unidades: tarjetas, batallas contra jefes, repaso inmediato y un Boleto de Salida para demostrar dominio. Un certificado por unidad y otro por el CFE de práctica final."},
+   tag:{en:"CFE Review",es:"Repaso del CFE"}, done:() => cfeDone("gov")}
 );
 
 /* ---------- assignment games (ag.html?g=<id>) ---------- */
@@ -353,6 +361,18 @@ function viewAG(id){
   <p class="muted" style="font-size:12px;text-align:center"><a href="${src}" target="_blank" rel="noopener">${WL("Open in a new tab","Abrir en pestaña nueva")}</a></p>`;
   window.scrollTo(0, 0);
 }
+/* CFE Review Quest saves in this browser under "cfeReviewQuest_v2|<teacher>|<school>",
+   one entry per "<student name>|<course>". Done = any student on this device passed that course's Final. */
+function cfeDone(course){
+  try {
+    for (let i = 0; i < localStorage.length; i++) {
+      const k = localStorage.key(i); if (k.indexOf("cfeReviewQuest_v2|") !== 0) continue;
+      const db = JSON.parse(localStorage.getItem(k) || "{}");
+      if (Object.keys(db).some(n => n.endsWith("|" + course) && db[n] && db[n].final && db[n].final.passed)) return true;
+    }
+  } catch(e){}
+  return false;
+}
 window.viewAssignments = function(){
   ASSIGN_UNIT = null; ASSIGN_PACK = null;
   const mine = myCourses();
@@ -367,7 +387,10 @@ window.viewAssignments = function(){
 };
 function viewFrame(kind){
   const cfg = {writing:{src:"frq_writing_lab.html", t:WL("FRQ Writing Lab","Laboratorio de escritura FRQ"), img:"bld_writing_center"},
-               marketlab:{src:"econ_market_structures_assignment.html", t:WL("Market Structures Lab","Laboratorio de estructuras de mercado"), img:"bld_market"}}[kind];
+               marketlab:{src:"econ_market_structures_assignment.html", t:WL("Market Structures Lab","Laboratorio de estructuras de mercado"), img:"bld_market"},
+               cfereview:{src:"cfe_review_quest.html", t:WL("CFE Review Quest","Misión de Repaso: CFE"), img:"bld_writing_center"}}[kind];
+  /* CFE Review Quest opens in the same language as the site */
+  if (kind === "cfereview") { try { localStorage.setItem("cfeRQ_lang", S.lang === "es" ? "es" : "en"); } catch(e){} }
   V().innerHTML = `
   <div class="eprow"><button class="btn ghost" style="padding:8px 12px;min-height:0" onclick="TAB='${ASSIGN_UNIT ? "unitwork:" + ASSIGN_UNIT : ASSIGN_PACK ? "coursework:" + ASSIGN_PACK : "assignments"}';render()">← ${WL("Back","Volver")}</button>
     <h2 style="font-size:22px;margin-left:6px">${cfg.t}</h2></div>
