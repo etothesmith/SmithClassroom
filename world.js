@@ -16,7 +16,8 @@ const WL = (en, es) => (S.lang === "es" ? es : en);
 const _o = {render: window.render, dock: window.dock, paintBar: window.paintBar, showTitle: window.showTitle,
   hideTitle: window.hideTitle, viewPack: window.viewPack, viewArcade: window.viewArcade, art: window.art,
   artTag: window.artTag, setLang: window.setLang, upgrade: window.upgrade, viewAssignments: window.viewAssignments,
-  showLangPick: window.showLangPick};
+  showLangPick: window.showLangPick, viewSmittys: window.viewSmittys, viewMoneyMoves: window.viewMoneyMoves,
+  viewCounsel2: window.viewCounsel2, viewMarginal: window.viewMarginal};
 
 /* ---------- courses: art and colour for each class ---------- */
 const COURSE_ART = {
@@ -574,9 +575,164 @@ function closeWhatsNew(to){
   go(to);
 }
 
+
+/* ============================================================================
+   WORLD LINK — the big games pay out in Smith's Classroom.
+
+   Money Moves and Counsel for the Defense II are compiled apps that keep
+   their own saves in this browser. The hub reads those saves (they're on the
+   same site) and pays for each new promotion; the final exam becomes a real
+   certificate in the Trophy Hall. Smaller games (Marginal Mastermind) send
+   events through world-link.js. Every payout has a fixed id and is paid
+   exactly once, so replays and refreshes can't farm coins.
+   ========================================================================== */
+const CAREER = {
+  mm:  {key:"money-moves-progress-v1", pack:"ap-econ", jobs:["teller","trader","loan","analyst","chair","treasury"],
+        game:"Money Moves", unit:{en:"Money Moves · Unit 4: The Financial Sector", es:"Money Moves · Unidad 4: El sector financiero"},
+        job:{teller:["Bank Teller","Cajero"],trader:["Bond Trader","Operador de bonos"],loan:["Loan Officer","Oficial de préstamos"],
+             analyst:["Fed Analyst","Analista de la Fed"],chair:["Fed Chair","Presidente de la Fed"],treasury:["Treasury","Tesoro"]}},
+  cd2: {key:"cfd2-career-v1", pack:"us-gov", jobs:["clerk","pd","civil","election","solicitor","advocate"],
+        game:"Counsel for the Defense II", unit:{en:"Counsel for the Defense II · Constitutional Counsel", es:"Counsel for the Defense II · Abogacía constitucional"},
+        job:{clerk:["Law Clerk","Asistente legal"],pd:["Public Defender","Defensor público"],civil:["Civil Rights Lawyer","Abogado de derechos civiles"],
+             election:["Election Lawyer","Abogado electoral"],solicitor:["Solicitor","Procurador"],advocate:["Supreme Court Advocate","Abogado ante la Corte Suprema"]}}
+};
+const PAY = {job:[2, 100], final:[5, 250]};
+let _payNotes = [];
+function readJSON(k){ try { return JSON.parse(localStorage.getItem(k) || "null"); } catch(e){ return null; } }
+function pay(id, coins, xp, label){
+  S.worldPaid = S.worldPaid || {};
+  if (S.worldPaid[id]) return false;
+  S.worldPaid[id] = Date.now();
+  S.xp += Math.max(0, Math.min(400, xp | 0)); S.tokens += Math.max(0, Math.min(6, coins | 0));
+  _payNotes.push(`${label} · +${coins} ${WL("coins","monedas")} · +${xp} XP`);
+  return true;
+}
+function addGameCert(id, unitLabel, packId, score){
+  if (S.certs.some(c => c.src === id)) return false;
+  const p = allPacks().find(p => p.id === packId), sc = Math.max(0, Math.min(100, Math.round(score || 100)));
+  S.certs.push({code: certCode(S.name || "student", id, sc), name: S.name || "Student", unit: unitLabel,
+    course: p ? L(p.name) : "", score: sc, date: today(), kind: "game", src: id});
+  _payNotes.push("★ " + WL("New certificate in your Trophy Hall","Nuevo certificado en tu salón de trofeos"));
+  return true;
+}
+function accuracy(stats){
+  let r = 0, w = 0; Object.values(stats || {}).forEach(v => { r += (v && v.r) || 0; w += (v && v.w) || 0; });
+  return r + w ? Math.round(r / (r + w) * 100) : 100;
+}
+function syncCareer(tag){
+  const g = CAREER[tag], sv = readJSON(g.key); if (!sv || !sv.progress) return;
+  const passed = st => st && (st.stage === "promo" || st.stage === "done");
+  g.jobs.forEach(j => { if (passed(sv.progress[j])) pay(`${tag}:${j}`, PAY.job[0], PAY.job[1], `${g.game}: ${WL(...g.job[j])}`); });
+  if (passed(sv.progress.final)) {
+    pay(`${tag}:final`, PAY.final[0], PAY.final[1], `${g.game}: ${WL("Final exam","Examen final")}`);
+    addGameCert(`${tag}:final`, L(g.unit), g.pack, accuracy(sv.stats));
+  }
+}
+/* the avatar is shared with Money Moves both ways: the latest edit wins */
+function avNorm(eq){ return eq && eq.v === 3 ? {v:3, shape:eq.shape, skin:eq.skin, face:eq.face ?? 14, hair:eq.hair ?? null,
+  top:eq.top, bottom:eq.bottom, acc:(eq.acc || []).slice()} : null; }
+function pullAvatarFromMM(){
+  const sv = readJSON(CAREER.mm.key), eq = avNorm(sv && sv.inv && sv.inv.equip);
+  if (!eq || !AV3.b[eq.shape + "-" + eq.skin]) return false;
+  const k = avKey(eq);
+  if (k === S.avatarSynced || (S.avatar && k === avKey(S.avatar))) { S.avatarSynced = k; return false; }
+  if (!S.avatarSynced && S.avatar) { S.avatarSynced = avKey(S.avatar); return false; }  /* first run: keep the hub's */
+  S.avatar = eq; S.avatarSynced = k; if (S.skin !== "smith") S.skin = "me"; return true;
+}
+function pushAvatarToMM(){
+  if (!S.avatar) return;
+  const sv = readJSON(CAREER.mm.key); if (!sv || !sv.player) return;   /* only for students who already play */
+  sv.inv = sv.inv || {}; sv.inv.equip = JSON.parse(JSON.stringify(S.avatar));
+  const owned = sv.inv.owned = sv.inv.owned || {};
+  [S.avatar.top, S.avatar.bottom, ...(S.avatar.acc || [])].forEach(id => { if (id) owned[id] = true; });
+  try { localStorage.setItem(CAREER.mm.key, JSON.stringify(sv)); S.avatarSynced = avKey(S.avatar); } catch(e){}
+}
+function drainOutbox(){
+  const box = readJSON("world.outbox") || []; if (!box.length) return;
+  const done = new Set();
+  box.forEach(ev => {
+    const key = ev.type + ":" + ev.id;
+    if (ev.type === "award") pay("ev:" + ev.id, Math.min(5, ev.coins | 0), Math.min(300, ev.xp | 0), ev.label || ev.id);
+    else if (ev.type === "cert") addGameCert("ev:" + ev.id, String(ev.unit || ev.id).slice(0, 120), ev.course, +ev.score || 100);
+    else if (ev.type === "badge") { S.worldBadges = S.worldBadges || {}; S.worldBadges[ev.id] = 1; }
+    done.add(key);
+  });
+  /* remove only what we handled; a game may have added more meanwhile */
+  const now = readJSON("world.outbox") || [];
+  try { localStorage.setItem("world.outbox", JSON.stringify(now.filter(e => !done.has(e.type + ":" + e.id)))); } catch(e){}
+}
+let _syncing = false;
+function syncGames(){
+  if (_syncing) return; _syncing = true;
+  try {
+    const before = JSON.stringify([S.xp, S.tokens, S.certs.length, S.avatar]);
+    syncCareer("mm"); syncCareer("cd2"); drainOutbox();
+    const avChanged = pullAvatarFromMM();
+    if (JSON.stringify([S.xp, S.tokens, S.certs.length, S.avatar]) !== before || avChanged) { save(); paintBar(); }
+    if (avChanged) refreshMe();
+    if (_payNotes.length) { const n = _payNotes.splice(0); toast("🎉 " + n.slice(0, 2).join("  ·  ") + (n.length > 2 ? `  (+${n.length - 2})` : "")); }
+  } finally { _syncing = false; }
+}
+window.addEventListener("storage", e => { if (!e.key || [CAREER.mm.key, CAREER.cd2.key, "world.outbox"].includes(e.key)) syncGames(); });
+window.addEventListener("message", e => { if (e.origin === location.origin && e.data && e.data.world === "outbox") syncGames(); });
+window.addEventListener("focus", syncGames);
+document.addEventListener("visibilitychange", () => { if (!document.hidden) syncGames(); });
+
+/* a portrait-shaped copy of the avatar for games that show a character
+   picture (Counsel II, Marginal Mastermind), cached in browser storage */
+function cacheAvatarForGames(r){
+  if (!r || !r.canvas) return;
+  try {
+    const old = readJSON("world.avatar");
+    if (old && old.key === r.key && old.name === S.name) return;
+    const cv = r.canvas, c = cv.getContext("2d"), d = c.getImageData(0, 0, cv.width, cv.height).data;
+    let x0 = cv.width, y0 = cv.height, x1 = 0, y1 = 0;
+    for (let y = 0; y < cv.height; y += 2) for (let x = 0; x < cv.width; x += 2)
+      if (d[(y * cv.width + x) * 4 + 3] > 20) { x0 = Math.min(x0, x); x1 = Math.max(x1, x); y0 = Math.min(y0, y); y1 = Math.max(y1, y); }
+    const h = y1 - y0 + 6, w = Math.round(h * 0.615), o = document.createElement("canvas"); o.width = w; o.height = h;
+    o.getContext("2d").drawImage(cv, x0 - 3, y0 - 3, x1 - x0 + 6, h, Math.round((w - (x1 - x0 + 6)) / 2), 0, x1 - x0 + 6, h);
+    const fmt = o.toDataURL("image/webp", 0.9).indexOf("image/webp") > 0 ? "image/webp" : "image/png";
+    localStorage.setItem("world.avatar", JSON.stringify({key: r.key, name: S.name || "", full: o.toDataURL(fmt, 0.9),
+      head: r.head}));
+  } catch(e){}
+}
+const _refreshMe0 = refreshMe;
+refreshMe = async function(){ const r = await _refreshMe0(); cacheAvatarForGames(r); return r; };
+
+/* Money Moves: hand it the current avatar before it loads */
+window.viewMoneyMoves = function(){ pushAvatarToMM(); _o.viewMoneyMoves(); };
+
+/* Smitty's Chill Grill runs inside the hub. Its progress used to live only in
+   memory (gone on refresh, so the assignment never stayed done) and every
+   passed level paid 3 coins again on replay. Keep it in the save, pay once. */
+if (S.smittys && !window._SG) window._SG = JSON.parse(JSON.stringify(S.smittys));
+window.viewSmittys = function(){
+  _o.viewSmittys();
+  const res = window.sgResult, fin = window.sgFinalReport;
+  window.sgResult = function(levelId, right, total){
+    const tok = S.tokens; res(levelId, right, total); S.tokens = tok;       /* undo the old unconditional +3 */
+    const passed = right >= Math.ceil(total * 0.67);
+    const names = {sole:["Sole Proprietorship","Propiedad individual"], part:["Partnership","Sociedad"], corp:["Corporation","Corporación"], fran:["Franchise","Franquicia"]};
+    if (passed) {
+      pay("sg:" + levelId, 3, 100, "Smitty's: " + WL(...(names[levelId] || [levelId, levelId])));
+      if (levelId === "fran") { const SG = window._SG, t = SG.totalRight + SG.totalWrong;
+        addGameCert("sg:fran", WL("Smitty's Chill Grill · Business Structures","Smitty's Chill Grill · Estructuras empresariales"), "econ-h", t ? SG.totalRight / t * 100 : 100); }
+    }
+    S.smittys = JSON.parse(JSON.stringify(window._SG)); save(); paintBar();
+    if (_payNotes.length) { const n = _payNotes.splice(0); toast("🎉 " + n.join("  ·  ")); }
+    else if (passed) toast(WL("Level passed again. Coins were already paid for this one.","Nivel aprobado otra vez. Las monedas de este ya se pagaron."));
+  };
+  window.sgFinalReport = function(){
+    fin();
+    document.querySelectorAll("#view button").forEach(b => { if (/arcade/i.test(b.getAttribute("onclick") || "")) {
+      b.setAttribute("onclick", "go('trophies')"); b.textContent = "🏆 " + WL("See it in your Trophy Hall","Míralo en tu salón de trofeos"); } });
+  };
+};
+
 /* ---------- boot ---------- */
 document.querySelector('meta[name="theme-color"]') && document.querySelector('meta[name="theme-color"]').setAttribute("content", "#FFF4DE");
 ensureAvatar();
 if (TAB === "home") TAB = "campus";
 bootSmiths();
 refreshMe();
+syncGames();
