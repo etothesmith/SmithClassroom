@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Smith's Classroom · Network test</title>
+<style>
+  body{font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;background:#FFF4DE;color:#1E1B18;margin:0;padding:24px}
+  main{max-width:720px;margin:0 auto;background:#fff;border:3px solid #2B2B2B;border-radius:18px;padding:20px 22px;box-shadow:0 6px 0 #2B2B2B}
+  h1{margin:0 0 4px;font-size:28px}
+  p{line-height:1.45}
+  ul{list-style:none;padding:0;margin:16px 0;display:grid;gap:8px}
+  li{display:flex;gap:10px;align-items:flex-start;border:2px solid rgba(0,0,0,.12);border-radius:12px;padding:10px 12px}
+  li b{display:block}
+  li small{color:#6E655B}
+  .s{font-size:22px;line-height:1;width:28px;text-align:center}
+  .verdict{font-size:20px;font-weight:800;border-radius:14px;padding:14px 16px;margin-top:10px}
+  .ok{background:#DDF5E6;border:2px solid #13804A}.bad{background:#FDE2E4;border:2px solid #C8102E}.wait{background:#FFF1C9;border:2px solid #F2B632}
+  button{font:inherit;font-weight:800;border:3px solid #2B2B2B;border-radius:12px;background:#F2B632;padding:10px 16px;cursor:pointer;box-shadow:0 4px 0 #2B2B2B}
+  code{background:#f3eee5;border-radius:6px;padding:1px 5px}
+</style>
+</head>
+<body>
+<main>
+  <h1>Network test</h1>
+  <p>Open this page on a <b>school computer, on the school Wi-Fi</b>. It checks whether Grenadier Town can reach the servers it needs. Take a screenshot of the result and send it to Claude.</p>
+  <button id="run">Run the test again</button>
+  <ul id="out"></ul>
+  <div id="verdict" class="verdict wait">Testing…</div>
+  <p style="font-size:13px;color:#6E655B" id="meta"></p>
+</main>
+<script src="town/config.js"></script>
+<script>
+const out = document.getElementById("out"), verdict = document.getElementById("verdict");
+function row(label, note){ const li = document.createElement("li"); li.innerHTML = `<span class="s">⏳</span><span><b>${label}</b><small>${note || ""}</small></span>`; out.appendChild(li);
+  return (ok, msg) => { li.querySelector(".s").textContent = ok === true ? "✅" : ok === false ? "❌" : "➖"; if (msg) li.querySelector("small").textContent = msg; }; }
+/* Can the browser open a connection to this host? (no-cors: we only learn reachable vs. blocked) */
+async function reach(url, ms = 8000){
+  const ctl = new AbortController(), t = setTimeout(() => ctl.abort(), ms), t0 = performance.now();
+  try { await fetch(url, {mode:"no-cors", cache:"no-store", signal:ctl.signal}); return {ok:true, ms:Math.round(performance.now() - t0)}; }
+  catch(e){ return {ok:false, err:e.name === "AbortError" ? "timed out" : "blocked or unreachable"}; }
+  finally { clearTimeout(t); }
+}
+async function run(){
+  out.innerHTML = ""; verdict.className = "verdict wait"; verdict.textContent = "Testing…";
+  const results = {};
+  const hosts = [
+    ["site", "This site (GitHub Pages)", location.origin + location.pathname.replace(/[^/]*$/, "") + "town/config.js", true],
+    ["fs", "Firestore database", "https://firestore.googleapis.com/", true],
+    ["auth", "Firebase sign-in", "https://identitytoolkit.googleapis.com/", true],
+    ["token", "Firebase sign-in tokens", "https://securetoken.googleapis.com/", true],
+    ["rtdb", "Realtime Database (plaza movement; optional, the plaza falls back to Firestore)", (window.TOWN_FIREBASE && window.TOWN_FIREBASE.databaseURL ? window.TOWN_FIREBASE.databaseURL.replace(/\/$/, "") + "/.json" : "https://firebaseio.com/"), false],
+    ["gstatic", "Google's CDN (gstatic.com). Expected to be blocked; the Town doesn't need it.", "https://www.gstatic.com/firebasejs/", false]
+  ];
+  for (const [k, label, url, needed] of hosts) {
+    const done = row(label, needed ? "needed" : "not needed");
+    const r = await reach(url); results[k] = r.ok;
+    if (k === "rtdb") done(r.ok ? true : (window.TOWN_FIREBASE && window.TOWN_FIREBASE.databaseURL ? false : null), r.ok ? `reachable · ${r.ms} ms` : (window.TOWN_FIREBASE && window.TOWN_FIREBASE.databaseURL ? `${r.err}: the plaza will update more slowly` : "can't check until the project is connected"));
+    else done(needed ? r.ok : null, r.ok ? `reachable · ${r.ms} ms` : `${r.err}${needed ? "" : " (that's fine)"}`);
+  }
+  /* live round trip, once the Firebase project is connected */
+  const cfg = window.TOWN_FIREBASE;
+  if (cfg && results.fs && results.auth) {
+    const done = row("Live round trip: sign in, save, and get a live update", "uses the real Firebase project");
+    try {
+      await new Promise((res, rej) => { const s = document.createElement("script"); s.src = "vendor/firebase-bundle.js"; s.onload = res; s.onerror = () => rej(new Error("SDK file blocked")); document.head.appendChild(s); });
+      const F = window.FBSDK, app = F.initializeApp(cfg, "nettest"), auth = F.getAuth(app);
+      const db = F.initializeFirestore(app, {experimentalAutoDetectLongPolling:true});
+      const u = (await F.signInAnonymously(auth)).user, ref = F.doc(db, "nettest/" + u.uid);
+      const t0 = performance.now(), stamp = Date.now();
+      const got = new Promise((res, rej) => { const to = setTimeout(() => rej(new Error("no live update after 12 s")), 12000);
+        const off = F.onSnapshot(ref, s => { if (s.exists() && s.data().stamp === stamp) { clearTimeout(to); off(); res(); } }, rej); });
+      await F.setDoc(ref, {stamp, ua:navigator.userAgent.slice(0, 120)});
+      await got; results.live = true; done(true, `works · ${Math.round(performance.now() - t0)} ms`);
+      if (cfg.databaseURL) { const d2 = row("Live plaza channel (Realtime Database)", "");
+        const ok = await new Promise(res => { const db2 = F.getDatabase(app); const to = setTimeout(() => res(false), 9000);
+          F.onValue(F.dbRef(db2, ".info/connected"), s2 => { if (s2.val() === true) { clearTimeout(to); res(true); } }); });
+        d2(ok, ok ? "connected" : "couldn't connect: the plaza will use Firestore and update more slowly"); }
+    } catch(e){ results.live = false; done(false, (e && (e.code || e.message)) || "failed"); }
+  } else if (!cfg) row("Live round trip", "")(null, "skipped: the Firebase project isn't connected yet (town/config.js)");
+  const need = results.site && results.fs && results.auth && results.token;
+  if (need && results.live !== false) { verdict.className = "verdict ok";
+    verdict.textContent = cfg && results.live ? "✅ Grenadier Town will work on this network." : "✅ The school network allows Firebase. Grenadier Town should work here once the project is connected."; }
+  else { verdict.className = "verdict bad";
+    verdict.textContent = "❌ Something the Town needs is blocked on this network. Send this screenshot to Claude; the Town will stay in practice mode until it's unblocked."; }
+  document.getElementById("meta").textContent = `${new Date().toLocaleString()} · ${navigator.userAgent}`;
+}
+document.getElementById("run").onclick = run; run();
+</script>
+</body>
+</html>
