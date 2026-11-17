@@ -760,7 +760,7 @@ function cacheAvatarForGames(r){
   if (!r || !r.canvas) return;
   try {
     const old = readJSON("world.avatar");
-    if (old && old.key === r.key && old.name === S.name) return;
+    if (old && old.key === r.key && old.name === S.name && old.art === 2) return;
     const cv = r.canvas, c = cv.getContext("2d"), d = c.getImageData(0, 0, cv.width, cv.height).data;
     let x0 = cv.width, y0 = cv.height, x1 = 0, y1 = 0;
     for (let y = 0; y < cv.height; y += 2) for (let x = 0; x < cv.width; x += 2)
@@ -768,7 +768,7 @@ function cacheAvatarForGames(r){
     const h = y1 - y0 + 6, w = Math.round(h * 0.615), o = document.createElement("canvas"); o.width = w; o.height = h;
     o.getContext("2d").drawImage(cv, x0 - 3, y0 - 3, x1 - x0 + 6, h, Math.round((w - (x1 - x0 + 6)) / 2), 0, x1 - x0 + 6, h);
     const fmt = o.toDataURL("image/webp", 0.9).indexOf("image/webp") > 0 ? "image/webp" : "image/png";
-    localStorage.setItem("world.avatar", JSON.stringify({key: r.key, name: S.name || "", full: o.toDataURL(fmt, 0.9),
+    localStorage.setItem("world.avatar", JSON.stringify({art: 2, key: r.key, name: S.name || "", full: o.toDataURL(fmt, 0.9),
       head: r.head}));
   } catch(e){}
 }

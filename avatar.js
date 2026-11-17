@@ -129,7 +129,7 @@ function avImg(name){
   if (!name) return Promise.resolve(null);
   if (!_avImg[name]) _avImg[name] = new Promise(res => {
     const im = new Image(); im.onload = () => res(im); im.onerror = () => res(null);
-    im.src = AV_BASE + name + ".webp";
+    im.src = AV_BASE + name + ".webp?v=2";   /* v2: hairline seams closed */
   });
   return _avImg[name];
 }
