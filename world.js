@@ -349,7 +349,7 @@ function viewAG(id){
     <h2 style="font-size:22px;margin-left:6px">${g.icon} ${WL(g.en, g.es)}</h2></div>
   <div style="border:2.5px solid var(--char);border-radius:16px;overflow:hidden;box-shadow:0 5px 0 var(--char);background:#fff">
     <iframe src="${src}" title="${esc(WL(g.en, g.es))}" style="width:100%;height:max(520px,min(88vh,calc(100vh - 150px)));border:none;display:block"
-      sandbox="allow-scripts allow-same-origin allow-downloads allow-popups allow-modals"></iframe></div>
+      sandbox="allow-scripts allow-same-origin allow-forms allow-downloads allow-popups allow-modals"></iframe></div>
   <p class="muted" style="font-size:12px;text-align:center"><a href="${src}" target="_blank" rel="noopener">${WL("Open in a new tab","Abrir en pestaña nueva")}</a></p>`;
   window.scrollTo(0, 0);
 }
@@ -373,7 +373,7 @@ function viewFrame(kind){
     <h2 style="font-size:22px;margin-left:6px">${cfg.t}</h2></div>
   <div style="border:2.5px solid var(--char);border-radius:16px;overflow:hidden;box-shadow:0 5px 0 var(--char);background:#fff">
     <iframe src="${cfg.src}" title="${esc(cfg.t)}" style="width:100%;height:max(480px,min(85vh,calc(100vh - 160px)));border:none;display:block"
-      sandbox="allow-scripts allow-same-origin allow-downloads allow-popups allow-modals"></iframe></div>
+      sandbox="allow-scripts allow-same-origin allow-forms allow-downloads allow-popups allow-modals"></iframe></div>
   <p class="muted" style="font-size:12px;text-align:center"><a href="${cfg.src}" target="_blank" rel="noopener">${WL("Open in a new tab","Abrir en pestaña nueva")}</a></p>`;
   window.scrollTo(0, 0);
 }
