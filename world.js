@@ -349,6 +349,14 @@ window.viewArcade = function(){
     ${S.avatar ? `<button class="chip" style="cursor:pointer" onclick="S.skin=S.skin==='me'?'smith':'me';save();render()">${S.skin === "me" ? WL("Switch to Coach Smith","Cambiar a Coach Smith") : WL("Play as my avatar","Jugar con mi avatar")}</button>` : `<button class="chip bad" style="cursor:pointer" onclick="go('locker')">${WL("Build your avatar to play as you","Crea tu avatar para jugar")}</button>`}</div></div>`;
   const first = v.querySelector("h1.big"); if (first) { first.closest("section") ? null : first.remove(); }
   v.prepend(head);
+  /* cover art on each game card */
+  const covers = {sprint:`<img src="${V2}games/covers/cover_grenadier_run.jpg" alt="">`, kart:`<img src="${V2}games/covers/cover_campus_kart.jpg" alt="">`,
+    gunner:`<div style="display:flex;justify-content:center;gap:4%;align-items:flex-end;height:100%;padding:8px;background:url(${banner("banner_arcade")}) center/cover">${monsterSet().slice(0,4).map(n => `<img src="${TRIM(n)}" alt="" style="height:80%;width:auto;filter:drop-shadow(0 4px 0 rgba(0,0,0,.3))">`).join("")}</div>`};
+  GAMES.filter(g => !g.hidden).forEach(g => {
+    const sec = [...v.querySelectorAll("section.panel")].find(x => x.querySelector("h3") && x.querySelector("h3").textContent === L(g.name));
+    if (sec && covers[g.id] && !sec.querySelector(".gcover")) sec.insertAdjacentHTML("afterbegin",
+      `<div class="gcover" style="margin:-18px -18px 14px;height:150px;overflow:hidden;border-bottom:2.5px solid var(--char);border-radius:16px 16px 0 0">${g.id === "gunner" ? covers[g.id] : covers[g.id].replace("<img ", '<img style="width:100%;height:100%;object-fit:cover" ')}</div>`);
+  });
 };
 
 /* ---------- locker: the avatar studio ---------- */
@@ -727,6 +735,116 @@ window.viewSmittys = function(){
     document.querySelectorAll("#view button").forEach(b => { if (/arcade/i.test(b.getAttribute("onclick") || "")) {
       b.setAttribute("onclick", "go('trophies')"); b.textContent = "🏆 " + WL("See it in your Trophy Hall","Míralo en tu salón de trofeos"); } });
   };
+};
+
+
+/* ============================================================================
+   ARCADE 2.0 — three games, the new art, and a bonus round of real questions.
+
+   Grenadier Run (the runner), Campus Kart (the driving game) and Hall Quest
+   (the side-scrolling brawler) replace the five classic games. Campus
+   Shuttle and the top-down Smith's Quest are retired from the list (their
+   code stays, so nothing else breaks). Hazards become "misconception
+   monsters", the karts and power-ups use the 2.0 art, and after every run a
+   short bonus round of class questions pays coins.
+   ========================================================================== */
+const TRIM = n => `${V2}games/trim/${n}.webp`;
+(function renameGames(){
+  const G = id => GAMES.find(g => g.id === id);
+  const run = G("sprint"), kart = G("kart"), hall = G("gunner"), sh = G("shuttle"), q = G("quest");
+  if (sh) sh.hidden = true; if (q) q.hidden = true;
+  if (run) { run.name = {en:"Grenadier Run", es:"Carrera Grenadier"}; run.color = "#C8102E";
+    run.tag = {en:"Sprint across campus as yourself. Jump the misconception monsters, grab power-ups, chain coins.",
+               es:"Corre por el campus como tú. Salta los monstruos de las ideas erróneas, toma potenciadores, encadena monedas."}; }
+  if (kart) { kart.name = {en:"Campus Kart", es:"Kart del campus"}; kart.color = "#F2B632";
+    kart.tag = {en:"Pick up classmates and race them across campus. Every drop-off puts time back on the clock.",
+                es:"Recoge compañeros y llévalos por el campus. Cada entrega te devuelve tiempo."}; }
+  if (hall) { hall.name = {en:"Hall Quest", es:"Misión en el pasillo"}; hall.color = "#5B3FA0";
+    hall.tag = {en:"Clear the halls of misconception monsters: the Inflation Blob, the Filibuster Sloth and friends.",
+                es:"Limpia los pasillos de monstruos de ideas erróneas: el Blob de la Inflación, el Perezoso del Filibusterismo y más."}; }
+})();
+/* which monsters show up depends on the student's classes */
+const MON_ECON = ["mon_inflation_blob","mon_tariff_troll","mon_deficit_dragon","mon_monopoly_moth","mon_couch_potato"];
+const MON_GOV  = ["mon_filibuster_sloth","mon_gerrymander_snake","mon_fake_news_gremlin","mon_deficit_dragon","mon_couch_potato"];
+function monsterSet(){
+  const mine = myCourses(), econ = mine.some(id => /econ/.test(id)), gov = mine.some(id => /gov/.test(id));
+  if (econ && gov) return ["mon_inflation_blob","mon_filibuster_sloth","mon_monopoly_moth","mon_gerrymander_snake","mon_fake_news_gremlin"];
+  return gov ? MON_GOV : MON_ECON;
+}
+const KART_TRAFFIC = ["kart_bus","kart_golfcart","kart_lawnmower","kart_bank","kart_gavel","kart_sneaker","kart_couch"];
+const _artArcade = window.art;
+window.art = function(k){
+  const fi = FOES.indexOf(k); if (fi >= 0) return TRIM(monsterSet()[fi]);
+  if (k === "item_coin") return TRIM("run_coin");
+  if (k === "kart_player") return TRIM(S.kart || "kart_grenadier");
+  const ti = TRAFFIC.indexOf(k); if (ti >= 0) return TRIM(KART_TRAFFIC[ti % KART_TRAFFIC.length]);
+  return _artArcade(k);
+};
+/* power-up art for Grenadier Run */
+window.ARC_PU = {};
+[["ammo","run_sparkle"],["shield","run_shield"],["boost","run_gem"],["magnet","run_magnet"]].forEach(([k, n]) => {
+  const im = new Image(); im.src = TRIM(n); ARC_PU[k] = im; });
+/* Campus Kart riders are other students: eight preset classmates */
+const _riders = [];
+for (let i = 0; i < 8; i++) composeAvatar(avStarter(i + 1)).then(r => { if (!r) return; const im = new Image(); im.src = r.full; _riders.push(im); });
+const _hallIms = {};
+window.hallMonsters = () => monsterSet().map(n => { if (!_hallIms[n]) { _hallIms[n] = new Image(); _hallIms[n].src = TRIM(n); } return _hallIms[n]; });
+window.arcadeRiders = () => _riders.length >= 4 ? _riders.slice() : null;
+
+/* ---- bonus round: three questions from your own classes after every run ---- */
+const BONUS_CAP = 6;  /* coins per day from bonus rounds */
+function bonusLeft(){ const d = today(); S.bonus = S.bonus && S.bonus.d === d ? S.bonus : {d, n:0}; return Math.max(0, BONUS_CAP - S.bonus.n); }
+function bonusPool(){
+  const mine = myCourses(), out = [];
+  allUnits().forEach(u => { if (!mine.includes(u.pack.id)) return;
+    u.items.forEach(it => { if (it.type === "mcq" && it.c && it.c.en && it.c.en.length > 1) out.push({it, u}); }); });
+  /* prefer questions the student has already met in their studies */
+  const seen = out.filter(o => S.prog[o.it.id]);
+  return shuffled(seen.length >= 6 ? seen : out).slice(0, 3);
+}
+let BONUS = null;
+function startBonus(){
+  BONUS = {qs: bonusPool(), i: 0, right: 0, paid: 0};
+  if (!BONUS.qs.length) return toast(WL("Pick your classes first.","Primero elige tus clases."));
+  showBonusQ();
+}
+function showBonusQ(){
+  let d = document.getElementById("bonus"); if (!d) { d = document.createElement("div"); d.id = "bonus"; document.body.appendChild(d); }
+  d.style.cssText = "position:fixed;inset:0;z-index:80;background:rgba(30,20,10,.6);display:grid;place-items:center;padding:16px;overflow-y:auto";
+  if (BONUS.i >= BONUS.qs.length) {
+    d.innerHTML = `<div class="panel" style="max-width:520px;width:100%;text-align:center">
+      <img src="${npc(BONUS.right ? "cheer" : "clipboard")}" alt="" style="height:140px">
+      <h2 style="font-size:30px;margin:6px 0">${BONUS.right}/3 ${WL("right","correctas")}</h2>
+      <p style="font-weight:700">+${BONUS.paid} ${WL("coins","monedas")}${bonusLeft() ? "" : " · " + WL("daily bonus limit reached","límite diario alcanzado")}</p>
+      <button class="btn primary wide" onclick="document.getElementById('bonus').remove();go('arcade')">${WL("Back to the arcade","Volver al arcade")}</button></div>`;
+    return;
+  }
+  const {it, u} = BONUS.qs[BONUS.i], c = (S.lang === "es" && it.c.es) ? it.c.es : it.c.en;
+  d.innerHTML = `<div class="panel" style="max-width:620px;width:100%">
+    <div class="row spread"><span class="eyebrow">⭐ ${WL("Bonus round","Ronda extra")} · ${BONUS.i + 1}/3</span>
+      <span class="chip warn">${bonusLeft()} ${WL("coins left today","monedas hoy")}</span></div>
+    <div class="muted" style="font-size:12px;font-weight:700;margin-top:6px">${esc(L(u.title))}</div>
+    <h3 style="font-size:20px;margin:6px 0 12px;font-family:var(--body)">${esc(L(it.q))}</h3>
+    <div class="opts" style="display:grid;gap:8px">${c.map((t, i) => `<button class="opt" onclick="answerBonus(${i})">${esc(t)}</button>`).join("")}</div>
+    <div id="bonusWhy"></div></div>`;
+}
+function answerBonus(i){
+  const {it} = BONUS.qs[BONUS.i], ok = i === it.a, btns = document.querySelectorAll("#bonus .opt");
+  btns.forEach((b, k) => { b.disabled = true; if (k === it.a) b.classList.add("right"); else if (k === i) b.classList.add("wrong"); });
+  S.prog[it.id] = S.prog[it.id] || {seen:0, right:0}; S.prog[it.id].seen++; if (ok) S.prog[it.id].right++;
+  if (ok) { BONUS.right++; if (bonusLeft()) { S.bonus.n++; S.tokens++; BONUS.paid++; } S.xp += 10; }
+  save(); paintBar();
+  document.getElementById("bonusWhy").innerHTML = `<div class="why" style="margin-top:12px;padding:10px 12px;border-radius:10px">
+    <b>${ok ? WL("Correct!","¡Correcto!") : WL("Not quite.","Casi.")}</b> ${esc(L(it.why || {en:"", es:""}))}</div>
+    <button class="btn primary wide" style="margin-top:10px" onclick="BONUS.i++;showBonusQ()">${WL("Next","Siguiente")} →</button>`;
+}
+const _endGameV2 = window.endGame;
+window.endGame = function(id, score, won){
+  const first = !GAME_OVER;
+  _endGameV2(id, score, won);
+  if (!first) return;
+  const el = document.getElementById("hint");
+  if (el) el.insertAdjacentHTML("beforeend", `<div style="margin-top:10px"><button class="btn primary" onclick="startBonus()">⭐ ${WL("Bonus round: 3 questions, up to +3 coins","Ronda extra: 3 preguntas, hasta +3 monedas")}</button></div>`);
 };
 
 /* ---------- boot ---------- */

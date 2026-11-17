@@ -8976,7 +8976,7 @@ function viewArcade(){
   V().innerHTML=`<h1 class="big" style="margin:18px 0 4px">${T_.arcade}</h1>
   <p class="muted">${free?T_.freePlay:T_.cost+(S.tokens?"":" · "+T_.noTokens)}</p>
   ${smittyCard}
-  ${GAMES.map(g=>`<section class="panel" style="border-left:4px solid ${g.color}">
+  ${GAMES.filter(g=>!g.hidden).map(g=>`<section class="panel" style="border-left:4px solid ${g.color}">
     <h3 style="font-size:19px">${esc(L(g.name))}</h3>
     <p class="muted" style="margin:4px 0 10px">${esc(L(g.tag))}</p>
     <div class="eyebrow">${T_.zone} — ${esc(L(zoneOf(g.id).name))}</div>
@@ -9638,6 +9638,9 @@ function gameSprint(cv,id,lvl,zone){
         x.fillStyle=E.coin;
         x.beginPath(); x.arc(cx2,cy2,20,0,7); x.fill();
         x.globalAlpha=1;
+        /* 2.0: drawn power-up art when it has loaded (world.js ARC_PU) */
+        const puIm=window.ARC_PU&&ARC_PU[it.k];
+        if(drawable(puIm)){ const h=36,w=puIm.naturalWidth/puIm.naturalHeight*h; x.drawImage(puIm,cx2-w/2,cy2-h/2,w,h); continue; }
         x.fillStyle="#0B0F1F"; x.beginPath(); x.arc(cx2,cy2,13,0,7); x.fill();
         x.strokeStyle=E.coin; x.lineWidth=2; x.stroke();
         x.fillStyle=E.coin; x.font="bold 14px 'Trebuchet MS',sans-serif";
@@ -10112,7 +10115,8 @@ function gameKart(cv,id,lvl,zone){
   /* ---- art ---- */
   const cart=spriteOf("kart_player");
   const propImgs={}; (zone.props||["prop_hut"]).forEach(k=>propImgs[k]=spriteOf(k));
-  const riderSprites=["idle","point","cheer","walk"].map(spriteOf);
+  /* 2.0: riders are other students (world.js arcadeRiders), never the player's own avatar */
+  const riderSprites=(window.arcadeRiders&&arcadeRiders())||["idle","point","cheer","walk"].map(spriteOf);
 
   /* ---- state ---- */
   const you=currentRacer();
@@ -10986,6 +10990,23 @@ function gameGunner(cv,id,lvl,zone){
       if(!f.alive) return;
       const fx=f.x-cam.x; if(fx<-90||fx>VW+90) return;
       const flash=f.flash>0;
+      /* 2.0: Hall Quest draws the misconception monsters (world.js hallMonsters)
+         over the same hitbox; the shapes below stay as the fallback. */
+      const mons=window.hallMonsters&&hallMonsters();
+      if(mons&&mons.length){
+        const im=mons[Math.abs(Math.round(f.spawnX0/97))%mons.length];
+        if(drawable(im)){
+          const hh=f.kind==="monitor"?f.h*1.45:f.h*2.1, ww=im.naturalWidth/im.naturalHeight*hh;
+          const bob=f.kind==="monitor"?0:Math.sin(t*5+f.t0)*3;
+          x.fillStyle="rgba(0,0,0,.28)";
+          x.beginPath(); x.ellipse(fx+f.w/2,f.y+f.h+3,ww*0.35,4,0,0,6.283); x.fill();
+          x.save(); x.translate(fx+f.w/2, f.y+f.h+bob);
+          if(f.dir>0) x.scale(-1,1);
+          if(flash) x.filter="brightness(3)";
+          x.drawImage(im,-ww/2,-hh,ww,hh); x.restore();
+          return;
+        }
+      }
       if(f.kind==="monitor"){
         x.fillStyle="rgba(0,0,0,.3)";
         x.beginPath(); x.ellipse(fx+f.w/2,f.y+f.h+3,f.w*0.5,4,0,0,6.283); x.fill();
