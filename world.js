@@ -126,7 +126,7 @@ const NAV = () => [
 function navSection(t){
   if (!t || t === "home" || t === "campus" || t === "assignments" || t === "showprep" || t === "showstudy") return "campus";
   if (t === "classes" || t.indexOf("pack:") === 0 || t.indexOf("unitwork:") === 0 || t.indexOf("coursework:") === 0 ||
-      t === "study" || t === "challenge" || ["marginal","moneymoves","counsel2","writing","marketlab"].includes(t)) return "classes";
+      t === "study" || t === "challenge" || t.indexOf("ag:") === 0 || ["marginal","moneymoves","counsel2","writing","marketlab"].includes(t)) return "classes";
   if (t === "locker" || t === "art") return "locker";
   if (t === "arcade" || t === "smittys") return "arcade";
   if (t === "trophies") return "trophies";
@@ -135,7 +135,7 @@ function navSection(t){
 }
 window.dock = function(){
   const el = document.getElementById("dock");
-  const full = ["gameshow","marginal","moneymoves","counsel2","writing","marketlab"].includes(TAB);
+  const full = ["gameshow","marginal","moneymoves","counsel2","writing","marketlab"].includes(TAB) || String(TAB).indexOf("ag:") === 0;
   el.style.display = full ? "none" : ""; if (full) { el.innerHTML = ""; return; }
   const cur = navSection(TAB);
   el.innerHTML = NAV().map(([k, ic, l]) =>
@@ -148,6 +148,7 @@ window.render = function(){
   const v2 = {campus:viewCampus, classes:viewClasses, locker:viewLocker, trophies:viewTrophies,
               writing:() => viewFrame("writing"), marketlab:() => viewFrame("marketlab")}[TAB];
   if (v2) { paintBar(); dock(); v2(); return; }
+  if (String(TAB).indexOf("ag:") === 0) { paintBar(); dock(); viewAG(TAB.slice(3)); return; }
   _o.render();
 };
 window.viewHome = function(){ TAB = "campus"; viewCampus(); };
@@ -311,6 +312,47 @@ ASSIGNMENTS.push(
           es:"Competencia perfecta, competencia monopolística, oligopolio y monopolio. Clasifica negocios reales y explica por qué."},
    tag:{en:"Unit 1 Lab",es:"Laboratorio Unidad 1"}, done:() => false}
 );
+
+/* ---------- assignment games (ag.html?g=<id>) ---------- */
+const AG_GAMES = [
+  {id:"data_desk", icon:"📊", color:"#2F7FD8", en:"Data Desk", es:"Mesa de Datos", min:25,
+   units:[["ap-econ","ap-m2"]], b:["GDP, unemployment and inflation from a newsroom data desk.","PIB, desempleo e inflación desde una mesa de datos."]},
+  {id:"fiscal_fix", icon:"🏛️", color:"#1E9E5A", en:"Fiscal Fix", es:"Arreglo Fiscal", min:25,
+   units:[["ap-econ","ap-m3"]], b:["Close the gap with AD/AS, the multiplier and fiscal policy.","Cierra la brecha con DA/OA, el multiplicador y la política fiscal."]},
+  {id:"port_authority", icon:"🚢", color:"#0E8FA8", en:"Port Authority", es:"Autoridad Portuaria", min:25,
+   units:[["ap-econ","ap-m6"],["econ-h","eh-u3"]], b:["Trade, exchange rates and comparative advantage at the docks.","Comercio, tipos de cambio y ventaja comparativa en el puerto."]},
+  {id:"mall_tycoon", icon:"🛍️", color:"#F08C2E", en:"Mall Tycoon", es:"Magnate del Centro Comercial", min:25,
+   units:[["econ-h","eh-u1"]], b:["Run four shops: supply, demand, price controls and elasticity.","Dirige cuatro tiendas: oferta, demanda, controles de precios y elasticidad."]},
+  {id:"bill_to_law", icon:"📜", color:"#1F3F8F", en:"Bill to Law", es:"De Proyecto a Ley", min:25,
+   units:[["us-gov","gov-u3"],["ap-gov","apg-u2"]], b:["Steer a bill through committee, the floor and the president's desk.","Guía un proyecto por el comité, el pleno y el escritorio del presidente."]},
+  {id:"campaign_trail", icon:"🗳️", color:"#D8344A", en:"Campaign Trail", es:"En Campaña", min:25,
+   units:[["us-gov","gov-u4"],["ap-gov","apg-u5"]], b:["Primaries, polls, campaign finance and the road to 270.","Primarias, encuestas, financiamiento y el camino a 270."]},
+  {id:"scotus_docket", icon:"⚖️", color:"#8A5CD8", en:"SCOTUS Docket", es:"Expediente de la Corte", min:30,
+   units:[["ap-gov","apg-u3"],["us-gov","gov-u5"]], b:["Clerk for the Court: 14 landmark cases, clauses and principles.","Asiste a la Corte: 14 casos clave, cláusulas y principios."]},
+  {id:"archive_heist", icon:"🗝️", color:"#C9A227", en:"Archive Heist", es:"Golpe al Archivo", min:25,
+   units:[["ap-gov","apg-u1"]], b:["Recover the nine foundational documents before the doors open.","Recupera los nueve documentos fundacionales antes de que abra el museo."]}
+];
+const agDone = id => (S.certs || []).some(c => c.src === "ev:ag-" + id);
+AG_GAMES.forEach(g => g.units.forEach(([pack, unit]) => ASSIGNMENTS.push({
+  pack, unit, tab:"ag:" + g.id, icon:g.icon, color:g.color,
+  get title(){ return WL(g.en, g.es); },
+  blurb:{en:g.b[0] + " ~" + g.min + " min.", es:g.b[1] + " ~" + g.min + " min."},
+  tag:{en:"Assignment Game", es:"Juego de tarea"}, done:() => agDone(g.id)
+})));
+function viewAG(id){
+  const g = AG_GAMES.find(x => x.id === id);
+  if (!g) { TAB = "assignments"; return render(); }
+  const back = ASSIGN_UNIT ? "unitwork:" + ASSIGN_UNIT : ASSIGN_PACK ? "coursework:" + ASSIGN_PACK : "assignments";
+  const src = "ag.html?g=" + encodeURIComponent(id) + "&lang=" + (S.lang || "en");
+  V().innerHTML = `
+  <div class="eprow"><button class="btn ghost" style="padding:8px 12px;min-height:0" onclick="TAB='${back}';render()">← ${WL("Back","Volver")}</button>
+    <h2 style="font-size:22px;margin-left:6px">${g.icon} ${WL(g.en, g.es)}</h2></div>
+  <div style="border:2.5px solid var(--char);border-radius:16px;overflow:hidden;box-shadow:0 5px 0 var(--char);background:#fff">
+    <iframe src="${src}" title="${esc(WL(g.en, g.es))}" style="width:100%;height:max(520px,min(88vh,calc(100vh - 150px)));border:none;display:block"
+      sandbox="allow-scripts allow-same-origin allow-downloads allow-popups allow-modals"></iframe></div>
+  <p class="muted" style="font-size:12px;text-align:center"><a href="${src}" target="_blank" rel="noopener">${WL("Open in a new tab","Abrir en pestaña nueva")}</a></p>`;
+  window.scrollTo(0, 0);
+}
 window.viewAssignments = function(){
   ASSIGN_UNIT = null; ASSIGN_PACK = null;
   const mine = myCourses();
