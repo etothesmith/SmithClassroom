@@ -47,6 +47,8 @@ const AV_TOPS = [
   ["top_08_varsity_jacket",{en:"Red varsity jacket",es:"Chaqueta universitaria roja"},600,6],
   ["top_05_puffer_jacket",{en:"Black & gold puffer",es:"Chaqueta acolchada negra y dorada"},850,4],
   ["top_04_wallstreet_blazer",{en:"Navy blazer",es:"Blazer azul marino"},950,3],
+  ["top_09_sundress",{en:"Yellow sundress",es:"Vestido amarillo"},300,8],
+  ["top_10_denim_jacket",{en:"Denim jacket",es:"Chaqueta de mezclilla"},350,9],
   ["top_06_grad_robe",{en:"Graduation robe",es:"Toga de graduación"},1200,7]
 ].map(([id,name,price,col])=>({id,slot:"top",name,price,col}));
 const AV_BOTTOMS = [

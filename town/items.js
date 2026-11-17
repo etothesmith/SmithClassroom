@@ -1,16 +1,17 @@
 /* Grenadier Town — catalog: furniture, pets, decor, house styles, quick-chat phrases, emotes, stickers.
    Art lives in v2/assets/town/ (see v2/GEMINI_TOWN_ASSETS.md); every entry has an emoji fallback. */
+/* [slot, name, [x%, y%], width % of the room, anchor] — floor items stand on y (bottom), wall items are centred */
 window.TOWN_SLOTS = [
-  ["bed",   {en:"Bed",      es:"Cama"},      [14, 58]],
-  ["sofa",  {en:"Sofa",     es:"Sofá"},      [44, 64]],
-  ["table", {en:"Table",    es:"Mesa"},      [72, 66]],
-  ["rug",   {en:"Rug",      es:"Alfombra"},  [46, 86]],
-  ["lamp",  {en:"Lamp",     es:"Lámpara"},   [88, 50]],
-  ["plant", {en:"Plant",    es:"Planta"},    [4, 78]],
-  ["art",   {en:"Wall art", es:"Cuadro"},    [40, 22]],
-  ["wall",  {en:"Wall",     es:"Pared"},     [70, 22]],
-  ["trophy",{en:"Shelf",    es:"Repisa"},    [16, 24]],
-  ["pet",   {en:"Pet",      es:"Mascota"},   [60, 80]]
+  ["bed",   {en:"Bed",      es:"Cama"},      [20, 86], 24, "b"],
+  ["sofa",  {en:"Sofa",     es:"Sofá"},      [50, 76], 19, "b"],
+  ["table", {en:"Table",    es:"Mesa"},      [75, 84], 13, "b"],
+  ["rug",   {en:"Rug",      es:"Alfombra"},  [52, 95], 24, "b"],
+  ["lamp",  {en:"Lamp",     es:"Lámpara"},   [90, 80], 8,  "b"],
+  ["plant", {en:"Plant",    es:"Planta"},    [6, 96],  9,  "b"],
+  ["art",   {en:"Wall art", es:"Cuadro"},    [40, 30], 10, "c"],
+  ["wall",  {en:"Wall",     es:"Pared"},     [62, 30], 9,  "c"],
+  ["trophy",{en:"Shelf",    es:"Repisa"},    [82, 58], 9,  "b"],
+  ["pet",   {en:"Pet",      es:"Mascota"},   [66, 97], 8,  "b"]
 ];
 /* r: rarity 0 common · 1 rare · 2 epic · 3 legendary.  p: shop price in coins (0 = crates and trading only) */
 window.TOWN_ITEMS = Object.fromEntries([
@@ -61,6 +62,7 @@ window.TOWN_RARITY = [{en:"Common",es:"Común",c:"#8A94A6"},{en:"Rare",es:"Raro"
 window.TOWN_HOUSES = [
   ["cottage", 0,  "Cottage", "Casita"],
   ["brick",   8,  "Brick house", "Casa de ladrillo"],
+  ["farmhouse", 10, "Farmhouse", "Casa de campo"],
   ["beach",   12, "Beach house", "Casa de playa"],
   ["modern",  15, "Modern house", "Casa moderna"],
   ["cabin",   15, "Log cabin", "Cabaña"],
