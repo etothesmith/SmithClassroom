@@ -11,4 +11,12 @@
      storageBucket: "…", messagingSenderId: "…", appId: "…"
    };
 */
-window.TOWN_FIREBASE = null;
+window.TOWN_FIREBASE = {
+  apiKey: "AIzaSyCDbPMjht-scr4AMuxHpoTXOlmDWq5x89M",
+  authDomain: "smiths-classroom.firebaseapp.com",
+  databaseURL: "https://smiths-classroom-default-rtdb.firebaseio.com",
+  projectId: "smiths-classroom",
+  storageBucket: "smiths-classroom.firebasestorage.app",
+  messagingSenderId: "323554728372",
+  appId: "1:323554728372:web:1d4ef6de3638ae07b03ae1"
+};
