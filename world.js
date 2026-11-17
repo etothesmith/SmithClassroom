@@ -119,6 +119,7 @@ window.paintBar = function(){
 const NAV = () => [
   ["campus",   "world",    WL("Campus","Campus")],
   ["classes",  "classes",  WL("Classes","Clases")],
+  ["town",     "town",     WL("Town","Pueblo")],
   ["locker",   "locker",   WL("Locker","Casillero")],
   ["arcade",   "game",     WL("Arcade","Arcade")],
   ["trophies", "trophies", WL("Trophies","Trofeos")]
@@ -127,6 +128,7 @@ function navSection(t){
   if (!t || t === "home" || t === "campus" || t === "assignments" || t === "showprep" || t === "showstudy") return "campus";
   if (t === "classes" || t.indexOf("pack:") === 0 || t.indexOf("unitwork:") === 0 || t.indexOf("coursework:") === 0 ||
       t === "study" || t === "challenge" || t.indexOf("ag:") === 0 || ["marginal","moneymoves","counsel2","writing","marketlab","cfereview"].includes(t)) return "classes";
+  if (t === "town") return "town";
   if (t === "locker" || t === "art") return "locker";
   if (t === "arcade" || t === "smittys") return "arcade";
   if (t === "trophies") return "trophies";
@@ -145,7 +147,8 @@ window.dock = function(){
 /* ---------- routing ---------- */
 window.render = function(){
   if (!TAB || TAB === "home") TAB = "campus";
-  const v2 = {campus:viewCampus, classes:viewClasses, locker:viewLocker, trophies:viewTrophies,
+  if (TAB !== "town" && window.townAway) window.townAway();
+  const v2 = {campus:viewCampus, classes:viewClasses, locker:viewLocker, trophies:viewTrophies, town:() => window.viewTown && window.viewTown(),
               writing:() => viewFrame("writing"), marketlab:() => viewFrame("marketlab"), cfereview:() => viewFrame("cfereview")}[TAB];
   if (v2) { paintBar(); dock(); v2(); return; }
   if (String(TAB).indexOf("ag:") === 0) { paintBar(); dock(); viewAG(TAB.slice(3)); return; }

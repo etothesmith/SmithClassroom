@@ -1,0 +1,27 @@
+{
+  "rules": {
+    ".read": false,
+    ".write": false,
+    "owner": {
+      "$cid": {
+        ".read": "auth != null",
+        ".write": "auth != null && auth.token.firebase.sign_in_provider != 'anonymous' && (!data.exists() || data.val() == auth.uid) && newData.val() == auth.uid"
+      }
+    },
+    "ctl": {
+      "$cid": {
+        ".read": "auth != null",
+        ".write": "auth != null && root.child('owner').child($cid).val() == auth.uid"
+      }
+    },
+    "plaza": {
+      "$cid": {
+        ".read": "auth != null",
+        "$uid": {
+          ".write": "auth != null && ((auth.uid == $uid && root.child('ctl').child($cid).child('frozen').val() != true) || root.child('owner').child($cid).val() == auth.uid || (auth.uid == $uid && !newData.exists()))",
+          ".validate": "!newData.exists() || (newData.hasChildren(['sid','x','y','at','uid']) && newData.child('uid').val() == $uid && newData.child('name').isString() && newData.child('name').val().length <= 40 && newData.child('x').isNumber() && newData.child('y').isNumber())"
+        }
+      }
+    }
+  }
+}

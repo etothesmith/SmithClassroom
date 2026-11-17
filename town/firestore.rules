@@ -1,0 +1,118 @@
+rules_version = '2';
+// Smith's Classroom · Grenadier Town — Firestore security rules.
+// Teachers sign in with email/password. Students sign in anonymously, join with a
+// class code, and claim their name with a PIN. A student can only act as the
+// student record whose uid matches their sign-in.
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function signedIn() { return request.auth != null; }
+    function isTeacher() { return signedIn() && request.auth.token.firebase.sign_in_provider != 'anonymous'; }
+    function cls(cid) { return get(/databases/$(database)/documents/classes/$(cid)).data; }
+    function owns(cid) { return isTeacher() && cls(cid).ownerUid == request.auth.uid; }
+    function member(cid) { return signedIn() && exists(/databases/$(database)/documents/classes/$(cid)/members/$(request.auth.uid)); }
+    // the student record `sid` belongs to whoever is signed in
+    function isSid(cid, sid) { return signedIn() && get(/databases/$(database)/documents/classes/$(cid)/students/$(sid)).data.uid == request.auth.uid; }
+    function live(cid) { return cls(cid).frozen != true; }
+    function onlyChanges(keys) { return request.resource.data.diff(resource.data).affectedKeys().hasOnly(keys); }
+
+    match /codes/{code} {
+      allow get: if signedIn();
+      allow create: if isTeacher() && request.resource.data.ownerUid == request.auth.uid;
+      allow delete: if isTeacher() && resource.data.ownerUid == request.auth.uid;
+    }
+
+    match /classes/{cid} {
+      allow get: if (isTeacher() && resource.data.ownerUid == request.auth.uid) || member(cid);
+      allow list: if isTeacher() && resource.data.ownerUid == request.auth.uid;
+      allow create: if isTeacher() && request.resource.data.ownerUid == request.auth.uid;
+      allow update, delete: if isTeacher() && resource.data.ownerUid == request.auth.uid;
+
+      match /members/{uid} {
+        allow get: if owns(cid) || (signedIn() && request.auth.uid == uid);
+        allow list: if owns(cid);
+        allow create, update: if signedIn() && request.auth.uid == uid
+          && exists(/databases/$(database)/documents/classes/$(cid));
+        allow delete: if owns(cid);
+      }
+
+      // Private: PIN hash and cloud save. Locked to the device that set the PIN;
+      // another device takes over only by proving the PIN (pinProof == pinHash).
+      match /students/{sid} {
+        allow get: if owns(cid) || (signedIn() && (resource == null || resource.data.uid == request.auth.uid
+                                                   || resource.data.get('pinHash', null) == null));
+        allow create: if member(cid) && request.resource.data.uid == request.auth.uid;
+        allow update: if owns(cid) || (member(cid)
+          && request.resource.data.uid == request.auth.uid
+          && (resource.data.get('uid', null) == request.auth.uid
+              || resource.data.get('pinHash', null) == null
+              || request.resource.data.get('pinProof', '') == resource.data.pinHash)
+          && (resource.data.get('pinHash', null) == null || request.resource.data.pinHash == resource.data.pinHash));
+        allow list, delete: if owns(cid);
+      }
+
+      // Public profile: name, avatar, house
+      match /pub/{sid} {
+        allow read: if member(cid) || owns(cid);
+        allow write: if isSid(cid, sid) || owns(cid);
+      }
+
+      // Live plaza positions
+      match /plaza/{sid} {
+        allow read: if member(cid) || owns(cid);
+        allow create, update: if isSid(cid, sid) && live(cid);
+        allow delete: if owns(cid);
+      }
+
+      // Quick chat: preset phrase ids only, and only while chat is on
+      match /chat/{id} {
+        allow read: if member(cid) || owns(cid);
+        allow create: if isSid(cid, request.resource.data.sid) && live(cid)
+          && cls(cid).chatOn == true && !(request.resource.data.sid in cls(cid).muted)
+          && request.resource.data.p is string && request.resource.data.p.size() <= 24;
+        allow delete: if owns(cid);
+      }
+
+      match /stickers/{id} {
+        allow read: if member(cid) || owns(cid);
+        allow create: if isSid(cid, request.resource.data.from) && live(cid);
+        allow delete: if owns(cid);
+      }
+
+      // Market: the seller lists, any classmate can buy once, the teacher can undo
+      match /market/{id} {
+        allow read: if member(cid) || owns(cid);
+        allow create: if isSid(cid, request.resource.data.seller) && live(cid)
+          && request.resource.data.status == 'open' && request.resource.data.price is int
+          && request.resource.data.price > 0
+          && (cls(cid).econ.ceiling == 0 || request.resource.data.price <= cls(cid).econ.ceiling);
+        allow update: if owns(cid)
+          || (resource.data.status == 'open' && request.resource.data.status == 'sold' && live(cid)
+              && isSid(cid, request.resource.data.buyer) && request.resource.data.buyer != resource.data.seller
+              && onlyChanges(['status','buyer','buyerUid','buyerName','soldAt']))
+          || (isSid(cid, resource.data.seller)
+              && ((resource.data.status == 'open' && request.resource.data.status == 'cancelled' && onlyChanges(['status']))
+                  || onlyChanges(['settled'])));
+        allow delete: if owns(cid);
+      }
+
+      // Trades: both sides must agree; the teacher can undo
+      match /trades/{id} {
+        allow read: if member(cid) || owns(cid);
+        allow create: if isSid(cid, request.resource.data.from) && live(cid)
+          && request.resource.data.status == 'offered' && request.resource.data.to != request.resource.data.from;
+        allow update: if owns(cid)
+          || (isSid(cid, resource.data.to) && resource.data.status == 'offered'
+              && request.resource.data.status in ['accepted','declined'] && onlyChanges(['status','respondedAt']))
+          || (isSid(cid, resource.data.from)
+              && ((resource.data.status == 'offered' && request.resource.data.status == 'cancelled' && onlyChanges(['status','respondedAt']))
+                  || onlyChanges(['settled'])));
+        allow delete: if owns(cid);
+      }
+    }
+
+    // Network test page (nettest.html) writes one small document per visit
+    match /nettest/{uid} {
+      allow read, write: if signedIn() && request.auth.uid == uid;
+    }
+  }
+}
