@@ -101,6 +101,14 @@ window.TOWN_ITEMS = Object.fromEntries([
  ["e_lakes","plant","🦢","Lake Eola swan","Cisne del lago Eola"],["e_market","trophy","📈","Market Madness bull","Toro de la Locura del Mercado"],
  ["t_besttown","trophy","🏆","Best Town of the Month cup","Copa Mejor Pueblo del Mes"]]
   .forEach(([id, slot, e, en, es]) => { window.TOWN_ITEMS[id] = {id, slot, r:3, p:0, e, name:{en, es}, office:true}; });
+/* more pets: adopt common ones at the Pet Rescue (sp = adoption fee), the rest come from crates and trades */
+[["pet_hamster","🐹",0,8,"Hamster","Hámster"],["pet_mouse","🐭",0,6,"Mouse","Ratón"],["pet_chick","🐥",0,6,"Chick","Pollito"],["pet_frog","🐸",0,8,"Tree frog","Rana arborícola"],
+ ["pet_snail","🐌",0,5,"Snail","Caracol"],["pet_hedgehog","🦔",0,12,"Hedgehog","Erizo"],["pet_poodle","🐩",1,20,"Poodle","Caniche"],["pet_blackcat","🐈‍⬛",1,18,"Black cat","Gato negro"],
+ ["pet_pig","🐷",1,16,"Mini pig","Minicerdo"],["pet_goat","🐐",1,16,"Pygmy goat","Cabra enana"],["pet_raccoon","🦝",1,0,"Raccoon","Mapache"],["pet_fox","🦊",1,0,"Fox","Zorro"],
+ ["pet_owl","🦉",2,0,"Owl","Búho"],["pet_gator","🐊",2,0,"Baby gator","Caimancito"],["pet_sloth","🦥",2,0,"Sloth","Perezoso"],["pet_otter","🦦",2,0,"River otter","Nutria"],
+ ["pet_peacock","🦚",2,0,"Peacock","Pavo real"],["pet_swan","🦢",2,0,"Lake Eola swan","Cisne del lago Eola"],["pet_dolphin","🐬",3,0,"Dolphin","Delfín"],
+ ["pet_panther","🐆",3,0,"Florida panther","Pantera de Florida"],["pet_unicorn","🦄",3,0,"Unicorn","Unicornio"],["pet_dragon","🐉",3,0,"Dragon","Dragón"]]
+  .forEach(([id, e, r, sp, en, es]) => { window.TOWN_ITEMS[id] = {id, slot:"pet", r, p:0, e, name:{en, es}, ...(sp ? {sp} : {})}; });
 window.TOWN_RARITY = [{en:"Common",es:"Común",c:"#8A94A6"},{en:"Rare",es:"Raro",c:"#2F7FD8"},{en:"Epic",es:"Épico",c:"#8A5CD8"},{en:"Legendary",es:"Legendario",c:"#E3A21A"}];
 window.TOWN_HOUSES = [
   ["cottage", 0,  "Cottage", "Casita"],

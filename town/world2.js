@@ -413,8 +413,7 @@ function petsHtml(){
     return `<div><span style="font-size:${Math.round(38 * s[2])}px">${I.e}</span><b>${E(T.L2(I.name))}</b><small>${L(s[1])}${nx ? ` · ${n}/${nx[0]}` : " · ❤️"}</small>
       <button class="btn ${w.daily.fed[id] ? "ghost" : "primary"}" ${w.daily.fed[id] ? "disabled" : ""} onclick="w2Feed('${id}')">🍖 ${w.daily.fed[id] ? W2("Fed","Comió") : W2("Feed","Alimentar")}</button></div>`; }).join("")}</div>`;
 }
-EXT.houseExtra.push({html: sid => sid === me() ? `<section class="panel"><div class="eyebrow">💚 ${W2("Your needs","Tus necesidades")}</div>${needsHtml(true)}</section>
-  <section class="panel"><div class="eyebrow">🐾 ${W2("Your pets","Tus mascotas")}</div><p class="muted" style="font-size:12px;margin:0 0 6px">${W2("Feed each pet once a day. Answer the question right for the good food. Pets grow from Baby to Young to Grown.","Alimenta a cada mascota una vez al día. Responde bien para la buena comida. Crecen de Bebé a Joven a Adulto.")}</p>${petsHtml()}</section>` : ""});
+EXT.houseExtra.push({html: sid => sid === me() ? `<section class="panel"><div class="eyebrow">💚 ${W2("Your needs","Tus necesidades")}</div>${needsHtml(true)}</section>` : ""});
 
 /* ================================================================ 6. town vs. town */
 let LG = [], MKT = [];
@@ -499,7 +498,8 @@ const PLACES = () => [
   {k:"downtown", e:"🏢", l:["Downtown","Centro"], go:"downtown", d:["Jobs, services and the Community Board","Trabajos, servicios y el Tablero"]},
   ...Object.entries(DISTRICTS).map(([k, D]) => ({k, e:D.e, l:D.l, d:D.d, district:true})),
   {k:"towns", e:"🏙️", l:["Other towns","Otros pueblos"], d:["Best Town of the Month and the Trade Post","Mejor Pueblo del Mes y el Puesto de comercio"]},
-  {k:"album", e:"📔", l:["My album","Mi álbum"], d:["Your collections","Tus colecciones"]}];
+  {k:"album", e:"📔", l:["My album","Mi álbum"], d:["Your collections","Tus colecciones"]}, ...MORE.places];
+const MORE = {places:[], views:{}};
 function paintMap(el){
   const back = `<div class="eprow"><button class="btn ghost" onclick="w2Go(null)">← ${W2("Map","Mapa")}</button></div>`;
   if (SUBV === "waterfront" && isOpen("waterfront")) return paintWaterfront(el, back);
@@ -507,6 +507,7 @@ function paintMap(el){
   if (SUBV === "space" && isOpen("space")) return paintSpace(el, back);
   if (SUBV === "towns") return paintTowns(el, back);
   if (SUBV === "album") return paintAlbum(el, back);
+  if (SUBV && MORE.views[SUBV]) return MORE.views[SUBV](el, back);
   SUBV = null; const avg = classAvgCerts();
   el.innerHTML = `<section class="panel raised"><div class="eyebrow">🧭 ${W2("Map of Grenadier Town","Mapa del Pueblo")}</div><h2>${W2("Where to?","¿A dónde?")}</h2>
       <div style="margin-top:6px">${needsHtml(false)}</div></section>
@@ -557,5 +558,5 @@ EXT.adminPanels.push({
 });
 window.w2TDist = async function(k){ const c = (await T.net.myClasses()).find(x => x.id === T.adminCid); if (!c) return; const d = new Set(c.districts || []); d.has(k) ? d.delete(k) : d.add(k); townSet("districts", [...d]); };
 
-window.WORLD2 = {w2, needs, mood, isOpen, classAvgCerts, storyOf, storyTotal, storyTarget, NPCS, FISH, albumSets, petStage, scoreFor, DISTRICTS, STORIES, bumpNeed};
+window.WORLD2 = {MORE, ask, series, pickQ, myUnits, w2, needs, mood, isOpen, classAvgCerts, storyOf, storyTotal, storyTarget, NPCS, FISH, albumSets, petStage, scoreFor, DISTRICTS, STORIES, bumpNeed};
 })();

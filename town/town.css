@@ -322,3 +322,34 @@
 .cleague tr.me{background:#FFF4C9}
 .tseason{position:relative;box-shadow:0 0 0 3px #F2B33D}
 .tlimit{position:absolute;top:-9px;left:50%;transform:translateX(-50%);font-style:normal;font-size:10px;font-weight:900;background:#F2B33D;border:2px solid var(--char);border-radius:8px;padding:0 6px;white-space:nowrap}
+
+/* ---- pets 2.0 and house life (town/pets.js, town/houselife.js) ---- */
+.pgrid{display:grid;gap:10px}
+.pcard{display:grid;grid-template-columns:96px 1fr;gap:10px;border:2.5px solid var(--char);border-radius:16px;padding:10px;background:#fff}
+.pcard.buddy{background:#FFF8E6;box-shadow:0 0 0 3px #F2B33D}
+.pav{position:relative;display:grid;place-items:center;background:#F3FFEF;border-radius:14px;min-height:96px}
+.pav i{position:absolute;top:4px;right:6px;font-style:normal;font-size:24px}
+.pinfo b{font-size:18px}
+.pinfo small{display:block;color:var(--muted,#666);font-weight:700;font-size:12px}
+.pinfo .cbar{height:8px;margin:2px 0 4px}
+.phearts{font-size:14px;letter-spacing:1px;margin:2px 0}
+.pbtns{grid-column:1/-1;display:flex;flex-wrap:wrap;gap:6px}
+.pbtns .btn{padding:4px 10px;min-height:0;font-size:13px}
+.ppick{display:flex;gap:12px;align-items:center;margin:6px 0}
+.ppick>span{font-size:60px}
+.ppick small{display:block;color:var(--muted,#666);font-weight:700}
+.pidea{display:flex;flex-wrap:wrap;gap:4px;margin:4px 0}
+.pidea .btn{padding:2px 9px;min-height:0;font-size:12px}
+.pbig{font-size:90px}
+.hchat .hclog{max-height:280px;overflow-y:auto;display:flex;flex-direction:column;gap:6px;padding:8px;background:#F7F4EC;border:2px solid var(--line,#ddd);border-radius:12px}
+.hcm{align-self:flex-start;max-width:80%;background:#fff;border:2px solid var(--char);border-radius:14px 14px 14px 4px;padding:5px 10px}
+.hcm.me{align-self:flex-end;background:#E3EBFF;border-radius:14px 14px 4px 14px}
+.hcm b{display:block;font-size:11px;color:var(--muted,#666)}
+.hcm small{display:block;font-size:10px;color:#999;text-align:right}
+.hcsys{align-self:center;font-size:12px;font-weight:800;color:var(--muted,#666)}
+.hcin{display:flex;gap:6px;margin-top:6px}
+.hcin input{flex:1;border:2.5px solid var(--char);border-radius:12px;padding:8px 10px;font:inherit}
+.hcquick{display:flex;flex-wrap:wrap;gap:4px;margin-top:4px}
+.hcquick .btn{padding:2px 9px;min-height:0;font-size:12px}
+.hparty{background:linear-gradient(90deg,#FFE1F0,#FFF1C9);display:flex;flex-wrap:wrap;gap:8px;align-items:center;padding:10px 14px}
+.hcadm{max-height:420px;overflow-y:auto}
