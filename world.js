@@ -137,7 +137,7 @@ function navSection(t){
 }
 window.dock = function(){
   const el = document.getElementById("dock");
-  const full = ["gameshow","marginal","moneymoves","counsel2","writing","marketlab","cfereview"].includes(TAB) || String(TAB).indexOf("ag:") === 0;
+  const full = ["gameshow","marginal","moneymoves","counsel2","writing","marketlab","cfereview"].includes(TAB) || String(TAB).indexOf("ag:") === 0 || String(TAB).indexOf("arc3:") === 0;
   el.style.display = full ? "none" : ""; if (full) { el.innerHTML = ""; return; }
   const cur = navSection(TAB);
   el.innerHTML = NAV().map(([k, ic, l]) =>
@@ -152,6 +152,7 @@ window.render = function(){
               writing:() => viewFrame("writing"), marketlab:() => viewFrame("marketlab"), cfereview:() => viewFrame("cfereview")}[TAB];
   if (v2) { paintBar(); dock(); v2(); return; }
   if (String(TAB).indexOf("ag:") === 0) { paintBar(); dock(); viewAG(TAB.slice(3)); return; }
+  if (String(TAB).indexOf("arc3:") === 0) { paintBar(); dock(); viewArc3(TAB.slice(5)); return; }
   _o.render();
 };
 window.viewHome = function(){ TAB = "campus"; viewCampus(); };
@@ -728,7 +729,13 @@ function drainOutbox(){
   const done = new Set();
   box.forEach(ev => {
     const key = ev.type + ":" + ev.id;
-    if (ev.type === "award") pay("ev:" + ev.id, Math.min(5, ev.coins | 0), Math.min(300, ev.xp | 0), ev.label || ev.id);
+    if (ev.type === "award") {
+      let coins = Math.min(5, ev.coins | 0);
+      /* arcade games: at most ARC3_DAILY coins a day across all three */
+      if (/^arc_/.test(String(ev.id))) { const d = today(); S.arcDay = S.arcDay && S.arcDay.d === d ? S.arcDay : {d, n:0};
+        coins = Math.max(0, Math.min(coins, ARC3_DAILY - S.arcDay.n)); S.arcDay.n += coins; }
+      pay("ev:" + ev.id, coins, Math.min(300, ev.xp | 0), ev.label || ev.id);
+    }
     else if (ev.type === "cert") addGameCert("ev:" + ev.id, String(ev.unit || ev.id).slice(0, 120), ev.course, +ev.score || 100);
     else if (ev.type === "badge") { S.worldBadges = S.worldBadges || {}; S.worldBadges[ev.id] = 1; }
     done.add(key);
@@ -917,6 +924,81 @@ window.endGame = function(id, score, won){
 
 /* ---------- boot ---------- */
 document.querySelector('meta[name="theme-color"]') && document.querySelector('meta[name="theme-color"]').setAttribute("content", "#FFF4DE");
+/* ==========================================================================
+   ARCADE 3.0 — Tardy Wave, Grenadier Express, Misconception Panic.
+   Each game is one self-contained page in arcade/ (built by arcade/build.py)
+   that runs in a frame here. A play costs 1 coin; the games pay coins and XP
+   back through the world outbox (capped per day). The older arcade games are
+   retired from the list; their code stays so nothing else breaks.
+   ========================================================================== */
+const ARC3_DAILY = 15;
+const ARC3 = [
+  {id:"tardy_wave", color:"#3A86FF", name:{en:"Tardy Wave", es:"Ola Tardía"},
+   tag:{en:"The bell rang and a wave of homework is chasing you. Jump, switch lanes, and run through the right Answer Door.",
+        es:"Sonó el timbre y una ola de tareas te persigue. Salta, cambia de carril y entra por la Puerta de la respuesta correcta."},
+   head:{left:43.7, top:30.58, w:12.14, visH:33.81}},
+  {id:"grenadier_express", color:"#F2B632", name:{en:"Grenadier Express", es:"Grenadier Express"},
+   tag:{en:"Drive the golf cart around campus. Every package is a question: deliver it to the building with the right answer.",
+        es:"Maneja el carrito por el campus. Cada paquete es una pregunta: entrégalo en el edificio con la respuesta correcta."}},
+  {id:"misconception_panic", color:"#7B2CBF", name:{en:"Misconception Panic", es:"Pánico de Ideas Erróneas"},
+   tag:{en:"Survive five minutes in the gym against misconception monsters. Answer right at every level-up to power up.",
+        es:"Sobrevive cinco minutos en el gimnasio contra monstruos de ideas erróneas. Responde bien al subir de nivel para mejorar."},
+   head:{left:39.29, top:38.06, w:10.41, visH:28.98}}
+];
+["sprint","kart","gunner","shuttle","quest"].forEach(id => { const g = GAMES.find(x => x.id === id); if (g) g.hidden = true; });
+const arc3Best = id => { try { return +JSON.parse(localStorage.getItem("arc." + id + ".best") || "0") || 0; } catch(e){ return 0; } };
+function arc3Card(g){
+  const free = TEACHER_OK, head = ME && ME.head && g.head ? `<div style="position:absolute;left:${g.head.left}%;top:${g.head.top}%;width:${g.head.w}%;height:${g.head.visH}%;overflow:hidden">
+      <img src="${ME.head}" alt="" style="width:100%;display:block"></div>` : "";
+  return `<section class="panel" style="border-left:4px solid ${g.color}">
+    <div class="gcover" style="margin:-18px -18px 14px;overflow:hidden;border-bottom:2.5px solid var(--char);border-radius:16px 16px 0 0">
+      <div style="position:relative;width:100%;aspect-ratio:960/300"><img src="arcade/covers/${g.id}.jpg" alt="" style="width:100%;height:100%;display:block">${head}</div></div>
+    <h3 style="font-size:21px">${esc(L(g.name))}</h3>
+    <p class="muted" style="margin:4px 0 10px">${esc(L(g.tag))}</p>
+    <div class="row"><span class="chip">${WL("Best","Récord")} ${arc3Best(g.id)}</span>
+      <span class="chip ${free ? "on" : "warn"}">${free ? WL("Free play","Juego libre") : "◎ 1"}</span>
+      <span class="chip">${WL("Questions from your classes","Preguntas de tus clases")}</span></div>
+    <button class="btn primary wide" style="margin-top:10px" ${(!free && S.tokens < 1) ? "disabled" : ""} onclick="playArc3('${g.id}')">${WL("Play","Jugar")}${free ? "" : " (◎1)"}</button>
+  </section>`;
+}
+const _viewArcade3 = window.viewArcade;
+window.viewArcade = function(){
+  _viewArcade3();
+  const v = document.getElementById("view");
+  v.querySelectorAll("p.muted").forEach(p => { if (p.parentElement === v && /token|ficha|coin|moneda/i.test(p.textContent)) p.remove(); });
+  /* the new games always star the student's own avatar */
+  const hd = v.querySelector("section.panel.raised > div");
+  if (hd) hd.innerHTML = `${ME && ME.head ? `<img src="${ME.head}" alt="" style="width:46px;border-radius:50%;border:2px solid var(--char)">` : ""}
+    <div><div class="eyebrow">${ME && ME.head ? WL("Starring you","Protagonizado por ti") : WL("Arcade","Arcade")}</div><h1 style="font-size:28px;margin:0">${WL("Arcade","Arcade")}</h1>
+    ${S.avatar ? "" : `<button class="chip bad" style="cursor:pointer" onclick="go('locker')">${WL("Build your avatar to star in the games","Crea tu avatar para salir en los juegos")}</button>`}</div>`;
+  v.insertAdjacentHTML("beforeend", `<p class="muted" style="margin:8px 2px">${TEACHER_OK ? WL("Teacher: free play.","Docente: juego libre.") :
+    WL("Each play costs 1 coin. Win coins back by answering questions in the games (up to " + ARC3_DAILY + " a day).",
+       "Cada partida cuesta 1 moneda. Gana monedas respondiendo preguntas en los juegos (hasta " + ARC3_DAILY + " al día).")}</p>` + ARC3.map(arc3Card).join(""));
+};
+window.playArc3 = function(id){
+  const g = ARC3.find(x => x.id === id); if (!g) return;
+  if (!TEACHER_OK) { if (S.tokens < 1) return toast(WL("You need 1 coin to play.","Necesitas 1 moneda para jugar.")); S.tokens--; save(); paintBar(); }
+  stopGame(); TAB = "arc3:" + id; render();
+};
+function viewArc3(id){
+  const g = ARC3.find(x => x.id === id); if (!g) { TAB = "arcade"; return render(); }
+  const cur = document.getElementById("arc3frame"); if (cur && cur.dataset.id === id) return;   /* already running: don't restart it */
+  document.body.classList.add("playing");
+  V().innerHTML = `
+  <div class="eprow"><button class="btn ghost" style="padding:8px 12px;min-height:0" onclick="go('arcade')">← ${WL("Arcade","Arcade")}</button>
+    <h2 style="font-size:22px;margin-left:6px">${esc(L(g.name))}</h2></div>
+  <div style="border:2.5px solid var(--char);border-radius:16px;overflow:hidden;box-shadow:0 5px 0 var(--char);background:#1d1a33">
+    <iframe id="arc3frame" data-id="${id}" src="arcade/${id}.html" title="${esc(L(g.name))}" allow="autoplay; gamepad; fullscreen" allowfullscreen
+      style="width:100%;aspect-ratio:16/9;max-height:calc(100vh - 130px);border:none;display:block"
+      sandbox="allow-scripts allow-same-origin allow-forms allow-pointer-lock"></iframe></div>
+  <p class="muted" style="font-size:12px;text-align:center">${WL("Click the game first if the keys don't respond.","Haz clic en el juego si las teclas no responden.")}
+    · <a href="arcade/${id}.html" target="_blank" rel="noopener">${WL("Open full screen","Pantalla completa")}</a></p>`;
+  const f = document.getElementById("arc3frame"); f.addEventListener("load", () => { try { f.focus(); f.contentWindow.focus(); } catch(e){} });
+  window.scrollTo(0, 0);
+}
+/* the game's "Back to arcade" button */
+window.addEventListener("message", e => { if (e.origin === location.origin && e.data && e.data.arcade === "exit") { syncGames(); go("arcade"); } });
+
 ensureAvatar();
 if (TAB === "home") TAB = "campus";
 bootSmiths();
