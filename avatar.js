@@ -49,7 +49,12 @@ const AV_TOPS = [
   ["top_04_wallstreet_blazer",{en:"Navy blazer",es:"Blazer azul marino"},950,3],
   ["top_09_sundress",{en:"Yellow sundress",es:"Vestido amarillo"},300,8],
   ["top_10_denim_jacket",{en:"Denim jacket",es:"Chaqueta de mezclilla"},350,9],
-  ["top_06_grad_robe",{en:"Graduation robe",es:"Toga de graduación"},1200,7]
+  ["top_06_grad_robe",{en:"Graduation robe",es:"Toga de graduación"},1200,7],
+  ["top_11_pink_crop_hoodie",{en:"Pink crop hoodie",es:"Sudadera corta rosa"},280,10],
+  ["top_12_lavender_cardigan",{en:"Lavender cardigan",es:"Cárdigan lavanda"},260,11],
+  ["top_13_ruffle_blouse",{en:"Ruffle blouse",es:"Blusa con volantes"},320,12],
+  ["top_14_tied_flannel",{en:"Tied plaid flannel",es:"Franela a cuadros anudada"},300,13],
+  ["top_15_striped_tee",{en:"Striped boat-neck tee",es:"Camiseta a rayas"},220,14]
 ].map(([id,name,price,col])=>({id,slot:"top",name,price,col}));
 const AV_BOTTOMS = [
   ["bot_01_athletic_shorts",{en:"Gray shorts",es:"Shorts grises"},0,null],

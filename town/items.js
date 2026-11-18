@@ -49,7 +49,7 @@ window.TOWN_ITEMS = Object.fromEntries([
   ["trophy_gavel","trophy",1,0,"⚖️","Golden gavel","Mazo dorado"],
   ["trophy_bell","trophy",2,0,"🔔","Liberty Bell replica","Réplica de la Campana de la Libertad"],
   ["trophy_bull","trophy",2,0,"🐂","Bull-market statue","Estatua del mercado alcista"],
-  ["trophy_golden_coin","trophy",3,0,"🪙","Giant gold coin","Moneda de oro gigante"],
+  ["trophy_golden_coin","trophy",3,0,"💵","Giant gold Smithbuck","Smithbuck de oro gigante"],
   ["pet_goldfish","pet",0,5,"🐠","Goldfish","Pez dorado"],
   ["pet_cat","pet",1,0,"🐈","Cat","Gato"],
   ["pet_dog","pet",1,0,"🐕","Dog","Perro"],
@@ -58,6 +58,16 @@ window.TOWN_ITEMS = Object.fromEntries([
   ["pet_eagle","pet",3,0,"🦅","Bald eagle","Águila calva"],
   ["pet_flamingo","pet",3,0,"🦩","Flamingo","Flamenco"]
 ].map(([id, slot, r, p, e, en, es]) => [id, {id, slot, r, p, e, name:{en, es}}]));
+/* Civic update furniture (art: v2/GEMINI_CLOTHES_AND_ITEMS.md, emoji until then) */
+[["bed_loft","bed",0,10,"🪜","Loft bed","Cama alta"],["bed_cloud","bed",2,0,"☁️","Cloud bed","Cama de nube"],
+ ["sofa_loveseat","sofa",0,7,"💗","Pink loveseat","Sofá rosa"],["sofa_egg_chair","sofa",1,0,"🥚","Hanging egg chair","Silla colgante"],
+ ["table_gaming","table",1,0,"🖥️","Gaming desk","Escritorio gamer"],["table_aquarium","table",2,0,"🐟","Aquarium table","Mesa acuario"],
+ ["rug_checker","rug",0,3,"🏁","Checkerboard rug","Alfombra de cuadros"],["rug_galaxy","rug",1,0,"🌌","Galaxy rug","Alfombra galaxia"],
+ ["lamp_fairy","lamp",0,3,"✨","Fairy-light lamp","Lámpara de lucecitas"],["lamp_moon","lamp",1,0,"🌙","Moon lamp","Lámpara de luna"],
+ ["plant_monstera","plant",0,4,"🌿","Monstera","Monstera"],["plant_cherry","plant",2,0,"🌸","Cherry blossom tree","Cerezo en flor"],
+ ["art_photos","art",0,4,"📸","Photo wall","Muro de fotos"],["wall_neon_bolt","wall",2,0,"⚡","Lightning-bolt neon","Neón de rayo"],
+ ["trophy_state","trophy",3,0,"🏆","State championship trophy","Trofeo de campeonato estatal"],["pet_bunny","pet",1,0,"🐰","Bunny","Conejo"]
+].forEach(([id, slot, r, p, e, en, es]) => { window.TOWN_ITEMS[id] = {id, slot, r, p, e, name:{en, es}}; });
 /* products made by student businesses (town/civic.js): not in the shop or crates. cost = supplies */
 [["prod_cupcakes","table","🧁","Cupcake tower","Torre de cupcakes",2],["prod_cookie_jar","table","🍪","Cookie jar","Tarro de galletas",2],
  ["prod_bouquet","plant","💐","Bouquet","Ramo de flores",2],["prod_sunflower","plant","🌻","Sunflower pot","Maceta de girasol",2],
@@ -66,6 +76,31 @@ window.TOWN_ITEMS = Object.fromEntries([
  ["prod_radio","table","📻","Fixed-up radio","Radio reparado",3],["prod_robot","trophy","🤖","Mini robot","Mini robot",4],
  ["prod_smoothie","table","🥤","Smoothie","Batido",1],["prod_fruit_bowl","table","🍓","Fruit bowl","Frutero",2]
 ].forEach(([id, slot, e, en, es, cost]) => { window.TOWN_ITEMS[id] = {id, slot, r:0, p:0, e, name:{en, es}, biz:true, cost}; });
+/* mayor-only furniture: given when a student takes office, never in crates or the shop */
+[["mayor_desk","table","🗄️","Mayor's desk","Escritorio del alcalde"],["mayor_flag","wall","🚩","Town flag","Bandera del pueblo"],["mayor_portrait","art","🖼️","Official mayor portrait","Retrato oficial del alcalde"]]
+  .forEach(([id, slot, e, en, es]) => { window.TOWN_ITEMS[id] = {id, slot, r:3, p:0, e, name:{en, es}, office:true}; });
+/* seasonal furniture: in the shop only during its month (season = month number) */
+[[1,[["s01_confetti","art","🎉","New Year confetti cannon","Cañón de confeti de Año Nuevo",20],["s01_snowglobe","table","🔮","Snow globe","Bola de nieve",25],["s01_clock","wall","🕛","Countdown clock","Reloj de cuenta regresiva",30]]],
+ [2,[["s02_heartlamp","lamp","💗","Heart lamp","Lámpara de corazón",20],["s02_roses","plant","🌹","Rose bouquet","Ramo de rosas",15],["s02_cards","art","💌","Valentine card wall","Muro de tarjetas",20]]],
+ [3,[["s03_kite","wall","🪁","Spring kite","Papalote de primavera",15],["s03_tulips","plant","🌷","Tulip pot","Maceta de tulipanes",15],["s03_bracket","art","🏀","Bracket poster","Póster de eliminatorias",25]]],
+ [4,[["s04_boots","rug","🥾","Rain boots mat","Tapete de botas",15],["s04_umbrella","lamp","☂️","Umbrella lamp","Lámpara de paraguas",20],["s04_eggs","table","🥚","Painted egg basket","Canasta de huevos pintados",20]]],
+ [5,[["s05_gradcap","trophy","🎓","Graduation cap","Birrete de graduación",35],["s05_apcert","art","📜","AP exam survival certificate","Certificado de supervivencia del AP",30],["s05_hibiscus","plant","🌺","Hibiscus","Hibisco",15]]],
+ [6,[["s06_beachball","rug","🏖️","Beach towel rug","Tapete de toalla",20],["s06_fan","lamp","🪭","Summer fan","Abanico de verano",15],["s06_icecream","table","🍦","Ice cream cart","Carrito de helados",30]]],
+ [7,[["s07_fireworks","art","🎆","Fireworks poster","Póster de fuegos artificiales",25],["s07_flag","wall","🇺🇸","Independence Day flag","Bandera del 4 de julio",20],["s07_grill","table","🍔","Backyard grill","Asador",30]]],
+ [8,[["s08_backpack","table","🎒","New backpack","Mochila nueva",20],["s08_pencils","art","✏️","Giant pencil art","Lápiz gigante",15],["s08_planner","wall","🗓️","School-year planner","Agenda escolar",15]]],
+ [9,[["s09_football","trophy","🏈","Homecoming football","Balón de homecoming",30],["s09_pennant","wall","🚩","Grenadier pennant","Banderín Grenadier",20],["s09_sunflower","plant","🌻","Sunflowers","Girasoles",15]]],
+ [10,[["s10_pumpkin","plant","🎃","Carved pumpkin","Calabaza tallada",20],["s10_candles","lamp","🕯️","Spooky candles","Velas de octubre",20],["s10_bats","wall","🦇","Paper bat garland","Guirnalda de murciélagos",15]]],
+ [11,[["s11_pie","table","🥧","Pumpkin pie","Pay de calabaza",15],["s11_wreath","wall","🍂","Autumn wreath","Corona de otoño",20],["s11_quilt","bed","🛏️","Cozy harvest quilt","Edredón de otoño",35]]],
+ [12,[["s12_lights","lamp","✨","Winter string lights","Luces de invierno",20],["s12_gingerbread","table","🏠","Gingerbread house","Casita de jengibre",30],["s12_snowman","plant","⛄","Snowman","Muñeco de nieve",25]]]]
+  .forEach(([m, list]) => list.forEach(([id, slot, e, en, es, p]) => { window.TOWN_ITEMS[id] = {id, slot, r:m % 3 === 0 ? 2 : 1, p, e, name:{en, es}, season:m}; }));
+/* quest and event rewards: earned, never sold */
+[["q_whistle","trophy","📯","Coach's golden whistle","Silbato dorado del coach"],["q_key","art","🗝️","Landlord's golden key","Llave dorada de la casera"],
+ ["q_mic","trophy","🎙️","Golden microphone","Micrófono dorado"],["q_ship","table","⛵","Ship in a bottle","Barco en botella"],
+ ["e_hurricane","trophy","🌀","Storm Survivor trophy","Trofeo Sobreviviente de la tormenta"],["e_fair","trophy","🎡","Grenadier Fair ribbon","Listón de la Feria Grenadier"],
+ ["e_election","trophy","🗳️","Election Night badge","Insignia de Noche Electoral"],["e_founders","art","📜","Founders' Week charter","Carta de la Semana Fundadora"],
+ ["e_lakes","plant","🦢","Lake Eola swan","Cisne del lago Eola"],["e_market","trophy","📈","Market Madness bull","Toro de la Locura del Mercado"],
+ ["t_besttown","trophy","🏆","Best Town of the Month cup","Copa Mejor Pueblo del Mes"]]
+  .forEach(([id, slot, e, en, es]) => { window.TOWN_ITEMS[id] = {id, slot, r:3, p:0, e, name:{en, es}, office:true}; });
 window.TOWN_RARITY = [{en:"Common",es:"Común",c:"#8A94A6"},{en:"Rare",es:"Raro",c:"#2F7FD8"},{en:"Epic",es:"Épico",c:"#8A5CD8"},{en:"Legendary",es:"Legendario",c:"#E3A21A"}];
 window.TOWN_HOUSES = [
   ["cottage", 0,  "Cottage", "Casita"],

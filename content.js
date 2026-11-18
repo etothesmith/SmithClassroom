@@ -1081,6 +1081,238 @@ const PACKS = [
               "en": "More capital investment today means more productive capacity tomorrow. X sacrificed more consumption now for faster future growth.",
               "es": "Más inversión en capital hoy significa más capacidad productiva mañana. X sacrificó más consumo ahora para crecer más rápido."
             }
+          },
+          {
+            "id": "ap-m1-x01",
+            "topic": "costs",
+            "type": "mcq",
+            "diff": 1,
+            "q": {
+              "en": "A city turns a park into a parking garage. The opportunity cost is:",
+              "es": "Una ciudad convierte un parque en un estacionamiento. El costo de oportunidad es:"
+            },
+            "c": {
+              "en": [
+                "The money spent building the garage",
+                "The recreation and green space the park provided",
+                "The parking fees the garage will collect",
+                "Nothing, since the city already owned the land"
+              ],
+              "es": [
+                "El dinero gastado en construir el estacionamiento",
+                "La recreación y el espacio verde que daba el parque",
+                "Las tarifas que cobrará el estacionamiento",
+                "Nada, porque la ciudad ya era dueña del terreno"
+              ]
+            },
+            "a": 1,
+            "why": {
+              "en": "Opportunity cost is the value of the next-best use given up: here, the park.",
+              "es": "El costo de oportunidad es el valor del mejor uso alternativo sacrificado: aquí, el parque."
+            }
+          },
+          {
+            "id": "ap-m1-x02",
+            "topic": "costs",
+            "type": "mcq",
+            "diff": 2,
+            "q": {
+              "en": "Which is an example of a sunk cost?",
+              "es": "¿Cuál es un ejemplo de costo hundido?"
+            },
+            "c": {
+              "en": [
+                "A nonrefundable concert ticket you already bought",
+                "The wage you'd earn at a job you might take",
+                "Tuition you will pay next year",
+                "Interest you could earn on savings"
+              ],
+              "es": [
+                "Un boleto de concierto no reembolsable que ya compraste",
+                "El salario de un trabajo que podrías aceptar",
+                "La matrícula que pagarás el próximo año",
+                "El interés que podrías ganar con tus ahorros"
+              ]
+            },
+            "a": 0,
+            "why": {
+              "en": "A sunk cost is already paid and can't be recovered, so it shouldn't change future decisions.",
+              "es": "Un costo hundido ya se pagó y no se recupera, así que no debe cambiar decisiones futuras."
+            }
+          },
+          {
+            "id": "ap-m1-x03",
+            "topic": "costs",
+            "type": "mcq",
+            "diff": 2,
+            "q": {
+              "en": "Marginal analysis says you should keep doing an activity as long as:",
+              "es": "El análisis marginal dice que debes seguir con una actividad mientras:"
+            },
+            "c": {
+              "en": [
+                "Total benefit is positive",
+                "Average cost is falling",
+                "Marginal cost is zero",
+                "Marginal benefit is at least as large as marginal cost"
+              ],
+              "es": [
+                "El beneficio total sea positivo",
+                "El costo promedio esté bajando",
+                "El costo marginal sea cero",
+                "El beneficio marginal sea al menos igual al costo marginal"
+              ]
+            },
+            "a": 3,
+            "why": {
+              "en": "Do one more unit when the extra benefit covers the extra cost; stop where MB = MC.",
+              "es": "Haz una unidad más si el beneficio extra cubre el costo extra; detente donde BM = CM."
+            }
+          },
+          {
+            "id": "ap-m1-x04",
+            "topic": "ppc",
+            "type": "mcq",
+            "diff": 2,
+            "q": {
+              "en": "On a PPC for robots and pizza, better technology for making robots ONLY will:",
+              "es": "En una FPP de robots y pizza, una mejor tecnología SOLO para robots:"
+            },
+            "c": {
+              "en": [
+                "Shift the whole PPC outward equally",
+                "Move the economy along the curve",
+                "Pivot the PPC outward along the robot axis only",
+                "Shift the PPC inward"
+              ],
+              "es": [
+                "Desplaza toda la FPP hacia afuera por igual",
+                "Mueve la economía a lo largo de la curva",
+                "Gira la FPP hacia afuera solo en el eje de robots",
+                "Desplaza la FPP hacia adentro"
+              ]
+            },
+            "a": 2,
+            "why": {
+              "en": "Technology that helps only one good expands the maximum of that good, so the curve pivots out on that axis.",
+              "es": "Una tecnología que ayuda a un solo bien aumenta su máximo, así que la curva gira hacia afuera en ese eje."
+            }
+          },
+          {
+            "id": "ap-m1-x05",
+            "topic": "ppc",
+            "type": "mcq",
+            "diff": 1,
+            "q": {
+              "en": "Unemployed workers and idle factories are shown on a PPC as:",
+              "es": "Los trabajadores desempleados y las fábricas inactivas se ven en la FPP como:"
+            },
+            "c": {
+              "en": [
+                "A point on the curve",
+                "A point inside the curve",
+                "A point outside the curve",
+                "An outward shift of the curve"
+              ],
+              "es": [
+                "Un punto sobre la curva",
+                "Un punto dentro de la curva",
+                "Un punto fuera de la curva",
+                "Un desplazamiento de la curva hacia afuera"
+              ]
+            },
+            "a": 1,
+            "why": {
+              "en": "Unused resources mean the economy produces less than it could: an inefficient point inside the PPC.",
+              "es": "Los recursos sin usar significan que la economía produce menos de lo que puede: un punto ineficiente dentro de la FPP."
+            }
+          },
+          {
+            "id": "ap-m1-x06",
+            "topic": "trade",
+            "type": "mcq",
+            "diff": 3,
+            "q": {
+              "en": "In 1 hour, Country A makes 10 shirts or 5 shoes; Country B makes 6 shirts or 6 shoes. Who has the comparative advantage in shoes?",
+              "es": "En 1 hora, el País A hace 10 camisas o 5 zapatos; el País B hace 6 camisas o 6 zapatos. ¿Quién tiene ventaja comparativa en zapatos?"
+            },
+            "c": {
+              "en": [
+                "Country B",
+                "Country A",
+                "Both equally",
+                "Neither"
+              ],
+              "es": [
+                "El País B",
+                "El País A",
+                "Ambos por igual",
+                "Ninguno"
+              ]
+            },
+            "a": 0,
+            "why": {
+              "en": "A shoe costs A 2 shirts but costs B only 1 shirt, so B has the lower opportunity cost.",
+              "es": "Un zapato le cuesta a A 2 camisas, pero a B solo 1 camisa, así que B tiene menor costo de oportunidad."
+            }
+          },
+          {
+            "id": "ap-m1-x07",
+            "topic": "trade",
+            "type": "mcq",
+            "diff": 2,
+            "q": {
+              "en": "For trade to benefit both countries, the terms of trade must fall:",
+              "es": "Para que el comercio beneficie a ambos países, los términos de intercambio deben estar:"
+            },
+            "c": {
+              "en": [
+                "Above both opportunity costs",
+                "Below both opportunity costs",
+                "Exactly at the higher opportunity cost",
+                "Between the two countries' opportunity costs"
+              ],
+              "es": [
+                "Por encima de ambos costos de oportunidad",
+                "Por debajo de ambos costos de oportunidad",
+                "Exactamente en el costo de oportunidad más alto",
+                "Entre los costos de oportunidad de los dos países"
+              ]
+            },
+            "a": 3,
+            "why": {
+              "en": "Each country must get the good for less than it would cost to make it at home.",
+              "es": "Cada país debe obtener el bien por menos de lo que le costaría producirlo."
+            }
+          },
+          {
+            "id": "ap-m1-x08",
+            "topic": "growth",
+            "type": "mcq",
+            "diff": 2,
+            "q": {
+              "en": "Which would NOT shift a country's PPC outward?",
+              "es": "¿Cuál NO desplazaría hacia afuera la FPP de un país?"
+            },
+            "c": {
+              "en": [
+                "Discovering new oil reserves",
+                "Immigration that grows the labor force",
+                "Putting unemployed workers back to work",
+                "A faster manufacturing process"
+              ],
+              "es": [
+                "Descubrir nuevas reservas de petróleo",
+                "Inmigración que aumenta la fuerza laboral",
+                "Volver a emplear a trabajadores desempleados",
+                "Un proceso de fabricación más rápido"
+              ]
+            },
+            "a": 2,
+            "why": {
+              "en": "Using idle resources moves the economy from inside the curve onto it; it doesn't move the curve.",
+              "es": "Usar recursos ociosos mueve la economía de adentro hacia la curva; no mueve la curva."
+            }
           }
         ],
         "topics": [
@@ -1807,6 +2039,238 @@ const PACKS = [
             "why": {
               "en": "Leading indicators (stock prices, building permits, new orders) signal where the economy is headed before GDP data confirms it.",
               "es": "Los indicadores adelantados (precios de acciones, permisos de construcción, nuevos pedidos) señalan hacia dónde va la economía antes de que el PIB lo confirme."
+            }
+          },
+          {
+            "id": "ap-m2-x01",
+            "topic": "gdp",
+            "type": "mcq",
+            "diff": 1,
+            "q": {
+              "en": "Which is NOT counted in U.S. GDP this year?",
+              "es": "¿Qué NO se cuenta en el PIB de EE. UU. este año?"
+            },
+            "c": {
+              "en": [
+                "A new house built this year",
+                "Buying a used car from a neighbor",
+                "A haircut at a barbershop",
+                "Government spending on a new bridge"
+              ],
+              "es": [
+                "Una casa nueva construida este año",
+                "Comprar un auto usado a un vecino",
+                "Un corte de pelo en una barbería",
+                "El gasto del gobierno en un puente nuevo"
+              ]
+            },
+            "a": 1,
+            "why": {
+              "en": "GDP counts only new final goods and services; a used car was counted when it was made.",
+              "es": "El PIB cuenta solo bienes y servicios finales nuevos; el auto usado se contó cuando se fabricó."
+            }
+          },
+          {
+            "id": "ap-m2-x02",
+            "topic": "gdp",
+            "type": "mcq",
+            "diff": 2,
+            "q": {
+              "en": "Social Security checks are left out of GDP because they:",
+              "es": "Los cheques del Seguro Social no se incluyen en el PIB porque:"
+            },
+            "c": {
+              "en": [
+                "Are transfer payments, not payment for new goods or services",
+                "Are paid by the federal government",
+                "Are too small to measure",
+                "Are counted in net exports"
+              ],
+              "es": [
+                "Son transferencias, no pagos por bienes o servicios nuevos",
+                "Los paga el gobierno federal",
+                "Son demasiado pequeños para medir",
+                "Se cuentan en las exportaciones netas"
+              ]
+            },
+            "a": 0,
+            "why": {
+              "en": "Transfer payments move money around without anything new being produced.",
+              "es": "Las transferencias mueven dinero sin que se produzca nada nuevo."
+            }
+          },
+          {
+            "id": "ap-m2-x03",
+            "topic": "unemp",
+            "type": "mcq",
+            "diff": 1,
+            "q": {
+              "en": "The unemployment rate is:",
+              "es": "La tasa de desempleo es:"
+            },
+            "c": {
+              "en": [
+                "Unemployed ÷ total population × 100",
+                "Employed ÷ labor force × 100",
+                "Unemployed ÷ all adults not working × 100",
+                "Unemployed ÷ labor force × 100"
+              ],
+              "es": [
+                "Desempleados ÷ población total × 100",
+                "Empleados ÷ fuerza laboral × 100",
+                "Desempleados ÷ adultos que no trabajan × 100",
+                "Desempleados ÷ fuerza laboral × 100"
+              ]
+            },
+            "a": 3,
+            "why": {
+              "en": "The labor force is the employed plus the unemployed who are looking for work.",
+              "es": "La fuerza laboral son los empleados más los desempleados que buscan trabajo."
+            }
+          },
+          {
+            "id": "ap-m2-x04",
+            "topic": "unemp",
+            "type": "mcq",
+            "diff": 2,
+            "q": {
+              "en": "150 million people are employed and 10 million are unemployed. The unemployment rate is:",
+              "es": "Hay 150 millones de empleados y 10 millones de desempleados. La tasa de desempleo es:"
+            },
+            "c": {
+              "en": [
+                "6.67%",
+                "10%",
+                "6.25%",
+                "5.5%"
+              ],
+              "es": [
+                "6.67%",
+                "10%",
+                "6.25%",
+                "5.5%"
+              ]
+            },
+            "a": 2,
+            "why": {
+              "en": "10 ÷ (150 + 10) = 10 ÷ 160 = 6.25%.",
+              "es": "10 ÷ (150 + 10) = 10 ÷ 160 = 6.25%."
+            }
+          },
+          {
+            "id": "ap-m2-x05",
+            "topic": "prices",
+            "type": "mcq",
+            "diff": 2,
+            "q": {
+              "en": "The CPI rises from 200 to 210. The inflation rate is:",
+              "es": "El IPC sube de 200 a 210. La tasa de inflación es:"
+            },
+            "c": {
+              "en": [
+                "10%",
+                "5%",
+                "2.1%",
+                "210%"
+              ],
+              "es": [
+                "10%",
+                "5%",
+                "2.1%",
+                "210%"
+              ]
+            },
+            "a": 1,
+            "why": {
+              "en": "(210 − 200) ÷ 200 × 100 = 5%.",
+              "es": "(210 − 200) ÷ 200 × 100 = 5%."
+            }
+          },
+          {
+            "id": "ap-m2-x06",
+            "topic": "prices",
+            "type": "mcq",
+            "diff": 2,
+            "q": {
+              "en": "Your pay rises 3% while inflation is 5%. Your real wage:",
+              "es": "Tu sueldo sube 3% y la inflación es 5%. Tu salario real:"
+            },
+            "c": {
+              "en": [
+                "Falls about 2%",
+                "Rises about 2%",
+                "Rises 8%",
+                "Stays the same"
+              ],
+              "es": [
+                "Baja como 2%",
+                "Sube como 2%",
+                "Sube 8%",
+                "No cambia"
+              ]
+            },
+            "a": 0,
+            "why": {
+              "en": "Real change ≈ nominal change − inflation = 3% − 5% = −2%.",
+              "es": "Cambio real ≈ cambio nominal − inflación = 3% − 5% = −2%."
+            }
+          },
+          {
+            "id": "ap-m2-x07",
+            "topic": "cycle",
+            "type": "mcq",
+            "diff": 1,
+            "q": {
+              "en": "Cyclical unemployment is highest during:",
+              "es": "El desempleo cíclico es más alto durante:"
+            },
+            "c": {
+              "en": [
+                "A peak",
+                "An expansion",
+                "Full employment",
+                "A recession"
+              ],
+              "es": [
+                "Un pico",
+                "Una expansión",
+                "El pleno empleo",
+                "Una recesión"
+              ]
+            },
+            "a": 3,
+            "why": {
+              "en": "Cyclical unemployment comes from falling spending in a downturn.",
+              "es": "El desempleo cíclico viene de la caída del gasto en una recesión."
+            }
+          },
+          {
+            "id": "ap-m2-x08",
+            "topic": "prices",
+            "type": "mcq",
+            "diff": 3,
+            "q": {
+              "en": "Deflation (a falling price level) can hurt an economy because:",
+              "es": "La deflación (precios que bajan) puede dañar la economía porque:"
+            },
+            "c": {
+              "en": [
+                "Prices become too high for most buyers",
+                "The money supply grows too fast",
+                "People delay spending and the real burden of debt rises",
+                "It lowers the real value of debts"
+              ],
+              "es": [
+                "Los precios se vuelven demasiado altos",
+                "La oferta de dinero crece demasiado rápido",
+                "La gente retrasa sus compras y la carga real de las deudas sube",
+                "Reduce el valor real de las deudas"
+              ]
+            },
+            "a": 2,
+            "why": {
+              "en": "Expecting lower prices, people wait to buy; and debts must be repaid with dollars that are worth more.",
+              "es": "Al esperar precios más bajos, la gente espera para comprar; y las deudas se pagan con dólares que valen más."
             }
           }
         ],
@@ -2641,6 +3105,238 @@ const PACKS = [
               "en": "More G raises AD. Moving up along SRAS, both output and the price level increase, closing the gap.",
               "es": "Más G aumenta la DA. Al moverse sobre la OACP, suben la producción y el nivel de precios, cerrando la brecha."
             }
+          },
+          {
+            "id": "ap-m3-x01",
+            "topic": "mult",
+            "type": "mcq",
+            "diff": 1,
+            "q": {
+              "en": "If the MPC is 0.8, the spending multiplier is:",
+              "es": "Si la PMgC es 0.8, el multiplicador del gasto es:"
+            },
+            "c": {
+              "en": [
+                "4",
+                "5",
+                "8",
+                "1.25"
+              ],
+              "es": [
+                "4",
+                "5",
+                "8",
+                "1.25"
+              ]
+            },
+            "a": 1,
+            "why": {
+              "en": "Multiplier = 1 ÷ (1 − MPC) = 1 ÷ 0.2 = 5.",
+              "es": "Multiplicador = 1 ÷ (1 − PMgC) = 1 ÷ 0.2 = 5."
+            }
+          },
+          {
+            "id": "ap-m3-x02",
+            "topic": "mult",
+            "type": "mcq",
+            "diff": 2,
+            "q": {
+              "en": "With an MPC of 0.75, a $20 billion rise in government spending can raise real GDP by up to:",
+              "es": "Con PMgC de 0.75, un aumento de $20 mil millones en gasto público puede elevar el PIB real hasta:"
+            },
+            "c": {
+              "en": [
+                "$80 billion",
+                "$15 billion",
+                "$20 billion",
+                "$26.7 billion"
+              ],
+              "es": [
+                "$80 mil millones",
+                "$15 mil millones",
+                "$20 mil millones",
+                "$26.7 mil millones"
+              ]
+            },
+            "a": 0,
+            "why": {
+              "en": "Multiplier = 1 ÷ 0.25 = 4, and 4 × $20 billion = $80 billion.",
+              "es": "Multiplicador = 1 ÷ 0.25 = 4, y 4 × $20 mil millones = $80 mil millones."
+            }
+          },
+          {
+            "id": "ap-m3-x03",
+            "topic": "mult",
+            "type": "mcq",
+            "diff": 3,
+            "q": {
+              "en": "With an MPC of 0.9, the tax multiplier is:",
+              "es": "Con PMgC de 0.9, el multiplicador de impuestos es:"
+            },
+            "c": {
+              "en": [
+                "−10",
+                "−0.9",
+                "9",
+                "−9"
+              ],
+              "es": [
+                "−10",
+                "−0.9",
+                "9",
+                "−9"
+              ]
+            },
+            "a": 3,
+            "why": {
+              "en": "Tax multiplier = −MPC ÷ MPS = −0.9 ÷ 0.1 = −9.",
+              "es": "Multiplicador de impuestos = −PMgC ÷ PMgS = −0.9 ÷ 0.1 = −9."
+            }
+          },
+          {
+            "id": "ap-m3-x04",
+            "topic": "as",
+            "type": "mcq",
+            "diff": 2,
+            "q": {
+              "en": "A drop in nominal wages and other input costs shifts:",
+              "es": "Una baja en los salarios nominales y otros costos de insumos desplaza:"
+            },
+            "c": {
+              "en": [
+                "SRAS to the left",
+                "LRAS to the left",
+                "SRAS to the right",
+                "AD to the right"
+              ],
+              "es": [
+                "La OACP a la izquierda",
+                "La OALP a la izquierda",
+                "La OACP a la derecha",
+                "La DA a la derecha"
+              ]
+            },
+            "a": 2,
+            "why": {
+              "en": "Cheaper inputs make production more profitable at every price level.",
+              "es": "Insumos más baratos hacen la producción más rentable a cualquier nivel de precios."
+            }
+          },
+          {
+            "id": "ap-m3-x05",
+            "topic": "ad",
+            "type": "mcq",
+            "diff": 1,
+            "q": {
+              "en": "An increase in net exports shifts:",
+              "es": "Un aumento de las exportaciones netas desplaza:"
+            },
+            "c": {
+              "en": [
+                "AD to the left",
+                "AD to the right",
+                "SRAS to the right",
+                "LRAS to the left"
+              ],
+              "es": [
+                "La DA a la izquierda",
+                "La DA a la derecha",
+                "La OACP a la derecha",
+                "La OALP a la izquierda"
+              ]
+            },
+            "a": 1,
+            "why": {
+              "en": "Net exports (X − M) are a component of aggregate demand.",
+              "es": "Las exportaciones netas (X − M) son un componente de la demanda agregada."
+            }
+          },
+          {
+            "id": "ap-m3-x06",
+            "topic": "fiscal",
+            "type": "mcq",
+            "diff": 1,
+            "q": {
+              "en": "Which is discretionary fiscal policy?",
+              "es": "¿Cuál es política fiscal discrecional?"
+            },
+            "c": {
+              "en": [
+                "Congress passes a tax cut to fight a recession",
+                "Unemployment benefits rise automatically",
+                "The Fed buys bonds",
+                "Income tax collections fall as incomes drop"
+              ],
+              "es": [
+                "El Congreso aprueba un recorte de impuestos contra una recesión",
+                "Los beneficios de desempleo suben automáticamente",
+                "La Fed compra bonos",
+                "La recaudación baja cuando bajan los ingresos"
+              ]
+            },
+            "a": 0,
+            "why": {
+              "en": "Discretionary policy needs a new decision by Congress and the president; automatic stabilizers don't.",
+              "es": "La política discrecional requiere una nueva decisión del Congreso y el presidente; los estabilizadores automáticos no."
+            }
+          },
+          {
+            "id": "ap-m3-x07",
+            "topic": "as",
+            "type": "mcq",
+            "diff": 3,
+            "q": {
+              "en": "With no government action, a recessionary gap closes in the long run because:",
+              "es": "Sin acción del gobierno, una brecha recesiva se cierra a largo plazo porque:"
+            },
+            "c": {
+              "en": [
+                "AD automatically rises",
+                "LRAS shifts left",
+                "The Fed is required to act",
+                "Wages and input prices fall, shifting SRAS right"
+              ],
+              "es": [
+                "La DA sube automáticamente",
+                "La OALP se desplaza a la izquierda",
+                "La Fed está obligada a actuar",
+                "Bajan los salarios y precios de insumos y la OACP se desplaza a la derecha"
+              ]
+            },
+            "a": 3,
+            "why": {
+              "en": "High unemployment pushes wages down over time, which lowers costs and restores full employment.",
+              "es": "El alto desempleo baja los salarios con el tiempo, lo que reduce costos y regresa al pleno empleo."
+            }
+          },
+          {
+            "id": "ap-m3-x08",
+            "topic": "fiscal",
+            "type": "mcq",
+            "diff": 2,
+            "q": {
+              "en": "An inflationary gap exists when:",
+              "es": "Existe una brecha inflacionaria cuando:"
+            },
+            "c": {
+              "en": [
+                "Real GDP is below full-employment output",
+                "Unemployment is above its natural rate",
+                "Real GDP is above full-employment output",
+                "The budget is in deficit"
+              ],
+              "es": [
+                "El PIB real está por debajo del pleno empleo",
+                "El desempleo está por encima de su tasa natural",
+                "El PIB real está por encima del nivel de pleno empleo",
+                "Hay déficit presupuestario"
+              ]
+            },
+            "a": 2,
+            "why": {
+              "en": "Output beyond potential overheats the economy and pushes prices up.",
+              "es": "Producir más allá del potencial sobrecalienta la economía y sube los precios."
+            }
           }
         ],
         "topics": [
@@ -3429,6 +4125,238 @@ const PACKS = [
               "en": "On the AP exam, the money market graph shows the nominal interest rate; the loanable funds graph shows the real interest rate.",
               "es": "En el examen AP, el gráfico del mercado de dinero muestra la tasa nominal; el de fondos prestables muestra la tasa real."
             }
+          },
+          {
+            "id": "ap-m4-x01",
+            "topic": "bank",
+            "type": "mcq",
+            "diff": 2,
+            "q": {
+              "en": "With a 10% reserve requirement, a $1,000 cash deposit lets the bank lend at most:",
+              "es": "Con un encaje del 10%, un depósito de $1,000 en efectivo permite al banco prestar como máximo:"
+            },
+            "c": {
+              "en": [
+                "$100",
+                "$900",
+                "$1,000",
+                "$10,000"
+              ],
+              "es": [
+                "$100",
+                "$900",
+                "$1,000",
+                "$10,000"
+              ]
+            },
+            "a": 1,
+            "why": {
+              "en": "The bank keeps $100 in required reserves and can lend the $900 of excess reserves.",
+              "es": "El banco guarda $100 de encaje y puede prestar los $900 de reservas excedentes."
+            }
+          },
+          {
+            "id": "ap-m4-x02",
+            "topic": "bank",
+            "type": "mcq",
+            "diff": 1,
+            "q": {
+              "en": "With a 20% reserve requirement, the simple money multiplier is:",
+              "es": "Con un encaje del 20%, el multiplicador monetario simple es:"
+            },
+            "c": {
+              "en": [
+                "5",
+                "2",
+                "20",
+                "0.2"
+              ],
+              "es": [
+                "5",
+                "2",
+                "20",
+                "0.2"
+              ]
+            },
+            "a": 0,
+            "why": {
+              "en": "Money multiplier = 1 ÷ reserve ratio = 1 ÷ 0.20 = 5.",
+              "es": "Multiplicador monetario = 1 ÷ encaje = 1 ÷ 0.20 = 5."
+            }
+          },
+          {
+            "id": "ap-m4-x03",
+            "topic": "bank",
+            "type": "mcq",
+            "diff": 3,
+            "q": {
+              "en": "A $500 cash deposit enters a banking system with a 10% reserve ratio. The most the money supply can grow from new loans is:",
+              "es": "Un depósito de $500 en efectivo entra a un sistema bancario con encaje del 10%. Lo máximo que puede crecer la oferta de dinero por nuevos préstamos es:"
+            },
+            "c": {
+              "en": [
+                "$500",
+                "$5,000",
+                "$50",
+                "$4,500"
+              ],
+              "es": [
+                "$500",
+                "$5,000",
+                "$50",
+                "$4,500"
+              ]
+            },
+            "a": 3,
+            "why": {
+              "en": "Excess reserves are $450, and $450 × 10 = $4,500. The deposit itself just swaps cash for checking.",
+              "es": "Las reservas excedentes son $450, y $450 × 10 = $4,500. El depósito solo cambia efectivo por cuenta corriente."
+            }
+          },
+          {
+            "id": "ap-m4-x04",
+            "topic": "fed",
+            "type": "mcq",
+            "diff": 1,
+            "q": {
+              "en": "Who sets the target for the federal funds rate?",
+              "es": "¿Quién fija la meta de la tasa de fondos federales?"
+            },
+            "c": {
+              "en": [
+                "Congress",
+                "The U.S. Treasury",
+                "The Federal Open Market Committee (FOMC)",
+                "Commercial banks"
+              ],
+              "es": [
+                "El Congreso",
+                "El Tesoro de EE. UU.",
+                "El Comité Federal de Mercado Abierto (FOMC)",
+                "Los bancos comerciales"
+              ]
+            },
+            "a": 2,
+            "why": {
+              "en": "The FOMC is the Fed's policy-making committee.",
+              "es": "El FOMC es el comité de política de la Fed."
+            }
+          },
+          {
+            "id": "ap-m4-x05",
+            "topic": "monpol",
+            "type": "mcq",
+            "diff": 2,
+            "q": {
+              "en": "Contractionary monetary policy raises interest rates, which tends to:",
+              "es": "La política monetaria contractiva sube las tasas de interés, lo que tiende a:"
+            },
+            "c": {
+              "en": [
+                "Increase investment and shift AD right",
+                "Reduce investment spending and shift AD left",
+                "Shift LRAS right",
+                "Lower the value of the dollar"
+              ],
+              "es": [
+                "Aumentar la inversión y desplazar la DA a la derecha",
+                "Reducir la inversión y desplazar la DA a la izquierda",
+                "Desplazar la OALP a la derecha",
+                "Bajar el valor del dólar"
+              ]
+            },
+            "a": 1,
+            "why": {
+              "en": "Higher borrowing costs cut investment and interest-sensitive consumption.",
+              "es": "Préstamos más caros reducen la inversión y el consumo sensible a las tasas."
+            }
+          },
+          {
+            "id": "ap-m4-x06",
+            "topic": "money",
+            "type": "mcq",
+            "diff": 1,
+            "q": {
+              "en": "Money is a medium of exchange because it:",
+              "es": "El dinero es medio de intercambio porque:"
+            },
+            "c": {
+              "en": [
+                "Is accepted in trade for goods and services",
+                "Holds value over time",
+                "Measures relative value",
+                "Earns interest"
+              ],
+              "es": [
+                "Se acepta a cambio de bienes y servicios",
+                "Conserva su valor en el tiempo",
+                "Mide el valor relativo",
+                "Gana intereses"
+              ]
+            },
+            "a": 0,
+            "why": {
+              "en": "Without money, people would need a double coincidence of wants (barter).",
+              "es": "Sin dinero, se necesitaría una doble coincidencia de deseos (trueque)."
+            }
+          },
+          {
+            "id": "ap-m4-x07",
+            "topic": "lf",
+            "type": "mcq",
+            "diff": 2,
+            "q": {
+              "en": "Businesses want to borrow more to build factories. In the loanable funds market, the real interest rate:",
+              "es": "Las empresas quieren pedir más prestado para construir fábricas. En el mercado de fondos prestables, la tasa de interés real:"
+            },
+            "c": {
+              "en": [
+                "Falls",
+                "Stays the same",
+                "Becomes negative",
+                "Rises"
+              ],
+              "es": [
+                "Baja",
+                "No cambia",
+                "Se vuelve negativa",
+                "Sube"
+              ]
+            },
+            "a": 3,
+            "why": {
+              "en": "Demand for loanable funds shifts right, raising the equilibrium real interest rate.",
+              "es": "La demanda de fondos prestables se desplaza a la derecha y sube la tasa real de equilibrio."
+            }
+          },
+          {
+            "id": "ap-m4-x08",
+            "topic": "monpol",
+            "type": "mcq",
+            "diff": 2,
+            "q": {
+              "en": "When bond prices rise, interest rates (bond yields):",
+              "es": "Cuando sube el precio de los bonos, las tasas de interés (rendimientos):"
+            },
+            "c": {
+              "en": [
+                "Rise",
+                "Stay the same",
+                "Fall",
+                "Double"
+              ],
+              "es": [
+                "Suben",
+                "No cambian",
+                "Bajan",
+                "Se duplican"
+              ]
+            },
+            "a": 2,
+            "why": {
+              "en": "Bond prices and interest rates move in opposite directions.",
+              "es": "Los precios de los bonos y las tasas de interés se mueven en direcciones opuestas."
+            }
           }
         ],
         "topics": [
@@ -4190,6 +5118,238 @@ const PACKS = [
             "why": {
               "en": "Infrastructure is public capital. It lowers business costs and can raise productivity, shifting LRAS right over time.",
               "es": "La infraestructura es capital público. Baja los costos de las empresas y puede elevar la productividad, desplazando la OALP con el tiempo."
+            }
+          },
+          {
+            "id": "ap-m5-x01",
+            "topic": "pc",
+            "type": "mcq",
+            "diff": 1,
+            "q": {
+              "en": "A move up and to the left along the short-run Phillips curve means:",
+              "es": "Un movimiento hacia arriba y a la izquierda en la curva de Phillips de corto plazo significa:"
+            },
+            "c": {
+              "en": [
+                "Higher inflation and higher unemployment",
+                "Higher inflation and lower unemployment",
+                "Lower inflation and lower unemployment",
+                "The natural rate fell"
+              ],
+              "es": [
+                "Más inflación y más desempleo",
+                "Más inflación y menos desempleo",
+                "Menos inflación y menos desempleo",
+                "Bajó la tasa natural"
+              ]
+            },
+            "a": 1,
+            "why": {
+              "en": "That's the short-run trade-off caused by rising aggregate demand.",
+              "es": "Es la compensación de corto plazo causada por un aumento de la demanda agregada."
+            }
+          },
+          {
+            "id": "ap-m5-x02",
+            "topic": "pc",
+            "type": "mcq",
+            "diff": 2,
+            "q": {
+              "en": "The long-run Phillips curve shifts right when:",
+              "es": "La curva de Phillips de largo plazo se desplaza a la derecha cuando:"
+            },
+            "c": {
+              "en": [
+                "The natural rate of unemployment rises",
+                "Inflation expectations fall",
+                "AD increases",
+                "The Fed cuts rates"
+              ],
+              "es": [
+                "Sube la tasa natural de desempleo",
+                "Bajan las expectativas de inflación",
+                "Aumenta la DA",
+                "La Fed baja las tasas"
+              ]
+            },
+            "a": 0,
+            "why": {
+              "en": "The LRPC sits at the natural rate of unemployment, so it moves only when that rate changes.",
+              "es": "La CPLP está en la tasa natural de desempleo, así que solo se mueve si esa tasa cambia."
+            }
+          },
+          {
+            "id": "ap-m5-x03",
+            "topic": "qtm",
+            "type": "mcq",
+            "diff": 2,
+            "q": {
+              "en": "The money supply is $2 trillion and nominal GDP is $10 trillion. Velocity is:",
+              "es": "La oferta de dinero es $2 billones y el PIB nominal $10 billones. La velocidad es:"
+            },
+            "c": {
+              "en": [
+                "0.2",
+                "20",
+                "12",
+                "5"
+              ],
+              "es": [
+                "0.2",
+                "20",
+                "12",
+                "5"
+              ]
+            },
+            "a": 3,
+            "why": {
+              "en": "V = PQ ÷ M = 10 ÷ 2 = 5.",
+              "es": "V = PQ ÷ M = 10 ÷ 2 = 5."
+            }
+          },
+          {
+            "id": "ap-m5-x04",
+            "topic": "debt",
+            "type": "mcq",
+            "diff": 1,
+            "q": {
+              "en": "Which adds to the national debt?",
+              "es": "¿Qué aumenta la deuda nacional?"
+            },
+            "c": {
+              "en": [
+                "Running budget surpluses",
+                "Cutting government spending",
+                "Running budget deficits",
+                "Raising taxes without new spending"
+              ],
+              "es": [
+                "Tener superávits",
+                "Recortar el gasto público",
+                "Tener déficits presupuestarios",
+                "Subir impuestos sin nuevo gasto"
+              ]
+            },
+            "a": 2,
+            "why": {
+              "en": "The debt is the sum of past deficits minus surpluses.",
+              "es": "La deuda es la suma de los déficits pasados menos los superávits."
+            }
+          },
+          {
+            "id": "ap-m5-x05",
+            "topic": "growth5",
+            "type": "mcq",
+            "diff": 1,
+            "q": {
+              "en": "Which most directly raises productivity (output per worker)?",
+              "es": "¿Qué aumenta más directamente la productividad (producción por trabajador)?"
+            },
+            "c": {
+              "en": [
+                "More workers using the same tools",
+                "More physical and human capital and better technology",
+                "Higher prices",
+                "Printing more money"
+              ],
+              "es": [
+                "Más trabajadores con las mismas herramientas",
+                "Más capital físico y humano y mejor tecnología",
+                "Precios más altos",
+                "Imprimir más dinero"
+              ]
+            },
+            "a": 1,
+            "why": {
+              "en": "Better tools, skills and technology let each worker produce more.",
+              "es": "Mejores herramientas, habilidades y tecnología permiten que cada trabajador produzca más."
+            }
+          },
+          {
+            "id": "ap-m5-x06",
+            "topic": "debt",
+            "type": "mcq",
+            "diff": 2,
+            "q": {
+              "en": "Large interest payments on the national debt can be a problem because:",
+              "es": "Los grandes pagos de interés de la deuda nacional pueden ser un problema porque:"
+            },
+            "c": {
+              "en": [
+                "More of the budget goes to interest instead of other programs",
+                "Interest payments increase real GDP",
+                "They lower interest rates",
+                "They are paid by the Fed"
+              ],
+              "es": [
+                "Más del presupuesto se va en intereses en lugar de otros programas",
+                "Los intereses aumentan el PIB real",
+                "Bajan las tasas de interés",
+                "Los paga la Fed"
+              ]
+            },
+            "a": 0,
+            "why": {
+              "en": "Interest is an obligation that competes with spending on roads, schools and defense.",
+              "es": "El interés es una obligación que compite con el gasto en carreteras, escuelas y defensa."
+            }
+          },
+          {
+            "id": "ap-m5-x07",
+            "topic": "pc",
+            "type": "mcq",
+            "diff": 3,
+            "q": {
+              "en": "Policy keeps pushing unemployment below the natural rate. In the long run the result is:",
+              "es": "La política sigue empujando el desempleo por debajo de la tasa natural. A largo plazo el resultado es:"
+            },
+            "c": {
+              "en": [
+                "Permanently lower unemployment",
+                "Deflation",
+                "Lower inflation",
+                "Higher inflation, with unemployment back at the natural rate"
+              ],
+              "es": [
+                "Desempleo bajo permanente",
+                "Deflación",
+                "Menos inflación",
+                "Más inflación, con el desempleo de vuelta en la tasa natural"
+              ]
+            },
+            "a": 3,
+            "why": {
+              "en": "Expectations adjust, the SRPC shifts up, and only inflation is left higher.",
+              "es": "Las expectativas se ajustan, la CPCP sube y solo queda más inflación."
+            }
+          },
+          {
+            "id": "ap-m5-x08",
+            "topic": "qtm",
+            "type": "mcq",
+            "diff": 1,
+            "q": {
+              "en": "Hyperinflation is usually caused by:",
+              "es": "La hiperinflación suele causarse por:"
+            },
+            "c": {
+              "en": [
+                "Rising productivity",
+                "Higher interest rates",
+                "A government printing money very rapidly",
+                "Budget surpluses"
+              ],
+              "es": [
+                "Productividad en aumento",
+                "Tasas de interés más altas",
+                "Un gobierno que imprime dinero muy rápido",
+                "Superávits presupuestarios"
+              ]
+            },
+            "a": 2,
+            "why": {
+              "en": "If M grows much faster than real output, the price level soars (MV = PQ).",
+              "es": "Si M crece mucho más rápido que la producción real, los precios se disparan (MV = PQ)."
             }
           }
         ],
@@ -5065,6 +6225,238 @@ const PACKS = [
               "en": "Buying U.S. bonds requires dollars, so demand for dollars rises. A stronger dollar lowers U.S. net exports.",
               "es": "Comprar bonos de EE. UU. requiere dólares: sube su demanda. Un dólar fuerte baja las exportaciones netas."
             }
+          },
+          {
+            "id": "ap-m6-x01",
+            "topic": "bop",
+            "type": "mcq",
+            "diff": 2,
+            "q": {
+              "en": "Which goes in the U.S. financial account?",
+              "es": "¿Qué va en la cuenta financiera de EE. UU.?"
+            },
+            "c": {
+              "en": [
+                "The U.S. imports French wine",
+                "A U.S. investor buys shares of a German company",
+                "An American tourist eats in Paris",
+                "The U.S. exports wheat"
+              ],
+              "es": [
+                "EE. UU. importa vino francés",
+                "Un inversionista de EE. UU. compra acciones de una empresa alemana",
+                "Un turista estadounidense come en París",
+                "EE. UU. exporta trigo"
+              ]
+            },
+            "a": 1,
+            "why": {
+              "en": "Buying foreign assets is a financial-account flow; goods and services go in the current account.",
+              "es": "Comprar activos extranjeros va en la cuenta financiera; bienes y servicios van en la cuenta corriente."
+            }
+          },
+          {
+            "id": "ap-m6-x02",
+            "topic": "fx",
+            "type": "mcq",
+            "diff": 2,
+            "q": {
+              "en": "If $1 = €0.90, then €1 buys about:",
+              "es": "Si $1 = €0.90, entonces €1 compra aproximadamente:"
+            },
+            "c": {
+              "en": [
+                "$1.11",
+                "$0.90",
+                "$1.90",
+                "$0.10"
+              ],
+              "es": [
+                "$1.11",
+                "$0.90",
+                "$1.90",
+                "$0.10"
+              ]
+            },
+            "a": 0,
+            "why": {
+              "en": "1 ÷ 0.90 ≈ 1.11 dollars per euro.",
+              "es": "1 ÷ 0.90 ≈ 1.11 dólares por euro."
+            }
+          },
+          {
+            "id": "ap-m6-x03",
+            "topic": "fxshift",
+            "type": "mcq",
+            "diff": 2,
+            "q": {
+              "en": "U.S. real interest rates rise compared with Europe's. The dollar will:",
+              "es": "Las tasas reales de EE. UU. suben frente a las de Europa. El dólar:"
+            },
+            "c": {
+              "en": [
+                "Depreciate",
+                "Stay the same",
+                "Be replaced by the euro",
+                "Appreciate as foreign demand for dollars rises"
+              ],
+              "es": [
+                "Se deprecia",
+                "No cambia",
+                "Es reemplazado por el euro",
+                "Se aprecia porque sube la demanda extranjera de dólares"
+              ]
+            },
+            "a": 3,
+            "why": {
+              "en": "Investors want U.S. assets, so they need more dollars.",
+              "es": "Los inversionistas quieren activos de EE. UU., así que necesitan más dólares."
+            }
+          },
+          {
+            "id": "ap-m6-x04",
+            "topic": "fx",
+            "type": "mcq",
+            "diff": 1,
+            "q": {
+              "en": "When the dollar depreciates:",
+              "es": "Cuando el dólar se deprecia:"
+            },
+            "c": {
+              "en": [
+                "Imports become cheaper for Americans",
+                "U.S. exports become more expensive",
+                "U.S. exports become cheaper for foreigners",
+                "Foreign travel gets cheaper for Americans"
+              ],
+              "es": [
+                "Las importaciones se abaratan para los estadounidenses",
+                "Las exportaciones de EE. UU. se encarecen",
+                "Las exportaciones de EE. UU. se abaratan para los extranjeros",
+                "Viajar al extranjero sale más barato para los estadounidenses"
+              ]
+            },
+            "a": 2,
+            "why": {
+              "en": "Each foreign currency unit buys more dollars, so U.S. goods cost foreigners less.",
+              "es": "Cada unidad de moneda extranjera compra más dólares, así que los bienes de EE. UU. les cuestan menos."
+            }
+          },
+          {
+            "id": "ap-m6-x05",
+            "topic": "flows",
+            "type": "mcq",
+            "diff": 1,
+            "q": {
+              "en": "Under flexible (floating) exchange rates, the exchange rate is set by:",
+              "es": "Con tipos de cambio flexibles, el tipo de cambio lo fija:"
+            },
+            "c": {
+              "en": [
+                "The World Trade Organization",
+                "Supply and demand in the foreign exchange market",
+                "Each country's president",
+                "The price of gold"
+              ],
+              "es": [
+                "La Organización Mundial del Comercio",
+                "La oferta y la demanda en el mercado de divisas",
+                "El presidente de cada país",
+                "El precio del oro"
+              ]
+            },
+            "a": 1,
+            "why": {
+              "en": "Currencies are priced like other goods: by buyers and sellers.",
+              "es": "Las monedas tienen precio como otros bienes: por compradores y vendedores."
+            }
+          },
+          {
+            "id": "ap-m6-x06",
+            "topic": "bop",
+            "type": "mcq",
+            "diff": 1,
+            "q": {
+              "en": "The balance of payments is made up mainly of:",
+              "es": "La balanza de pagos se compone principalmente de:"
+            },
+            "c": {
+              "en": [
+                "The current account and the financial account",
+                "Exports and GDP",
+                "The federal budget and the national debt",
+                "Tariffs and quotas"
+              ],
+              "es": [
+                "La cuenta corriente y la cuenta financiera",
+                "Las exportaciones y el PIB",
+                "El presupuesto federal y la deuda nacional",
+                "Aranceles y cuotas"
+              ]
+            },
+            "a": 0,
+            "why": {
+              "en": "It records all transactions between a country and the rest of the world.",
+              "es": "Registra todas las transacciones entre un país y el resto del mundo."
+            }
+          },
+          {
+            "id": "ap-m6-x07",
+            "topic": "fxshift",
+            "type": "mcq",
+            "diff": 2,
+            "q": {
+              "en": "Americans visit Mexico in record numbers. In the market for pesos:",
+              "es": "Un número récord de estadounidenses visita México. En el mercado de pesos:"
+            },
+            "c": {
+              "en": [
+                "Supply of pesos rises and the peso depreciates",
+                "Demand for pesos falls",
+                "Nothing changes",
+                "Demand for pesos rises and the peso appreciates"
+              ],
+              "es": [
+                "Sube la oferta de pesos y el peso se deprecia",
+                "Baja la demanda de pesos",
+                "No cambia nada",
+                "Sube la demanda de pesos y el peso se aprecia"
+              ]
+            },
+            "a": 3,
+            "why": {
+              "en": "Tourists must buy pesos to spend in Mexico.",
+              "es": "Los turistas deben comprar pesos para gastar en México."
+            }
+          },
+          {
+            "id": "ap-m6-x08",
+            "topic": "flows",
+            "type": "mcq",
+            "diff": 2,
+            "q": {
+              "en": "A country's exports become more expensive to the rest of the world when its currency:",
+              "es": "Las exportaciones de un país se encarecen para el mundo cuando su moneda:"
+            },
+            "c": {
+              "en": [
+                "Depreciates",
+                "Is fixed at a low rate",
+                "Appreciates",
+                "Loses value"
+              ],
+              "es": [
+                "Se deprecia",
+                "Se fija a un valor bajo",
+                "Se aprecia",
+                "Pierde valor"
+              ]
+            },
+            "a": 2,
+            "why": {
+              "en": "Foreigners need more of their own currency to buy each unit.",
+              "es": "Los extranjeros necesitan más de su moneda para comprar cada unidad."
+            }
           }
         ],
         "topics": [
@@ -5805,6 +7197,296 @@ const PACKS = [
               "en": "The Declaration lists the king's abuses, including 'imposing Taxes on us without our Consent' and quartering troops.",
               "es": "La Declaración enumera abusos del rey, como 'imponernos impuestos sin nuestro consentimiento' y alojar tropas."
             }
+          },
+          {
+            "id": "gov-u1-x01",
+            "topic": "principles",
+            "type": "mcq",
+            "diff": 1,
+            "q": {
+              "en": "Popular sovereignty means:",
+              "es": "Soberanía popular significa:"
+            },
+            "c": {
+              "en": [
+                "The states hold all power",
+                "The president has the final say",
+                "The people are the source of government's power",
+                "Courts can overturn any law"
+              ],
+              "es": [
+                "Los estados tienen todo el poder",
+                "El presidente tiene la última palabra",
+                "El pueblo es la fuente del poder del gobierno",
+                "Los tribunales pueden anular cualquier ley"
+              ]
+            },
+            "a": 2,
+            "why": {
+              "en": "'We the People' and elections put this idea into practice.",
+              "es": "'Nosotros, el Pueblo' y las elecciones ponen esta idea en práctica."
+            }
+          },
+          {
+            "id": "gov-u1-x02",
+            "topic": "thinkers",
+            "type": "mcq",
+            "diff": 2,
+            "q": {
+              "en": "In Leviathan, Thomas Hobbes argued that people need:",
+              "es": "En Leviatán, Thomas Hobbes argumentó que la gente necesita:"
+            },
+            "c": {
+              "en": [
+                "No government at all",
+                "A strong government to escape a violent 'state of nature'",
+                "A government with three branches",
+                "A direct democracy"
+              ],
+              "es": [
+                "Ningún gobierno",
+                "Un gobierno fuerte para escapar de un 'estado de naturaleza' violento",
+                "Un gobierno de tres poderes",
+                "Una democracia directa"
+              ]
+            },
+            "a": 1,
+            "why": {
+              "en": "Hobbes thought life without government would be 'nasty, brutish and short.'",
+              "es": "Hobbes pensaba que la vida sin gobierno sería 'desagradable, brutal y corta'."
+            }
+          },
+          {
+            "id": "gov-u1-x03",
+            "topic": "thinkers",
+            "type": "mcq",
+            "diff": 1,
+            "q": {
+              "en": "John Locke's natural rights are:",
+              "es": "Los derechos naturales de John Locke son:"
+            },
+            "c": {
+              "en": [
+                "Life, liberty and property",
+                "Speech, press and religion",
+                "Voting, petitioning and assembling",
+                "Happiness, safety and wealth"
+              ],
+              "es": [
+                "Vida, libertad y propiedad",
+                "Expresión, prensa y religión",
+                "Votar, peticionar y reunirse",
+                "Felicidad, seguridad y riqueza"
+              ]
+            },
+            "a": 0,
+            "why": {
+              "en": "Jefferson echoed Locke with 'life, liberty and the pursuit of happiness.'",
+              "es": "Jefferson se inspiró en Locke con 'vida, libertad y la búsqueda de la felicidad'."
+            }
+          },
+          {
+            "id": "gov-u1-x04",
+            "topic": "documents",
+            "type": "mcq",
+            "diff": 1,
+            "q": {
+              "en": "The main author of the Declaration of Independence was:",
+              "es": "El autor principal de la Declaración de Independencia fue:"
+            },
+            "c": {
+              "en": [
+                "James Madison",
+                "George Washington",
+                "Benjamin Franklin",
+                "Thomas Jefferson"
+              ],
+              "es": [
+                "James Madison",
+                "George Washington",
+                "Benjamin Franklin",
+                "Thomas Jefferson"
+              ]
+            },
+            "a": 3,
+            "why": {
+              "en": "A committee including Franklin and Adams edited Jefferson's draft.",
+              "es": "Un comité con Franklin y Adams editó el borrador de Jefferson."
+            }
+          },
+          {
+            "id": "gov-u1-x05",
+            "topic": "principles",
+            "type": "mcq",
+            "diff": 2,
+            "q": {
+              "en": "Changing the Articles of Confederation required:",
+              "es": "Cambiar los Artículos de la Confederación requería:"
+            },
+            "c": {
+              "en": [
+                "A two-thirds vote of Congress",
+                "The president's approval",
+                "A unanimous vote of the states",
+                "A national vote of the people"
+              ],
+              "es": [
+                "Dos tercios del Congreso",
+                "La aprobación del presidente",
+                "El voto unánime de los estados",
+                "Un voto nacional del pueblo"
+              ]
+            },
+            "a": 2,
+            "why": {
+              "en": "Unanimity made the Articles almost impossible to fix.",
+              "es": "La unanimidad hacía casi imposible corregir los Artículos."
+            }
+          },
+          {
+            "id": "gov-u1-x06",
+            "topic": "principles",
+            "type": "mcq",
+            "diff": 1,
+            "q": {
+              "en": "The rule of law means:",
+              "es": "El estado de derecho significa:"
+            },
+            "c": {
+              "en": [
+                "The president makes the laws",
+                "Everyone, including leaders, must follow the law",
+                "Laws apply only to citizens",
+                "Judges can ignore unfair laws"
+              ],
+              "es": [
+                "El presidente hace las leyes",
+                "Todos, incluidos los líderes, deben cumplir la ley",
+                "Las leyes solo aplican a los ciudadanos",
+                "Los jueces pueden ignorar leyes injustas"
+              ]
+            },
+            "a": 1,
+            "why": {
+              "en": "No one is above the law.",
+              "es": "Nadie está por encima de la ley."
+            }
+          },
+          {
+            "id": "gov-u1-x07",
+            "topic": "documents",
+            "type": "mcq",
+            "diff": 2,
+            "q": {
+              "en": "The Federalist Papers were written to:",
+              "es": "Los Ensayos Federalistas se escribieron para:"
+            },
+            "c": {
+              "en": [
+                "Persuade New Yorkers to ratify the Constitution",
+                "Declare independence from Britain",
+                "Create the Bill of Rights",
+                "Organize the Articles of Confederation"
+              ],
+              "es": [
+                "Convencer a los neoyorquinos de ratificar la Constitución",
+                "Declarar la independencia de Gran Bretaña",
+                "Crear la Carta de Derechos",
+                "Organizar los Artículos de la Confederación"
+              ]
+            },
+            "a": 0,
+            "why": {
+              "en": "Hamilton, Madison and Jay wrote 85 essays as 'Publius.'",
+              "es": "Hamilton, Madison y Jay escribieron 85 ensayos como 'Publius'."
+            }
+          },
+          {
+            "id": "gov-u1-x08",
+            "topic": "principles",
+            "type": "mcq",
+            "diff": 2,
+            "q": {
+              "en": "The Constitutional Convention of 1787 met at first to:",
+              "es": "La Convención Constitucional de 1787 se reunió al principio para:"
+            },
+            "c": {
+              "en": [
+                "Write the Declaration of Independence",
+                "Elect the first president",
+                "Declare war on Britain",
+                "Revise the Articles of Confederation"
+              ],
+              "es": [
+                "Escribir la Declaración de Independencia",
+                "Elegir al primer presidente",
+                "Declarar la guerra a Gran Bretaña",
+                "Revisar los Artículos de la Confederación"
+              ]
+            },
+            "a": 3,
+            "why": {
+              "en": "Delegates decided to write a whole new plan instead.",
+              "es": "Los delegados decidieron escribir un plan completamente nuevo."
+            }
+          },
+          {
+            "id": "gov-u1-x09",
+            "topic": "thinkers",
+            "type": "mcq",
+            "diff": 2,
+            "q": {
+              "en": "The social contract is the idea that people:",
+              "es": "El contrato social es la idea de que la gente:"
+            },
+            "c": {
+              "en": [
+                "Sign a contract to become citizens",
+                "Must obey a king without question",
+                "Give up some freedom to a government that protects their rights",
+                "Agree to share all property"
+              ],
+              "es": [
+                "Firma un contrato para ser ciudadana",
+                "Debe obedecer a un rey sin cuestionar",
+                "Cede algo de libertad a un gobierno que protege sus derechos",
+                "Acepta compartir toda la propiedad"
+              ]
+            },
+            "a": 2,
+            "why": {
+              "en": "If government breaks the contract, Locke said, people may change it.",
+              "es": "Si el gobierno rompe el contrato, decía Locke, el pueblo puede cambiarlo."
+            }
+          },
+          {
+            "id": "gov-u1-x10",
+            "topic": "principles",
+            "type": "mcq",
+            "diff": 1,
+            "q": {
+              "en": "Federalism divides power between:",
+              "es": "El federalismo divide el poder entre:"
+            },
+            "c": {
+              "en": [
+                "The three branches",
+                "The national government and the states",
+                "The House and the Senate",
+                "Citizens and immigrants"
+              ],
+              "es": [
+                "Los tres poderes",
+                "El gobierno nacional y los estados",
+                "La Cámara y el Senado",
+                "Ciudadanos e inmigrantes"
+              ]
+            },
+            "a": 1,
+            "why": {
+              "en": "Separation of powers divides the branches; federalism divides levels.",
+              "es": "La separación de poderes divide las ramas; el federalismo divide los niveles."
+            }
           }
         ]
       },
@@ -6394,6 +8076,296 @@ const PACKS = [
               "en": "Chief Justice Marshall used the Necessary and Proper Clause to uphold the bank and the Supremacy Clause to block Maryland's tax.",
               "es": "El juez Marshall usó la Cláusula Necesaria y Apropiada para avalar el banco y la de Supremacía para bloquear el impuesto de Maryland."
             }
+          },
+          {
+            "id": "gov-u2-x01",
+            "topic": "structure",
+            "type": "mcq",
+            "diff": 1,
+            "q": {
+              "en": "Article III of the Constitution creates the:",
+              "es": "El Artículo III de la Constitución crea:"
+            },
+            "c": {
+              "en": [
+                "Legislative branch",
+                "Executive branch",
+                "Judicial branch",
+                "Amendment process"
+              ],
+              "es": [
+                "El poder legislativo",
+                "El poder ejecutivo",
+                "El poder judicial",
+                "El proceso de enmienda"
+              ]
+            },
+            "a": 2,
+            "why": {
+              "en": "Article I: Congress. Article II: president. Article III: courts.",
+              "es": "Artículo I: Congreso. Artículo II: presidente. Artículo III: tribunales."
+            }
+          },
+          {
+            "id": "gov-u2-x02",
+            "topic": "powers",
+            "type": "mcq",
+            "diff": 1,
+            "q": {
+              "en": "Which is a power reserved to the states?",
+              "es": "¿Cuál es un poder reservado a los estados?"
+            },
+            "c": {
+              "en": [
+                "Printing money",
+                "Running elections and setting up public schools",
+                "Declaring war",
+                "Making treaties"
+              ],
+              "es": [
+                "Imprimir dinero",
+                "Organizar elecciones y crear escuelas públicas",
+                "Declarar la guerra",
+                "Hacer tratados"
+              ]
+            },
+            "a": 1,
+            "why": {
+              "en": "The Tenth Amendment reserves powers not given to the national government.",
+              "es": "La Décima Enmienda reserva los poderes no dados al gobierno nacional."
+            }
+          },
+          {
+            "id": "gov-u2-x03",
+            "topic": "powers",
+            "type": "mcq",
+            "diff": 2,
+            "q": {
+              "en": "Implied powers are:",
+              "es": "Los poderes implícitos son:"
+            },
+            "c": {
+              "en": [
+                "Powers not listed but needed to carry out listed powers",
+                "Powers given to the states",
+                "Powers shared by both levels",
+                "Powers removed by amendments"
+              ],
+              "es": [
+                "Poderes no escritos pero necesarios para ejercer los poderes enumerados",
+                "Poderes de los estados",
+                "Poderes compartidos por ambos niveles",
+                "Poderes quitados por enmiendas"
+              ]
+            },
+            "a": 0,
+            "why": {
+              "en": "They come from the Necessary and Proper (Elastic) Clause.",
+              "es": "Vienen de la Cláusula Necesaria y Apropiada (Elástica)."
+            }
+          },
+          {
+            "id": "gov-u2-x04",
+            "topic": "amending",
+            "type": "mcq",
+            "diff": 1,
+            "q": {
+              "en": "The first ten amendments are called the:",
+              "es": "Las primeras diez enmiendas se llaman:"
+            },
+            "c": {
+              "en": [
+                "Articles of Confederation",
+                "Federalist Papers",
+                "Preamble",
+                "Bill of Rights"
+              ],
+              "es": [
+                "Artículos de la Confederación",
+                "Ensayos Federalistas",
+                "Preámbulo",
+                "Carta de Derechos"
+              ]
+            },
+            "a": 3,
+            "why": {
+              "en": "They were ratified in 1791.",
+              "es": "Se ratificaron en 1791."
+            }
+          },
+          {
+            "id": "gov-u2-x05",
+            "topic": "structure",
+            "type": "mcq",
+            "diff": 2,
+            "q": {
+              "en": "The Preamble lists the Constitution's:",
+              "es": "El Preámbulo enumera:"
+            },
+            "c": {
+              "en": [
+                "Rules for elections",
+                "List of rights",
+                "Goals, like 'establish justice' and 'secure the blessings of liberty'",
+                "Powers of the president"
+              ],
+              "es": [
+                "Las reglas de las elecciones",
+                "La lista de derechos",
+                "Los objetivos, como 'establecer justicia' y 'asegurar los beneficios de la libertad'",
+                "Los poderes del presidente"
+              ]
+            },
+            "a": 2,
+            "why": {
+              "en": "The Preamble explains why the Constitution was written.",
+              "es": "El Preámbulo explica por qué se escribió la Constitución."
+            }
+          },
+          {
+            "id": "gov-u2-x06",
+            "topic": "powers",
+            "type": "mcq",
+            "diff": 2,
+            "q": {
+              "en": "The Commerce Clause gives Congress power to:",
+              "es": "La Cláusula de Comercio le da al Congreso el poder de:"
+            },
+            "c": {
+              "en": [
+                "Set state sales taxes",
+                "Regulate trade among the states and with other nations",
+                "Run public schools",
+                "Appoint judges"
+              ],
+              "es": [
+                "Fijar impuestos estatales a las ventas",
+                "Regular el comercio entre estados y con otras naciones",
+                "Dirigir las escuelas públicas",
+                "Nombrar jueces"
+              ]
+            },
+            "a": 1,
+            "why": {
+              "en": "It's one of Congress's most-used powers.",
+              "es": "Es uno de los poderes más usados del Congreso."
+            }
+          },
+          {
+            "id": "gov-u2-x07",
+            "topic": "amending",
+            "type": "mcq",
+            "diff": 2,
+            "q": {
+              "en": "A proposed amendment must be ratified by:",
+              "es": "Una enmienda propuesta debe ser ratificada por:"
+            },
+            "c": {
+              "en": [
+                "Three-fourths of the states",
+                "Two-thirds of the states",
+                "A majority of the states",
+                "The Supreme Court"
+              ],
+              "es": [
+                "Tres cuartas partes de los estados",
+                "Dos tercios de los estados",
+                "La mayoría de los estados",
+                "La Corte Suprema"
+              ]
+            },
+            "a": 0,
+            "why": {
+              "en": "That's 38 of the 50 states.",
+              "es": "Son 38 de los 50 estados."
+            }
+          },
+          {
+            "id": "gov-u2-x08",
+            "topic": "structure",
+            "type": "mcq",
+            "diff": 2,
+            "q": {
+              "en": "Article VI contains the:",
+              "es": "El Artículo VI contiene:"
+            },
+            "c": {
+              "en": [
+                "Necessary and Proper Clause",
+                "Commerce Clause",
+                "Bill of Rights",
+                "Supremacy Clause"
+              ],
+              "es": [
+                "La Cláusula Necesaria y Apropiada",
+                "La Cláusula de Comercio",
+                "La Carta de Derechos",
+                "La Cláusula de Supremacía"
+              ]
+            },
+            "a": 3,
+            "why": {
+              "en": "The Constitution and federal laws are the 'supreme Law of the Land.'",
+              "es": "La Constitución y las leyes federales son la 'ley suprema del país'."
+            }
+          },
+          {
+            "id": "gov-u2-x09",
+            "topic": "powers",
+            "type": "mcq",
+            "diff": 1,
+            "q": {
+              "en": "Expressed (enumerated) powers are:",
+              "es": "Los poderes expresos (enumerados) son:"
+            },
+            "c": {
+              "en": [
+                "Powers given to states",
+                "Powers the president claims in emergencies",
+                "Powers written in the Constitution",
+                "Powers implied by the Elastic Clause"
+              ],
+              "es": [
+                "Poderes de los estados",
+                "Poderes que el presidente reclama en emergencias",
+                "Poderes escritos en la Constitución",
+                "Poderes implícitos de la Cláusula Elástica"
+              ]
+            },
+            "a": 2,
+            "why": {
+              "en": "Examples: coining money, declaring war, raising an army.",
+              "es": "Ejemplos: acuñar moneda, declarar la guerra, formar un ejército."
+            }
+          },
+          {
+            "id": "gov-u2-x10",
+            "topic": "structure",
+            "type": "mcq",
+            "diff": 3,
+            "q": {
+              "en": "Article VII of the Constitution explains:",
+              "es": "El Artículo VII de la Constitución explica:"
+            },
+            "c": {
+              "en": [
+                "How to impeach a president",
+                "How the Constitution would be ratified",
+                "The powers of Congress",
+                "The rights of the accused"
+              ],
+              "es": [
+                "Cómo destituir a un presidente",
+                "Cómo se ratificaría la Constitución",
+                "Los poderes del Congreso",
+                "Los derechos de los acusados"
+              ]
+            },
+            "a": 1,
+            "why": {
+              "en": "Nine of thirteen states had to approve it.",
+              "es": "Nueve de trece estados debían aprobarla."
+            }
           }
         ]
       },
@@ -6924,6 +8896,296 @@ const PACKS = [
             "why": {
               "en": "Advice and consent belongs to the Senate. Revenue bills start in the House, the House impeaches, and the House picks the president in an Electoral College deadlock.",
               "es": "El consejo y consentimiento es del Senado. Los proyectos de impuestos empiezan en la Cámara, que también acusa y elige al presidente en caso de empate."
+            }
+          },
+          {
+            "id": "gov-u3-x01",
+            "topic": "legislative",
+            "type": "mcq",
+            "diff": 1,
+            "q": {
+              "en": "How many voting members are in the U.S. House of Representatives?",
+              "es": "¿Cuántos miembros con voto tiene la Cámara de Representantes?"
+            },
+            "c": {
+              "en": [
+                "100",
+                "538",
+                "435",
+                "50"
+              ],
+              "es": [
+                "100",
+                "538",
+                "435",
+                "50"
+              ]
+            },
+            "a": 2,
+            "why": {
+              "en": "Seats are divided among the states by population.",
+              "es": "Los escaños se reparten entre los estados según su población."
+            }
+          },
+          {
+            "id": "gov-u3-x02",
+            "topic": "legislative",
+            "type": "mcq",
+            "diff": 1,
+            "q": {
+              "en": "U.S. senators serve terms of:",
+              "es": "Los senadores de EE. UU. sirven periodos de:"
+            },
+            "c": {
+              "en": [
+                "2 years",
+                "6 years",
+                "4 years",
+                "Life"
+              ],
+              "es": [
+                "2 años",
+                "6 años",
+                "4 años",
+                "Vitalicio"
+              ]
+            },
+            "a": 1,
+            "why": {
+              "en": "One-third of the Senate is elected every two years.",
+              "es": "Un tercio del Senado se elige cada dos años."
+            }
+          },
+          {
+            "id": "gov-u3-x03",
+            "topic": "executive",
+            "type": "mcq",
+            "diff": 1,
+            "q": {
+              "en": "If the president dies or resigns, who becomes president?",
+              "es": "Si el presidente muere o renuncia, ¿quién se convierte en presidente?"
+            },
+            "c": {
+              "en": [
+                "The vice president",
+                "The Speaker of the House",
+                "The Chief Justice",
+                "The Secretary of State"
+              ],
+              "es": [
+                "El vicepresidente",
+                "El presidente de la Cámara",
+                "El presidente de la Corte Suprema",
+                "El secretario de Estado"
+              ]
+            },
+            "a": 0,
+            "why": {
+              "en": "The 25th Amendment confirms this order of succession.",
+              "es": "La 25.ª Enmienda confirma este orden de sucesión."
+            }
+          },
+          {
+            "id": "gov-u3-x04",
+            "topic": "judicial",
+            "type": "mcq",
+            "diff": 1,
+            "q": {
+              "en": "Federal judges serve:",
+              "es": "Los jueces federales sirven:"
+            },
+            "c": {
+              "en": [
+                "10-year terms",
+                "Until age 65",
+                "4-year terms",
+                "For life, during good behavior"
+              ],
+              "es": [
+                "Periodos de 10 años",
+                "Hasta los 65 años",
+                "Periodos de 4 años",
+                "De por vida, mientras tengan buena conducta"
+              ]
+            },
+            "a": 3,
+            "why": {
+              "en": "Life terms protect judges from political pressure.",
+              "es": "Los cargos vitalicios protegen a los jueces de la presión política."
+            }
+          },
+          {
+            "id": "gov-u3-x05",
+            "topic": "legislative",
+            "type": "mcq",
+            "diff": 3,
+            "q": {
+              "en": "A pocket veto happens when the president:",
+              "es": "Un veto de bolsillo ocurre cuando el presidente:"
+            },
+            "c": {
+              "en": [
+                "Signs the bill in private",
+                "Vetoes part of a bill",
+                "Doesn't sign a bill and Congress adjourns within 10 days",
+                "Asks the Supreme Court to rule"
+              ],
+              "es": [
+                "Firma el proyecto en privado",
+                "Veta parte de un proyecto",
+                "No firma un proyecto y el Congreso termina sesiones dentro de 10 días",
+                "Pide a la Corte Suprema que decida"
+              ]
+            },
+            "a": 2,
+            "why": {
+              "en": "Congress can't override a pocket veto; it must pass the bill again.",
+              "es": "El Congreso no puede anular un veto de bolsillo; debe aprobar el proyecto de nuevo."
+            }
+          },
+          {
+            "id": "gov-u3-x06",
+            "topic": "executive",
+            "type": "mcq",
+            "diff": 2,
+            "q": {
+              "en": "Which is a power of the president?",
+              "es": "¿Cuál es un poder del presidente?"
+            },
+            "c": {
+              "en": [
+                "Declaring war",
+                "Granting pardons for federal crimes",
+                "Approving treaties",
+                "Collecting taxes"
+              ],
+              "es": [
+                "Declarar la guerra",
+                "Indultar delitos federales",
+                "Aprobar tratados",
+                "Recaudar impuestos"
+              ]
+            },
+            "a": 1,
+            "why": {
+              "en": "Declaring war and taxing belong to Congress; the Senate approves treaties.",
+              "es": "Declarar la guerra y cobrar impuestos son del Congreso; el Senado aprueba tratados."
+            }
+          },
+          {
+            "id": "gov-u3-x07",
+            "topic": "judicial",
+            "type": "mcq",
+            "diff": 1,
+            "q": {
+              "en": "Judicial review lets courts:",
+              "es": "La revisión judicial permite a los tribunales:"
+            },
+            "c": {
+              "en": [
+                "Declare laws or government actions unconstitutional",
+                "Write new laws",
+                "Appoint Cabinet members",
+                "Veto bills"
+              ],
+              "es": [
+                "Declarar inconstitucionales leyes o acciones del gobierno",
+                "Escribir leyes nuevas",
+                "Nombrar a miembros del gabinete",
+                "Vetar proyectos de ley"
+              ]
+            },
+            "a": 0,
+            "why": {
+              "en": "Established in Marbury v. Madison (1803).",
+              "es": "Establecida en Marbury v. Madison (1803)."
+            }
+          },
+          {
+            "id": "gov-u3-x08",
+            "topic": "legislative",
+            "type": "mcq",
+            "diff": 1,
+            "q": {
+              "en": "Who leads the House of Representatives?",
+              "es": "¿Quién dirige la Cámara de Representantes?"
+            },
+            "c": {
+              "en": [
+                "The vice president",
+                "The president pro tempore",
+                "The majority whip",
+                "The Speaker of the House"
+              ],
+              "es": [
+                "El vicepresidente",
+                "El presidente pro tempore",
+                "El coordinador de la mayoría",
+                "El presidente de la Cámara (Speaker)"
+              ]
+            },
+            "a": 3,
+            "why": {
+              "en": "The vice president is president of the Senate, not the House.",
+              "es": "El vicepresidente preside el Senado, no la Cámara."
+            }
+          },
+          {
+            "id": "gov-u3-x09",
+            "topic": "judicial",
+            "type": "mcq",
+            "diff": 1,
+            "q": {
+              "en": "How many justices sit on the U.S. Supreme Court?",
+              "es": "¿Cuántos jueces tiene la Corte Suprema de EE. UU.?"
+            },
+            "c": {
+              "en": [
+                "7",
+                "12",
+                "9",
+                "5"
+              ],
+              "es": [
+                "7",
+                "12",
+                "9",
+                "5"
+              ]
+            },
+            "a": 2,
+            "why": {
+              "en": "Congress set the number at nine in 1869.",
+              "es": "El Congreso fijó el número en nueve en 1869."
+            }
+          },
+          {
+            "id": "gov-u3-x10",
+            "topic": "executive",
+            "type": "mcq",
+            "diff": 1,
+            "q": {
+              "en": "The State of the Union address is given by:",
+              "es": "El discurso del Estado de la Unión lo da:"
+            },
+            "c": {
+              "en": [
+                "The Chief Justice to the nation",
+                "The president to Congress",
+                "The Speaker to the president",
+                "Governors to state legislatures"
+              ],
+              "es": [
+                "El presidente de la Corte a la nación",
+                "El presidente ante el Congreso",
+                "El Speaker al presidente",
+                "Los gobernadores a sus legislaturas"
+              ]
+            },
+            "a": 1,
+            "why": {
+              "en": "Article II says the president shall report on the 'State of the Union.'",
+              "es": "El Artículo II dice que el presidente informará sobre el 'Estado de la Unión'."
             }
           }
         ]
@@ -7495,6 +9757,296 @@ const PACKS = [
             "why": {
               "en": "48 states and D.C. use winner-take-all. Maine and Nebraska split some votes by congressional district.",
               "es": "48 estados y D.C. usan 'el ganador se lleva todo'. Maine y Nebraska reparten algunos votos por distrito."
+            }
+          },
+          {
+            "id": "gov-u4-x01",
+            "topic": "citizenship",
+            "type": "mcq",
+            "diff": 1,
+            "q": {
+              "en": "Naturalization is the process by which:",
+              "es": "La naturalización es el proceso por el cual:"
+            },
+            "c": {
+              "en": [
+                "A citizen moves to another state",
+                "A bill becomes law",
+                "An immigrant becomes a U.S. citizen",
+                "A candidate gets on the ballot"
+              ],
+              "es": [
+                "Un ciudadano se muda a otro estado",
+                "Un proyecto se vuelve ley",
+                "Un inmigrante se convierte en ciudadano estadounidense",
+                "Un candidato entra a la boleta"
+              ]
+            },
+            "a": 2,
+            "why": {
+              "en": "Applicants take a civics and English test and an oath.",
+              "es": "Los solicitantes toman un examen de civismo e inglés y un juramento."
+            }
+          },
+          {
+            "id": "gov-u4-x02",
+            "topic": "citizenship",
+            "type": "mcq",
+            "diff": 2,
+            "q": {
+              "en": "Which is a requirement to become a naturalized citizen?",
+              "es": "¿Cuál es un requisito para naturalizarse?"
+            },
+            "c": {
+              "en": [
+                "Owning property",
+                "Passing a civics and English test",
+                "Being born in a U.S. territory",
+                "Serving in Congress"
+              ],
+              "es": [
+                "Ser dueño de una propiedad",
+                "Aprobar un examen de civismo e inglés",
+                "Haber nacido en un territorio de EE. UU.",
+                "Servir en el Congreso"
+              ]
+            },
+            "a": 1,
+            "why": {
+              "en": "Applicants also need years of lawful permanent residence.",
+              "es": "También se necesitan años de residencia permanente legal."
+            }
+          },
+          {
+            "id": "gov-u4-x03",
+            "topic": "elections",
+            "type": "mcq",
+            "diff": 1,
+            "q": {
+              "en": "In a general election, voters:",
+              "es": "En una elección general, los votantes:"
+            },
+            "c": {
+              "en": [
+                "Choose among the parties' nominees for office",
+                "Choose their party's nominee",
+                "Vote only for president",
+                "Vote only in odd years"
+              ],
+              "es": [
+                "Eligen entre los candidatos nominados por los partidos",
+                "Eligen al candidato de su partido",
+                "Votan solo por presidente",
+                "Votan solo en años impares"
+              ]
+            },
+            "a": 0,
+            "why": {
+              "en": "Primaries pick nominees; the general election picks the winner.",
+              "es": "Las primarias eligen candidatos; la general elige al ganador."
+            }
+          },
+          {
+            "id": "gov-u4-x04",
+            "topic": "elections",
+            "type": "mcq",
+            "diff": 1,
+            "q": {
+              "en": "How many electoral votes does a candidate need to win the presidency?",
+              "es": "¿Cuántos votos electorales necesita un candidato para ganar la presidencia?"
+            },
+            "c": {
+              "en": [
+                "218",
+                "538",
+                "51",
+                "270"
+              ],
+              "es": [
+                "218",
+                "538",
+                "51",
+                "270"
+              ]
+            },
+            "a": 3,
+            "why": {
+              "en": "270 is a majority of the 538 electoral votes.",
+              "es": "270 es la mayoría de los 538 votos electorales."
+            }
+          },
+          {
+            "id": "gov-u4-x05",
+            "topic": "participation",
+            "type": "mcq",
+            "diff": 1,
+            "q": {
+              "en": "Serving on a jury when called is:",
+              "es": "Servir como jurado cuando te llaman es:"
+            },
+            "c": {
+              "en": [
+                "A political party activity",
+                "Lobbying",
+                "A civic obligation",
+                "An optional right only"
+              ],
+              "es": [
+                "Una actividad de partido",
+                "Cabildeo",
+                "Una obligación cívica",
+                "Solo un derecho opcional"
+              ]
+            },
+            "a": 2,
+            "why": {
+              "en": "Jury service is required by law.",
+              "es": "El servicio de jurado es obligatorio por ley."
+            }
+          },
+          {
+            "id": "gov-u4-x06",
+            "topic": "participation",
+            "type": "mcq",
+            "diff": 2,
+            "q": {
+              "en": "A referendum lets voters:",
+              "es": "Un referéndum permite a los votantes:"
+            },
+            "c": {
+              "en": [
+                "Remove an official from office",
+                "Approve or reject a law or measure directly",
+                "Pick a party nominee",
+                "Propose an amendment to Congress"
+              ],
+              "es": [
+                "Destituir a un funcionario",
+                "Aprobar o rechazar directamente una ley o medida",
+                "Elegir a un candidato del partido",
+                "Proponer una enmienda al Congreso"
+              ]
+            },
+            "a": 1,
+            "why": {
+              "en": "Florida voters approve state constitutional amendments this way.",
+              "es": "Los votantes de Florida aprueban así las enmiendas a la constitución estatal."
+            }
+          },
+          {
+            "id": "gov-u4-x07",
+            "topic": "participation",
+            "type": "mcq",
+            "diff": 2,
+            "q": {
+              "en": "A recall election lets voters:",
+              "es": "Una elección revocatoria permite a los votantes:"
+            },
+            "c": {
+              "en": [
+                "Remove an elected official before the term ends",
+                "Change the U.S. Constitution",
+                "Choose a president",
+                "Approve a tax"
+              ],
+              "es": [
+                "Destituir a un funcionario electo antes de que termine su periodo",
+                "Cambiar la Constitución de EE. UU.",
+                "Elegir a un presidente",
+                "Aprobar un impuesto"
+              ]
+            },
+            "a": 0,
+            "why": {
+              "en": "Not every state allows recalls of state officials.",
+              "es": "No todos los estados permiten revocar a funcionarios estatales."
+            }
+          },
+          {
+            "id": "gov-u4-x08",
+            "topic": "elections",
+            "type": "mcq",
+            "diff": 2,
+            "q": {
+              "en": "To vote in Florida you must be:",
+              "es": "Para votar en Florida debes ser:"
+            },
+            "c": {
+              "en": [
+                "A property owner",
+                "A member of a political party",
+                "A resident for 10 years",
+                "A U.S. citizen who is 18 by Election Day (you can pre-register at 16)"
+              ],
+              "es": [
+                "Dueño de una propiedad",
+                "Miembro de un partido",
+                "Residente por 10 años",
+                "Ciudadano de EE. UU. con 18 años el día de la elección (puedes preinscribirte a los 16)"
+              ]
+            },
+            "a": 3,
+            "why": {
+              "en": "Party membership only matters for Florida's closed primaries.",
+              "es": "Ser de un partido solo importa en las primarias cerradas de Florida."
+            }
+          },
+          {
+            "id": "gov-u4-x09",
+            "topic": "citizenship",
+            "type": "mcq",
+            "diff": 1,
+            "q": {
+              "en": "Paying taxes is a citizen's:",
+              "es": "Pagar impuestos es una:"
+            },
+            "c": {
+              "en": [
+                "Optional responsibility",
+                "Right",
+                "Obligation (duty)",
+                "Privilege for adults over 21"
+              ],
+              "es": [
+                "Responsabilidad opcional",
+                "Derecho",
+                "Obligación (deber) del ciudadano",
+                "Privilegio de mayores de 21"
+              ]
+            },
+            "a": 2,
+            "why": {
+              "en": "Obligations are required by law; responsibilities are voluntary.",
+              "es": "Las obligaciones son requeridas por ley; las responsabilidades son voluntarias."
+            }
+          },
+          {
+            "id": "gov-u4-x10",
+            "topic": "participation",
+            "type": "mcq",
+            "diff": 2,
+            "q": {
+              "en": "Which is a civic responsibility (not required by law)?",
+              "es": "¿Cuál es una responsabilidad cívica (no obligatoria por ley)?"
+            },
+            "c": {
+              "en": [
+                "Obeying traffic laws",
+                "Volunteering at a food bank",
+                "Serving on a jury when called",
+                "Paying income taxes"
+              ],
+              "es": [
+                "Obedecer las leyes de tránsito",
+                "Ser voluntario en un banco de alimentos",
+                "Servir como jurado cuando te llaman",
+                "Pagar impuestos sobre la renta"
+              ]
+            },
+            "a": 1,
+            "why": {
+              "en": "Voting and volunteering are responsibilities; laws make the others required.",
+              "es": "Votar y ser voluntario son responsabilidades; las leyes hacen obligatorias las otras."
             }
           }
         ]
@@ -8084,6 +10636,296 @@ const PACKS = [
             "why": {
               "en": "Equal protection was the basis for Brown v. Board and many civil rights rulings.",
               "es": "La igualdad de protección fue la base de Brown v. Board y de muchos fallos de derechos civiles."
+            }
+          },
+          {
+            "id": "gov-u5-x01",
+            "topic": "rights",
+            "type": "mcq",
+            "diff": 1,
+            "q": {
+              "en": "The First Amendment protects all of these EXCEPT:",
+              "es": "La Primera Enmienda protege todo esto EXCEPTO:"
+            },
+            "c": {
+              "en": [
+                "Freedom of religion",
+                "Freedom of the press",
+                "The right to bear arms",
+                "The right to assemble peacefully"
+              ],
+              "es": [
+                "La libertad de religión",
+                "La libertad de prensa",
+                "El derecho a portar armas",
+                "El derecho a reunirse pacíficamente"
+              ]
+            },
+            "a": 2,
+            "why": {
+              "en": "The right to bear arms is the Second Amendment.",
+              "es": "El derecho a portar armas es la Segunda Enmienda."
+            }
+          },
+          {
+            "id": "gov-u5-x02",
+            "topic": "rights",
+            "type": "mcq",
+            "diff": 1,
+            "q": {
+              "en": "The Eighth Amendment bans:",
+              "es": "La Octava Enmienda prohíbe:"
+            },
+            "c": {
+              "en": [
+                "Unreasonable searches",
+                "Cruel and unusual punishment",
+                "Quartering soldiers",
+                "Self-incrimination"
+              ],
+              "es": [
+                "Registros irrazonables",
+                "Castigos crueles e inusuales",
+                "Alojar soldados",
+                "La autoincriminación"
+              ]
+            },
+            "a": 1,
+            "why": {
+              "en": "It also bans excessive bail and fines.",
+              "es": "También prohíbe fianzas y multas excesivas."
+            }
+          },
+          {
+            "id": "gov-u5-x03",
+            "topic": "rights",
+            "type": "mcq",
+            "diff": 1,
+            "q": {
+              "en": "The Sixth Amendment guarantees:",
+              "es": "La Sexta Enmienda garantiza:"
+            },
+            "c": {
+              "en": [
+                "A speedy, public trial by an impartial jury",
+                "Freedom of speech",
+                "The right to vote",
+                "Protection from double jeopardy"
+              ],
+              "es": [
+                "Un juicio rápido y público con un jurado imparcial",
+                "La libertad de expresión",
+                "El derecho al voto",
+                "Protección contra el doble enjuiciamiento"
+              ]
+            },
+            "a": 0,
+            "why": {
+              "en": "It also guarantees the right to a lawyer.",
+              "es": "También garantiza el derecho a un abogado."
+            }
+          },
+          {
+            "id": "gov-u5-x04",
+            "topic": "cases",
+            "type": "mcq",
+            "diff": 1,
+            "q": {
+              "en": "In Marbury v. Madison (1803), the Supreme Court:",
+              "es": "En Marbury v. Madison (1803), la Corte Suprema:"
+            },
+            "c": {
+              "en": [
+                "Ended school segregation",
+                "Required Miranda warnings",
+                "Guaranteed lawyers to the poor",
+                "Established judicial review"
+              ],
+              "es": [
+                "Terminó la segregación escolar",
+                "Exigió las advertencias Miranda",
+                "Garantizó abogados a los pobres",
+                "Estableció la revisión judicial"
+              ]
+            },
+            "a": 3,
+            "why": {
+              "en": "Chief Justice John Marshall wrote the opinion.",
+              "es": "El presidente de la Corte John Marshall escribió la opinión."
+            }
+          },
+          {
+            "id": "gov-u5-x05",
+            "topic": "cases",
+            "type": "mcq",
+            "diff": 3,
+            "q": {
+              "en": "District of Columbia v. Heller (2008) held that the Second Amendment:",
+              "es": "District of Columbia v. Heller (2008) decidió que la Segunda Enmienda:"
+            },
+            "c": {
+              "en": [
+                "Applies only to state militias",
+                "Was repealed",
+                "Protects an individual right to keep a handgun at home for self-defense",
+                "Bans all gun laws"
+              ],
+              "es": [
+                "Solo aplica a las milicias estatales",
+                "Fue derogada",
+                "Protege el derecho individual a tener un arma en casa para defensa propia",
+                "Prohíbe todas las leyes sobre armas"
+              ]
+            },
+            "a": 2,
+            "why": {
+              "en": "The Court said some regulations are still allowed.",
+              "es": "La Corte dijo que aún se permiten algunas regulaciones."
+            }
+          },
+          {
+            "id": "gov-u5-x06",
+            "topic": "systems",
+            "type": "mcq",
+            "diff": 1,
+            "q": {
+              "en": "In an absolute monarchy, power is held by:",
+              "es": "En una monarquía absoluta, el poder lo tiene:"
+            },
+            "c": {
+              "en": [
+                "An elected parliament",
+                "A king or queen with unlimited authority",
+                "The people directly",
+                "A group of states"
+              ],
+              "es": [
+                "Un parlamento electo",
+                "Un rey o reina con autoridad ilimitada",
+                "El pueblo directamente",
+                "Un grupo de estados"
+              ]
+            },
+            "a": 1,
+            "why": {
+              "en": "Saudi Arabia is a present-day example.",
+              "es": "Arabia Saudita es un ejemplo actual."
+            }
+          },
+          {
+            "id": "gov-u5-x07",
+            "topic": "systems",
+            "type": "mcq",
+            "diff": 2,
+            "q": {
+              "en": "In a unitary system, most power belongs to:",
+              "es": "En un sistema unitario, la mayor parte del poder la tiene:"
+            },
+            "c": {
+              "en": [
+                "The central government",
+                "The states or provinces",
+                "Local towns",
+                "The courts"
+              ],
+              "es": [
+                "El gobierno central",
+                "Los estados o provincias",
+                "Los pueblos",
+                "Los tribunales"
+              ]
+            },
+            "a": 0,
+            "why": {
+              "en": "France and Japan are unitary; the U.S. is federal.",
+              "es": "Francia y Japón son unitarios; EE. UU. es federal."
+            }
+          },
+          {
+            "id": "gov-u5-x08",
+            "topic": "systems",
+            "type": "mcq",
+            "diff": 2,
+            "q": {
+              "en": "An oligarchy is government by:",
+              "es": "Una oligarquía es el gobierno de:"
+            },
+            "c": {
+              "en": [
+                "One ruler",
+                "All citizens",
+                "An elected parliament",
+                "A small group of powerful people"
+              ],
+              "es": [
+                "Un solo gobernante",
+                "Todos los ciudadanos",
+                "Un parlamento electo",
+                "Un pequeño grupo de personas poderosas"
+              ]
+            },
+            "a": 3,
+            "why": {
+              "en": "'Oligarchy' comes from Greek for 'rule by the few.'",
+              "es": "'Oligarquía' viene del griego 'gobierno de pocos'."
+            }
+          },
+          {
+            "id": "gov-u5-x09",
+            "topic": "rights",
+            "type": "mcq",
+            "diff": 2,
+            "q": {
+              "en": "The Third Amendment protects against:",
+              "es": "La Tercera Enmienda protege contra:"
+            },
+            "c": {
+              "en": [
+                "Unreasonable searches",
+                "Excessive bail",
+                "Being forced to house soldiers in your home",
+                "Double jeopardy"
+              ],
+              "es": [
+                "Registros irrazonables",
+                "Fianzas excesivas",
+                "Ser obligado a alojar soldados en tu casa",
+                "El doble enjuiciamiento"
+              ]
+            },
+            "a": 2,
+            "why": {
+              "en": "Colonists resented the British Quartering Acts.",
+              "es": "Los colonos rechazaban las Leyes de Acuartelamiento británicas."
+            }
+          },
+          {
+            "id": "gov-u5-x10",
+            "topic": "cases",
+            "type": "mcq",
+            "diff": 2,
+            "q": {
+              "en": "In Tinker v. Des Moines (1969), students had:",
+              "es": "En Tinker v. Des Moines (1969), los estudiantes:"
+            },
+            "c": {
+              "en": [
+                "Refused to say the Pledge",
+                "Worn black armbands to protest the Vietnam War",
+                "Published a school newspaper",
+                "Prayed at a football game"
+              ],
+              "es": [
+                "Se negaron a decir el Juramento",
+                "Usaron brazaletes negros para protestar contra la guerra de Vietnam",
+                "Publicaron un periódico escolar",
+                "Rezaron en un partido de fútbol"
+              ]
+            },
+            "a": 1,
+            "why": {
+              "en": "The Court said students don't lose their rights 'at the schoolhouse gate.'",
+              "es": "La Corte dijo que los estudiantes no pierden sus derechos 'en la puerta de la escuela'."
             }
           }
         ]
@@ -8946,6 +11788,118 @@ const PACKS = [
               "en": "Representation scales to a large population and written limits protect minorities from a temporary majority.",
               "es": "La representación funciona en poblaciones grandes y los límites escritos protegen a las minorías de una mayoría temporal."
             }
+          },
+          {
+            "id": "gov-u6-x01",
+            "type": "mcq",
+            "diff": 2,
+            "q": {
+              "en": "Coach Smith announces there will be no more island elections and he will rule forever. Which principle is he breaking?",
+              "es": "Coach Smith anuncia que no habrá más elecciones en la isla y gobernará para siempre. ¿Qué principio rompe?"
+            },
+            "c": {
+              "en": [
+                "Federalism",
+                "Judicial review",
+                "Popular sovereignty",
+                "Bicameralism"
+              ],
+              "es": [
+                "El federalismo",
+                "La revisión judicial",
+                "La soberanía popular",
+                "El bicameralismo"
+              ]
+            },
+            "a": 2,
+            "why": {
+              "en": "Government's power must come from the people, through elections.",
+              "es": "El poder del gobierno debe venir del pueblo, por medio de elecciones."
+            }
+          },
+          {
+            "id": "gov-u6-x02",
+            "type": "mcq",
+            "diff": 2,
+            "q": {
+              "en": "Both the island and its towns collect taxes. This sharing of a power is an example of:",
+              "es": "Tanto la isla como sus pueblos cobran impuestos. Compartir este poder es un ejemplo de:"
+            },
+            "c": {
+              "en": [
+                "Separation of powers",
+                "Concurrent powers under federalism",
+                "Checks and balances",
+                "Judicial review"
+              ],
+              "es": [
+                "Separación de poderes",
+                "Poderes concurrentes en el federalismo",
+                "Pesos y contrapesos",
+                "Revisión judicial"
+              ]
+            },
+            "a": 1,
+            "why": {
+              "en": "Concurrent powers are held by both levels of government.",
+              "es": "Los poderes concurrentes los tienen ambos niveles de gobierno."
+            }
+          },
+          {
+            "id": "gov-u6-x03",
+            "type": "mcq",
+            "diff": 2,
+            "q": {
+              "en": "The island court strikes down Coach Smith's ban on protests in the plaza. The court is using:",
+              "es": "El tribunal de la isla anula la prohibición de protestas de Coach Smith. El tribunal usa:"
+            },
+            "c": {
+              "en": [
+                "Judicial review",
+                "Executive privilege",
+                "A veto",
+                "A filibuster"
+              ],
+              "es": [
+                "La revisión judicial",
+                "El privilegio ejecutivo",
+                "Un veto",
+                "Un filibusterismo"
+              ]
+            },
+            "a": 0,
+            "why": {
+              "en": "Courts can void government actions that violate the constitution.",
+              "es": "Los tribunales pueden anular acciones que violan la constitución."
+            }
+          },
+          {
+            "id": "gov-u6-x04",
+            "type": "mcq",
+            "diff": 3,
+            "q": {
+              "en": "Coach Smith wants to try an islander in secret with no jury. Which amendment protects the islander?",
+              "es": "Coach Smith quiere juzgar en secreto y sin jurado a un isleño. ¿Qué enmienda lo protege?"
+            },
+            "c": {
+              "en": [
+                "The Second Amendment",
+                "The Tenth Amendment",
+                "The Third Amendment",
+                "The Sixth Amendment"
+              ],
+              "es": [
+                "La Segunda Enmienda",
+                "La Décima Enmienda",
+                "La Tercera Enmienda",
+                "La Sexta Enmienda"
+              ]
+            },
+            "a": 3,
+            "why": {
+              "en": "The Sixth guarantees a speedy, public trial by an impartial jury.",
+              "es": "La Sexta garantiza un juicio rápido y público con jurado imparcial."
+            }
           }
         ]
       }
@@ -9701,6 +12655,238 @@ const PACKS = [
             "why": {
               "en": "Article I gives Congress the power to declare war; the president is commander in chief. Splitting war powers is a deliberate check.",
               "es": "El Artículo I da al Congreso el poder de declarar la guerra; el presidente es comandante en jefe. Dividir esos poderes es un control deliberado."
+            }
+          },
+          {
+            "id": "apg-u1-x01",
+            "topic": "ideals",
+            "type": "mcq",
+            "diff": 2,
+            "q": {
+              "en": "Elite democracy is best reflected in the original Constitution's:",
+              "es": "La democracia elitista se refleja mejor en la Constitución original en:"
+            },
+            "c": {
+              "en": [
+                "Ballot initiatives",
+                "Town hall meetings",
+                "Election of senators by state legislatures",
+                "Open primaries"
+              ],
+              "es": [
+                "Las iniciativas ciudadanas",
+                "Las asambleas municipales",
+                "La elección de senadores por las legislaturas estatales",
+                "Las primarias abiertas"
+              ]
+            },
+            "a": 2,
+            "why": {
+              "en": "The 17th Amendment (1913) later gave voters direct election of senators.",
+              "es": "La 17.ª Enmienda (1913) dio después a los votantes la elección directa de senadores."
+            }
+          },
+          {
+            "id": "apg-u1-x02",
+            "topic": "framing",
+            "type": "mcq",
+            "diff": 1,
+            "q": {
+              "en": "Giving Congress the power to tax fixed which weakness of the Articles?",
+              "es": "Dar al Congreso el poder de cobrar impuestos corrigió ¿qué debilidad de los Artículos?"
+            },
+            "c": {
+              "en": [
+                "States couldn't print money",
+                "The national government couldn't raise its own revenue",
+                "There was no Bill of Rights",
+                "Congress had too many members"
+              ],
+              "es": [
+                "Los estados no podían imprimir dinero",
+                "El gobierno nacional no podía obtener sus propios ingresos",
+                "No había Carta de Derechos",
+                "El Congreso tenía demasiados miembros"
+              ]
+            },
+            "a": 1,
+            "why": {
+              "en": "Under the Articles, Congress could only ask the states for money.",
+              "es": "Con los Artículos, el Congreso solo podía pedir dinero a los estados."
+            }
+          },
+          {
+            "id": "apg-u1-x03",
+            "topic": "federalism",
+            "type": "mcq",
+            "diff": 3,
+            "q": {
+              "en": "Heart of Atlanta Motel v. U.S. (1964) upheld a ban on discrimination in hotels using:",
+              "es": "Heart of Atlanta Motel v. U.S. (1964) mantuvo la prohibición de discriminar en hoteles usando:"
+            },
+            "c": {
+              "en": [
+                "The Commerce Clause",
+                "The Tenth Amendment",
+                "The Full Faith and Credit Clause",
+                "A block grant"
+              ],
+              "es": [
+                "La Cláusula de Comercio",
+                "La Décima Enmienda",
+                "La Cláusula de Plena Fe y Crédito",
+                "Una subvención en bloque"
+              ]
+            },
+            "a": 0,
+            "why": {
+              "en": "Hotels serve interstate travelers, so Congress could regulate them.",
+              "es": "Los hoteles atienden a viajeros interestatales, así que el Congreso podía regularlos."
+            }
+          },
+          {
+            "id": "apg-u1-x04",
+            "topic": "federalism",
+            "type": "mcq",
+            "diff": 2,
+            "q": {
+              "en": "'Layer cake' federalism, with separate national and state duties, is called:",
+              "es": "El federalismo de 'pastel de capas', con funciones separadas, se llama:"
+            },
+            "c": {
+              "en": [
+                "Cooperative federalism",
+                "Fiscal federalism",
+                "New federalism",
+                "Dual federalism"
+              ],
+              "es": [
+                "Federalismo cooperativo",
+                "Federalismo fiscal",
+                "Nuevo federalismo",
+                "Federalismo dual"
+              ]
+            },
+            "a": 3,
+            "why": {
+              "en": "Cooperative federalism is the 'marble cake,' with blended roles.",
+              "es": "El federalismo cooperativo es el 'pastel marmoleado', con funciones mezcladas."
+            }
+          },
+          {
+            "id": "apg-u1-x05",
+            "topic": "fedpapers",
+            "type": "mcq",
+            "diff": 2,
+            "q": {
+              "en": "Federalist No. 51 argues that liberty is protected by:",
+              "es": "El Federalista n.º 51 argumenta que la libertad se protege con:"
+            },
+            "c": {
+              "en": [
+                "A single strong executive",
+                "A bill of rights",
+                "Separation of powers and checks and balances",
+                "Direct democracy"
+              ],
+              "es": [
+                "Un solo ejecutivo fuerte",
+                "Una carta de derechos",
+                "Separación de poderes y pesos y contrapesos",
+                "Democracia directa"
+              ]
+            },
+            "a": 2,
+            "why": {
+              "en": "Each branch can check the others, so no one branch dominates.",
+              "es": "Cada poder puede frenar a los otros, así ninguno domina."
+            }
+          },
+          {
+            "id": "apg-u1-x06",
+            "topic": "framing",
+            "type": "mcq",
+            "diff": 1,
+            "q": {
+              "en": "The Constitution took effect after ratification by:",
+              "es": "La Constitución entró en vigor tras ser ratificada por:"
+            },
+            "c": {
+              "en": [
+                "All thirteen states",
+                "Nine of the thirteen states",
+                "Two-thirds of Congress",
+                "A national vote"
+              ],
+              "es": [
+                "Los trece estados",
+                "Nueve de los trece estados",
+                "Dos tercios del Congreso",
+                "Un voto nacional"
+              ]
+            },
+            "a": 1,
+            "why": {
+              "en": "Article VII set the nine-state rule.",
+              "es": "El Artículo VII fijó la regla de nueve estados."
+            }
+          },
+          {
+            "id": "apg-u1-x07",
+            "topic": "ideals",
+            "type": "mcq",
+            "diff": 2,
+            "q": {
+              "en": "Participatory democracy is reflected in:",
+              "es": "La democracia participativa se refleja en:"
+            },
+            "c": {
+              "en": [
+                "State ballot initiatives where citizens vote on laws directly",
+                "The Electoral College",
+                "Appointed federal judges",
+                "Six-year Senate terms"
+              ],
+              "es": [
+                "Iniciativas estatales donde los ciudadanos votan leyes directamente",
+                "El Colegio Electoral",
+                "Los jueces federales designados",
+                "Los periodos de seis años del Senado"
+              ]
+            },
+            "a": 0,
+            "why": {
+              "en": "It emphasizes broad, direct citizen involvement.",
+              "es": "Enfatiza la participación amplia y directa de los ciudadanos."
+            }
+          },
+          {
+            "id": "apg-u1-x08",
+            "topic": "federalism",
+            "type": "mcq",
+            "diff": 3,
+            "q": {
+              "en": "'Devolution' in the 1990s refers to:",
+              "es": "La 'devolución' en los años 90 se refiere a:"
+            },
+            "c": {
+              "en": [
+                "More federal mandates",
+                "New federal agencies",
+                "Ending state governments",
+                "Shifting responsibilities from the national government back to the states"
+              ],
+              "es": [
+                "Más mandatos federales",
+                "Nuevas agencias federales",
+                "Eliminar los gobiernos estatales",
+                "Pasar responsabilidades del gobierno nacional a los estados"
+              ]
+            },
+            "a": 3,
+            "why": {
+              "en": "The 1996 welfare reform used block grants to give states more control.",
+              "es": "La reforma de asistencia de 1996 usó subvenciones en bloque para dar más control a los estados."
             }
           }
         ],
@@ -10582,6 +13768,238 @@ const PACKS = [
             "why": {
               "en": "Close advisers help presidents control policy and the bureaucracy; Cabinet secretaries need confirmation and run large departments.",
               "es": "Los asesores cercanos ayudan a controlar las políticas y la burocracia; los secretarios del Gabinete necesitan confirmación."
+            }
+          },
+          {
+            "id": "apg-u2-x01",
+            "topic": "congress",
+            "type": "mcq",
+            "diff": 2,
+            "q": {
+              "en": "The Senate's 'advice and consent' power applies to:",
+              "es": "El poder de 'consejo y consentimiento' del Senado aplica a:"
+            },
+            "c": {
+              "en": [
+                "Revenue bills",
+                "Bringing impeachment charges",
+                "Presidential appointments and treaties",
+                "The whole federal budget"
+              ],
+              "es": [
+                "Proyectos de ingresos",
+                "Presentar cargos de juicio político",
+                "Nombramientos presidenciales y tratados",
+                "Todo el presupuesto federal"
+              ]
+            },
+            "a": 2,
+            "why": {
+              "en": "Revenue bills and impeachment charges start in the House.",
+              "es": "Los proyectos de ingresos y los cargos de juicio político empiezan en la Cámara."
+            }
+          },
+          {
+            "id": "apg-u2-x02",
+            "topic": "congress",
+            "type": "mcq",
+            "diff": 2,
+            "q": {
+              "en": "Discretionary spending differs from mandatory spending because it:",
+              "es": "El gasto discrecional difiere del obligatorio porque:"
+            },
+            "c": {
+              "en": [
+                "Is required by existing laws like Social Security",
+                "Is set each year through appropriations",
+                "Can never be changed",
+                "Is controlled by the president alone"
+              ],
+              "es": [
+                "Lo exigen leyes existentes como el Seguro Social",
+                "Se fija cada año con asignaciones",
+                "Nunca se puede cambiar",
+                "Lo controla solo el presidente"
+              ]
+            },
+            "a": 1,
+            "why": {
+              "en": "Mandatory spending (entitlements) is the larger share of the budget.",
+              "es": "El gasto obligatorio (derechos) es la mayor parte del presupuesto."
+            }
+          },
+          {
+            "id": "apg-u2-x03",
+            "topic": "congress",
+            "type": "mcq",
+            "diff": 2,
+            "q": {
+              "en": "Logrolling in Congress means:",
+              "es": "El 'logrolling' en el Congreso significa:"
+            },
+            "c": {
+              "en": [
+                "Members trade votes to pass each other's bills",
+                "An all-night filibuster",
+                "A committee rewriting a bill",
+                "The Speaker scheduling a vote"
+              ],
+              "es": [
+                "Los miembros intercambian votos para aprobar proyectos de otros",
+                "Un filibusterismo de toda la noche",
+                "Un comité que reescribe un proyecto",
+                "El Speaker programa una votación"
+              ]
+            },
+            "a": 0,
+            "why": {
+              "en": "'You vote for my bill, I'll vote for yours.'",
+              "es": "'Tú votas por mi proyecto, yo voto por el tuyo'."
+            }
+          },
+          {
+            "id": "apg-u2-x04",
+            "topic": "president",
+            "type": "mcq",
+            "diff": 3,
+            "q": {
+              "en": "The War Powers Resolution (1973) requires the president to:",
+              "es": "La Resolución de Poderes de Guerra (1973) exige que el presidente:"
+            },
+            "c": {
+              "en": [
+                "Get a declaration of war before any action",
+                "Get the Supreme Court's approval",
+                "Consult the governors",
+                "Notify Congress within 48 hours of sending troops and withdraw within 60–90 days without approval"
+              ],
+              "es": [
+                "Obtenga una declaración de guerra antes de actuar",
+                "Obtenga la aprobación de la Corte Suprema",
+                "Consulte a los gobernadores",
+                "Avise al Congreso en 48 horas al enviar tropas y las retire en 60–90 días sin aprobación"
+              ]
+            },
+            "a": 3,
+            "why": {
+              "en": "Congress passed it over Nixon's veto after the Vietnam War.",
+              "es": "El Congreso la aprobó sobre el veto de Nixon tras la guerra de Vietnam."
+            }
+          },
+          {
+            "id": "apg-u2-x05",
+            "topic": "president",
+            "type": "mcq",
+            "diff": 3,
+            "q": {
+              "en": "A presidential signing statement is:",
+              "es": "Una declaración de firma presidencial es:"
+            },
+            "c": {
+              "en": [
+                "A veto message",
+                "An executive agreement",
+                "A note added when signing a bill, explaining how the president will interpret or enforce it",
+                "A treaty ratification"
+              ],
+              "es": [
+                "Un mensaje de veto",
+                "Un acuerdo ejecutivo",
+                "Una nota al firmar un proyecto que explica cómo el presidente lo interpretará o aplicará",
+                "La ratificación de un tratado"
+              ]
+            },
+            "a": 2,
+            "why": {
+              "en": "Critics say it can act like a partial veto.",
+              "es": "Los críticos dicen que puede funcionar como un veto parcial."
+            }
+          },
+          {
+            "id": "apg-u2-x06",
+            "topic": "courts",
+            "type": "mcq",
+            "diff": 2,
+            "q": {
+              "en": "Original jurisdiction means a court:",
+              "es": "La jurisdicción original significa que un tribunal:"
+            },
+            "c": {
+              "en": [
+                "Hears only appeals",
+                "Hears a case first, before any other court",
+                "Reviews state laws",
+                "Picks cases on its own"
+              ],
+              "es": [
+                "Solo escucha apelaciones",
+                "Escucha un caso primero, antes que otro tribunal",
+                "Revisa leyes estatales",
+                "Elige casos por su cuenta"
+              ]
+            },
+            "a": 1,
+            "why": {
+              "en": "The Supreme Court has original jurisdiction in a few cases, like disputes between states.",
+              "es": "La Corte Suprema tiene jurisdicción original en pocos casos, como disputas entre estados."
+            }
+          },
+          {
+            "id": "apg-u2-x07",
+            "topic": "courts",
+            "type": "mcq",
+            "diff": 2,
+            "q": {
+              "en": "The 'rule of four' means:",
+              "es": "La 'regla de cuatro' significa:"
+            },
+            "c": {
+              "en": [
+                "Four justices must agree to hear a case (grant certiorari)",
+                "Four votes decide a case",
+                "Justices serve four years",
+                "Cases pass through four lower courts"
+              ],
+              "es": [
+                "Cuatro jueces deben aceptar escuchar un caso (conceder certiorari)",
+                "Cuatro votos deciden un caso",
+                "Los jueces sirven cuatro años",
+                "Los casos pasan por cuatro tribunales"
+              ]
+            },
+            "a": 0,
+            "why": {
+              "en": "A majority of five is still needed to decide the case.",
+              "es": "Aún se necesita una mayoría de cinco para decidir el caso."
+            }
+          },
+          {
+            "id": "apg-u2-x08",
+            "topic": "bureau",
+            "type": "mcq",
+            "diff": 1,
+            "q": {
+              "en": "Cabinet departments, independent regulatory commissions and government corporations are all part of the:",
+              "es": "Los departamentos, comisiones reguladoras independientes y corporaciones del gobierno son parte de:"
+            },
+            "c": {
+              "en": [
+                "Legislative branch",
+                "Judicial branch",
+                "Electoral College",
+                "Federal bureaucracy"
+              ],
+              "es": [
+                "El poder legislativo",
+                "El poder judicial",
+                "El Colegio Electoral",
+                "La burocracia federal"
+              ]
+            },
+            "a": 3,
+            "why": {
+              "en": "The bureaucracy carries out (implements) the laws.",
+              "es": "La burocracia ejecuta (implementa) las leyes."
             }
           }
         ],
@@ -11481,6 +14899,238 @@ const PACKS = [
               "en": "'Nor shall any State deprive any person of life, liberty, or property, without due process of law' is the hook for selective incorporation.",
               "es": "'Ningún Estado privará a persona alguna de la vida, la libertad o la propiedad sin el debido proceso legal' es la base de la incorporación selectiva."
             }
+          },
+          {
+            "id": "apg-u3-x01",
+            "topic": "religion",
+            "type": "mcq",
+            "diff": 1,
+            "q": {
+              "en": "The establishment clause prohibits:",
+              "es": "La cláusula de establecimiento prohíbe:"
+            },
+            "c": {
+              "en": [
+                "People from practicing their religion",
+                "Religious groups from voting",
+                "Government from establishing or favoring a religion",
+                "Churches from owning property"
+              ],
+              "es": [
+                "Que la gente practique su religión",
+                "Que los grupos religiosos voten",
+                "Que el gobierno establezca o favorezca una religión",
+                "Que las iglesias tengan propiedades"
+              ]
+            },
+            "a": 2,
+            "why": {
+              "en": "It's often described as a 'wall of separation' between church and state.",
+              "es": "Se describe como un 'muro de separación' entre iglesia y estado."
+            }
+          },
+          {
+            "id": "apg-u3-x02",
+            "topic": "religion",
+            "type": "mcq",
+            "diff": 1,
+            "q": {
+              "en": "The free exercise clause protects:",
+              "es": "La cláusula de libre ejercicio protege:"
+            },
+            "c": {
+              "en": [
+                "Government support for religion",
+                "People's right to practice their religion",
+                "Teacher-led prayer in public schools",
+                "A national church"
+              ],
+              "es": [
+                "El apoyo del gobierno a la religión",
+                "El derecho a practicar la propia religión",
+                "La oración dirigida por maestros en escuelas públicas",
+                "Una iglesia nacional"
+              ]
+            },
+            "a": 1,
+            "why": {
+              "en": "Wisconsin v. Yoder is a free exercise case.",
+              "es": "Wisconsin v. Yoder es un caso de libre ejercicio."
+            }
+          },
+          {
+            "id": "apg-u3-x03",
+            "topic": "speech",
+            "type": "mcq",
+            "diff": 2,
+            "q": {
+              "en": "Burning a flag in protest was protected as symbolic speech in:",
+              "es": "Quemar una bandera en protesta fue protegido como expresión simbólica en:"
+            },
+            "c": {
+              "en": [
+                "Texas v. Johnson (1989)",
+                "Schenck v. United States (1919)",
+                "Engel v. Vitale (1962)",
+                "Mapp v. Ohio (1961)"
+              ],
+              "es": [
+                "Texas v. Johnson (1989)",
+                "Schenck v. United States (1919)",
+                "Engel v. Vitale (1962)",
+                "Mapp v. Ohio (1961)"
+              ]
+            },
+            "a": 0,
+            "why": {
+              "en": "The Court said government can't ban expression just because it's offensive.",
+              "es": "La Corte dijo que el gobierno no puede prohibir una expresión solo por ser ofensiva."
+            }
+          },
+          {
+            "id": "apg-u3-x04",
+            "topic": "accused",
+            "type": "mcq",
+            "diff": 2,
+            "q": {
+              "en": "The Eighth Amendment's ban on excessive bail protects:",
+              "es": "La prohibición de fianzas excesivas de la Octava Enmienda protege a:"
+            },
+            "c": {
+              "en": [
+                "People already convicted",
+                "Witnesses",
+                "Police officers",
+                "People accused of crimes who are awaiting trial"
+              ],
+              "es": [
+                "Personas ya condenadas",
+                "Testigos",
+                "Policías",
+                "Personas acusadas que esperan juicio"
+              ]
+            },
+            "a": 3,
+            "why": {
+              "en": "Bail lets the accused stay free until trial.",
+              "es": "La fianza permite al acusado estar libre hasta el juicio."
+            }
+          },
+          {
+            "id": "apg-u3-x05",
+            "topic": "accused",
+            "type": "mcq",
+            "diff": 1,
+            "q": {
+              "en": "Double jeopardy means a person cannot be:",
+              "es": "El doble enjuiciamiento significa que una persona no puede:"
+            },
+            "c": {
+              "en": [
+                "Forced to testify against themselves",
+                "Searched without a warrant",
+                "Tried twice for the same crime after an acquittal",
+                "Held without bail"
+              ],
+              "es": [
+                "Ser obligada a declarar contra sí misma",
+                "Ser registrada sin orden",
+                "Ser juzgada dos veces por el mismo delito tras ser absuelta",
+                "Ser retenida sin fianza"
+              ]
+            },
+            "a": 2,
+            "why": {
+              "en": "It's protected by the Fifth Amendment.",
+              "es": "Lo protege la Quinta Enmienda."
+            }
+          },
+          {
+            "id": "apg-u3-x06",
+            "topic": "civilrights",
+            "type": "mcq",
+            "diff": 2,
+            "q": {
+              "en": "Civil rights differ from civil liberties because civil rights:",
+              "es": "Los derechos civiles difieren de las libertades civiles porque:"
+            },
+            "c": {
+              "en": [
+                "Limit what government can do to individuals",
+                "Protect groups from discrimination, often through equal protection",
+                "Apply only to criminal defendants",
+                "Come only from state constitutions"
+              ],
+              "es": [
+                "Limitan lo que el gobierno puede hacer a los individuos",
+                "Protegen a grupos contra la discriminación, a menudo por la igual protección",
+                "Aplican solo a acusados",
+                "Vienen solo de las constituciones estatales"
+              ]
+            },
+            "a": 1,
+            "why": {
+              "en": "Liberties limit government; rights require government to treat people equally.",
+              "es": "Las libertades limitan al gobierno; los derechos exigen trato igual."
+            }
+          },
+          {
+            "id": "apg-u3-x07",
+            "topic": "civilrights",
+            "type": "mcq",
+            "diff": 1,
+            "q": {
+              "en": "The Nineteenth Amendment (1920):",
+              "es": "La Decimonovena Enmienda (1920):"
+            },
+            "c": {
+              "en": [
+                "Guaranteed women the right to vote",
+                "Ended poll taxes",
+                "Lowered the voting age to 18",
+                "Abolished slavery"
+              ],
+              "es": [
+                "Garantizó el voto de las mujeres",
+                "Eliminó los impuestos al voto",
+                "Bajó la edad para votar a 18",
+                "Abolió la esclavitud"
+              ]
+            },
+            "a": 0,
+            "why": {
+              "en": "It was the result of decades of suffrage activism.",
+              "es": "Fue el resultado de décadas de activismo sufragista."
+            }
+          },
+          {
+            "id": "apg-u3-x08",
+            "topic": "speech",
+            "type": "mcq",
+            "diff": 2,
+            "q": {
+              "en": "Which speech gets the LEAST First Amendment protection?",
+              "es": "¿Qué expresión tiene MENOS protección de la Primera Enmienda?"
+            },
+            "c": {
+              "en": [
+                "Political criticism of the president",
+                "Peaceful protest signs",
+                "Newspaper editorials",
+                "Speech that incites imminent lawless action"
+              ],
+              "es": [
+                "Las críticas políticas al presidente",
+                "Carteles de protesta pacífica",
+                "Editoriales de periódico",
+                "La que incita a una acción ilegal inminente"
+              ]
+            },
+            "a": 3,
+            "why": {
+              "en": "Brandenburg v. Ohio (1969) set the 'imminent lawless action' test.",
+              "es": "Brandenburg v. Ohio (1969) fijó la prueba de 'acción ilegal inminente'."
+            }
           }
         ],
         "topics": [
@@ -12369,6 +16019,238 @@ const PACKS = [
             "why": {
               "en": "Many Americans describe themselves as moderate, picking positions issue by issue.",
               "es": "Muchos estadounidenses se describen como moderados y eligen postura tema por tema."
+            }
+          },
+          {
+            "id": "apg-u4-x01",
+            "topic": "polling",
+            "type": "mcq",
+            "diff": 1,
+            "q": {
+              "en": "A random sample means:",
+              "es": "Una muestra aleatoria significa que:"
+            },
+            "c": {
+              "en": [
+                "Only volunteers are polled",
+                "People come from one neighborhood",
+                "Everyone in the population has an equal chance of being picked",
+                "The poll is online only"
+              ],
+              "es": [
+                "Solo se encuesta a voluntarios",
+                "La gente viene de un solo barrio",
+                "Todos en la población tienen la misma probabilidad de ser elegidos",
+                "La encuesta es solo en línea"
+              ]
+            },
+            "a": 2,
+            "why": {
+              "en": "Random samples make polls representative.",
+              "es": "Las muestras aleatorias hacen representativas las encuestas."
+            }
+          },
+          {
+            "id": "apg-u4-x02",
+            "topic": "polling",
+            "type": "mcq",
+            "diff": 2,
+            "q": {
+              "en": "Tracking polls measure:",
+              "es": "Las encuestas de seguimiento miden:"
+            },
+            "c": {
+              "en": [
+                "One group's opinion once",
+                "Changes in opinion over time",
+                "Votes after polls close",
+                "Party membership"
+              ],
+              "es": [
+                "La opinión de un grupo una sola vez",
+                "Cambios de opinión a lo largo del tiempo",
+                "Los votos tras cerrar las casillas",
+                "La afiliación a partidos"
+              ]
+            },
+            "a": 1,
+            "why": {
+              "en": "Campaigns use them to see if a message is working.",
+              "es": "Las campañas las usan para ver si un mensaje funciona."
+            }
+          },
+          {
+            "id": "apg-u4-x03",
+            "topic": "values",
+            "type": "mcq",
+            "diff": 1,
+            "q": {
+              "en": "Limited government as a core value means:",
+              "es": "El gobierno limitado como valor central significa:"
+            },
+            "c": {
+              "en": [
+                "Government power should be restricted to protect individual freedom",
+                "Government should control the economy",
+                "States have no power",
+                "The president has unlimited emergency power"
+              ],
+              "es": [
+                "El poder del gobierno debe limitarse para proteger la libertad",
+                "El gobierno debe controlar la economía",
+                "Los estados no tienen poder",
+                "El presidente tiene poder ilimitado en emergencias"
+              ]
+            },
+            "a": 0,
+            "why": {
+              "en": "The Constitution and Bill of Rights put limits on government.",
+              "es": "La Constitución y la Carta de Derechos limitan al gobierno."
+            }
+          },
+          {
+            "id": "apg-u4-x04",
+            "topic": "ideology",
+            "type": "mcq",
+            "diff": 1,
+            "q": {
+              "en": "Liberals generally favor:",
+              "es": "Los liberales generalmente favorecen:"
+            },
+            "c": {
+              "en": [
+                "Fewer regulations on business",
+                "Lower taxes on high incomes",
+                "Less spending on social programs",
+                "A bigger government role in reducing economic inequality"
+              ],
+              "es": [
+                "Menos regulaciones a las empresas",
+                "Menos impuestos a los ingresos altos",
+                "Menos gasto en programas sociales",
+                "Un mayor papel del gobierno para reducir la desigualdad"
+              ]
+            },
+            "a": 3,
+            "why": {
+              "en": "Conservatives generally favor the other three.",
+              "es": "Los conservadores generalmente favorecen las otras tres."
+            }
+          },
+          {
+            "id": "apg-u4-x05",
+            "topic": "econpol",
+            "type": "mcq",
+            "diff": 2,
+            "q": {
+              "en": "Monetarists believe economic policy should focus mainly on:",
+              "es": "Los monetaristas creen que la política económica debe enfocarse en:"
+            },
+            "c": {
+              "en": [
+                "Raising government spending",
+                "Cutting all taxes",
+                "Controlling the growth of the money supply",
+                "Balancing trade"
+              ],
+              "es": [
+                "Aumentar el gasto público",
+                "Recortar todos los impuestos",
+                "Controlar el crecimiento de la oferta de dinero",
+                "Equilibrar el comercio"
+              ]
+            },
+            "a": 2,
+            "why": {
+              "en": "Milton Friedman is the best-known monetarist.",
+              "es": "Milton Friedman es el monetarista más conocido."
+            }
+          },
+          {
+            "id": "apg-u4-x06",
+            "topic": "values",
+            "type": "mcq",
+            "diff": 1,
+            "q": {
+              "en": "Free enterprise as a core value means:",
+              "es": "La libre empresa como valor central significa:"
+            },
+            "c": {
+              "en": [
+                "Government owns major industries",
+                "Private businesses operate with limited government interference",
+                "Government sets prices",
+                "Trade with other countries is banned"
+              ],
+              "es": [
+                "El gobierno es dueño de las grandes industrias",
+                "Las empresas privadas operan con poca interferencia del gobierno",
+                "El gobierno fija los precios",
+                "Se prohíbe el comercio exterior"
+              ]
+            },
+            "a": 1,
+            "why": {
+              "en": "It reflects American support for capitalism.",
+              "es": "Refleja el apoyo estadounidense al capitalismo."
+            }
+          },
+          {
+            "id": "apg-u4-x07",
+            "topic": "polling",
+            "type": "mcq",
+            "diff": 2,
+            "q": {
+              "en": "The bandwagon effect happens when:",
+              "es": "El efecto 'carro ganador' ocurre cuando:"
+            },
+            "c": {
+              "en": [
+                "People back a candidate because polls show them winning",
+                "Pollsters ask leading questions",
+                "Turnout is low",
+                "A candidate drops out"
+              ],
+              "es": [
+                "La gente apoya a un candidato porque las encuestas lo muestran ganando",
+                "Los encuestadores hacen preguntas tendenciosas",
+                "Hay poca participación",
+                "Un candidato se retira"
+              ]
+            },
+            "a": 0,
+            "why": {
+              "en": "Polls can influence the opinions they measure.",
+              "es": "Las encuestas pueden influir en las opiniones que miden."
+            }
+          },
+          {
+            "id": "apg-u4-x08",
+            "topic": "ideology",
+            "type": "mcq",
+            "diff": 1,
+            "q": {
+              "en": "Conservatives are more likely than liberals to support:",
+              "es": "Los conservadores, más que los liberales, tienden a apoyar:"
+            },
+            "c": {
+              "en": [
+                "Expanding social welfare programs",
+                "Stricter environmental rules",
+                "A higher government-set minimum wage",
+                "Lower taxes and fewer business regulations"
+              ],
+              "es": [
+                "Ampliar programas sociales",
+                "Reglas ambientales más estrictas",
+                "Un salario mínimo más alto fijado por el gobierno",
+                "Menos impuestos y menos regulaciones a las empresas"
+              ]
+            },
+            "a": 3,
+            "why": {
+              "en": "Conservatives tend to favor a smaller role for government in the economy.",
+              "es": "Los conservadores tienden a preferir un papel menor del gobierno en la economía."
             }
           }
         ],
@@ -13284,6 +17166,238 @@ const PACKS = [
               "en": "Divided government can produce gridlock but also forces compromise.",
               "es": "El gobierno dividido puede causar parálisis, pero también obliga a pactar."
             }
+          },
+          {
+            "id": "apg-u5-x01",
+            "topic": "voting",
+            "type": "mcq",
+            "diff": 2,
+            "q": {
+              "en": "Rational-choice voting means a voter:",
+              "es": "El voto de elección racional significa que el votante:"
+            },
+            "c": {
+              "en": [
+                "Votes like their parents",
+                "Votes only by party",
+                "Picks the candidate whose policies best serve their own interests",
+                "Votes for whoever leads in polls"
+              ],
+              "es": [
+                "Vota como sus padres",
+                "Vota solo por partido",
+                "Elige al candidato cuyas políticas mejor sirven a sus intereses",
+                "Vota por quien va ganando en las encuestas"
+              ]
+            },
+            "a": 2,
+            "why": {
+              "en": "Other models: retrospective, prospective and party-line voting.",
+              "es": "Otros modelos: voto retrospectivo, prospectivo y por partido."
+            }
+          },
+          {
+            "id": "apg-u5-x02",
+            "topic": "parties",
+            "type": "mcq",
+            "diff": 2,
+            "q": {
+              "en": "A party realignment is:",
+              "es": "Un realineamiento partidista es:"
+            },
+            "c": {
+              "en": [
+                "A change in a party's mascot",
+                "A lasting shift in which groups support each party",
+                "A single election upset",
+                "A new party every election"
+              ],
+              "es": [
+                "Un cambio de la mascota del partido",
+                "Un cambio duradero en qué grupos apoyan a cada partido",
+                "Una sorpresa en una sola elección",
+                "Un partido nuevo cada elección"
+              ]
+            },
+            "a": 1,
+            "why": {
+              "en": "The New Deal coalition of 1932 is a classic example.",
+              "es": "La coalición del New Deal de 1932 es un ejemplo clásico."
+            }
+          },
+          {
+            "id": "apg-u5-x03",
+            "topic": "groups",
+            "type": "mcq",
+            "diff": 1,
+            "q": {
+              "en": "Lobbying is:",
+              "es": "El cabildeo es:"
+            },
+            "c": {
+              "en": [
+                "Contacting officials to influence policy",
+                "Giving money directly to voters",
+                "Running for office",
+                "Organizing a political party"
+              ],
+              "es": [
+                "Contactar a funcionarios para influir en las políticas",
+                "Dar dinero a los votantes",
+                "Postularse a un cargo",
+                "Organizar un partido"
+              ]
+            },
+            "a": 0,
+            "why": {
+              "en": "Lobbyists share information and make arguments to lawmakers.",
+              "es": "Los cabilderos comparten información y argumentos con los legisladores."
+            }
+          },
+          {
+            "id": "apg-u5-x04",
+            "topic": "elections",
+            "type": "mcq",
+            "diff": 2,
+            "q": {
+              "en": "Front-loading in the primary calendar means:",
+              "es": "El 'front-loading' en el calendario de primarias significa:"
+            },
+            "c": {
+              "en": [
+                "Candidates spend all their money early",
+                "The general election comes first",
+                "Parties skip primaries",
+                "States move their primaries earlier to gain influence"
+              ],
+              "es": [
+                "Los candidatos gastan todo al principio",
+                "La elección general va primero",
+                "Los partidos se saltan las primarias",
+                "Los estados adelantan sus primarias para ganar influencia"
+              ]
+            },
+            "a": 3,
+            "why": {
+              "en": "Early contests like Iowa and New Hampshire get outsized attention.",
+              "es": "Las contiendas tempranas como Iowa y New Hampshire reciben mucha atención."
+            }
+          },
+          {
+            "id": "apg-u5-x05",
+            "topic": "media",
+            "type": "mcq",
+            "diff": 1,
+            "q": {
+              "en": "Which are linkage institutions connecting citizens to government?",
+              "es": "¿Cuáles son instituciones de enlace entre ciudadanos y gobierno?"
+            },
+            "c": {
+              "en": [
+                "The Supreme Court",
+                "Federal agencies",
+                "Parties, interest groups, elections and the media",
+                "The Cabinet"
+              ],
+              "es": [
+                "La Corte Suprema",
+                "Las agencias federales",
+                "Partidos, grupos de interés, elecciones y medios",
+                "El gabinete"
+              ]
+            },
+            "a": 2,
+            "why": {
+              "en": "They carry citizens' views to policymakers.",
+              "es": "Llevan las opiniones de los ciudadanos a los gobernantes."
+            }
+          },
+          {
+            "id": "apg-u5-x06",
+            "topic": "groups",
+            "type": "mcq",
+            "diff": 1,
+            "q": {
+              "en": "Single-issue groups focus on:",
+              "es": "Los grupos de un solo tema se enfocan en:"
+            },
+            "c": {
+              "en": [
+                "Every political issue",
+                "One policy area, like gun rights or the environment",
+                "Running candidates",
+                "Managing elections"
+              ],
+              "es": [
+                "Todos los temas políticos",
+                "Un área de política, como armas o medio ambiente",
+                "Postular candidatos",
+                "Administrar elecciones"
+              ]
+            },
+            "a": 1,
+            "why": {
+              "en": "Their members are often highly motivated voters.",
+              "es": "Sus miembros suelen ser votantes muy motivados."
+            }
+          },
+          {
+            "id": "apg-u5-x07",
+            "topic": "voting",
+            "type": "mcq",
+            "diff": 1,
+            "q": {
+              "en": "Which is most strongly linked to higher voter turnout?",
+              "es": "¿Qué está más relacionado con mayor participación electoral?"
+            },
+            "c": {
+              "en": [
+                "More years of education",
+                "Being under 25",
+                "Living in a non-competitive state",
+                "Having just moved"
+              ],
+              "es": [
+                "Más años de educación",
+                "Tener menos de 25 años",
+                "Vivir en un estado poco competitivo",
+                "Haberse mudado hace poco"
+              ]
+            },
+            "a": 0,
+            "why": {
+              "en": "Education, age and income all predict who votes.",
+              "es": "La educación, la edad y el ingreso predicen quién vota."
+            }
+          },
+          {
+            "id": "apg-u5-x08",
+            "topic": "elections",
+            "type": "mcq",
+            "diff": 2,
+            "q": {
+              "en": "In campaign finance, 'hard money' is:",
+              "es": "En el financiamiento de campañas, el 'hard money' es:"
+            },
+            "c": {
+              "en": [
+                "Unlimited donations to super PACs",
+                "Party spending on voter registration",
+                "Public funding only",
+                "Money given directly to candidates, limited and regulated by law"
+              ],
+              "es": [
+                "Donaciones ilimitadas a super PAC",
+                "Gasto de partidos en registro de votantes",
+                "Solo financiamiento público",
+                "Dinero dado directamente a candidatos, limitado y regulado por ley"
+              ]
+            },
+            "a": 3,
+            "why": {
+              "en": "Soft money and super PAC spending are less restricted.",
+              "es": "El 'soft money' y el gasto de super PAC tienen menos restricciones."
+            }
           }
         ],
         "topics": [
@@ -14069,6 +18183,354 @@ const PACKS = [
               "en": "Human capital is the knowledge, skills, and experience that make workers more productive.",
               "es": "El capital humano es el conocimiento, habilidades y experiencia que hacen a los trabajadores más productivos."
             }
+          },
+          {
+            "id": "eh-u1-x01",
+            "topic": "markets",
+            "type": "mcq",
+            "diff": 1,
+            "q": {
+              "en": "The law of demand says that when price rises:",
+              "es": "La ley de la demanda dice que cuando sube el precio:"
+            },
+            "c": {
+              "en": [
+                "Quantity demanded rises",
+                "Quantity demanded falls",
+                "Demand increases",
+                "Supply falls"
+              ],
+              "es": [
+                "Sube la cantidad demandada",
+                "Baja la cantidad demandada",
+                "Aumenta la demanda",
+                "Baja la oferta"
+              ]
+            },
+            "a": 1,
+            "why": {
+              "en": "Higher prices lead buyers to purchase less.",
+              "es": "Precios más altos hacen que los compradores compren menos."
+            }
+          },
+          {
+            "id": "eh-u1-x02",
+            "topic": "markets",
+            "type": "mcq",
+            "diff": 1,
+            "q": {
+              "en": "The law of supply says that when price rises, producers:",
+              "es": "La ley de la oferta dice que cuando sube el precio, los productores:"
+            },
+            "c": {
+              "en": [
+                "Offer more of the good",
+                "Offer less of the good",
+                "Stop producing",
+                "Lower their costs"
+              ],
+              "es": [
+                "Ofrecen más del bien",
+                "Ofrecen menos del bien",
+                "Dejan de producir",
+                "Bajan sus costos"
+              ]
+            },
+            "a": 0,
+            "why": {
+              "en": "Higher prices make producing more profitable.",
+              "es": "Precios más altos hacen más rentable producir."
+            }
+          },
+          {
+            "id": "eh-u1-x03",
+            "topic": "markets",
+            "type": "mcq",
+            "diff": 1,
+            "q": {
+              "en": "The equilibrium price is where:",
+              "es": "El precio de equilibrio es donde:"
+            },
+            "c": {
+              "en": [
+                "Supply is greatest",
+                "Demand is greatest",
+                "The government sets the price",
+                "Quantity supplied equals quantity demanded"
+              ],
+              "es": [
+                "La oferta es mayor",
+                "La demanda es mayor",
+                "El gobierno fija el precio",
+                "La cantidad ofrecida es igual a la cantidad demandada"
+              ]
+            },
+            "a": 3,
+            "why": {
+              "en": "At equilibrium there is no shortage or surplus.",
+              "es": "En equilibrio no hay escasez ni excedente."
+            }
+          },
+          {
+            "id": "eh-u1-x04",
+            "topic": "markets",
+            "type": "mcq",
+            "diff": 2,
+            "q": {
+              "en": "A surplus happens when:",
+              "es": "Hay un excedente cuando:"
+            },
+            "c": {
+              "en": [
+                "Price is below equilibrium",
+                "Demand rises",
+                "Price is above equilibrium, so quantity supplied exceeds quantity demanded",
+                "The market clears"
+              ],
+              "es": [
+                "El precio está por debajo del equilibrio",
+                "Sube la demanda",
+                "El precio está por encima del equilibrio y la cantidad ofrecida supera a la demandada",
+                "El mercado se vacía"
+              ]
+            },
+            "a": 2,
+            "why": {
+              "en": "Too high a price leaves unsold goods, which pushes the price down.",
+              "es": "Un precio muy alto deja bienes sin vender, lo que baja el precio."
+            }
+          },
+          {
+            "id": "eh-u1-x05",
+            "topic": "markets",
+            "type": "mcq",
+            "diff": 2,
+            "q": {
+              "en": "Which shifts the demand curve for umbrellas to the right?",
+              "es": "¿Qué desplaza la curva de demanda de paraguas a la derecha?"
+            },
+            "c": {
+              "en": [
+                "A fall in the price of umbrellas",
+                "A forecast for a rainy month",
+                "A new tax on umbrella makers",
+                "Better umbrella-making machines"
+              ],
+              "es": [
+                "Una baja en el precio de los paraguas",
+                "Un pronóstico de un mes lluvioso",
+                "Un nuevo impuesto a los fabricantes",
+                "Mejores máquinas para hacer paraguas"
+              ]
+            },
+            "a": 1,
+            "why": {
+              "en": "Expectations and tastes shift demand; a price change only moves along the curve, and the others affect supply.",
+              "es": "Las expectativas y gustos desplazan la demanda; un cambio de precio solo mueve a lo largo de la curva, y lo demás afecta la oferta."
+            }
+          },
+          {
+            "id": "eh-u1-x06",
+            "topic": "markets",
+            "type": "mcq",
+            "diff": 1,
+            "q": {
+              "en": "A substitute is a good that:",
+              "es": "Un sustituto es un bien que:"
+            },
+            "c": {
+              "en": [
+                "Can be used in place of another, like tea for coffee",
+                "Is used together with another, like chips and salsa",
+                "Has no close replacement",
+                "Is always cheaper"
+              ],
+              "es": [
+                "Puede usarse en lugar de otro, como té por café",
+                "Se usa junto con otro, como papitas y salsa",
+                "No tiene reemplazo cercano",
+                "Siempre es más barato"
+              ]
+            },
+            "a": 0,
+            "why": {
+              "en": "If coffee gets pricier, demand for tea rises.",
+              "es": "Si el café sube, aumenta la demanda de té."
+            }
+          },
+          {
+            "id": "eh-u1-x07",
+            "topic": "markets",
+            "type": "mcq",
+            "diff": 2,
+            "q": {
+              "en": "The price of peanut butter rises. Demand for jelly (a complement) will likely:",
+              "es": "Sube el precio de la crema de cacahuate. La demanda de mermelada (complemento) probablemente:"
+            },
+            "c": {
+              "en": [
+                "Increase",
+                "Stay the same",
+                "Double",
+                "Decrease"
+              ],
+              "es": [
+                "Suba",
+                "No cambie",
+                "Se duplique",
+                "Baje"
+              ]
+            },
+            "a": 3,
+            "why": {
+              "en": "Complements are used together, so less peanut butter means less jelly.",
+              "es": "Los complementos se usan juntos: menos crema de cacahuate, menos mermelada."
+            }
+          },
+          {
+            "id": "eh-u1-x08",
+            "topic": "roles",
+            "type": "mcq",
+            "diff": 1,
+            "q": {
+              "en": "Profit is:",
+              "es": "La ganancia es:"
+            },
+            "c": {
+              "en": [
+                "Total revenue",
+                "Price times cost",
+                "Total revenue minus total cost",
+                "Money borrowed to start a business"
+              ],
+              "es": [
+                "El ingreso total",
+                "Precio por costo",
+                "Ingreso total menos costo total",
+                "Dinero prestado para iniciar un negocio"
+              ]
+            },
+            "a": 2,
+            "why": {
+              "en": "Profit is what's left after paying all costs.",
+              "es": "La ganancia es lo que queda después de pagar todos los costos."
+            }
+          },
+          {
+            "id": "eh-u1-x09",
+            "topic": "systems",
+            "type": "mcq",
+            "diff": 1,
+            "q": {
+              "en": "A traditional economy decides what to produce mainly by:",
+              "es": "Una economía tradicional decide qué producir principalmente por:"
+            },
+            "c": {
+              "en": [
+                "Government planning",
+                "Customs passed down over generations",
+                "Market prices",
+                "Foreign trade"
+              ],
+              "es": [
+                "La planificación del gobierno",
+                "Costumbres heredadas por generaciones",
+                "Los precios del mercado",
+                "El comercio exterior"
+              ]
+            },
+            "a": 1,
+            "why": {
+              "en": "Traditional economies follow habits and customs.",
+              "es": "Las economías tradicionales siguen hábitos y costumbres."
+            }
+          },
+          {
+            "id": "eh-u1-x10",
+            "topic": "roles",
+            "type": "mcq",
+            "diff": 2,
+            "q": {
+              "en": "A monopoly is a market with:",
+              "es": "Un monopolio es un mercado con:"
+            },
+            "c": {
+              "en": [
+                "One seller and no close substitutes",
+                "Many sellers of identical products",
+                "A few large sellers",
+                "Many sellers of slightly different products"
+              ],
+              "es": [
+                "Un solo vendedor y sin sustitutos cercanos",
+                "Muchos vendedores de productos idénticos",
+                "Pocos vendedores grandes",
+                "Muchos vendedores de productos un poco distintos"
+              ]
+            },
+            "a": 0,
+            "why": {
+              "en": "With no competitors, a monopoly can set higher prices.",
+              "es": "Sin competidores, un monopolio puede fijar precios más altos."
+            }
+          },
+          {
+            "id": "eh-u1-x11",
+            "topic": "markets",
+            "type": "mcq",
+            "diff": 2,
+            "q": {
+              "en": "Demand is elastic when consumers:",
+              "es": "La demanda es elástica cuando los consumidores:"
+            },
+            "c": {
+              "en": [
+                "Buy the same amount at any price",
+                "Only buy necessities",
+                "Never switch brands",
+                "Change how much they buy a lot when price changes"
+              ],
+              "es": [
+                "Compran lo mismo a cualquier precio",
+                "Solo compran lo necesario",
+                "Nunca cambian de marca",
+                "Cambian mucho cuánto compran cuando cambia el precio"
+              ]
+            },
+            "a": 3,
+            "why": {
+              "en": "Goods with many substitutes or that are luxuries tend to be elastic.",
+              "es": "Los bienes con muchos sustitutos o de lujo suelen ser elásticos."
+            }
+          },
+          {
+            "id": "eh-u1-x12",
+            "topic": "systems",
+            "type": "mcq",
+            "diff": 2,
+            "q": {
+              "en": "Adam Smith's 'invisible hand' refers to:",
+              "es": "La 'mano invisible' de Adam Smith se refiere a:"
+            },
+            "c": {
+              "en": [
+                "Government control of prices",
+                "Labor unions",
+                "Self-interest in free markets guiding resources to their best uses",
+                "The Federal Reserve"
+              ],
+              "es": [
+                "El control de precios del gobierno",
+                "Los sindicatos",
+                "El interés propio en mercados libres que guía los recursos a sus mejores usos",
+                "La Reserva Federal"
+              ]
+            },
+            "a": 2,
+            "why": {
+              "en": "Buyers and sellers pursuing their own interest end up serving society through competition.",
+              "es": "Compradores y vendedores que buscan su propio interés terminan sirviendo a la sociedad por la competencia."
+            }
           }
         ],
         "topics": [
@@ -14689,6 +19151,354 @@ const PACKS = [
               "en": "Programs like unemployment insurance and progressive taxes automatically pump more money into the economy during downturns.",
               "es": "Programas como el seguro de desempleo e impuestos progresivos automáticamente inyectan más dinero durante las recesiones."
             }
+          },
+          {
+            "id": "eh-u2-x01",
+            "topic": "measure",
+            "type": "mcq",
+            "diff": 1,
+            "q": {
+              "en": "Inflation is:",
+              "es": "La inflación es:"
+            },
+            "c": {
+              "en": [
+                "A rise in one product's price",
+                "A general rise in the price level",
+                "An increase in GDP",
+                "A fall in unemployment"
+              ],
+              "es": [
+                "El aumento del precio de un producto",
+                "Un aumento general del nivel de precios",
+                "Un aumento del PIB",
+                "Una baja del desempleo"
+              ]
+            },
+            "a": 1,
+            "why": {
+              "en": "Inflation means most prices are rising, so each dollar buys less.",
+              "es": "Inflación significa que la mayoría de los precios suben y cada dólar compra menos."
+            }
+          },
+          {
+            "id": "eh-u2-x02",
+            "topic": "measure",
+            "type": "mcq",
+            "diff": 1,
+            "q": {
+              "en": "The Consumer Price Index (CPI) tracks:",
+              "es": "El Índice de Precios al Consumidor (IPC) mide:"
+            },
+            "c": {
+              "en": [
+                "Prices of a typical basket of consumer goods and services",
+                "Total output",
+                "The unemployment rate",
+                "Interest rates"
+              ],
+              "es": [
+                "Los precios de una canasta típica de bienes y servicios",
+                "La producción total",
+                "La tasa de desempleo",
+                "Las tasas de interés"
+              ]
+            },
+            "a": 0,
+            "why": {
+              "en": "The CPI is the most common measure of inflation.",
+              "es": "El IPC es la medida más común de la inflación."
+            }
+          },
+          {
+            "id": "eh-u2-x03",
+            "topic": "measure",
+            "type": "mcq",
+            "diff": 1,
+            "q": {
+              "en": "GDP per capita is:",
+              "es": "El PIB per cápita es:"
+            },
+            "c": {
+              "en": [
+                "GDP times the population",
+                "Total exports",
+                "The growth rate of GDP",
+                "GDP divided by the population"
+              ],
+              "es": [
+                "El PIB por la población",
+                "Las exportaciones totales",
+                "La tasa de crecimiento del PIB",
+                "El PIB dividido entre la población"
+              ]
+            },
+            "a": 3,
+            "why": {
+              "en": "It's used to compare living standards between countries.",
+              "es": "Se usa para comparar niveles de vida entre países."
+            }
+          },
+          {
+            "id": "eh-u2-x04",
+            "topic": "cycles",
+            "type": "mcq",
+            "diff": 1,
+            "q": {
+              "en": "A depression is:",
+              "es": "Una depresión es:"
+            },
+            "c": {
+              "en": [
+                "A short pause in growth",
+                "The peak of the business cycle",
+                "A very long and severe recession",
+                "A period of high inflation"
+              ],
+              "es": [
+                "Una pausa corta del crecimiento",
+                "El pico del ciclo económico",
+                "Una recesión muy larga y severa",
+                "Un período de alta inflación"
+              ]
+            },
+            "a": 2,
+            "why": {
+              "en": "The Great Depression of the 1930s is the classic example.",
+              "es": "La Gran Depresión de los años 30 es el ejemplo clásico."
+            }
+          },
+          {
+            "id": "eh-u2-x05",
+            "topic": "cycles",
+            "type": "mcq",
+            "diff": 2,
+            "q": {
+              "en": "Structural unemployment happens when:",
+              "es": "El desempleo estructural ocurre cuando:"
+            },
+            "c": {
+              "en": [
+                "Workers are between jobs",
+                "Workers' skills no longer match the jobs available",
+                "The economy is in a recession",
+                "Jobs are seasonal"
+              ],
+              "es": [
+                "Los trabajadores están entre empleos",
+                "Las habilidades de los trabajadores ya no coinciden con los empleos disponibles",
+                "La economía está en recesión",
+                "Los empleos son de temporada"
+              ]
+            },
+            "a": 1,
+            "why": {
+              "en": "New technology and changing industries make some skills obsolete.",
+              "es": "La nueva tecnología y el cambio en las industrias hacen obsoletas algunas habilidades."
+            }
+          },
+          {
+            "id": "eh-u2-x06",
+            "topic": "cycles",
+            "type": "mcq",
+            "diff": 1,
+            "q": {
+              "en": "Seasonal unemployment affects workers like:",
+              "es": "El desempleo estacional afecta a trabajadores como:"
+            },
+            "c": {
+              "en": [
+                "Lifeguards in winter and farm workers after harvest",
+                "Software engineers",
+                "Teachers in October",
+                "Doctors"
+              ],
+              "es": [
+                "Salvavidas en invierno y jornaleros después de la cosecha",
+                "Ingenieros de software",
+                "Maestros en octubre",
+                "Médicos"
+              ]
+            },
+            "a": 0,
+            "why": {
+              "en": "Some jobs exist only part of the year.",
+              "es": "Algunos empleos existen solo parte del año."
+            }
+          },
+          {
+            "id": "eh-u2-x07",
+            "topic": "policy",
+            "type": "mcq",
+            "diff": 2,
+            "q": {
+              "en": "The Federal Reserve's tools include:",
+              "es": "Las herramientas de la Reserva Federal incluyen:"
+            },
+            "c": {
+              "en": [
+                "Tax cuts",
+                "Government spending",
+                "Tariffs",
+                "Open market operations, the discount rate and interest on reserves"
+              ],
+              "es": [
+                "Recortes de impuestos",
+                "Gasto público",
+                "Aranceles",
+                "Operaciones de mercado abierto, la tasa de descuento y el interés sobre reservas"
+              ]
+            },
+            "a": 3,
+            "why": {
+              "en": "Taxes and spending are fiscal policy, set by Congress and the president.",
+              "es": "Los impuestos y el gasto son política fiscal, del Congreso y el presidente."
+            }
+          },
+          {
+            "id": "eh-u2-x08",
+            "topic": "policy",
+            "type": "mcq",
+            "diff": 1,
+            "q": {
+              "en": "A budget deficit happens when the government:",
+              "es": "Hay déficit presupuestario cuando el gobierno:"
+            },
+            "c": {
+              "en": [
+                "Collects more than it spends",
+                "Borrows only from other countries",
+                "Spends more than it collects in a year",
+                "Prints money"
+              ],
+              "es": [
+                "Recauda más de lo que gasta",
+                "Pide prestado solo a otros países",
+                "Gasta más de lo que recauda en un año",
+                "Imprime dinero"
+              ]
+            },
+            "a": 2,
+            "why": {
+              "en": "Deficits are covered by borrowing, which adds to the national debt.",
+              "es": "Los déficits se cubren pidiendo prestado, lo que aumenta la deuda nacional."
+            }
+          },
+          {
+            "id": "eh-u2-x09",
+            "topic": "policy",
+            "type": "mcq",
+            "diff": 2,
+            "q": {
+              "en": "A regressive tax takes:",
+              "es": "Un impuesto regresivo toma:"
+            },
+            "c": {
+              "en": [
+                "A larger share from high-income people",
+                "A larger share of income from low-income people",
+                "The same share from everyone",
+                "Nothing from low-income people"
+              ],
+              "es": [
+                "Una parte mayor de las personas de altos ingresos",
+                "Una parte mayor del ingreso de las personas de bajos ingresos",
+                "La misma parte de todos",
+                "Nada de las personas de bajos ingresos"
+              ]
+            },
+            "a": 1,
+            "why": {
+              "en": "Sales taxes are regressive because lower-income families spend more of their income.",
+              "es": "Los impuestos a las ventas son regresivos porque las familias de menos ingresos gastan más de su ingreso."
+            }
+          },
+          {
+            "id": "eh-u2-x10",
+            "topic": "policy",
+            "type": "mcq",
+            "diff": 2,
+            "q": {
+              "en": "A sales tax is usually considered:",
+              "es": "Un impuesto a las ventas suele considerarse:"
+            },
+            "c": {
+              "en": [
+                "Regressive",
+                "Progressive",
+                "Proportional at every income",
+                "A tariff"
+              ],
+              "es": [
+                "Regresivo",
+                "Progresivo",
+                "Proporcional en todos los ingresos",
+                "Un arancel"
+              ]
+            },
+            "a": 0,
+            "why": {
+              "en": "Everyone pays the same rate, but it's a bigger share of a smaller income.",
+              "es": "Todos pagan la misma tasa, pero es una parte mayor de un ingreso menor."
+            }
+          },
+          {
+            "id": "eh-u2-x11",
+            "topic": "measure",
+            "type": "mcq",
+            "diff": 2,
+            "q": {
+              "en": "Which counts as investment ('I') in GDP?",
+              "es": "¿Qué cuenta como inversión ('I') en el PIB?"
+            },
+            "c": {
+              "en": [
+                "A family buys groceries",
+                "The government builds a road",
+                "A person buys a share of stock",
+                "A business buys new machines"
+              ],
+              "es": [
+                "Una familia compra comida",
+                "El gobierno construye una carretera",
+                "Una persona compra una acción",
+                "Una empresa compra máquinas nuevas"
+              ]
+            },
+            "a": 3,
+            "why": {
+              "en": "In GDP, investment means new capital goods, not stocks (a financial asset).",
+              "es": "En el PIB, inversión son bienes de capital nuevos, no acciones (un activo financiero)."
+            }
+          },
+          {
+            "id": "eh-u2-x12",
+            "topic": "policy",
+            "type": "mcq",
+            "diff": 1,
+            "q": {
+              "en": "Expansionary fiscal policy includes:",
+              "es": "La política fiscal expansiva incluye:"
+            },
+            "c": {
+              "en": [
+                "Raising taxes",
+                "Reducing the money supply",
+                "Cutting taxes and increasing government spending",
+                "Raising interest rates"
+              ],
+              "es": [
+                "Subir impuestos",
+                "Reducir la oferta de dinero",
+                "Bajar impuestos y aumentar el gasto público",
+                "Subir las tasas de interés"
+              ]
+            },
+            "a": 2,
+            "why": {
+              "en": "It boosts spending to fight a recession.",
+              "es": "Aumenta el gasto para combatir una recesión."
+            }
           }
         ],
         "topics": [
@@ -15217,6 +20027,354 @@ const PACKS = [
               "en": "A weaker dollar means foreign currencies buy more in the U.S., attracting more international visitors to Florida.",
               "es": "Un dólar más débil significa que las monedas extranjeras compran más en EE.UU., atrayendo más visitantes internacionales a Florida."
             }
+          },
+          {
+            "id": "eh-u3-x01",
+            "topic": "tradeb",
+            "type": "mcq",
+            "diff": 1,
+            "q": {
+              "en": "Absolute advantage means a country:",
+              "es": "La ventaja absoluta significa que un país:"
+            },
+            "c": {
+              "en": [
+                "Has a lower opportunity cost",
+                "Can produce more of a good with the same resources",
+                "Imports more than it exports",
+                "Has a trade surplus"
+              ],
+              "es": [
+                "Tiene menor costo de oportunidad",
+                "Puede producir más de un bien con los mismos recursos",
+                "Importa más de lo que exporta",
+                "Tiene superávit comercial"
+              ]
+            },
+            "a": 1,
+            "why": {
+              "en": "Absolute advantage is about output; comparative advantage is about opportunity cost.",
+              "es": "La ventaja absoluta trata de la producción; la comparativa, del costo de oportunidad."
+            }
+          },
+          {
+            "id": "eh-u3-x02",
+            "topic": "tradeb",
+            "type": "mcq",
+            "diff": 2,
+            "q": {
+              "en": "Comparative advantage means a country:",
+              "es": "La ventaja comparativa significa que un país:"
+            },
+            "c": {
+              "en": [
+                "Can produce a good at a lower opportunity cost",
+                "Can produce more of everything",
+                "Has more natural resources",
+                "Exports the most goods"
+              ],
+              "es": [
+                "Puede producir un bien a menor costo de oportunidad",
+                "Puede producir más de todo",
+                "Tiene más recursos naturales",
+                "Exporta más bienes"
+              ]
+            },
+            "a": 0,
+            "why": {
+              "en": "Countries gain by specializing where their opportunity cost is lowest.",
+              "es": "Los países ganan al especializarse donde su costo de oportunidad es menor."
+            }
+          },
+          {
+            "id": "eh-u3-x03",
+            "topic": "tradeb",
+            "type": "mcq",
+            "diff": 1,
+            "q": {
+              "en": "Imports are:",
+              "es": "Las importaciones son:"
+            },
+            "c": {
+              "en": [
+                "Goods sold to other countries",
+                "Taxes on foreign goods",
+                "Limits on trade",
+                "Goods and services bought from other countries"
+              ],
+              "es": [
+                "Bienes vendidos a otros países",
+                "Impuestos a bienes extranjeros",
+                "Límites al comercio",
+                "Bienes y servicios comprados a otros países"
+              ]
+            },
+            "a": 3,
+            "why": {
+              "en": "Exports are sold abroad; imports are bought from abroad.",
+              "es": "Las exportaciones se venden afuera; las importaciones se compran afuera."
+            }
+          },
+          {
+            "id": "eh-u3-x04",
+            "topic": "barriers",
+            "type": "mcq",
+            "diff": 1,
+            "q": {
+              "en": "Free trade agreements like the USMCA aim to:",
+              "es": "Los tratados de libre comercio como el T-MEC buscan:"
+            },
+            "c": {
+              "en": [
+                "Raise tariffs",
+                "Ban imports",
+                "Reduce or remove trade barriers among members",
+                "Fix exchange rates"
+              ],
+              "es": [
+                "Subir aranceles",
+                "Prohibir importaciones",
+                "Reducir o eliminar barreras comerciales entre los miembros",
+                "Fijar los tipos de cambio"
+              ]
+            },
+            "a": 2,
+            "why": {
+              "en": "USMCA (United States–Mexico–Canada Agreement) replaced NAFTA in 2020.",
+              "es": "El T-MEC (Estados Unidos, México y Canadá) reemplazó al TLCAN en 2020."
+            }
+          },
+          {
+            "id": "eh-u3-x05",
+            "topic": "barriers",
+            "type": "mcq",
+            "diff": 2,
+            "q": {
+              "en": "The World Trade Organization (WTO):",
+              "es": "La Organización Mundial del Comercio (OMC):"
+            },
+            "c": {
+              "en": [
+                "Prints a world currency",
+                "Sets rules for international trade and settles disputes",
+                "Sets U.S. interest rates",
+                "Runs the United Nations"
+              ],
+              "es": [
+                "Imprime una moneda mundial",
+                "Fija reglas del comercio internacional y resuelve disputas",
+                "Fija las tasas de interés de EE. UU.",
+                "Dirige la ONU"
+              ]
+            },
+            "a": 1,
+            "why": {
+              "en": "The WTO helps countries negotiate and enforce trade rules.",
+              "es": "La OMC ayuda a negociar y hacer cumplir reglas de comercio."
+            }
+          },
+          {
+            "id": "eh-u3-x06",
+            "topic": "barriers",
+            "type": "mcq",
+            "diff": 2,
+            "q": {
+              "en": "A tariff on imported steel most likely:",
+              "es": "Un arancel al acero importado probablemente:"
+            },
+            "c": {
+              "en": [
+                "Raises steel prices for U.S. buyers and helps domestic steelmakers",
+                "Lowers steel prices",
+                "Hurts domestic steelmakers",
+                "Has no effect on prices"
+              ],
+              "es": [
+                "Sube el precio del acero para compradores de EE. UU. y ayuda a los productores nacionales",
+                "Baja el precio del acero",
+                "Perjudica a los productores nacionales",
+                "No afecta los precios"
+              ]
+            },
+            "a": 0,
+            "why": {
+              "en": "The tax makes imports pricier, so domestic producers can charge more.",
+              "es": "El impuesto encarece las importaciones y los productores nacionales pueden cobrar más."
+            }
+          },
+          {
+            "id": "eh-u3-x07",
+            "topic": "fx",
+            "type": "mcq",
+            "diff": 1,
+            "q": {
+              "en": "An exchange rate is:",
+              "es": "Un tipo de cambio es:"
+            },
+            "c": {
+              "en": [
+                "The interest rate on loans",
+                "The tax on imports",
+                "The inflation rate",
+                "The price of one currency in terms of another"
+              ],
+              "es": [
+                "La tasa de interés de los préstamos",
+                "El impuesto a las importaciones",
+                "La tasa de inflación",
+                "El precio de una moneda en términos de otra"
+              ]
+            },
+            "a": 3,
+            "why": {
+              "en": "For example, how many pesos one dollar buys.",
+              "es": "Por ejemplo, cuántos pesos compra un dólar."
+            }
+          },
+          {
+            "id": "eh-u3-x08",
+            "topic": "tradeb",
+            "type": "mcq",
+            "diff": 1,
+            "q": {
+              "en": "A trade deficit happens when a country:",
+              "es": "Hay déficit comercial cuando un país:"
+            },
+            "c": {
+              "en": [
+                "Exports more than it imports",
+                "Has no trade",
+                "Imports more than it exports",
+                "Has a budget deficit"
+              ],
+              "es": [
+                "Exporta más de lo que importa",
+                "No comercia",
+                "Importa más de lo que exporta",
+                "Tiene déficit presupuestario"
+              ]
+            },
+            "a": 2,
+            "why": {
+              "en": "A trade deficit is about trade, not the government budget.",
+              "es": "El déficit comercial es sobre comercio, no sobre el presupuesto del gobierno."
+            }
+          },
+          {
+            "id": "eh-u3-x09",
+            "topic": "barriers",
+            "type": "mcq",
+            "diff": 2,
+            "q": {
+              "en": "The infant-industry argument says:",
+              "es": "El argumento de la industria naciente dice que:"
+            },
+            "c": {
+              "en": [
+                "Child labor should be banned",
+                "New domestic industries need protection until they can compete",
+                "Exports should be subsidized forever",
+                "All tariffs should be removed"
+              ],
+              "es": [
+                "Se debe prohibir el trabajo infantil",
+                "Las industrias nacionales nuevas necesitan protección hasta que puedan competir",
+                "Las exportaciones deben subsidiarse siempre",
+                "Se deben quitar todos los aranceles"
+              ]
+            },
+            "a": 1,
+            "why": {
+              "en": "Critics say the protection often never ends.",
+              "es": "Los críticos dicen que la protección muchas veces nunca termina."
+            }
+          },
+          {
+            "id": "eh-u3-x10",
+            "topic": "fx",
+            "type": "mcq",
+            "diff": 2,
+            "q": {
+              "en": "When the dollar is strong, Americans traveling abroad find that:",
+              "es": "Cuando el dólar está fuerte, los estadounidenses que viajan encuentran que:"
+            },
+            "c": {
+              "en": [
+                "Foreign hotels and goods are cheaper",
+                "Foreign goods are more expensive",
+                "Nothing changes",
+                "They can't exchange money"
+              ],
+              "es": [
+                "Los hoteles y bienes extranjeros son más baratos",
+                "Los bienes extranjeros son más caros",
+                "No cambia nada",
+                "No pueden cambiar dinero"
+              ]
+            },
+            "a": 0,
+            "why": {
+              "en": "Each dollar buys more foreign currency.",
+              "es": "Cada dólar compra más moneda extranjera."
+            }
+          },
+          {
+            "id": "eh-u3-x11",
+            "topic": "tradeb",
+            "type": "mcq",
+            "diff": 1,
+            "q": {
+              "en": "Globalization means:",
+              "es": "La globalización significa:"
+            },
+            "c": {
+              "en": [
+                "Countries trading less",
+                "A single world government",
+                "Higher tariffs",
+                "Growing connections among economies through trade, investment and technology"
+              ],
+              "es": [
+                "Que los países comercian menos",
+                "Un solo gobierno mundial",
+                "Aranceles más altos",
+                "Más conexiones entre economías por comercio, inversión y tecnología"
+              ]
+            },
+            "a": 3,
+            "why": {
+              "en": "Florida's ports and tourism are part of a global economy.",
+              "es": "Los puertos y el turismo de Florida son parte de la economía global."
+            }
+          },
+          {
+            "id": "eh-u3-x12",
+            "topic": "barriers",
+            "type": "mcq",
+            "diff": 3,
+            "q": {
+              "en": "Which group usually benefits from a quota on imported sugar?",
+              "es": "¿Qué grupo suele beneficiarse de una cuota a la importación de azúcar?"
+            },
+            "c": {
+              "en": [
+                "Domestic candy makers",
+                "Consumers",
+                "Domestic sugar producers",
+                "Foreign sugar exporters"
+              ],
+              "es": [
+                "Los fabricantes nacionales de dulces",
+                "Los consumidores",
+                "Los productores nacionales de azúcar",
+                "Los exportadores extranjeros de azúcar"
+              ]
+            },
+            "a": 2,
+            "why": {
+              "en": "Less foreign supply raises the domestic price, which helps U.S. growers but costs buyers.",
+              "es": "Menos oferta extranjera sube el precio interno: ayuda a los productores pero cuesta a los compradores."
+            }
           }
         ],
         "topics": [
@@ -15735,6 +20893,354 @@ const PACKS = [
             "why": {
               "en": "CDs lock your money for a set period in exchange for higher rates. Checking is most liquid but earns the least.",
               "es": "Los CDs inmovilizan tu dinero por un período fijo a cambio de tasas más altas."
+            }
+          },
+          {
+            "id": "eh-u4-x01",
+            "topic": "income",
+            "type": "mcq",
+            "diff": 1,
+            "q": {
+              "en": "A budget is:",
+              "es": "Un presupuesto es:"
+            },
+            "c": {
+              "en": [
+                "A record of past debts",
+                "A plan for how to spend and save your income",
+                "A type of bank account",
+                "A loan from a bank"
+              ],
+              "es": [
+                "Un registro de deudas pasadas",
+                "Un plan para gastar y ahorrar tu ingreso",
+                "Un tipo de cuenta bancaria",
+                "Un préstamo bancario"
+              ]
+            },
+            "a": 1,
+            "why": {
+              "en": "A budget tells your money where to go before you spend it.",
+              "es": "Un presupuesto le dice a tu dinero adónde ir antes de gastarlo."
+            }
+          },
+          {
+            "id": "eh-u4-x02",
+            "topic": "income",
+            "type": "mcq",
+            "diff": 1,
+            "q": {
+              "en": "Which is withheld from most paychecks?",
+              "es": "¿Qué se descuenta de la mayoría de los cheques de pago?"
+            },
+            "c": {
+              "en": [
+                "FICA (Social Security and Medicare)",
+                "Sales tax",
+                "Property tax",
+                "Tariffs"
+              ],
+              "es": [
+                "FICA (Seguro Social y Medicare)",
+                "Impuesto a las ventas",
+                "Impuesto a la propiedad",
+                "Aranceles"
+              ]
+            },
+            "a": 0,
+            "why": {
+              "en": "FICA payroll taxes fund Social Security and Medicare.",
+              "es": "Los impuestos FICA financian el Seguro Social y Medicare."
+            }
+          },
+          {
+            "id": "eh-u4-x03",
+            "topic": "income",
+            "type": "mcq",
+            "diff": 2,
+            "q": {
+              "en": "A W-4 form tells your employer:",
+              "es": "El formulario W-4 le dice a tu empleador:"
+            },
+            "c": {
+              "en": [
+                "Your yearly salary",
+                "Your credit score",
+                "Your bank account number",
+                "How much federal income tax to withhold"
+              ],
+              "es": [
+                "Tu salario anual",
+                "Tu puntaje de crédito",
+                "Tu número de cuenta bancaria",
+                "Cuánto impuesto federal sobre la renta retener"
+              ]
+            },
+            "a": 3,
+            "why": {
+              "en": "You fill out a W-4 when you start a job.",
+              "es": "Llenas un W-4 cuando empiezas un trabajo."
+            }
+          },
+          {
+            "id": "eh-u4-x04",
+            "topic": "credit",
+            "type": "mcq",
+            "diff": 1,
+            "q": {
+              "en": "The APR on a credit card is:",
+              "es": "La APR de una tarjeta de crédito es:"
+            },
+            "c": {
+              "en": [
+                "The credit limit",
+                "The minimum payment",
+                "The yearly interest rate charged on unpaid balances",
+                "A rewards program"
+              ],
+              "es": [
+                "El límite de crédito",
+                "El pago mínimo",
+                "La tasa de interés anual que se cobra sobre saldos sin pagar",
+                "Un programa de recompensas"
+              ]
+            },
+            "a": 2,
+            "why": {
+              "en": "Paying the full balance each month avoids interest.",
+              "es": "Pagar el saldo completo cada mes evita los intereses."
+            }
+          },
+          {
+            "id": "eh-u4-x05",
+            "topic": "credit",
+            "type": "mcq",
+            "diff": 1,
+            "q": {
+              "en": "A debit card differs from a credit card because a debit card:",
+              "es": "Una tarjeta de débito se diferencia de una de crédito porque:"
+            },
+            "c": {
+              "en": [
+                "Borrows money from the bank",
+                "Takes money straight from your bank account",
+                "Always charges interest",
+                "Builds credit faster"
+              ],
+              "es": [
+                "Pide dinero prestado al banco",
+                "Toma el dinero directo de tu cuenta bancaria",
+                "Siempre cobra intereses",
+                "Crea historial de crédito más rápido"
+              ]
+            },
+            "a": 1,
+            "why": {
+              "en": "A credit card is a loan you must repay.",
+              "es": "Una tarjeta de crédito es un préstamo que debes pagar."
+            }
+          },
+          {
+            "id": "eh-u4-x06",
+            "topic": "credit",
+            "type": "mcq",
+            "diff": 1,
+            "q": {
+              "en": "FICO credit scores range from about:",
+              "es": "Los puntajes de crédito FICO van más o menos de:"
+            },
+            "c": {
+              "en": [
+                "300 to 850",
+                "0 to 100",
+                "100 to 1,000",
+                "500 to 600"
+              ],
+              "es": [
+                "300 a 850",
+                "0 a 100",
+                "100 a 1,000",
+                "500 a 600"
+              ]
+            },
+            "a": 0,
+            "why": {
+              "en": "Higher scores get better loan rates.",
+              "es": "Los puntajes más altos consiguen mejores tasas."
+            }
+          },
+          {
+            "id": "eh-u4-x07",
+            "topic": "saving",
+            "type": "mcq",
+            "diff": 1,
+            "q": {
+              "en": "An emergency fund should usually cover about:",
+              "es": "Un fondo de emergencia debería cubrir más o menos:"
+            },
+            "c": {
+              "en": [
+                "One week of expenses",
+                "10 years of expenses",
+                "Only your rent",
+                "3 to 6 months of expenses"
+              ],
+              "es": [
+                "Una semana de gastos",
+                "10 años de gastos",
+                "Solo tu renta",
+                "3 a 6 meses de gastos"
+              ]
+            },
+            "a": 3,
+            "why": {
+              "en": "It protects you from a job loss or surprise bill without going into debt.",
+              "es": "Te protege si pierdes el trabajo o tienes un gasto inesperado sin endeudarte."
+            }
+          },
+          {
+            "id": "eh-u4-x08",
+            "topic": "saving",
+            "type": "mcq",
+            "diff": 2,
+            "q": {
+              "en": "The Rule of 72 estimates:",
+              "es": "La Regla del 72 estima:"
+            },
+            "c": {
+              "en": [
+                "Your tax rate",
+                "Your credit score",
+                "How many years it takes money to double at a given interest rate",
+                "The inflation rate"
+              ],
+              "es": [
+                "Tu tasa de impuestos",
+                "Tu puntaje de crédito",
+                "Cuántos años tarda el dinero en duplicarse a cierta tasa de interés",
+                "La tasa de inflación"
+              ]
+            },
+            "a": 2,
+            "why": {
+              "en": "72 ÷ 6% ≈ 12 years to double.",
+              "es": "72 ÷ 6% ≈ 12 años para duplicarse."
+            }
+          },
+          {
+            "id": "eh-u4-x09",
+            "topic": "saving",
+            "type": "mcq",
+            "diff": 2,
+            "q": {
+              "en": "Diversification in investing means:",
+              "es": "Diversificar al invertir significa:"
+            },
+            "c": {
+              "en": [
+                "Putting all your money in one stock",
+                "Spreading money across different investments to lower risk",
+                "Keeping only cash",
+                "Borrowing to invest"
+              ],
+              "es": [
+                "Poner todo tu dinero en una acción",
+                "Repartir el dinero en distintas inversiones para bajar el riesgo",
+                "Tener solo efectivo",
+                "Pedir prestado para invertir"
+              ]
+            },
+            "a": 1,
+            "why": {
+              "en": "Don't put all your eggs in one basket.",
+              "es": "No pongas todos los huevos en una sola canasta."
+            }
+          },
+          {
+            "id": "eh-u4-x10",
+            "topic": "saving",
+            "type": "mcq",
+            "diff": 1,
+            "q": {
+              "en": "A share of stock represents:",
+              "es": "Una acción representa:"
+            },
+            "c": {
+              "en": [
+                "Part ownership of a company",
+                "A loan to the government",
+                "A savings account",
+                "An insurance policy"
+              ],
+              "es": [
+                "Ser dueño de una parte de una empresa",
+                "Un préstamo al gobierno",
+                "Una cuenta de ahorros",
+                "Una póliza de seguro"
+              ]
+            },
+            "a": 0,
+            "why": {
+              "en": "A bond is a loan; a stock is ownership.",
+              "es": "Un bono es un préstamo; una acción es propiedad."
+            }
+          },
+          {
+            "id": "eh-u4-x11",
+            "topic": "income",
+            "type": "mcq",
+            "diff": 1,
+            "q": {
+              "en": "Gross pay is $600 and $90 is withheld. Net pay is:",
+              "es": "El pago bruto es $600 y se retienen $90. El pago neto es:"
+            },
+            "c": {
+              "en": [
+                "$690",
+                "$600",
+                "$90",
+                "$510"
+              ],
+              "es": [
+                "$690",
+                "$600",
+                "$90",
+                "$510"
+              ]
+            },
+            "a": 3,
+            "why": {
+              "en": "Net pay = gross pay − deductions = $600 − $90.",
+              "es": "Pago neto = pago bruto − deducciones = $600 − $90."
+            }
+          },
+          {
+            "id": "eh-u4-x12",
+            "topic": "saving",
+            "type": "mcq",
+            "diff": 2,
+            "q": {
+              "en": "An insurance deductible is:",
+              "es": "El deducible de un seguro es:"
+            },
+            "c": {
+              "en": [
+                "The monthly cost of insurance",
+                "The most the insurer will pay",
+                "What you pay before insurance starts paying",
+                "A tax refund"
+              ],
+              "es": [
+                "El costo mensual del seguro",
+                "Lo máximo que paga la aseguradora",
+                "Lo que pagas antes de que el seguro empiece a pagar",
+                "Un reembolso de impuestos"
+              ]
+            },
+            "a": 2,
+            "why": {
+              "en": "The monthly cost is the premium.",
+              "es": "El costo mensual es la prima."
             }
           }
         ],

@@ -159,6 +159,79 @@ service cloud.firestore {
         allow update: if owns(cid) || (isSid(cid, resource.data.to) && onlyChanges(['settled']));
         allow delete: if owns(cid);
       }
+      // ---- careers, Downtown and town requests (town/careers.js) ----
+      // Job applications: one per student per job (id = <job>_<sid>); the teacher hires or denies
+      match /apps/{id} {
+        allow read: if member(cid) || owns(cid);
+        allow create, update: if owns(cid) || (isSid(cid, request.resource.data.sid) && live(cid)
+          && id == request.resource.data.job + '_' + request.resource.data.sid && request.resource.data.status == 'pending'
+          && request.resource.data.why is string && request.resource.data.why.size() <= 240
+          && request.resource.data.skills is string && request.resource.data.skills.size() <= 240
+          && request.resource.data.ref is string && request.resource.data.ref.size() <= 40);
+        allow delete: if owns(cid) || isSid(cid, resource.data.sid);
+      }
+      // Cases: service requests and town events; only someone hired for that job can work or close one
+      match /cases/{id} {
+        allow read: if member(cid) || owns(cid);
+        allow create: if owns(cid) || (isSid(cid, request.resource.data.by) && live(cid)
+          && request.resource.data.kind in ['sick','checkup','pet','interview','loan','fire','report','claim','tutor','package','order','photo','litter','park']);
+        allow update: if owns(cid) || (live(cid) && (
+            (isSid(cid, request.resource.data.get('worker', '')) && request.resource.data.worker in cls(cid).staff[resource.data.job]
+              && onlyChanges(['n','status','worker','workerName','doneAt','result']))
+            || (resource.data.kind in ['litter','park'] && isSid(cid, request.resource.data.by) && request.resource.data.by in cls(cid).staff[resource.data.job])));
+        allow delete: if owns(cid);
+      }
+      // Town project requests: anyone asks; the mayor (or teacher) approves; builders and donors add progress
+      match /requests/{id} {
+        allow read: if member(cid) || owns(cid);
+        allow create: if isSid(cid, request.resource.data.sid) && live(cid) && request.resource.data.status == 'review'
+          && request.resource.data.note is string && request.resource.data.note.size() <= 100;
+        allow update: if owns(cid) || (live(cid) && (
+            (cls(cid).mayor.sid == request.resource.data.get('by', '') && isSid(cid, request.resource.data.by) && onlyChanges(['status','by','decidedAt'])
+              && request.resource.data.status in ['approved','declined'])
+            || (resource.data.status == 'approved' && onlyChanges(['coins','donors','n','builders','status','doneAt'])
+              && (request.resource.data.status == 'approved' || (request.resource.data.status == 'done'
+                  && request.resource.data.n >= request.resource.data.need && request.resource.data.coins >= request.resource.data.cost)))));
+        allow delete: if owns(cid);
+      }
+      match /reqvotes/{id} {
+        allow read: if member(cid) || owns(cid);
+        allow create: if isSid(cid, request.resource.data.sid) && id == request.resource.data.rid + '_' + request.resource.data.sid;
+        allow delete: if owns(cid);
+      }
+      // Gazette stories: only a hired reporter writes; the teacher publishes
+      match /news/{id} {
+        allow read: if member(cid) || owns(cid);
+        allow create: if isSid(cid, request.resource.data.sid) && live(cid) && request.resource.data.sid in cls(cid).staff.reporter
+          && request.resource.data.status == 'review'
+          && request.resource.data.headline is string && request.resource.data.headline.size() <= 60
+          && request.resource.data.body is string && request.resource.data.body.size() <= 400;
+        allow update, delete: if owns(cid);
+      }
+      // Knocking: a visitor asks to come in; only the owner answers (id = <owner>_<visitor>)
+      match /knocks/{id} {
+        allow read: if member(cid) || owns(cid);
+        allow create, update: if (isSid(cid, request.resource.data.from) && live(cid)
+            && id == request.resource.data.to + '_' + request.resource.data.from && request.resource.data.status == 'knock')
+          || (resource != null && isSid(cid, resource.data.to) && onlyChanges(['status','respondedAt'])
+            && request.resource.data.status in ['in','no']);
+        allow delete: if owns(cid);
+      }
+      // Weekly story events: each student's right answers this week (id = <week>_<sid>)
+      match /storypts/{id} {
+        allow read: if member(cid) || owns(cid);
+        allow create, update: if isSid(cid, request.resource.data.sid) && live(cid)
+          && id == request.resource.data.week + '_' + request.resource.data.sid
+          && request.resource.data.n is int && request.resource.data.n >= 0 && request.resource.data.n <= 60;
+        allow delete: if owns(cid);
+      }
+      // Mayor's executive actions
+      match /mayoracts/{id} {
+        allow read: if member(cid) || owns(cid);
+        allow create: if isSid(cid, request.resource.data.sid) && live(cid) && cls(cid).mayor.sid == request.resource.data.sid
+          && request.resource.data.kind in ['holiday','challenge','proclaim'];
+        allow delete: if owns(cid);
+      }
       // Live plaza quiz answers: one per student per question; the teacher reads them
       match /buzz/{id} {
         allow read, delete: if owns(cid);
@@ -174,6 +247,23 @@ service cloud.firestore {
       allow write: if signedIn() && exists(/databases/$(database)/documents/classes/$(cid)/members/$(request.auth.uid))
         && get(/databases/$(database)/documents/classes/$(cid)).data.ownerUid == owner
         && request.resource.data.total is int && request.resource.data.total >= 0 && request.resource.data.total < 10000000;
+    }
+
+    // Interstate Trade Post: furniture for sale between one teacher's periods (no student names)
+    match /league/{owner}/market/{id} {
+      allow read: if signedIn();
+      allow create: if signedIn() && exists(/databases/$(database)/documents/classes/$(request.resource.data.cid)/members/$(request.auth.uid))
+        && get(/databases/$(database)/documents/classes/$(request.resource.data.cid)).data.ownerUid == owner
+        && request.resource.data.uid == request.auth.uid && request.resource.data.status == 'open'
+        && request.resource.data.price is int && request.resource.data.price >= 1 && request.resource.data.price <= 100;
+      allow update: if signedIn() && resource.data.status == 'open' && (
+          (request.resource.data.status == 'sold' && request.resource.data.buyerCid != resource.data.cid
+            && exists(/databases/$(database)/documents/classes/$(request.resource.data.buyerCid)/members/$(request.auth.uid))
+            && get(/databases/$(database)/documents/classes/$(request.resource.data.buyerCid)).data.ownerUid == owner
+            && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['status','buyerCid','buyerName','soldAt']))
+          || (request.resource.data.status == 'cancel' && resource.data.uid == request.auth.uid
+            && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['status'])));
+      allow delete: if false;
     }
 
     // Network test page (nettest.html) writes one small document per visit
