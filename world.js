@@ -216,9 +216,10 @@ function viewCampus(){
       </div>
     </div>
   </section>
-  ${due.length ? `<div class="eyebrow" style="margin:6px 2px">📌 ${WL("On the bulletin board","En el tablero")}</div>
-    <div class="duestrip">${due.map(a => `<button class="duecard" onclick="TAB='${a.tab}';render()" style="border-left:8px solid ${courseArt(a.pack).hex}">
-      <small>${esc(L(courseArt(a.pack).short))} · ${esc(L(a.tag))}</small><b>${esc(a.title)}</b></button>`).join("")}</div>` : ""}
+  ${`<div class="eyebrow" style="margin:6px 2px">📌 ${WL("On the bulletin board","En el tablero")}</div>
+    <div class="duestrip">${newsUnseen() ? `<button class="duecard" onclick="go('assignments');setTimeout(()=>{const n=document.getElementById('news');n&&n.scrollIntoView({behavior:'smooth'})},200)" style="border-left:8px solid var(--hot);background:#FFF1C9">
+      <small>📰 ${WL("What's new","Novedades")} · ${newsUnseen()} ${WL("new","nuevas")}</small><b>${WL("New in Smith's Classroom","Nuevo en Smith's Classroom")}</b></button>` : ""}${due.map(a => `<button class="duecard" onclick="TAB='${a.tab}';render()" style="border-left:8px solid ${courseArt(a.pack).hex}">
+      <small>${esc(L(courseArt(a.pack).short))} · ${esc(L(a.tag))}</small><b>${esc(a.title)}</b></button>`).join("")}</div>`}
   <div class="row spread" style="margin-top:6px">
     <h2 style="font-size:26px">${WL("Grenadier Campus","Campus Grenadier")}</h2>
     <div class="seg" role="group"><button aria-pressed="${mapView}" onclick="S.campusView='map';save();render()">${WL("Map","Mapa")}</button><button aria-pressed="${!mapView}" onclick="S.campusView='list';save();render()">${WL("List","Lista")}</button></div>
@@ -388,9 +389,37 @@ window.viewAssignments = function(){
       <div class="eyebrow">📌 ${WL("Bulletin board","Tablero")}</div><h1 style="font-size:30px;margin:2px 0">${WL("Assignments","Tareas")}</h1></div>
   </section>
   ${allPacks().filter(p => mine.includes(p.id)).map(p => { const list = assignmentsForPack(p.id); if (!list.length) return "";
-    return `<div class="eyebrow" style="margin:18px 2px 0;color:${courseArt(p.id).hex}">${esc(L(p.name))}</div>${list.map(a => assignCard(a, true)).join("")}`; }).join("")}`;
+    return `<div class="eyebrow" style="margin:18px 2px 0;color:${courseArt(p.id).hex}">${esc(L(p.name))}</div>${list.map(a => assignCard(a, true)).join("")}`; }).join("")}
+  ${newsPanel()}`;
+  S.newsSeen = NEWS[0].id; save();
   window.scrollTo(0, 0);
 };
+/* ---------- What's new: pinned to the bulletin board ---------- */
+const NEWS = [
+  {id:"2026-11-18c", d:"Nov 18", e:"👗", t:["30 new outfits are on the way","30 conjuntos nuevos en camino"],
+   b:["Twenty new looks for girls and ten for guys are being drawn now, for the Locker and Money Moves. Plus 16 new pieces of furniture and pets for your Town house.",
+      "Se están dibujando veinte looks nuevos para chicas y diez para chicos, para el Casillero y Money Moves. Además, 16 muebles y mascotas nuevos para tu casa del Pueblo."]},
+  {id:"2026-11-18b", d:"Nov 18", e:"🎓", t:["Finishing a unit pays you","Terminar una unidad te paga"],
+   b:["Every unit certificate now comes with a 15-coin paycheck. Units you already finished got back pay. Money from Money Moves and CFE Review Quest turns into Town coins too.",
+      "Cada certificado de unidad ahora trae un pago de 15 monedas. Las unidades que ya terminaste recibieron pago atrasado. El dinero de Money Moves y de la Misión CFE también se vuelve monedas del Pueblo."]},
+  {id:"2026-11-18a", d:"Nov 18", e:"🔐", t:["Your account follows you","Tu cuenta te sigue"],
+   b:["Sign in with your Town ID (class code, name and PIN) from the card on Campus. Your progress, coins, avatar and games follow you to any computer. On a shared Chromebook, choose “Sign out and clear this computer.”",
+      "Entra con tu ID del Pueblo (código, nombre y PIN) desde la tarjeta del Campus. Tu progreso, monedas, avatar y juegos te siguen a cualquier computadora. En una Chromebook compartida, elige “Cerrar sesión y limpiar esta computadora.”"]},
+  {id:"2026-11-18t", d:"Nov 18", e:"🏛️", t:["The Town grew up","El Pueblo creció"],
+   b:["New tabs: Town Hall (class goals that unlock plaza upgrades, period-vs-period league, mayor elections, laws you can write, impeachment), Bank (savings with interest, loans, credit score) and Jobs (daily jobs, streaks, and your own business). Buying from classmates fills your Shop Local card.",
+      "Pestañas nuevas: Ayuntamiento (metas de clase que mejoran la plaza, liga de periodos, elecciones, leyes que puedes escribir, juicio político), Banco (ahorros con interés, préstamos, puntaje de crédito) y Trabajos (trabajos diarios, rachas y tu propio negocio). Comprar a tus compañeros llena tu tarjeta de Compra Local."]},
+  {id:"2026-11-17", d:"Nov 17", e:"🕹️", t:["Arcade 3.0","Arcade 3.0"],
+   b:["Three brand-new games starring your avatar: Tardy Wave, Grenadier Express and Misconception Panic. The questions come from your own classes.",
+      "Tres juegos nuevos con tu avatar: Ola Tardía, Grenadier Express y Pánico de Ideas Erróneas. Las preguntas salen de tus clases."]}
+];
+const newsUnseen = () => { const i = NEWS.findIndex(n => n.id === S.newsSeen); return i < 0 ? NEWS.length : i; };
+function newsPanel(){
+  const unseen = newsUnseen();
+  return `<section class="panel" id="news" style="margin-top:18px"><div class="eyebrow">📰 ${WL("What's new","Novedades")}</div>
+    ${NEWS.map((n, i) => `<div style="display:flex;gap:12px;align-items:flex-start;padding:10px 0;border-bottom:1px dashed var(--line)">
+      <span style="font-size:30px;line-height:1">${n.e}</span><div><b>${esc(L({en:n.t[0], es:n.t[1]}))}</b>${i < unseen ? ` <span class="chip bad" style="font-size:11px">${WL("NEW","NUEVO")}</span>` : ""}
+      <small class="muted"> · ${n.d}</small><p style="margin:4px 0 0">${esc(L({en:n.b[0], es:n.b[1]}))}</p></div></div>`).join("")}</section>`;
+}
 function viewFrame(kind){
   const cfg = {writing:{src:"frq_writing_lab.html", t:WL("FRQ Writing Lab","Laboratorio de escritura FRQ"), img:"bld_writing_center"},
                marketlab:{src:"econ_market_structures_assignment.html", t:WL("Market Structures Lab","Laboratorio de estructuras de mercado"), img:"bld_market"},

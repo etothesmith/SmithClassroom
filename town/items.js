@@ -58,6 +58,16 @@ window.TOWN_ITEMS = Object.fromEntries([
   ["pet_eagle","pet",3,0,"🦅","Bald eagle","Águila calva"],
   ["pet_flamingo","pet",3,0,"🦩","Flamingo","Flamenco"]
 ].map(([id, slot, r, p, e, en, es]) => [id, {id, slot, r, p, e, name:{en, es}}]));
+/* Civic update furniture (art: v2/GEMINI_CLOTHES_AND_ITEMS.md, emoji until then) */
+[["bed_loft","bed",0,10,"🪜","Loft bed","Cama alta"],["bed_cloud","bed",2,0,"☁️","Cloud bed","Cama de nube"],
+ ["sofa_loveseat","sofa",0,7,"💗","Pink loveseat","Sofá rosa"],["sofa_egg_chair","sofa",1,0,"🥚","Hanging egg chair","Silla colgante"],
+ ["table_gaming","table",1,0,"🖥️","Gaming desk","Escritorio gamer"],["table_aquarium","table",2,0,"🐟","Aquarium table","Mesa acuario"],
+ ["rug_checker","rug",0,3,"🏁","Checkerboard rug","Alfombra de cuadros"],["rug_galaxy","rug",1,0,"🌌","Galaxy rug","Alfombra galaxia"],
+ ["lamp_fairy","lamp",0,3,"✨","Fairy-light lamp","Lámpara de lucecitas"],["lamp_moon","lamp",1,0,"🌙","Moon lamp","Lámpara de luna"],
+ ["plant_monstera","plant",0,4,"🌿","Monstera","Monstera"],["plant_cherry","plant",2,0,"🌸","Cherry blossom tree","Cerezo en flor"],
+ ["art_photos","art",0,4,"📸","Photo wall","Muro de fotos"],["wall_neon_bolt","wall",2,0,"⚡","Lightning-bolt neon","Neón de rayo"],
+ ["trophy_state","trophy",3,0,"🏆","State championship trophy","Trofeo de campeonato estatal"],["pet_bunny","pet",1,0,"🐰","Bunny","Conejo"]
+].forEach(([id, slot, r, p, e, en, es]) => { window.TOWN_ITEMS[id] = {id, slot, r, p, e, name:{en, es}}; });
 /* products made by student businesses (town/civic.js): not in the shop or crates. cost = supplies */
 [["prod_cupcakes","table","🧁","Cupcake tower","Torre de cupcakes",2],["prod_cookie_jar","table","🍪","Cookie jar","Tarro de galletas",2],
  ["prod_bouquet","plant","💐","Bouquet","Ramo de flores",2],["prod_sunflower","plant","🌻","Sunflower pot","Maceta de girasol",2],

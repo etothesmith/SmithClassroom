@@ -122,7 +122,14 @@ const JOBS = {
   market: {e:"🛒", en:"List or buy something in the Market", es:"Publica o compra algo en el Mercado"},
   vote:   {e:"🏆", en:"Vote for Home of the Week", es:"Vota por la Casa de la Semana"},
   hall:   {e:"🏛️", en:"Check the Town Hall", es:"Visita el Ayuntamiento"},
-  buylocal:{e:"🤝", en:"Buy something from a classmate in the Market", es:"Compra algo a un compañero en el Mercado"}
+  buylocal:{e:"🤝", en:"Buy something from a classmate in the Market", es:"Compra algo a un compañero en el Mercado"},
+  study50:{e:"🧠", en:"Earn 50 XP today (pays 2)", es:"Gana 50 XP hoy (paga 2)", pay:2, check:() => myXp() - (civ().jobs.xp0 || myXp()) >= 50},
+  crate:  {e:"🎁", en:"Open a crate", es:"Abre una caja"},
+  decorate:{e:"🛋️", en:"Place or move furniture in your house", es:"Pon o mueve un mueble en tu casa"},
+  trade:  {e:"🔄", en:"Send or accept a trade", es:"Envía o acepta un intercambio"},
+  make:   {e:"🧁", en:"Make a product for a business", es:"Haz un producto para un negocio"},
+  sell:   {e:"💰", en:"Sell something in the Market", es:"Vende algo en el Mercado"},
+  save:   {e:"🐷", en:"Have 10+ coins in savings", es:"Ten 10+ monedas en ahorros", check:() => civ().bank.bal >= 10}
 };
 
 /* ---------------------------------------------------------------- shared helpers */
@@ -522,7 +529,7 @@ window.civMake = function(id){
   const it = T.ITEMS[id], c = civ(); c.made = c.made || {}; const n = c.made[day()] || 0;
   if (n >= DAILY_MAKE) return T.toast(W2("Your shop is closed for today. Make more tomorrow!","Tu tienda cerró por hoy. ¡Haz más mañana!"));
   if (S.tokens < it.cost) return T.toast(W2(`Supplies cost ${it.cost} coins.`, `Los insumos cuestan ${it.cost} monedas.`));
-  T.coins(-it.cost); T.addItem(id, 1); c.made = {[day()]:n + 1};
+  T.coins(-it.cost); T.addItem(id, 1); c.made = {[day()]:n + 1}; flag("make");
   if (c.biz) c.biz.cost += it.cost; else { c.bizStats = c.bizStats || {sold:0, rev:0, cost:0}; c.bizStats.cost += it.cost; }
   T.persist(); paint(); T.toast(W2(`Made: ${T.itemName(id)}. List it in the Market!`, `Hiciste: ${T.itemName(id)}. ¡Véndelo en el Mercado!`));
 };
@@ -562,7 +569,7 @@ function rollJobs(){
   if (!picks.includes("study")) picks[0] = "study";
   Object.assign(j, {day:d, picks, done:{}, paid:{}, flags:{}, xp0:myXp()}); save();
 }
-function jobDone(k){ const j = civ().jobs; return k === "study" ? JOBS.study.check() : !!j.flags[k]; }
+function jobDone(k){ const j = civ().jobs; return JOBS[k] && JOBS[k].check ? JOBS[k].check() : !!j.flags[k]; }
 function visitStreak(){
   const s = civ().streak, d = day(); if (s.last === d) return;
   const y = new Date(); y.setDate(y.getDate() - 1);
@@ -585,11 +592,13 @@ function paintJobs(el){
 }
 window.civCollect = function(k){
   const j = civ().jobs; if (j.paid[k] || !jobDone(k)) return; j.paid[k] = 1;
-  const n = Math.max(1, Math.round(jobPay())); T.coins(n); T.persist(); paint(); T.toast(W2(`+${n} coin${n > 1 ? "s" : ""}`, `+${n} moneda(s)`));
+  const n = Math.max(1, Math.round(jobPay() * ((JOBS[k] && JOBS[k].pay) || 1))); T.coins(n); T.persist(); paint(); T.toast(W2(`+${n} coin${n > 1 ? "s" : ""}`, `+${n} moneda(s)`));
 };
 /* job flags from things that already happen in the Town */
 const wrap = (name, k) => { const f = window[name]; if (typeof f !== "function") return; window[name] = function(){ const r = f.apply(this, arguments); flag(k); return r; }; };
 wrap("townSticker", "sticker"); wrap("townSay", "chat"); wrap("townList", "market"); wrap("townBuy", "market");
+wrap("townOpenCrate", "crate"); wrap("townPut", "decorate"); wrap("townSendTrade", "trade"); wrap("townAccept", "trade");
+EXT.onSold.push(() => flag("sell"));
 
 /* Home of the Week */
 let HOTW = [], HOTW_LAST = [];
