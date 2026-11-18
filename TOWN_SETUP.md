@@ -39,3 +39,12 @@ If the school blocks the Realtime Database (`*.firebaseio.com`), the plaza switc
 - You can **pause the Town**, **turn chat off**, **mute** a student, **reset a PIN**, **remove** a student, and **undo** any sale or trade.
 - The chat log and every sale and trade are visible to you under **Town → Teacher: manage the Town**.
 - Cloud saves hold the student's Smith's Classroom progress (coins, XP, certificates, avatar) and their game saves, keyed to the class code and name.
+
+## Civic update (Town Hall, Bank, Jobs)
+This update adds new Firestore collections, so the rules need to be published again: **Firestore Database → Rules**, paste everything in `town/firestore.rules`, then **Publish**. The Realtime Database rules didn't change.
+
+Teacher controls live in **Town → Teacher: manage the Town**:
+- **Class goal**: set a class XP target and pick the plaza upgrade it unlocks. The period-vs-period league updates on its own.
+- **Economy events and the Fed**: set the weekly interest rate for the Town Bank, and start a one-day event (inflation, tariff, recession, boom or supply shock).
+- **Elections and laws**: open sign-ups, open voting, then close the polls to count. When the mayor proposes a law, count the votes, or strike it down as the Supreme Court.
+- **Plaza quiz**: pick a course, start a question, and reveal it. Use "Show on the board" to run it from the projector.

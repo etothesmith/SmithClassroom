@@ -58,6 +58,14 @@ window.TOWN_ITEMS = Object.fromEntries([
   ["pet_eagle","pet",3,0,"🦅","Bald eagle","Águila calva"],
   ["pet_flamingo","pet",3,0,"🦩","Flamingo","Flamenco"]
 ].map(([id, slot, r, p, e, en, es]) => [id, {id, slot, r, p, e, name:{en, es}}]));
+/* products made by student businesses (town/civic.js): not in the shop or crates. cost = supplies */
+[["prod_cupcakes","table","🧁","Cupcake tower","Torre de cupcakes",2],["prod_cookie_jar","table","🍪","Cookie jar","Tarro de galletas",2],
+ ["prod_bouquet","plant","💐","Bouquet","Ramo de flores",2],["prod_sunflower","plant","🌻","Sunflower pot","Maceta de girasol",2],
+ ["prod_painting","art","🖼️","Original painting","Pintura original",3],["prod_sculpture","trophy","🗿","Clay sculpture","Escultura de barro",3],
+ ["prod_quilt_rug","rug","🧶","Quilted rug","Alfombra tejida",3],["prod_knit_lamp","lamp","🏮","Paper lantern","Farol de papel",3],
+ ["prod_radio","table","📻","Fixed-up radio","Radio reparado",3],["prod_robot","trophy","🤖","Mini robot","Mini robot",4],
+ ["prod_smoothie","table","🥤","Smoothie","Batido",1],["prod_fruit_bowl","table","🍓","Fruit bowl","Frutero",2]
+].forEach(([id, slot, e, en, es, cost]) => { window.TOWN_ITEMS[id] = {id, slot, r:0, p:0, e, name:{en, es}, biz:true, cost}; });
 window.TOWN_RARITY = [{en:"Common",es:"Común",c:"#8A94A6"},{en:"Rare",es:"Raro",c:"#2F7FD8"},{en:"Epic",es:"Épico",c:"#8A5CD8"},{en:"Legendary",es:"Legendario",c:"#E3A21A"}];
 window.TOWN_HOUSES = [
   ["cottage", 0,  "Cottage", "Casita"],
