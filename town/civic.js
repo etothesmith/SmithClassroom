@@ -1,0 +1,733 @@
+/* =============================================================================
+   GRENADIER TOWN — civic life (town/civic.js)
+   Adds to town/town.js through its extension points (TOWN.EXT):
+     1. Class goals that unlock plaza upgrades, and a period-vs-period league
+     2. The Town Bank: savings with interest, loans, a credit score (the
+        teacher sets the "Fed" rate)
+     3. Economy events the teacher triggers (inflation, tariff, recession,
+        boom, supply shock), each with an Econ check question
+     4. Elections for mayor and town laws (the teacher tallies, and can strike
+        a law down as the Supreme Court)
+     5. Student businesses: make products, sell them, split profit with a
+        partner
+     6. Daily jobs, a visit streak, and Home of the Week
+     7. Live plaza quiz the teacher runs from the board, and seasonal decor
+   Everything has an emoji fallback until the Gemini art lands in
+   v2/assets/town/ (see v2/GEMINI_TOWN_CIVIC.md).
+   ========================================================================== */
+(function(){
+"use strict";
+const T = window.TOWN; if (!T) return;
+const {EXT, L2, TA} = T;
+let PROJ = false, ADMIN_CLS = null;   /* the board view reads the class the teacher is showing */
+const NET = () => T.net, SESS = () => T.session, CLS = () => (PROJ && ADMIN_CLS) || T.cls || ADMIN_CLS || {};
+const store = () => T.net.store;
+const W2 = (en, es) => WL(en, es);
+const E = s => esc(String(s == null ? "" : s));
+const pad = n => String(n).padStart(2, "0");
+const day = (d = new Date()) => `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
+const dayN = (d = new Date()) => Math.floor((new Date(d.getFullYear(), d.getMonth(), d.getDate()) - new Date(2024, 0, 1)) / 864e5);
+const week = (d = new Date()) => { const m = new Date(d.getFullYear(), d.getMonth(), d.getDate() - ((d.getDay() + 6) % 7)); return day(m); };
+const lastWeek = () => { const d = new Date(); d.setDate(d.getDate() - 7); return week(d); };
+const C = () => "classes/" + SESS().cid;
+const hashN = s => { let h = 2166136261; for (const ch of s) { h ^= ch.charCodeAt(0); h = Math.imul(h, 16777619); } return h >>> 0; };
+const img = (src, emo, cls) => T.artImg(src, emo, cls === "big");
+const sub = u => T.viewSub(u);
+const paint = () => { if (T.isTown()) T.paintSub(); };
+
+/* ---------------------------------------------------------------- local state */
+function civ(){
+  const t = T.town(), c = t.civic = t.civic || {};
+  c.bank = c.bank || {bal:0, at:day(), loan:null, credit:650, hist:[]};
+  c.jobs = c.jobs || {day:"", picks:[], done:{}, paid:{}, flags:{}};
+  c.streak = c.streak || {n:0, last:"", best:0};
+  c.xp = c.xp || {};               /* {"wk:<week>": xp at the start of the week, "goal:<id>": xp at goal start} */
+  c.biz = c.biz || null;           /* {type, made:{day:n}, sold, rev, cost} */
+  c.voted = c.voted || {};
+  c.tax = c.tax || 0;              /* coins paid in sales tax (counts toward the class goal) */
+  return c;
+}
+const myXp = () => S.xp | 0;
+function xpSince(key){ const c = civ(); if (c.xp[key] == null) { c.xp[key] = myXp(); save(); } return Math.max(0, myXp() - c.xp[key]); }
+
+/* ---------------------------------------------------------------- catalog */
+const UPGRADES = {   /* at: [x, feet y] on the 960x540 plaza */
+  fountain:  {e:"⛲", en:"Grand fountain", es:"Gran fuente", at:[584, 440], h:150},
+  foodtruck: {e:"🚚", en:"Food truck", es:"Camión de comida", at:[872, 440], h:110},
+  stage:     {e:"🎤", en:"Stage", es:"Escenario", at:[410, 335], h:120},
+  statue:    {e:"🗽", en:"Grenadier statue", es:"Estatua Grenadier", at:[440, 500], h:130},
+  balloons:  {e:"🎈", en:"Balloon arch", es:"Arco de globos", at:[650, 250], h:90},
+  garden:    {e:"🌷", en:"Flower garden", es:"Jardín", at:[300, 530], h:70},
+  arcade:    {e:"🕹️", en:"Arcade cabinet", es:"Máquina de arcade", at:[700, 330], h:100},
+  mural:     {e:"🎨", en:"Class mural", es:"Mural de la clase", at:[230, 205], h:90}
+};
+const EVENTS = {
+  inflation: {e:"🎈", en:"Inflation hits!", es:"¡Llega la inflación!", mult:() => 1.3,
+    what:{en:"Too much money is chasing too few goods. Shop prices are up 30%.", es:"Demasiado dinero persigue muy pocos bienes. Los precios de la tienda suben 30%."},
+    q:{q:{en:"Prices in the shop went up 30%. What happens to the purchasing power of your coins?", es:"Los precios subieron 30%. ¿Qué pasa con el poder adquisitivo de tus monedas?"},
+       c:{en:["It falls: each coin buys less","It rises: each coin buys more","It stays the same"], es:["Baja: cada moneda compra menos","Sube: cada moneda compra más","No cambia"]}, a:0}},
+  tariff: {e:"🚢", en:"Tariff on imported furniture", es:"Arancel a muebles importados", mult:it => /^(bed|sofa|lamp|table)/.test(it.id) ? 1.5 : 1,
+    what:{en:"Beds, sofas, tables and lamps are imported, and a 50% tariff was added to their price.", es:"Camas, sofás, mesas y lámparas son importados y tienen un arancel del 50%."},
+    q:{q:{en:"Who usually ends up paying most of a tariff on imported goods?", es:"¿Quién suele pagar la mayor parte de un arancel a productos importados?"},
+       c:{en:["Domestic buyers, through higher prices","The foreign government","Nobody, it's free"], es:["Los compradores nacionales, con precios más altos","El gobierno extranjero","Nadie, es gratis"]}, a:0}},
+  recession: {e:"📉", en:"Recession", es:"Recesión", mult:() => 0.8, jobs:0.5,
+    what:{en:"Spending is down. Stores cut prices 20%, but jobs pay half.", es:"El gasto bajó. Las tiendas bajan 20% los precios, pero los trabajos pagan la mitad."},
+    q:{q:{en:"In a recession, which usually goes UP?", es:"En una recesión, ¿qué suele SUBIR?"},
+       c:{en:["Unemployment","Real GDP","Business profits"], es:["El desempleo","El PIB real","Las ganancias"]}, a:0}},
+  boom: {e:"🚀", en:"Economic boom", es:"Auge económico", mult:() => 1.15, jobs:2,
+    what:{en:"Business is great! Jobs pay double, and prices are creeping up 15%.", es:"¡Hay mucho negocio! Los trabajos pagan el doble y los precios suben 15%."},
+    q:{q:{en:"During a boom, the Fed is most likely to…", es:"Durante un auge, la Fed probablemente…"},
+       c:{en:["Raise interest rates to cool inflation","Cut taxes to zero","Print more money"], es:["Subir las tasas para frenar la inflación","Bajar los impuestos a cero","Imprimir más dinero"]}, a:0}},
+  shock: {e:"🏭", en:"Supply shock", es:"Choque de oferta", mult:it => /^(bed|sofa)/.test(it.id) ? 2 : 1,
+    what:{en:"The furniture factory flooded. Beds and sofas are scarce, so their prices doubled.", es:"La fábrica de muebles se inundó. Camas y sofás escasean y su precio se duplicó."},
+    q:{q:{en:"A factory shutdown shifts the supply curve for sofas…", es:"El cierre de una fábrica desplaza la curva de oferta de sofás…"},
+       c:{en:["Left: less supply, higher price","Right: more supply, lower price","It doesn't move"], es:["A la izquierda: menos oferta, precio más alto","A la derecha: más oferta, precio más bajo","No se mueve"]}, a:0}}
+};
+const PLANKS = {
+  prices:  {e:"🏷️", en:"Lower shop prices", es:"Bajar los precios"},
+  park:    {e:"🌳", en:"Build a new park", es:"Construir un parque"},
+  crates:  {e:"🎁", en:"Weekly crate giveaway", es:"Cajas gratis cada semana"},
+  savings: {e:"🏦", en:"Higher savings interest", es:"Más interés en ahorros"},
+  petcap:  {e:"🐶", en:"Fair pet prices", es:"Precios justos de mascotas"},
+  study:   {e:"📚", en:"Study groups for everyone", es:"Grupos de estudio para todos"},
+  events:  {e:"🎉", en:"More plaza events", es:"Más eventos en la plaza"},
+  clean:   {e:"🧹", en:"A cleaner, kinder town", es:"Un pueblo más limpio y amable"}
+};
+const LAWS = {
+  park_tax:    {e:"🌳", en:"Park Tax", es:"Impuesto del parque", what:{en:"10% sales tax on Market sales. The tax counts toward the class goal.", es:"Impuesto del 10% en ventas del Mercado. Cuenta para la meta de la clase."}},
+  pet_cap:     {e:"🐶", en:"Pet Price Cap", es:"Tope a mascotas", what:{en:"Pets can't be listed for more than 25 coins.", es:"Las mascotas no pueden venderse por más de 25 monedas."}},
+  save_bonus:  {e:"🏦", en:"Savers' Bonus", es:"Bono de ahorro", what:{en:"The Town Bank pays 1% more interest every week.", es:"El Banco paga 1% más de interés cada semana."}},
+  crate_friday:{e:"🎁", en:"Crate Fridays", es:"Viernes de cajas", what:{en:"Every resident gets a crate each Friday.", es:"Cada residente recibe una caja cada viernes."}},
+  shop_sale:   {e:"🏷️", en:"Shop Subsidy", es:"Subsidio a la tienda", what:{en:"The town pays 10% of shop prices for you.", es:"El pueblo paga el 10% de los precios de la tienda."}}
+};
+const BIZ = {
+  bakery:  {e:"🧁", en:"Bakery", es:"Panadería", items:["prod_cupcakes","prod_cookie_jar"]},
+  flowers: {e:"💐", en:"Flower shop", es:"Florería", items:["prod_bouquet","prod_sunflower"]},
+  art:     {e:"🎨", en:"Art studio", es:"Estudio de arte", items:["prod_painting","prod_sculpture"]},
+  crafts:  {e:"🧶", en:"Craft shop", es:"Tienda de manualidades", items:["prod_quilt_rug","prod_knit_lamp"]},
+  tech:    {e:"🔧", en:"Tech repair", es:"Reparación de tecnología", items:["prod_radio","prod_robot"]},
+  smoothie:{e:"🥤", en:"Smoothie bar", es:"Barra de batidos", items:["prod_smoothie","prod_fruit_bowl"]}
+};
+const START_COST = 10, DAILY_MAKE = 5;
+const JOBS = {
+  study:  {e:"📚", en:"Earn 20 XP studying or playing today", es:"Gana 20 XP estudiando o jugando hoy", check:() => myXp() - (civ().jobs.xp0 || myXp()) >= 20},
+  visit:  {e:"🏡", en:"Visit a classmate's house", es:"Visita la casa de un compañero"},
+  sticker:{e:"⭐", en:"Leave a sticker on a house", es:"Deja una calcomanía en una casa"},
+  chat:   {e:"💬", en:"Say something in Quick chat", es:"Di algo en el chat rápido"},
+  bank:   {e:"🏦", en:"Put coins in the Town Bank", es:"Pon monedas en el Banco"},
+  market: {e:"🛒", en:"List or buy something in the Market", es:"Publica o compra algo en el Mercado"},
+  vote:   {e:"🏆", en:"Vote for Home of the Week", es:"Vota por la Casa de la Semana"},
+  hall:   {e:"🏛️", en:"Check the Town Hall", es:"Visita el Ayuntamiento"}
+};
+
+/* ---------------------------------------------------------------- shared helpers */
+const cur = () => { const c = CLS(); return c.event && c.event.id && (!c.event.until || c.event.until > Date.now()) ? c.event : null; };
+const laws = () => (CLS().laws || []).filter(k => LAWS[k]);
+const hasLaw = k => laws().includes(k);
+const fedRate = () => { const r = CLS().econ && CLS().econ.rate; return r == null ? 2 : +r; };
+const saveRate = () => fedRate() + (hasLaw("save_bonus") ? 1 : 0);
+const jobPay = () => { const e = cur(); return e && EVENTS[e.kind] && EVENTS[e.kind].jobs || 1; };
+function flag(k){ const j = civ().jobs; if (j.day !== day()) rollJobs(); j.flags[k] = 1; save(); }
+function sheet(html){ const box = document.getElementById("certAsk"); if (!box) return; box.classList.remove("hidden");
+  box.innerHTML = `<div class="certask tcard" role="dialog" aria-modal="true">${html}</div>`; }
+const closeSheet = () => window.townCloseCard && window.townCloseCard();
+function qCard(q, onDone, title){
+  const opts = q.c[S.lang === "es" && q.c.es ? "es" : "en"], order = shuffle3(opts.length);
+  window._civQ = {q, order, onDone};
+  sheet(`<div class="eyebrow">${title || W2("Econ check","Pregunta de economía")}</div><h2 style="font-size:20px">${E(L2(q.q))}</h2>
+    <div class="cqopts">${order.map((i, k) => `<button class="btn" onclick="civAnswer(${k})">${E(opts[i])}</button>`).join("")}</div><p id="cqWhy"></p>`);
+}
+function shuffle3(n){ const a = [...Array(n).keys()]; for (let i = n - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; }
+window.civAnswer = function(k){
+  const st = window._civQ; if (!st || st.answered) return; st.answered = true;
+  const ok = st.order[k] === st.q.a, btns = document.querySelectorAll(".cqopts button");
+  btns.forEach((b, i) => { b.disabled = true; if (st.order[i] === st.q.a) b.classList.add("primary"); });
+  const why = document.getElementById("cqWhy");
+  if (why) why.innerHTML = `<b>${ok ? W2("Correct!","¡Correcto!") : W2("Not quite.","Casi.")}</b> ${st.q.why ? E(L2(st.q.why)) : ""}
+    <br><button class="btn primary wide" style="margin-top:10px" onclick="townCloseCard()">${W2("Done","Listo")}</button>`;
+  st.onDone && st.onDone(ok);
+};
+function bar(t, col){ return `<div class="cbar"><i style="width:${Math.round(Math.min(1, Math.max(0, t)) * 100)}%;background:${col || "var(--gold,#E3A21A)"}"></i></div>`; }
+
+/* ================================================================ 1. class goal + league */
+function goal(){ const g = CLS().goal; return g && g.id ? g : null; }
+function goalProgress(){
+  const g = goal(); if (!g) return {n:0, rows:[]};
+  const rows = Object.entries(T.pub).map(([sid, p]) => ({sid, name:p.name, n:p.goal && p.goal.id === g.id ? p.goal.n | 0 : 0}));
+  const mine = rows.find(r => r.sid === SESS().sid); if (mine) mine.n = Math.max(mine.n, myGoalN());
+  else rows.push({sid:SESS().sid, name:SESS().name, n:myGoalN()});
+  return {n:rows.reduce((s, r) => s + r.n, 0), rows:rows.sort((a, b) => b.n - a.n)};
+}
+function myGoalN(){ const g = goal(); return g ? xpSince("goal:" + g.id) + civ().tax * 20 : 0; }
+const goalDone = () => { const g = goal(); return !!g && (g.done || goalProgress().n >= g.target); };
+function unlocked(){ const u = new Set(CLS().upgrades || []); const g = goal(); if (g && g.reward && goalDone()) u.add(g.reward); return [...u].filter(k => UPGRADES[k]); }
+let _leagueAt = 0, LEAGUE = [];
+function leaguePush(){
+  const c = CLS(); if (!c.ownerUid || !SESS()) return;
+  const wk = week(), pubs = Object.values(T.pub);
+  const total = pubs.reduce((s, p) => s + (p.wk && p.wk.w === wk ? p.wk.n | 0 : 0), 0) + (pubs.some(p => p.uid === store().uid()) ? 0 : xpSince("wk:" + wk));
+  const n = Math.max(1, pubs.filter(p => p.wk && p.wk.w === wk).length);
+  const P = `league/${c.ownerUid}/periods/${SESS().cid}`, row = LEAGUE.find(r => r.id === SESS().cid);
+  if (row && row.w === wk && row.total >= total) return;
+  if (Date.now() - _leagueAt < 120000) return; _leagueAt = Date.now();
+  store().set(P, {name:SESS().className || "", w:wk, total, n, at:Date.now()}).catch(e => console.warn("league", e));
+}
+function paintGoalCard(){
+  const g = goal();
+  if (!g) return `<section class="panel"><div class="eyebrow">🎯 ${W2("Class goal","Meta de la clase")}</div>
+    <p class="muted">${W2("No goal right now. Coach Smith sets one, and when your class reaches it the plaza gets an upgrade.","No hay meta ahora. Coach Smith pone una y, cuando la clase la cumpla, la plaza se mejora.")}</p>${upgradeShelf()}</section>`;
+  const pr = goalProgress(), up = UPGRADES[g.reward], done = goalDone();
+  return `<section class="panel cgoal ${done ? "done" : ""}"><div class="eyebrow">🎯 ${W2("Class goal","Meta de la clase")}</div>
+    <div class="cgoalh">${up ? img(`${TA}plaza/${g.reward}.webp`, up.e, "big") : ""}<div>
+      <h2>${W2(`Earn ${g.target.toLocaleString()} XP together`, `Ganen ${g.target.toLocaleString()} XP juntos`)}</h2>
+      <p class="muted">${up ? W2(`Reward: a ${up.en} on the plaza, plus a crate for everyone.`, `Premio: ${up.es} en la plaza y una caja para todos.`) : ""}
+        ${g.until ? " · " + W2("Ends","Termina") + " " + new Date(g.until).toLocaleDateString() : ""}</p></div></div>
+    ${bar(pr.n / g.target, done ? "#3BB273" : null)}
+    <p><b>${pr.n.toLocaleString()}</b> / ${g.target.toLocaleString()} XP ${done ? "· 🎉 " + W2("Reached!","¡Logrado!") : ""}</p>
+    <div class="cmini">${pr.rows.filter(r => r.n > 0).slice(0, 5).map((r, i) => `<span>${["🥇","🥈","🥉","4.","5."][i]} ${E(r.name)} <b>${r.n}</b></span>`).join("")}</div>
+    <p class="muted" style="font-size:12px">${W2("Every XP you earn in Smith's Classroom counts: studying, assignments, games." + (hasLaw("park_tax") ? " Park Tax money counts too." : ""),
+      "Cuenta toda la XP que ganes en Smith's Classroom: estudiar, tareas, juegos." + (hasLaw("park_tax") ? " El Impuesto del parque también cuenta." : ""))}</p>
+    ${upgradeShelf()}</section>`;
+}
+function upgradeShelf(){ const u = unlocked(); if (!u.length) return "";
+  return `<div class="cups"><small>${W2("Plaza upgrades unlocked:","Mejoras de la plaza:")}</small> ${u.map(k => `<span title="${E(L2(UPGRADES[k]))}">${UPGRADES[k].e} ${E(L2(UPGRADES[k]))}</span>`).join("")}</div>`; }
+function paintLeague(){
+  const wk = week(), rows = LEAGUE.filter(r => r.w === wk).sort((a, b) => (b.total / b.n) - (a.total / a.n));
+  return `<section class="panel"><div class="eyebrow">🏁 ${W2("Period vs. period · this week","Periodo contra periodo · esta semana")}</div>
+    ${rows.length ? `<table class="ttab cleague"><tr><th></th><th>${W2("Period","Periodo")}</th><th>${W2("XP per student","XP por estudiante")}</th><th>${W2("Total","Total")}</th></tr>
+      ${rows.map((r, i) => `<tr class="${r.id === SESS().cid ? "me" : ""}"><td>${["🥇","🥈","🥉"][i] || i + 1}</td><td>${E(r.name)}</td><td><b>${Math.round(r.total / r.n)}</b></td><td>${r.total.toLocaleString()}</td></tr>`).join("")}</table>`
+      : `<p class="muted">${W2("No scores yet this week. Earn XP to put your period on the board!","Aún no hay puntos esta semana. ¡Gana XP para poner a tu periodo en la tabla!")}</p>`}
+    <p class="muted" style="font-size:12px">${W2("Ranked by XP per student, so small and big classes compete fairly. Resets every Monday.","Se ordena por XP por estudiante para que compitan justo. Se reinicia cada lunes.")}</p></section>`;
+}
+
+/* ================================================================ 2. bank */
+function accrue(){
+  const b = civ().bank, today = day(); if (b.at === today) return;
+  const days = Math.max(0, Math.round((new Date(today) - new Date(b.at)) / 864e5));
+  if (days > 0 && b.bal > 0) { const before = b.bal; b.bal = b.bal * Math.pow(1 + saveRate() / 100 / 7, Math.min(days, 60));
+    const earned = b.bal - before; if (earned >= 0.01) log("interest", earned); }
+  b.at = today;
+  /* a loan past due is collected automatically and hurts the credit score */
+  if (b.loan && Date.now() > b.loan.due) {
+    const owe = loanOwed(); let need = owe;
+    const fromSave = Math.min(Math.floor(b.bal), need); b.bal -= fromSave; need -= fromSave;
+    const fromCash = Math.min(S.tokens | 0, need); T.coins(-fromCash); need -= fromCash;
+    log("late", -owe); b.credit = Math.max(300, b.credit - 60); b.loan = need > 0 ? {...b.loan, amt:need, fee:0, due:Date.now() + 7 * 864e5, late:true} : null;
+    T.toast(W2("Your loan was late, so the bank collected it. Credit score −60.", "Tu préstamo se venció y el banco lo cobró. Puntaje de crédito −60."));
+  }
+  save();
+}
+function log(k, amt){ const b = civ().bank; b.hist.unshift({k, amt:Math.round(amt * 100) / 100, at:Date.now()}); b.hist = b.hist.slice(0, 12); }
+const loanLimit = () => { const c = civ().bank.credit; return c >= 750 ? 40 : c >= 680 ? 30 : c >= 600 ? 20 : 10; };
+const loanRate = () => fedRate() + 3;
+function loanOwed(){ const l = civ().bank.loan; if (!l) return 0; const weeks = Math.max(1, Math.ceil((Date.now() - l.at) / (7 * 864e5)));
+  return l.amt + Math.ceil(l.amt * l.rate / 100 * weeks) - (l.paid || 0); }
+function creditWord(c){ return c >= 750 ? W2("Excellent","Excelente") : c >= 680 ? W2("Good","Bueno") : c >= 600 ? W2("Fair","Regular") : W2("Poor","Bajo"); }
+function paintBank(el){
+  accrue(); const b = civ().bank, l = b.loan;
+  el.innerHTML = `<section class="panel raised cbank">${img(`${TA}civic/bank.webp`, "🏦", "big")}
+      <div><div class="eyebrow">${W2("Town Bank","Banco del Pueblo")}</div><h2>${W2("Savings","Ahorros")}: 🪙 ${b.bal.toFixed(2)}</h2>
+      <p class="muted">${W2(`Interest: ${saveRate()}% a week, added every day.`, `Interés: ${saveRate()}% por semana, se suma cada día.`)}
+        ${W2("Coach Smith sets the rate, like the Fed.","Coach Smith fija la tasa, como la Fed.")}</p></div></section>
+    <section class="panel"><div class="eyebrow">${W2("Deposit or withdraw","Depositar o retirar")}</div>
+      <p class="muted">${W2(`Cash: 🪙 ${S.tokens}. Savings grow; cash doesn't.`, `Efectivo: 🪙 ${S.tokens}. Los ahorros crecen; el efectivo no.`)}</p>
+      <div class="tsell"><input id="bAmt" type="number" min="1" inputmode="numeric" placeholder="${W2("Coins","Monedas")}">
+        <button class="btn primary" onclick="civBank('in')">${W2("Deposit","Depositar")}</button><button class="btn" onclick="civBank('out')">${W2("Withdraw","Retirar")}</button></div>
+      <p class="muted" style="font-size:12px">${W2(`In 4 weeks, 20 coins grows to about ${(20 * Math.pow(1 + saveRate() / 700, 28)).toFixed(1)}: that's compound interest.`,
+        `En 4 semanas, 20 monedas crecen a unas ${(20 * Math.pow(1 + saveRate() / 700, 28)).toFixed(1)}: eso es interés compuesto.`)}</p></section>
+    <section class="panel"><div class="eyebrow">${W2("Loans and credit","Préstamos y crédito")}</div>
+      <div class="ccredit"><b>${b.credit}</b><span>${creditWord(b.credit)}</span>${bar((b.credit - 300) / 550, b.credit >= 680 ? "#3BB273" : b.credit >= 600 ? "#E3A21A" : "#E4572E")}</div>
+      ${l ? `<p>${W2("You owe","Debes")} <b>🪙 ${loanOwed()}</b> · ${W2("due","vence")} ${new Date(l.due).toLocaleDateString()}${l.late ? " ⚠️" : ""}</p>
+           <button class="btn primary" onclick="civRepay()">${W2("Pay it back","Pagar")}</button>`
+         : `<p class="muted">${W2(`You can borrow up to ${loanLimit()} coins at ${loanRate()}% a week. Pay it back within 7 days to raise your credit score. Late loans lower it.`,
+              `Puedes pedir hasta ${loanLimit()} monedas al ${loanRate()}% por semana. Págalo en 7 días para subir tu puntaje. Si te atrasas, baja.`)}</p>
+           <div class="tsell"><input id="lAmt" type="number" min="1" max="${loanLimit()}" inputmode="numeric" placeholder="${W2("Coins","Monedas")}">
+           <button class="btn" onclick="civBorrow()">${W2("Borrow","Pedir prestado")}</button></div>`}</section>
+    <section class="panel"><div class="eyebrow">${W2("History","Historial")}</div>
+      ${b.hist.map(h => `<div class="chist"><span>${{in:"⬇️ " + W2("Deposit","Depósito"), out:"⬆️ " + W2("Withdrawal","Retiro"), interest:"✨ " + W2("Interest","Interés"),
+        loan:"💵 " + W2("Loan","Préstamo"), repay:"✅ " + W2("Repaid","Pagado"), late:"⚠️ " + W2("Late, collected","Atrasado, cobrado")}[h.k] || h.k}</span>
+        <b>${h.amt > 0 ? "+" : ""}${h.amt}</b><small class="muted">${new Date(h.at).toLocaleDateString()}</small></div>`).join("") || `<p class="muted">—</p>`}</section>`;
+}
+window.civBank = function(dir){
+  accrue(); const b = civ().bank, n = parseInt(document.getElementById("bAmt").value, 10);
+  if (!(n > 0)) return T.toast(W2("Type how many coins.","Escribe cuántas monedas."));
+  if (dir === "in") { if (n > S.tokens) return T.toast(W2("You don't have that much cash.","No tienes tanto efectivo.")); T.coins(-n); b.bal += n; log("in", n); flag("bank"); }
+  else { if (n > Math.floor(b.bal)) return T.toast(W2("Not enough in savings.","No hay suficiente en ahorros.")); b.bal -= n; T.coins(n); log("out", -n); }
+  T.persist(); paint();
+};
+window.civBorrow = function(){
+  accrue(); const b = civ().bank, n = parseInt(document.getElementById("lAmt").value, 10);
+  if (b.loan) return; if (!(n > 0 && n <= loanLimit())) return T.toast(W2(`You can borrow 1 to ${loanLimit()} coins.`, `Puedes pedir de 1 a ${loanLimit()} monedas.`));
+  if (!confirm(W2(`Borrow ${n} coins at ${loanRate()}% a week? You'll owe about ${n + Math.ceil(n * loanRate() / 100)} if you repay this week.`,
+                  `¿Pedir ${n} monedas al ${loanRate()}% semanal? Deberás unas ${n + Math.ceil(n * loanRate() / 100)} si pagas esta semana.`))) return;
+  b.loan = {amt:n, rate:loanRate(), at:Date.now(), due:Date.now() + 7 * 864e5}; T.coins(n); log("loan", n); T.persist(); paint();
+};
+window.civRepay = function(){
+  accrue(); const b = civ().bank, owe = loanOwed(); if (!b.loan) return;
+  if (S.tokens < owe) return T.toast(W2(`You need ${owe} coins in cash (withdraw from savings first).`, `Necesitas ${owe} monedas en efectivo (retira de tus ahorros).`));
+  T.coins(-owe); log("repay", -owe); if (!b.loan.late) b.credit = Math.min(850, b.credit + 25); b.loan = null; T.persist(); paint();
+  T.toast(W2("Loan repaid! Your credit score went up.", "¡Préstamo pagado! Tu puntaje de crédito subió."));
+};
+
+/* ================================================================ 3. economy events */
+EXT.priceMult.push(it => { const e = cur(); let m = e && EVENTS[e.kind] ? EVENTS[e.kind].mult(it) : 1; if (hasLaw("shop_sale")) m *= 0.9; return m; });
+EXT.banner.push(() => {
+  const e = cur(); if (!e || !EVENTS[e.kind]) return "";
+  const ev = EVENTS[e.kind], answered = civ().evq && civ().evq[e.id];
+  return `<section class="panel cevent"><span class="cevi">${ev.e}</span><div><b>${E(L2(ev))}</b> ${E(L2(ev.what))}</div>
+    ${answered ? "" : `<button class="btn primary" onclick="civEventQ()">${W2("Econ check: +2 coins","Pregunta: +2 monedas")}</button>`}</section>`;
+});
+window.civEventQ = function(){
+  const e = cur(); if (!e) return; const ev = EVENTS[e.kind]; const c = civ(); c.evq = c.evq || {};
+  if (c.evq[e.id]) return;
+  qCard(ev.q, ok => { c.evq[e.id] = ok ? 1 : -1; if (ok) T.coins(2); T.persist(); setTimeout(() => T.isTown() && T.paintTown(), 0); });
+};
+
+/* ================================================================ 4. elections and laws */
+const elec = () => { const e = CLS().election; return e && e.id ? e : null; };
+let CANDS = [], PROPS = [];
+function paintElection(){
+  const e = elec(), m = CLS().mayor;
+  const mayorLine = m && m.sid ? `<div class="cmayor">${img(`${TA}civic/mayor_sash.webp`, "🎖️")}<div><small>${W2("Mayor","Alcalde")}</small><b>${E(m.name)}</b></div></div>` : "";
+  if (!e) return `<section class="panel"><div class="eyebrow">🗳️ ${W2("Elections","Elecciones")}</div>${mayorLine}
+    <p class="muted">${W2("No election right now. When Coach Smith opens one, you can run for mayor or vote.","No hay elección ahora. Cuando Coach Smith abra una, puedes postularte o votar.")}</p></section>`;
+  const mine = CANDS.find(c => c.sid === SESS().sid), voted = civ().voted[e.id];
+  let body = "";
+  if (e.phase === "filing") body = `<p>${W2("Candidates are signing up now. Voting opens soon.","Los candidatos se están inscribiendo. La votación abre pronto.")}</p>
+    ${mine ? `<p class="tnote">✅ ${W2("You're on the ballot.","Estás en la boleta.")} <button class="btn ghost" onclick="civWithdraw()">${W2("Withdraw","Retirarme")}</button></p>`
+           : `<button class="btn primary" onclick="civRun()">${W2("Run for mayor","Postularme a alcalde")}</button>`}`;
+  else if (e.phase === "voting") body = voted ? `<p class="tnote">🗳️ ${W2("Your vote is in. Results come out when Coach Smith closes the polls.","Tu voto está registrado. Los resultados salen cuando Coach Smith cierre la votación.")}</p>`
+    : `<p>${W2("Pick one. Votes are secret: only Coach Smith counts them.","Elige uno. El voto es secreto: solo Coach Smith los cuenta.")}</p>`;
+  else if (e.phase === "closed" && e.result) body = `<p class="tnote">🎉 ${W2(`${E(e.result.name)} won with ${e.result.votes} of ${e.result.total} votes.`, `${E(e.result.name)} ganó con ${e.result.votes} de ${e.result.total} votos.`)}</p>
+    <div class="cmini">${(e.result.tally || []).map(([n, v]) => `<span>${E(n)} <b>${v}</b></span>`).join("")}</div>`;
+  return `<section class="panel"><div class="eyebrow">🗳️ ${W2("Election for mayor","Elección de alcalde")} · ${{filing:W2("sign-ups","inscripciones"), voting:W2("voting","votación"), closed:W2("results","resultados")}[e.phase] || ""}</div>
+    ${mayorLine}${body}
+    <div class="ccands">${CANDS.map(c => `<div class="ccand">${img(`${TA}civic/podium.webp`, "🎤")}<div><b>${E(c.name)}</b>
+      <div class="cplanks">${(c.planks || []).map(k => PLANKS[k] ? `<span>${PLANKS[k].e} ${E(L2(PLANKS[k]))}</span>` : "").join("")}</div></div>
+      ${e.phase === "voting" && !voted && c.sid !== SESS().sid ? `<button class="btn primary" onclick="civVote('${c.sid}')">${W2("Vote","Votar")}</button>` : ""}</div>`).join("")
+      || (e.phase !== "closed" ? `<p class="muted">${W2("No candidates yet.","Aún no hay candidatos.")}</p>` : "")}</div></section>`;
+}
+window.civRun = function(){
+  const e = elec(); if (!e || e.phase !== "filing") return;
+  window._planks = [];
+  sheet(`<h2>${W2("Run for mayor","Postúlate a alcalde")}</h2><p class="muted">${W2("Pick the two promises you'll campaign on.","Elige las dos promesas de tu campaña.")}</p>
+    <div class="cpick">${Object.entries(PLANKS).map(([k, p]) => `<button data-k="${k}" onclick="civPlank(this)">${p.e} ${E(L2(p))}</button>`).join("")}</div>
+    <button class="btn primary wide" onclick="civFile()">${W2("Get on the ballot","Entrar a la boleta")}</button><button class="btn ghost wide" onclick="townCloseCard()">${W2("Cancel","Cancelar")}</button>`);
+};
+window.civPlank = function(b){ const k = b.dataset.k, a = window._planks, i = a.indexOf(k);
+  if (i >= 0) a.splice(i, 1); else { if (a.length >= 2) a.shift(); a.push(k); }
+  document.querySelectorAll(".cpick button").forEach(x => x.classList.toggle("on", a.includes(x.dataset.k))); };
+window.civFile = async function(){
+  const e = elec(), a = window._planks; if (!e || a.length !== 2) return T.toast(W2("Pick two promises.","Elige dos promesas."));
+  try { await store().set(`${C()}/candidates/${e.id}_${SESS().sid}`, {eid:e.id, sid:SESS().sid, uid:store().uid(), name:SESS().name, planks:a, at:Date.now()});
+    closeSheet(); T.toast(W2("You're on the ballot. Go campaign!","¡Estás en la boleta! ¡A hacer campaña!")); } catch(err){ T.toast(W2("Couldn't sign up right now.","No se pudo inscribir.")); }
+};
+window.civWithdraw = function(){ const e = elec(); if (e && confirm(W2("Take your name off the ballot?","¿Quitar tu nombre de la boleta?")))
+  store().del(`${C()}/candidates/${e.id}_${SESS().sid}`).catch(() => {}); };
+window.civVote = async function(sid){
+  const e = elec(), c = CANDS.find(x => x.sid === sid); if (!e || !c) return;
+  if (!confirm(W2(`Vote for ${c.name}? You can't change it.`, `¿Votar por ${c.name}? No se puede cambiar.`))) return;
+  try { await store().set(`${C()}/votes/${e.id}_${SESS().sid}`, {eid:e.id, sid:SESS().sid, for:sid, at:Date.now()});
+    civ().voted[e.id] = 1; save(); T.toast(W2("Vote cast!","¡Voto emitido!")); paint(); }
+  catch(err){ civ().voted[e.id] = 1; save(); T.toast(W2("You already voted.","Ya votaste.")); paint(); }
+};
+function paintLaws(){
+  const m = CLS().mayor, isMayor = m && m.sid === SESS().sid, open = PROPS.filter(p => p.status === "voting"), active = laws();
+  const past = PROPS.filter(p => p.status !== "voting").sort((a, b) => b.at - a.at).slice(0, 5);
+  return `<section class="panel"><div class="eyebrow">📜 ${W2("Town laws","Leyes del pueblo")}</div>
+    ${active.length ? active.map(k => `<div class="claw on">${LAWS[k].e} <b>${E(L2(LAWS[k]))}</b><span>${E(L2(LAWS[k].what))}</span></div>`).join("") : `<p class="muted">${W2("No laws yet.","Aún no hay leyes.")}</p>`}
+    ${open.map(p => `<div class="claw vote">${LAWS[p.key].e} <b>${W2("Proposed","Propuesta")}: ${E(L2(LAWS[p.key]))}</b><span>${E(L2(LAWS[p.key].what))} · ${W2("by Mayor","de la alcaldía:")} ${E(p.name)}</span>
+      ${civ().voted["law:" + p.id] ? `<i>${W2("You voted.","Votaste.")}</i>` : `<span class="cyn"><button class="btn primary" onclick="civLawVote('${p.id}',true)">👍 ${W2("Yes","Sí")}</button><button class="btn" onclick="civLawVote('${p.id}',false)">👎 ${W2("No","No")}</button></span>`}</div>`).join("")}
+    ${isMayor && !open.length ? `<button class="btn primary" onclick="civPropose()">🖋️ ${W2("Mayor: propose a law","Alcalde: proponer una ley")}</button>` : ""}
+    ${past.length ? `<div class="cmini">${past.map(p => `<span>${LAWS[p.key] ? LAWS[p.key].e : ""} ${E(L2(LAWS[p.key] || {en:p.key}))}: <b>${{passed:W2("passed","aprobada"), failed:W2("failed","rechazada"), struck:W2("struck down by the Court","anulada por la Corte")}[p.status] || p.status}</b>${p.yes != null ? ` (${p.yes}–${p.no})` : ""}</span>`).join("")}</div>` : ""}
+    <p class="muted" style="font-size:12px">${W2("The mayor proposes, the class votes (secret ballot), and Coach Smith, as the Supreme Court, can strike a law down.","La alcaldía propone, la clase vota (voto secreto) y Coach Smith, como la Corte Suprema, puede anular una ley.")}</p></section>`;
+}
+window.civPropose = function(){
+  sheet(`<h2>${W2("Propose a law","Proponer una ley")}</h2><div class="cpick col">${Object.entries(LAWS).filter(([k]) => !laws().includes(k)).map(([k, l]) =>
+    `<button onclick="civProposeGo('${k}')">${l.e} <b>${E(L2(l))}</b><small>${E(L2(l.what))}</small></button>`).join("")}</div>
+    <button class="btn ghost wide" onclick="townCloseCard()">${W2("Cancel","Cancelar")}</button>`);
+};
+window.civProposeGo = async function(k){
+  try { await store().add(`${C()}/proposals`, {key:k, sid:SESS().sid, uid:store().uid(), name:SESS().name, status:"voting", at:Date.now()});
+    closeSheet(); T.toast(W2("Proposed! Your class votes now.","¡Propuesta! Ahora vota la clase.")); } catch(e){ T.toast(W2("Only the mayor can propose laws.","Solo la alcaldía puede proponer leyes.")); }
+};
+window.civLawVote = async function(pid, v){
+  try { await store().set(`${C()}/lawvotes/${pid}_${SESS().sid}`, {pid, sid:SESS().sid, v:!!v, at:Date.now()}); } catch(e){}
+  civ().voted["law:" + pid] = 1; save(); T.toast(W2("Vote cast!","¡Voto emitido!")); paint();
+};
+EXT.listCheck.push((id, price) => hasLaw("pet_cap") && /^pet_/.test(id) && price > 25 ? W2("The Pet Price Cap law limits pets to 25 coins.", "La ley de tope a mascotas limita el precio a 25 monedas.") : null);
+EXT.onSold.push(m => { if (!hasLaw("park_tax")) return; const tax = Math.max(1, Math.round(m.price * 0.1)); T.coins(-tax); civ().tax += tax;
+  T.toast(W2(`Park Tax: ${tax} coin${tax > 1 ? "s" : ""} went to the class goal.`, `Impuesto del parque: ${tax} moneda(s) para la meta de la clase.`)); });
+
+/* ---------------- Town Hall tab */
+function paintHall(el){
+  flag("hall");
+  const draw = () => { el.innerHTML = `<section class="panel raised chall">${img(`${TA}civic/town_hall.webp`, "🏛️", "big")}<div><div class="eyebrow">${E(SESS().className || "")}</div>
+      <h2>${W2("Town Hall","Ayuntamiento")}</h2><p class="muted">${W2("Class goals, the period league, elections and laws.","Metas de la clase, la liga de periodos, elecciones y leyes.")}</p></div></section>
+    ${paintGoalCard()}${paintLeague()}${paintElection()}${paintLaws()}`; };
+  draw();
+  sub(NET().watchPub(rows => { if (!rows) return; rows.forEach(p => T.pub[p.id] = p); leaguePush(); draw(); }));
+  const c = CLS();
+  if (c.ownerUid) sub(store().watch(`league/${c.ownerUid}/periods`, {}, rows => { if (rows) { LEAGUE = rows; draw(); } }));
+  const e = elec();
+  if (e) sub(store().watch(`${C()}/candidates`, {where:[["eid","==",e.id]]}, rows => { if (rows) { CANDS = rows.sort((a, b) => a.at - b.at); draw(); } }));
+  sub(store().watch(`${C()}/proposals`, {}, rows => { if (rows) { PROPS = rows.filter(p => LAWS[p.key]); draw(); } }));
+}
+
+/* ================================================================ 5. businesses */
+const myBiz = () => civ().biz;
+const prodOf = id => Object.entries(BIZ).find(([k, b]) => b.items.includes(id));
+function bizPartner(){ const b = myBiz(); if (!b || !b.partner) return null; const p = T.pub[b.partner]; return p && p.bizWith === SESS().sid ? b.partner : null; }
+/* someone named me as their partner: their business line becomes mine to make too */
+function partnerOf(){ return Object.entries(T.pub).find(([sid, p]) => sid !== SESS().sid && p.biz && p.biz.partner === SESS().sid); }
+function paintBiz(){
+  const b = myBiz(), inv = partnerOf();
+  if (!b) {
+    const offer = inv && !(civ().bizWith === inv[0]) ? `<p class="tnote">🤝 ${W2(`${E(inv[1].name)} wants you as a partner in their ${E(L2(BIZ[inv[1].biz.type]))}.`, `${E(inv[1].name)} te quiere de socio en su ${E(L2(BIZ[inv[1].biz.type]))}.`)}
+      <button class="btn primary" onclick="civJoinBiz('${inv[0]}')">${W2("Join","Unirme")}</button></p>` : "";
+    const working = civ().bizWith && T.pub[civ().bizWith] && T.pub[civ().bizWith].biz ? bizCard(civ().bizWith) : "";
+    return `<section class="panel"><div class="eyebrow">🏪 ${W2("Start a business","Empieza un negocio")}</div>${offer}${working}
+      <p class="muted">${W2(`Startup cost: ${START_COST} coins. You buy supplies, make products, and sell them in the Market. Profit = price − cost.`,
+        `Costo inicial: ${START_COST} monedas. Compras insumos, haces productos y los vendes en el Mercado. Ganancia = precio − costo.`)}</p>
+      <div class="cbiz">${Object.entries(BIZ).map(([k, z]) => `<button onclick="civStartBiz('${k}')">${img(`${TA}civic/stall_${k}.webp`, z.e)}<b>${E(L2(z))}</b>
+        <small>${z.items.map(id => T.ITEMS[id] ? T.ITEMS[id].e : "").join(" ")}</small></button>`).join("")}</div></section>`;
+  }
+  return bizCard(SESS().sid);
+}
+function bizCard(ownerSid){
+  const mine = ownerSid === SESS().sid, b = mine ? myBiz() : T.pub[ownerSid].biz, z = BIZ[b.type]; if (!z) return "";
+  const made = (civ().made && civ().made[day()]) || 0, partner = mine ? b.partner : ownerSid, pp = partner && T.pub[partner];
+  const st = mine ? myBiz() : (civ().bizStats || {sold:0, rev:0, cost:0});
+  return `<section class="panel cbizc">${img(`${TA}civic/stall_${b.type}.webp`, z.e, "big")}<div>
+      <div class="eyebrow">${mine ? W2("Your business","Tu negocio") : W2("Partner business","Negocio de tu socio")}</div>
+      <h2>${E(mine ? SESS().name : T.pub[ownerSid].name)}'s ${E(L2(z))}</h2>
+      <p class="muted">${pp ? W2(`Partner: ${E(pp.name)}${mine && !bizPartner() ? " (waiting for them to join)" : ""}. Profit on every sale is split 50/50.`, `Socio: ${E(pp.name)}${mine && !bizPartner() ? " (esperando que acepte)" : ""}. La ganancia de cada venta se divide 50/50.`)
+        : W2("Sole proprietor: you keep all the profit and take all the risk.","Propietario único: te quedas con toda la ganancia y todo el riesgo.")}</p>
+      <div class="cstats"><span>${W2("Sold","Vendidos")} <b>${st.sold | 0}</b></span><span>${W2("Revenue","Ingresos")} <b>🪙${st.rev | 0}</b></span>
+        <span>${W2("Costs","Costos")} <b>🪙${st.cost | 0}</b></span><span>${W2("Profit","Ganancia")} <b>🪙${(st.rev | 0) - (st.cost | 0)}</b></span></div>
+      <div class="cmake">${z.items.map(id => { const it = T.ITEMS[id]; return `<button class="btn" onclick="civMake('${id}')" ${made >= DAILY_MAKE ? "disabled" : ""}>${T.itemArt(id, 40)}
+        ${E(T.itemName(id))}<small>${W2("supplies","insumos")} 🪙${it.cost}</small></button>`; }).join("")}</div>
+      <p class="muted" style="font-size:12px">${W2(`Made today: ${made}/${DAILY_MAKE}. Products go to your inventory; list them in the Market at a price above your cost.`, `Hechos hoy: ${made}/${DAILY_MAKE}. Los productos van a tu inventario; véndelos en el Mercado a más de su costo.`)}</p>
+      ${mine && !b.partner ? `<button class="btn ghost" onclick="civPartner()">🤝 ${W2("Add a partner","Agregar socio")}</button>` : ""}
+      ${mine ? `<button class="btn ghost" onclick="civCloseBiz()">${W2("Close the business","Cerrar el negocio")}</button>` : ""}</div></section>`;
+}
+window.civStartBiz = function(k){
+  if (S.tokens < START_COST) return T.toast(W2(`You need ${START_COST} coins to start.`, `Necesitas ${START_COST} monedas para empezar.`));
+  if (!confirm(W2(`Open a ${BIZ[k].en} for ${START_COST} coins?`, `¿Abrir una ${BIZ[k].es} por ${START_COST} monedas?`))) return;
+  T.coins(-START_COST); civ().biz = {type:k, sold:0, rev:0, cost:START_COST, partner:null, since:Date.now()}; T.persist(); paint();
+};
+window.civMake = function(id){
+  const it = T.ITEMS[id], c = civ(); c.made = c.made || {}; const n = c.made[day()] || 0;
+  if (n >= DAILY_MAKE) return T.toast(W2("Your shop is closed for today. Make more tomorrow!","Tu tienda cerró por hoy. ¡Haz más mañana!"));
+  if (S.tokens < it.cost) return T.toast(W2(`Supplies cost ${it.cost} coins.`, `Los insumos cuestan ${it.cost} monedas.`));
+  T.coins(-it.cost); T.addItem(id, 1); c.made = {[day()]:n + 1};
+  if (c.biz) c.biz.cost += it.cost; else { c.bizStats = c.bizStats || {sold:0, rev:0, cost:0}; c.bizStats.cost += it.cost; }
+  T.persist(); paint(); T.toast(W2(`Made: ${T.itemName(id)}. List it in the Market!`, `Hiciste: ${T.itemName(id)}. ¡Véndelo en el Mercado!`));
+};
+window.civPartner = function(){
+  const list = T.lots().filter(p => p.sid !== SESS().sid);
+  sheet(`<h2>${W2("Pick a partner","Elige un socio")}</h2><p class="muted">${W2("A partnership shares the work and splits the profit 50/50.","Una sociedad comparte el trabajo y divide la ganancia 50/50.")}</p>
+    <div class="tpeople">${list.map(p => `<button class="btn" onclick="civPartnerGo('${p.sid}')">${E(p.name)}</button>`).join("") || `<p class="muted">—</p>`}</div>
+    <button class="btn ghost wide" onclick="townCloseCard()">${W2("Cancel","Cancelar")}</button>`);
+};
+window.civPartnerGo = function(sid){ civ().biz.partner = sid; T.persist(); closeSheet(); paint(); T.toast(W2("Partner invite sent.","Invitación enviada.")); };
+window.civJoinBiz = function(owner){ civ().bizWith = owner; T.persist(); paint(); T.toast(W2("You're partners now!","¡Ahora son socios!")); };
+window.civCloseBiz = function(){ if (confirm(W2("Close your business? Products you made stay in your inventory.","¿Cerrar tu negocio? Tus productos se quedan en tu inventario."))) { civ().biz = null; T.persist(); paint(); } };
+/* a product sold: count it, and send the partner half the profit */
+EXT.onSold.push(m => {
+  const p = prodOf(m.item); if (!p) return; const c = civ(), it = T.ITEMS[m.item], profit = Math.max(0, m.price - (it.cost || 0));
+  const st = c.biz && c.biz.type === p[0] ? c.biz : (c.bizStats = c.bizStats || {sold:0, rev:0, cost:0});
+  st.sold = (st.sold | 0) + 1; st.rev = (st.rev | 0) + m.price;
+  const to = c.biz && c.biz.type === p[0] ? bizPartner() : c.bizWith && T.pub[c.bizWith] && T.pub[c.bizWith].biz && T.pub[c.bizWith].biz.type === p[0] ? c.bizWith : null;
+  const half = Math.floor(profit / 2);
+  if (to && half > 0) { T.coins(-half);
+    store().add(`${C()}/payouts`, {from:SESS().sid, fromName:SESS().name, to, coins:half, item:m.item, at:Date.now(), settled:false}).catch(e => { T.coins(half); console.warn(e); }); }
+});
+function settlePayouts(rows){
+  let changed = false;
+  rows.forEach(r => { changed = T.once("pay:" + r.id, () => { T.coins(r.coins | 0);
+    const c = civ(), st = c.biz || (c.bizStats = c.bizStats || {sold:0, rev:0, cost:0}); st.rev = (st.rev | 0) + (r.coins | 0);
+    T.toast(W2(`Partner payout: ${r.fromName} sold a ${T.itemName(r.item)}. +${r.coins} coins.`, `Pago de socio: ${r.fromName} vendió ${T.itemName(r.item)}. +${r.coins} monedas.`));
+    if (!r.settled) store().update(`${C()}/payouts/${r.id}`, {settled:true}).catch(() => {}); }) || changed; });
+  if (changed) T.persist();
+}
+
+/* ================================================================ 6. daily jobs, streak, Home of the Week */
+function rollJobs(){
+  const j = civ().jobs, d = day(); if (j.day === d) return;
+  const keys = Object.keys(JOBS), h = hashN(d + (SESS() ? SESS().sid : "")), picks = [];
+  for (let i = 0; picks.length < 3; i++) { const k = keys[(h + i * 7) % keys.length]; if (!picks.includes(k)) picks.push(k); }
+  if (!picks.includes("study")) picks[0] = "study";
+  Object.assign(j, {day:d, picks, done:{}, paid:{}, flags:{}, xp0:myXp()}); save();
+}
+function jobDone(k){ const j = civ().jobs; return k === "study" ? JOBS.study.check() : !!j.flags[k]; }
+function visitStreak(){
+  const s = civ().streak, d = day(); if (s.last === d) return;
+  const y = new Date(); y.setDate(y.getDate() - 1);
+  s.n = s.last === day(y) ? s.n + 1 : 1; s.last = d; s.best = Math.max(s.best, s.n);
+  if (s.n % 5 === 0) { T.town().crates++; T.toast(W2(`🔥 ${s.n}-day streak! +1 crate.`, `🔥 ¡Racha de ${s.n} días! +1 caja.`)); }
+  /* Crate Fridays law */
+  if (hasLaw("crate_friday") && new Date().getDay() === 5) T.once("fri:" + d, () => { T.town().crates++; T.toast(W2("Crate Friday! +1 crate.","¡Viernes de cajas! +1 caja.")); });
+  T.persist();
+}
+function paintJobs(el){
+  rollJobs(); const j = civ().jobs, s = civ().streak, pay = jobPay();
+  el.innerHTML = `<section class="panel raised cjobs">${img(`${TA}civic/job_board.webp`, "📋", "big")}<div><div class="eyebrow">${W2("Job board","Tablero de trabajos")} · ${new Date().toLocaleDateString()}</div>
+      <h2>${W2("Today's jobs","Trabajos de hoy")}</h2><p class="muted">${W2(`Each job pays ${Math.max(1, Math.round(pay))} coin${pay > 1 ? "s" : ""}. New jobs every day.`, `Cada trabajo paga ${Math.max(1, Math.round(pay))} moneda(s). Trabajos nuevos cada día.`)}</p></div>
+      <div class="cstreak">${img(`${TA}civic/streak_flame.webp`, "🔥")}<b>${s.n}</b><small>${W2("day streak","días seguidos")}</small></div></section>
+    <section class="panel">${j.picks.map(k => { const d = jobDone(k), paid = j.paid[k];
+      return `<div class="cjob ${d ? "done" : ""}"><span>${JOBS[k].e}</span><b>${E(L2(JOBS[k]))}</b>
+        ${paid ? `<i>✅ ${W2("Paid","Pagado")}</i>` : d ? `<button class="btn primary" onclick="civCollect('${k}')">${W2("Collect","Cobrar")}</button>` : `<i class="muted">${W2("to do","pendiente")}</i>`}</div>`; }).join("")}
+      <p class="muted" style="font-size:12px">${W2("Visit the Town 5 days in a row for a bonus crate.","Visita el Pueblo 5 días seguidos para ganar una caja extra.")}</p></section>
+    ${paintBiz()}`;
+}
+window.civCollect = function(k){
+  const j = civ().jobs; if (j.paid[k] || !jobDone(k)) return; j.paid[k] = 1;
+  const n = Math.max(1, Math.round(jobPay())); T.coins(n); T.persist(); paint(); T.toast(W2(`+${n} coin${n > 1 ? "s" : ""}`, `+${n} moneda(s)`));
+};
+/* job flags from things that already happen in the Town */
+const wrap = (name, k) => { const f = window[name]; if (typeof f !== "function") return; window[name] = function(){ const r = f.apply(this, arguments); flag(k); return r; }; };
+wrap("townSticker", "sticker"); wrap("townSay", "chat"); wrap("townList", "market"); wrap("townBuy", "market");
+
+/* Home of the Week */
+let HOTW = [], HOTW_LAST = [];
+function tally(rows){ const t = {}; rows.forEach(r => { t[r.for] = (t[r.for] || 0) + 1; }); return Object.entries(t).sort((a, b) => b[1] - a[1]); }
+function hotwWinner(){ const t = tally(HOTW_LAST); return t.length ? t[0][0] : null; }
+function watchHotw(){
+  if (!SESS()) return () => {};
+  return store().watch(`${C()}/hotw`, {where:[["w","in",[week(), lastWeek()]]]}, rows => { if (!rows) return; HOTW = rows.filter(r => r.w === week()); HOTW_LAST = rows.filter(r => r.w === lastWeek());
+    const win = hotwWinner(); if (win === SESS().sid) T.once("hotw:" + lastWeek(), () => { T.town().crates++; T.persist(); T.toast(W2("🏆 Your house won Home of the Week! +1 crate.","🏆 ¡Tu casa ganó Casa de la Semana! +1 caja.")); }); });
+}
+EXT.streetBadge.push(p => { const s = [];
+  if (hotwWinner() === p.sid) s.push(`<span class="cbadge" title="${W2("Home of the Week","Casa de la Semana")}">🏆</span>`);
+  if (CLS().mayor && CLS().mayor.sid === p.sid) s.push(`<span class="cbadge" title="${W2("Mayor","Alcalde")}">🎖️</span>`);
+  if (p.biz && BIZ[p.biz.type]) s.push(`<span class="cbadge" title="${E(L2(BIZ[p.biz.type]))}">${BIZ[p.biz.type].e}</span>`);
+  if (p.streak >= 5) s.push(`<span class="cbadge">🔥${p.streak}</span>`);
+  return s.join(""); });
+EXT.houseExtra.push({
+  html: sid => { if (!SESS()) return ""; const mine = sid === SESS().sid, votes = tally(HOTW), mineV = HOTW.find(r => r.sid === SESS().sid);
+    return `<section class="panel chotw"><div class="eyebrow">🏆 ${W2("Home of the Week","Casa de la Semana")}</div>
+      ${mine ? `<p class="muted">${W2(`Your house has ${(votes.find(v => v[0] === sid) || [0, 0])[1]} vote(s) this week. Voting resets Monday; last week's winner gets a crate.`, `Tu casa tiene ${(votes.find(v => v[0] === sid) || [0, 0])[1]} voto(s) esta semana. Se reinicia el lunes; quien gane recibe una caja.`)}</p>`
+        : mineV ? `<p class="tnote">${W2(`You voted for ${E((T.pub[mineV.for] || {}).name || "…")} this week.`, `Votaste por ${E((T.pub[mineV.for] || {}).name || "…")} esta semana.`)}</p>`
+        : `<button class="btn primary" onclick="civHotw('${sid}')">🏆 ${W2("Vote for this house","Votar por esta casa")}</button>`}</section>`; },
+  after: sid => { if (SESS() && sid !== SESS().sid) flag("visit"); }
+});
+window.civHotw = async function(sid){
+  try { await store().set(`${C()}/hotw/${week()}_${SESS().sid}`, {w:week(), sid:SESS().sid, for:sid, at:Date.now()}); flag("vote");
+    T.toast(W2("Vote counted!","¡Voto contado!")); paint(); } catch(e){ T.toast(W2("You already voted this week.","Ya votaste esta semana.")); }
+};
+
+/* ================================================================ 7. plaza: upgrades, seasons, live quiz */
+const PIMG = {};
+function plazaImg(k){ if (!(k in PIMG)) { const im = new Image(); im.onerror = () => { PIMG[k] = null; }; im.src = `${TA}plaza/${k}.webp`; PIMG[k] = im; } return PIMG[k]; }
+EXT.plazaBack.push(cx => {
+  unlocked().forEach(k => { const u = UPGRADES[k], im = plazaImg(k), [x, y] = u.at;
+    if (im && im.complete && im.naturalWidth) { const h = u.h, w = im.naturalWidth * h / im.naturalHeight; cx.drawImage(im, x - w / 2, y - h, w, h); }
+    else { cx.font = `${Math.round(u.h * 0.6)}px sans-serif`; cx.textAlign = "center"; cx.fillText(u.e, x, y - 6); } });
+});
+function season(){
+  const s = CLS().season; if (s && s !== "auto") return s === "off" ? null : s;
+  const m = new Date().getMonth(); return {9:"fall", 10:"harvest", 11:"winter", 1:"hearts", 2:"spring", 3:"spring", 4:"grad"}[m] || null;
+}
+const SEASONS = {fall:["🎃","🦇"], harvest:["🍂","🍁"], winter:["❄️","❄️"], hearts:["💖","💌"], spring:["🌸","🌼"], grad:["🎓","🎉"], homecoming:["🎖️","🏈"]};
+let FALL = null;
+EXT.plazaFront.push(cx => {
+  const s = season(); if (!s || !SEASONS[s]) return; const [a, b] = SEASONS[s];
+  if (!FALL) FALL = Array.from({length:18}, (_, i) => ({x:Math.random() * 960, y:Math.random() * 540, v:20 + Math.random() * 30, k:i % 2}));
+  const t = performance.now() / 1000; cx.textAlign = "center";
+  if (s === "homecoming") { cx.font = "22px sans-serif"; for (let x = 20; x < 960; x += 48) cx.fillText(x % 96 ? "🔴" : "🟡", x, 22 + Math.sin(x / 70) * 6); }
+  cx.font = "22px sans-serif"; cx.globalAlpha = 0.85;
+  FALL.forEach(p => { p.y += p.v / 60; if (p.y > 560) { p.y = -20; p.x = Math.random() * 960; } cx.fillText(p.k ? b : a, p.x + Math.sin(t + p.v) * 12, p.y); });
+  cx.globalAlpha = 1;
+});
+/* live plaza quiz: the question shows on everyone's plaza and on the board */
+const quiz = () => { const q = CLS().quiz; return q && q.id && Date.now() - (q.at || 0) < 15 * 60e3 ? q : null; };
+EXT.plazaFront.push(cx => {
+  const q = quiz(); if (!q) return;
+  cx.fillStyle = "rgba(29,27,46,.86)"; T.rr(cx, 130, 12, 810, q.phase === "reveal" ? 120 : 92, 16); cx.fill();
+  cx.fillStyle = "#FFD23F"; cx.font = "800 16px 'Baloo 2', sans-serif"; cx.textAlign = "left";
+  cx.fillText(q.phase === "reveal" ? "✅ " + W2("Answer","Respuesta") : "❓ " + W2("Plaza quiz! Tap to answer","¡Quiz en la plaza! Toca para responder"), 150, 38);
+  cx.fillStyle = "#fff"; cx.font = "700 18px 'Nunito', sans-serif";
+  const txt = L2(q.q.q); cx.fillText(txt.length > 84 ? txt.slice(0, 82) + "…" : txt, 150, 66);
+  if (q.phase === "reveal") { const opts = q.q.c[S.lang === "es" && q.q.c.es ? "es" : "en"]; cx.fillStyle = "#7CFC9A"; cx.fillText("→ " + opts[q.q.a], 150, 94);
+    if (q.first && q.first.length) { cx.fillStyle = "#FFD23F"; cx.fillText("⚡ " + q.first.slice(0, 3).join(", "), 150, 120); } }
+});
+EXT.plazaTap.push((x, y) => { const q = quiz(); if (!q || y > 110 || x < 130 || !SESS()) return false; civQuizOpen(); return true; });
+function civQuizOpen(){
+  const q = quiz(); if (!q || q.phase !== "open") return; const c = civ(); c.quiz = c.quiz || {};
+  if (c.quiz[q.id] != null) return T.toast(W2("You answered. Wait for Coach Smith to reveal it!","Ya respondiste. ¡Espera a que Coach Smith lo revele!"));
+  const opts = q.q.c[S.lang === "es" && q.q.c.es ? "es" : "en"];
+  sheet(`<div class="eyebrow">❓ ${W2("Plaza quiz","Quiz de la plaza")}</div><h2 style="font-size:20px">${E(L2(q.q.q))}</h2>
+    <div class="cqopts">${opts.map((o, i) => `<button class="btn" onclick="civQuizAns(${i})">${["A","B","C","D"][i]}. ${E(o)}</button>`).join("")}</div>`);
+}
+window.civQuizOpen = civQuizOpen;
+window.civQuizAns = async function(i){
+  const q = quiz(); if (!q) return; const c = civ(); c.quiz = c.quiz || {}; c.quiz[q.id] = i; save(); closeSheet();
+  try { await store().set(`${C()}/buzz/${q.id}_${SESS().sid}`, {qid:q.id, sid:SESS().sid, name:SESS().name, a:i, at:Date.now()}); T.toast(W2("Locked in!","¡Respuesta enviada!")); }
+  catch(e){ T.toast(W2("Couldn't send your answer.","No se pudo enviar tu respuesta.")); }
+};
+function quizReveal(q){
+  const c = civ(); c.quiz = c.quiz || {}; const mine = c.quiz[q.id];
+  if (mine == null) return;
+  T.once("quiz:" + q.id, () => { if (mine === q.q.a) { T.coins(1); T.toast(W2("Plaza quiz: correct! +1 coin.","Quiz de la plaza: ¡correcto! +1 moneda.")); }
+    else T.toast(W2("Plaza quiz: not this time.","Quiz de la plaza: esta vez no.")); T.persist(); });
+}
+
+/* ================================================================ class doc, session, publish hooks */
+EXT.onClass.push((was, c) => {
+  if (!SESS()) return;
+  const g = goal(); if (g) xpSince("goal:" + g.id);
+  if (was && was.econ && c.econ && (was.econ.rate == null ? 2 : was.econ.rate) !== fedRate()) T.toast(fedRate() > (was.econ.rate == null ? 2 : was.econ.rate)
+    ? W2(`Coach Smith raised the interest rate to ${fedRate()}%. Savings earn more; loans cost more.`, `Coach Smith subió la tasa a ${fedRate()}%. Los ahorros ganan más; los préstamos cuestan más.`)
+    : W2(`Coach Smith cut the interest rate to ${fedRate()}%. Borrowing is cheaper now.`, `Coach Smith bajó la tasa a ${fedRate()}%. Pedir prestado es más barato.`));
+  const e = cur(); if (e && (!was || !was.event || was.event.id !== e.id)) T.toast(`${EVENTS[e.kind].e} ${L2(EVENTS[e.kind])}`);
+  if (goalDone()) T.once("goal:" + g.id, () => { T.town().crates++; T.persist();
+    T.toast(W2(`🎉 Class goal reached! The ${UPGRADES[g.reward] ? UPGRADES[g.reward].en : "upgrade"} is on the plaza, and you got a crate.`, `🎉 ¡Meta lograda! ${UPGRADES[g.reward] ? UPGRADES[g.reward].es : "La mejora"} está en la plaza y recibiste una caja.`));
+    if (typeof fireConfetti === "function") fireConfetti(); });
+  const q = c.quiz; if (q && q.id && q.phase === "reveal") quizReveal(q);
+  if (q && q.id && q.phase === "open" && (!was || !was.quiz || was.quiz.id !== q.id) && T.isTown() && T.tt === "plaza") setTimeout(civQuizOpen, 300);
+  if (T.isTown() && ["hall","bank","jobs"].includes(T.tt) && (!was || JSON.stringify([was.goal, was.election, was.mayor, was.laws, was.econ, was.event]) !== JSON.stringify([c.goal, c.election, c.mayor, c.laws, c.econ, c.event]))) T.paintTown();
+});
+let BGS = [];
+EXT.onSession.push(() => {
+  BGS.forEach(u => { try { u(); } catch(e){} }); BGS = [];
+  rollJobs(); visitStreak(); xpSince("wk:" + week()); accrue();
+  BGS.push(store().watch(`${C()}/payouts`, {where:[["to","==",SESS().sid]]}, rows => { if (rows) settlePayouts(rows); }));
+  BGS.push(watchHotw());
+});
+EXT.pubExtra.push(() => {
+  const g = goal(), c = civ();
+  return {wk:{w:week(), n:xpSince("wk:" + week())}, goal:g ? {id:g.id, n:myGoalN()} : null, streak:c.streak.n,
+          biz:c.biz ? {type:c.biz.type, partner:c.biz.partner || null} : null, bizWith:c.bizWith || null};
+});
+/* keep my numbers fresh for the class goal and the league while I study */
+let _pubXp = -1;   /* only re-publish when XP actually changed (keeps Firestore writes low) */
+setInterval(() => { if (SESS() && myXp() !== _pubXp) { _pubXp = myXp(); T.publishSoon(); } }, 180000);
+
+/* ---------------------------------------------------------------- tabs */
+EXT.tabs.push({key:"hall", icon:"🏛️", label:() => W2("Town Hall","Ayuntamiento"), paint:paintHall},
+              {key:"bank", icon:"🏦", label:() => W2("Bank","Banco"), paint:el => { paintBank(el); }},
+              {key:"jobs", icon:"📋", label:() => W2("Jobs","Trabajos"), paint:el => { paintJobs(el);
+                sub(NET().watchPub(rows => { if (rows) { rows.forEach(p => T.pub[p.id] = p); if (T.tt === "jobs" && document.getElementById("tbody") === el) paintJobs(el); } })); }});
+EXT.plazaSub.push(() => { const q = quiz(); if (q && q.phase === "open" && civ().quiz && civ().quiz[q.id] == null) setTimeout(civQuizOpen, 400); });
+
+/* ================================================================ teacher panels */
+let A_BUZZ = [];
+EXT.adminPanels.push({
+  html: c => {
+    const g = c.goal && c.goal.id ? c.goal : null, ev = c.event && c.event.id && (!c.event.until || c.event.until > Date.now()) ? c.event : null, el = c.election && c.election.id ? c.election : null;
+    const q = c.quiz && c.quiz.id ? c.quiz : null, rate = c.econ && c.econ.rate != null ? c.econ.rate : 2;
+    return `<section class="panel tadm"><div class="eyebrow">🎯 ${W2("Class goal","Meta de la clase")}</div>
+      ${g ? `<p>${W2("Current goal","Meta actual")}: <b>${g.target} XP</b> → ${UPGRADES[g.reward] ? UPGRADES[g.reward].e + " " + UPGRADES[g.reward].en : ""} ${g.done ? "✅" : ""}
+        <span id="aGoalN" class="muted"></span></p>` : `<p class="muted">${W2("No goal set.","Sin meta.")}</p>`}
+      <div class="tlev"><label>${W2("Target XP for the class","XP meta de la clase")}<input id="aGoalT" type="number" min="100" step="100" value="${g ? g.target : 3000}"></label>
+        <label>${W2("Plaza reward","Premio en la plaza")}<select id="aGoalR">${Object.entries(UPGRADES).filter(([k]) => !(c.upgrades || []).includes(k)).map(([k, u]) => `<option value="${k}">${u.e} ${u.en}</option>`).join("")}</select></label>
+        <button class="btn primary" onclick="civSetGoal()">${g ? W2("Start a new goal","Nueva meta") : W2("Set goal","Poner meta")}</button></div>
+      <p class="muted" style="font-size:12px">${W2("Unlocked so far","Desbloqueado")}: ${(c.upgrades || []).map(k => UPGRADES[k] ? UPGRADES[k].e : "").join(" ") || "—"} · ${W2("About 150–300 XP per student a week is a stretch goal.","Unos 150–300 XP por estudiante por semana es una meta exigente.")}</p></section>
+    <section class="panel tadm"><div class="eyebrow">📈 ${W2("Economy events and the Fed","Eventos económicos y la Fed")}</div>
+      <div class="tlev"><label>${W2("Interest rate (% a week)","Tasa de interés (% semanal)")}<input type="number" min="0" max="10" step="0.5" value="${rate}" onchange="townEcon('rate',this.value)"></label></div>
+      <p>${ev ? `${W2("Now","Ahora")}: <b>${EVENTS[ev.kind].e} ${EVENTS[ev.kind].en}</b>${ev.until ? " · " + W2("until","hasta") + " " + new Date(ev.until).toLocaleString() : ""} <button class="btn ghost" onclick="civEvent(null)">${W2("End it","Terminar")}</button>` : W2("No event running.","Ningún evento activo.")}</p>
+      <div class="tsw">${Object.entries(EVENTS).map(([k, e]) => `<button class="btn" onclick="civEvent('${k}')">${e.e} ${e.en}</button>`).join("")}</div>
+      <p class="muted" style="font-size:12px">${W2("Events last one day. Each one changes Town prices or job pay and asks students an Econ check question (+2 coins).","Los eventos duran un día. Cambian precios o pagos y hacen una pregunta (+2 monedas).")}</p></section>
+    <section class="panel tadm"><div class="eyebrow">🗳️ ${W2("Elections and laws","Elecciones y leyes")}</div>
+      <p>${c.mayor && c.mayor.sid ? W2("Mayor","Alcalde") + ": <b>" + E(c.mayor.name) + "</b>" : W2("No mayor yet.","Aún no hay alcalde.")}
+        ${el ? ` · ${W2("Election","Elección")}: <b>${el.phase}</b>` : ""}</p>
+      <div class="tsw">${!el || el.phase === "closed" ? `<button class="btn" onclick="civElection('filing')">📣 ${W2("Open sign-ups for mayor","Abrir inscripciones")}</button>` : ""}
+        ${el && el.phase === "filing" ? `<button class="btn primary" onclick="civElection('voting')">🗳️ ${W2("Open voting","Abrir votación")}</button>` : ""}
+        ${el && el.phase === "voting" ? `<button class="btn primary" onclick="civTally()">✅ ${W2("Close polls and count","Cerrar y contar")}</button>` : ""}</div>
+      <div id="aLaws"></div></section>
+    <section class="panel tadm"><div class="eyebrow">❓ ${W2("Plaza quiz and decorations","Quiz en la plaza y decoración")}</div>
+      <div class="tlev"><label>${W2("Course","Curso")}<select id="aQC">${(typeof allPacks === "function" ? allPacks() : []).map(p => `<option value="${p.id}">${E(L2(p.name))}</option>`).join("")}</select></label>
+        <button class="btn primary" onclick="civQuiz()">❓ ${q && q.phase === "open" ? W2("Next question","Siguiente pregunta") : W2("Start a plaza quiz","Empezar un quiz")}</button>
+        ${q && q.phase === "open" ? `<button class="btn" onclick="civReveal()">👀 ${W2("Reveal answer","Revelar respuesta")}</button>` : ""}
+        <button class="btn ghost" onclick="townProjector()">📽️ ${W2("Show on the board","Mostrar en el pizarrón")}</button></div>
+      ${q ? `<p><b>${E(L2(q.q.q))}</b></p><div id="aBuzz" class="muted"></div>` : ""}
+      <div class="tlev"><label>${W2("Plaza decorations","Decoración de la plaza")}<select onchange="civSeason(this.value)">${[["auto",W2("Automatic (by month)","Automática (por mes)")],["off",W2("Off","Apagada")],["homecoming","Homecoming"],["fall","🎃"],["harvest","🍂"],["winter","❄️"],["hearts","💖"],["spring","🌸"],["grad","🎓"]]
+        .map(([k, l]) => `<option value="${k}" ${(c.season || "auto") === k ? "selected" : ""}>${l}</option>`).join("")}</select></label></div></section>`;
+  },
+  after: c => {
+    /* live counts for the goal and the quiz, and the law tally */
+    store().list(`classes/${c.id}/pub`).then(rows => { const g = c.goal; const el = document.getElementById("aGoalN"); if (!g || !el) return;
+      const n = rows.reduce((s, p) => s + (p.goal && p.goal.id === g.id ? p.goal.n | 0 : 0), 0); el.textContent = `· ${n} / ${g.target}`;
+      if (n >= g.target && !g.done) T.adminSet({goal:{...g, done:true}, upgrades:[...new Set([...(c.upgrades || []), g.reward])]}); }).catch(() => {});
+    const q = c.quiz && c.quiz.id ? c.quiz : null;
+    if (q) T.viewSub(store().watch(`classes/${c.id}/buzz`, {where:[["qid","==",q.id]]}, rows => { if (!rows) return; A_BUZZ = rows.sort((a, b) => a.at - b.at);
+      const el = document.getElementById("aBuzz"); if (!el) return; const right = A_BUZZ.filter(r => r.a === q.q.a);
+      el.innerHTML = `${A_BUZZ.length} ${W2("answered","respondieron")} · ${right.length} ${W2("right","correctas")}${right.length ? " · ⚡ " + right.slice(0, 3).map(r => E(r.name)).join(", ") : ""}`; }));
+    T.viewSub(store().watch(`classes/${c.id}/proposals`, {}, rows => { const box = document.getElementById("aLaws"); if (!box || !rows) return;
+      box.innerHTML = rows.filter(p => LAWS[p.key]).sort((a, b) => b.at - a.at).slice(0, 8).map(p => `<div class="tdeal"><span>${LAWS[p.key].e} ${LAWS[p.key].en} · ${E(p.name)} · <b>${p.status}</b>${p.yes != null ? ` (${p.yes}–${p.no})` : ""}</span>
+        ${p.status === "voting" ? `<button class="btn primary" onclick="civLawTally('${p.id}')">${W2("Count votes","Contar votos")}</button>` : ""}
+        ${p.status === "passed" && (c.laws || []).includes(p.key) ? `<button class="btn ghost" onclick="civStrike('${p.id}')">⚖️ ${W2("Strike down","Anular")}</button>` : ""}</div>`).join("")
+        || `<p class="muted" style="font-size:12px">${W2("When there's a mayor, they can propose laws here for the class to vote on.","Cuando haya alcalde, podrá proponer leyes para que la clase vote.")}</p>`; }));
+  }
+});
+const tc = () => T.adminCid;
+const getCls = async () => (await T.net.myClasses()).find(x => x.id === tc());
+window.civSetGoal = function(){
+  const t = Math.max(100, parseInt(document.getElementById("aGoalT").value, 10) || 3000), r = document.getElementById("aGoalR").value;
+  if (!r) return alert(W2("Every plaza upgrade is unlocked!","¡Todas las mejoras están desbloqueadas!"));
+  T.adminSet({goal:{id:Date.now().toString(36), target:t, reward:r, start:Date.now(), done:false}});
+};
+window.civEvent = k => T.adminSet({event:k ? {id:Date.now().toString(36), kind:k, start:Date.now(), until:Date.now() + 864e5} : null});
+window.civSeason = k => T.adminSet({season:k});
+window.civElection = async function(phase){
+  const c = await getCls(), cur = c.election && c.election.id && c.election.phase !== "closed" ? c.election : null;
+  T.adminSet({election:cur ? {...cur, phase} : {id:Date.now().toString(36), office:"mayor", phase, at:Date.now()}});
+};
+window.civTally = async function(){
+  const c = await getCls(), e = c.election; if (!e) return;
+  const [votes, cands] = await Promise.all([store().list(`classes/${c.id}/votes`, {where:[["eid","==",e.id]]}), store().list(`classes/${c.id}/candidates`, {where:[["eid","==",e.id]]})]);
+  const t = {}; votes.forEach(v => { if (cands.some(x => x.sid === v.for)) t[v.for] = (t[v.for] || 0) + 1; });
+  const tally = cands.map(x => [x.name, t[x.sid] || 0, x.sid]).sort((a, b) => b[1] - a[1]);
+  if (!tally.length) return alert(W2("Nobody ran.","Nadie se postuló."));
+  if (tally.length > 1 && tally[0][1] === tally[1][1] && !confirm(W2("It's a tie! Keep the first candidate who signed up as the winner? (Cancel to keep voting open.)","¡Empate! ¿Gana quien se inscribió primero? (Cancelar para seguir votando.)"))) return;
+  const w = tally[0];
+  T.adminSet({election:{...e, phase:"closed", result:{sid:w[2], name:w[0], votes:w[1], total:votes.length, tally:tally.map(x => [x[0], x[1]])}},
+              mayor:{sid:w[2], name:w[0], since:Date.now(), eid:e.id}});
+};
+window.civLawTally = async function(pid){
+  const c = await getCls(), p = (await store().list(`classes/${c.id}/proposals`)).find(x => x.id === pid); if (!p) return;
+  const v = await store().list(`classes/${c.id}/lawvotes`, {where:[["pid","==",pid]]});
+  const yes = v.filter(x => x.v).length, no = v.length - yes, passed = yes > no;
+  await store().update(`classes/${c.id}/proposals/${pid}`, {status:passed ? "passed" : "failed", yes, no});
+  if (passed) T.adminSet({laws:[...new Set([...(c.laws || []), p.key])]}); else T.paintAdmin();
+};
+window.civStrike = async function(pid){
+  if (!confirm(W2("As the Supreme Court, strike this law down?","Como la Corte Suprema, ¿anular esta ley?"))) return;
+  const c = await getCls(), p = (await store().list(`classes/${c.id}/proposals`)).find(x => x.id === pid); if (!p) return;
+  await store().update(`classes/${c.id}/proposals/${pid}`, {status:"struck"}); T.adminSet({laws:(c.laws || []).filter(k => k !== p.key)});
+};
+window.civQuiz = async function(){
+  const pid = document.getElementById("aQC").value; window._lastQC = pid; const pk = (typeof allPacks === "function" ? allPacks() : []).find(p => p.id === pid); if (!pk) return;
+  const pool = []; pk.units.forEach(u => u.items.forEach(it => { if (it.type === "mcq" && it.c && it.c.en && it.c.en.length >= 3) pool.push(it); }));
+  const it = pool[Math.floor(Math.random() * pool.length)]; if (!it) return;
+  _pbzN = 0; setC({quiz:{id:Date.now().toString(36), phase:"open", at:Date.now(), q:{q:it.q, c:it.c, a:it.a, why:it.why || null}}});
+};
+window.civReveal = async function(){
+  const c = await getCls(), q = c.quiz; if (!q) return;
+  const rows = await store().list(`classes/${c.id}/buzz`, {where:[["qid","==",q.id]]});
+  const first = rows.filter(r => r.a === q.q.a).sort((a, b) => a.at - b.at).slice(0, 3).map(r => r.name);
+  setC({quiz:{...q, phase:"reveal", first, right:rows.filter(r => r.a === q.q.a).length, total:rows.length}});
+};
+
+/* the board: watch the class live, and give the teacher quiz buttons under the plaza */
+let _pbz = null, _pbzN = 0;
+const setC = patch => PROJ ? T.net.setClass(T.adminCid, patch) : T.adminSet(patch);
+EXT.projector.push(cid => {
+  PROJ = true;
+  T.viewSub(() => { PROJ = false; });
+  T.viewSub(store().watchDoc(`classes/${cid}`, c => { if (!c) return; ADMIN_CLS = {...c, id:cid}; const box = document.getElementById("tProjX"); if (!box) return;
+    const q = c.quiz && c.quiz.id ? c.quiz : null;
+    box.innerHTML = `<div class="tsw" style="justify-content:center;margin:10px 0">
+      <select id="aQC">${(typeof allPacks === "function" ? allPacks() : []).map(p => `<option value="${p.id}" ${q && window._lastQC === p.id ? "selected" : ""}>${E(L2(p.name))}</option>`).join("")}</select>
+      <button class="btn primary" onclick="civQuiz()">❓ ${q && q.phase === "open" ? W2("Next question","Siguiente") : W2("Plaza quiz","Quiz")}</button>
+      ${q && q.phase === "open" ? `<button class="btn" onclick="civReveal()">👀 ${W2("Reveal","Revelar")}</button>` : ""}<span id="aBuzz" class="muted"></span></div>`;
+    if (q && (!_pbz || _pbz.id !== q.id)) { if (_pbz) _pbz.off();
+      _pbz = {id:q.id, off:store().watch(`classes/${cid}/buzz`, {where:[["qid","==",q.id]]}, rows => { if (rows) _pbzN = rows.length; const el = document.getElementById("aBuzz"); if (el) el.textContent = `${_pbzN} ${W2("answered","respondieron")}`; })}; }
+    else if (q) { const el = document.getElementById("aBuzz"); if (el) el.textContent = `${_pbzN} ${W2("answered","respondieron")}`; } }));
+  T.viewSub(() => { if (_pbz) { _pbz.off(); _pbz = null; } });
+});
+
+/* every visit to the hub counts for the weekly league, even outside the Town */
+window.CIVIC = {civ, week, goalProgress, unlocked, loanOwed, accrue, rollJobs, jobDone, EVENTS, LAWS, BIZ, UPGRADES, JOBS, get LEAGUE(){ return LEAGUE; }};
+})();

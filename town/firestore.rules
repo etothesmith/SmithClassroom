@@ -108,6 +108,67 @@ service cloud.firestore {
                   || onlyChanges(['settled'])));
         allow delete: if owns(cid);
       }
+
+      // ---- civic life (town/civic.js) ----
+      // Election candidates: one per student per election, id = <eid>_<sid>
+      match /candidates/{id} {
+        allow read: if member(cid) || owns(cid);
+        allow create: if isSid(cid, request.resource.data.sid) && live(cid)
+          && id == request.resource.data.eid + '_' + request.resource.data.sid
+          && cls(cid).election.id == request.resource.data.eid && cls(cid).election.phase == 'filing'
+          && request.resource.data.planks is list && request.resource.data.planks.size() <= 2;
+        allow delete: if owns(cid) || isSid(cid, resource.data.sid);
+      }
+      // Secret ballot: one vote per student per election; only the teacher can read and count
+      match /votes/{id} {
+        allow read, delete: if owns(cid);
+        allow create: if isSid(cid, request.resource.data.sid) && live(cid)
+          && id == request.resource.data.eid + '_' + request.resource.data.sid
+          && cls(cid).election.id == request.resource.data.eid && cls(cid).election.phase == 'voting';
+      }
+      // Laws: only the mayor proposes; the teacher counts and can strike one down
+      match /proposals/{id} {
+        allow read: if member(cid) || owns(cid);
+        allow create: if isSid(cid, request.resource.data.sid) && live(cid)
+          && cls(cid).mayor.sid == request.resource.data.sid && request.resource.data.status == 'voting';
+        allow update, delete: if owns(cid);
+      }
+      match /lawvotes/{id} {
+        allow read, delete: if owns(cid);
+        allow create: if isSid(cid, request.resource.data.sid) && live(cid)
+          && id == request.resource.data.pid + '_' + request.resource.data.sid && request.resource.data.v is bool;
+      }
+      // Home of the Week: one vote per student per week (not secret), id = <week>_<sid>
+      match /hotw/{id} {
+        allow read: if member(cid) || owns(cid);
+        allow create: if isSid(cid, request.resource.data.sid) && live(cid)
+          && id == request.resource.data.w + '_' + request.resource.data.sid && request.resource.data.for != request.resource.data.sid;
+        allow delete: if owns(cid);
+      }
+      // Business partners: the seller sends the partner their half of the profit
+      match /payouts/{id} {
+        allow read: if member(cid) || owns(cid);
+        allow create: if isSid(cid, request.resource.data.from) && live(cid)
+          && request.resource.data.coins is int && request.resource.data.coins > 0 && request.resource.data.coins <= 500
+          && request.resource.data.to != request.resource.data.from;
+        allow update: if owns(cid) || (isSid(cid, resource.data.to) && onlyChanges(['settled']));
+        allow delete: if owns(cid);
+      }
+      // Live plaza quiz answers: one per student per question; the teacher reads them
+      match /buzz/{id} {
+        allow read, delete: if owns(cid);
+        allow create: if isSid(cid, request.resource.data.sid)
+          && id == request.resource.data.qid + '_' + request.resource.data.sid && request.resource.data.a is int;
+      }
+    }
+
+    // Period vs. period league: one small row per class, written by its members.
+    // Only period names and totals live here (no student names).
+    match /league/{owner}/periods/{cid} {
+      allow read: if signedIn();
+      allow write: if signedIn() && exists(/databases/$(database)/documents/classes/$(cid)/members/$(request.auth.uid))
+        && get(/databases/$(database)/documents/classes/$(cid)).data.ownerUid == owner
+        && request.resource.data.total is int && request.resource.data.total >= 0 && request.resource.data.total < 10000000;
     }
 
     // Network test page (nettest.html) writes one small document per visit

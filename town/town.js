@@ -23,6 +23,10 @@ let VIEW_SUBS = [];              /* subscriptions owned by the current view */
 let PUB = {};                    /* sid -> public profile */
 let MARKET = [], CHAT = [], PLAZA = {}, MY_SALES = [], MY_BUYS = [], T_FROM = [], T_TO = [];
 let toastEl = null;
+/* extension points used by town/civic.js (Town Hall, Bank, Jobs, businesses, events, plaza quiz) */
+const EXT = {tabs:[], onClass:[], onSession:[], priceMult:[], listCheck:[], onSold:[], plazaBack:[], plazaFront:[], plazaTap:[],
+             adminPanels:[], streetBadge:[], houseExtra:[], plazaSub:[], banner:[], pubExtra:[], projector:[]};
+const run = (list, ...a) => list.forEach(f => { try { f(...a); } catch(e){ console.warn("town ext", e); } });
 
 /* ---------------------------------------------------------------- state */
 function town(){
@@ -37,7 +41,7 @@ const addItem = (id, n = 1) => { const inv = town().inv; inv[id] = Math.max(0, (
 const once = (key, fn) => { const a = town().applied; if (a[key]) return false; a[key] = Date.now(); fn(); return true; };
 const coins = n => { S.tokens = Math.max(0, (S.tokens | 0) + n); };
 const shopMult = () => (CLS && CLS.econ && +CLS.econ.shopMult) || 1;
-const priceOf = it => Math.max(1, Math.round(it.p * shopMult()));
+const priceOf = it => Math.max(1, Math.round(it.p * shopMult() * EXT.priceMult.reduce((m, f) => m * (f(it) || 1), 1)));
 const itemName = id => ITEMS[id] ? L2(ITEMS[id].name) : id;
 /* Art that hasn't been made yet falls back to an emoji, and is only asked for once per visit */
 const MISSING = new Set();
@@ -70,7 +74,7 @@ function crateTick(){
 }
 function rollCrate(){
   const r = Math.random(); const tier = r < 0.01 ? 3 : r < 0.10 ? 2 : r < 0.40 ? 1 : 0;
-  const pool = Object.values(ITEMS).filter(i => i.r === tier); return pool[Math.floor(Math.random() * pool.length)].id;
+  const pool = Object.values(ITEMS).filter(i => i.r === tier && !i.biz); return pool[Math.floor(Math.random() * pool.length)].id;
 }
 
 /* ---------------------------------------------------------------- cloud save */
@@ -118,8 +122,9 @@ function publishSoon(){ if (!NET || !SESS) return; clearTimeout(_pubT); _pubT = 
 function myEq(){ return S.avatar || (typeof avStarter === "function" ? avStarter(0) : null); }
 function publishNow(){
   if (!NET || !SESS) return; const t = town();
+  const extra = {}; EXT.pubExtra.forEach(f => { try { Object.assign(extra, f()); } catch(e){} });
   NET.publish({eq:myEq(), lvl:levelOf(S.xp), house:{style:t.house.style, slots:t.house.slots}, shelf:Object.keys(freeInv()).slice(0, 40),
-               since:t.since}).catch(e => console.warn("publish", e));
+               since:t.since, ...extra}).catch(e => console.warn("publish", e));
 }
 
 /* ---------------------------------------------------------------- sessions & background watchers */
@@ -139,11 +144,13 @@ function onClassDoc(was){
     toast(WL(`Stimulus! Coach Smith gave everyone ${CLS.stimulus.coins} coins.`, `¡Estímulo! Coach Smith dio ${CLS.stimulus.coins} monedas a todos.`)); });
   if (CLS.gift && CLS.gift.id && (CLS.gift.to === "all" || CLS.gift.to === SESS.sid)) once("gift:" + CLS.gift.id, () => { t.crates += CLS.gift.crates | 0; persist();
     toast(WL(`Coach Smith sent you ${CLS.gift.crates} crate(s)!`, `¡Coach Smith te envió ${CLS.gift.crates} caja(s)!`)); });
+  run(EXT.onClass, was, CLS);
   if (isTown() && (!was || was.frozen !== CLS.frozen || was.chatOn !== CLS.chatOn || JSON.stringify(was.econ) !== JSON.stringify(CLS.econ) || JSON.stringify(was.muted) !== JSON.stringify(CLS.muted))) paintTown();
 }
 async function startSession(s){
   SESS = s; town(); crateTick();
   await pullCloud(); startBg(); publishNow();
+  run(EXT.onSession, s);
 }
 async function boot(){
   NET = await window.TOWN_NET; await NET.ready;
@@ -157,7 +164,7 @@ async function boot(){
 function settleSales(){
   let changed = false;
   MY_SALES.forEach(m => {
-    if (m.status === "sold") changed = once("sold:" + m.id, () => { coins(m.price);
+    if (m.status === "sold") changed = once("sold:" + m.id, () => { coins(m.price); run(EXT.onSold, m);
       toast(WL(`${m.buyerName} bought your ${itemName(m.item)} for ${m.price} coins!`, `¡${m.buyerName} compró tu ${itemName(m.item)} por ${m.price} monedas!`));
       if (!m.settled) NET.settle("market", m.id).catch(() => {}); }) || changed;
     if (m.status === "cancelled") changed = once("ret:" + m.id, () => { if (town().applied["list:" + m.id]) addItem(m.item, 1); }) || changed;
@@ -221,7 +228,8 @@ function paintTown(){
     return;
   }
   const tabs = [["plaza","🏙️",WL("Plaza","Plaza")],["homes","🏡",WL("Homes","Casas")],["market","🛒",WL("Market","Mercado")],
-                ["trades","🤝",WL("Trades","Intercambios")],["shop","🎁",WL("Shop & crates","Tienda y cajas")]];
+                ["trades","🤝",WL("Trades","Intercambios")],["shop","🎁",WL("Shop & crates","Tienda y cajas")]]
+                .concat(EXT.tabs.map(t => [t.key, t.icon, t.label()]));
   V().innerHTML = `${modeBanner()}
   <section class="panel raised thead" style="background-image:url(${TA}banner_town.jpg)">
     <div class="theadin"><div class="eyebrow">${esc(SESS.className || WL("Grenadier Town","Pueblo Grenadier"))}</div>
@@ -229,6 +237,7 @@ function paintTown(){
       <div class="tme">${esc(SESS.name)} · <img src="${icon("coin")}" alt="">${S.tokens} · 🎁 ${town().crates}
         <button class="tlink" onclick="townLeave()">${WL("Switch account","Cambiar cuenta")}</button></div></div>
   </section>
+  ${EXT.banner.map(f => { try { return f() || ""; } catch(e){ return ""; } }).join("")}
   <nav class="tsub" role="tablist">${tabs.map(([k, ic, l]) => `<button role="tab" aria-selected="${TT === k}" onclick="townTab('${k}')">${ic} ${l}${k === "trades" ? '<b id="ttTradeN"></b>' : ""}</button>`).join("")}</nav>
   <div id="tbody"></div>${teacherLink()}`;
   badge(); paintSub();
@@ -238,7 +247,8 @@ window.townTab = function(k){ if (TT === "plaza" && k !== "plaza" && NET && SESS
 function paintSub(){
   const el = document.getElementById("tbody"); if (!el) return;
   VIEW_SUBS.forEach(u => { try { u(); } catch(e){} }); VIEW_SUBS = []; stopPlaza();
-  ({plaza:paintPlaza, homes:paintHomes, market:paintMarket, trades:paintTrades, shop:paintShop}[TT] || paintPlaza)(el);
+  const ext = EXT.tabs.find(t => t.key === TT);
+  (ext ? ext.paint : {plaza:paintPlaza, homes:paintHomes, market:paintMarket, trades:paintTrades, shop:paintShop}[TT] || paintPlaza)(el);
 }
 
 /* ---------------------------------------------------------------- join */
@@ -317,6 +327,7 @@ function paintPlaza(el){
     /* tapped a classmate? */
     const hit = Object.entries(PL.others).find(([sid, o]) => Math.abs(o.x - x) < 26 && y > o.y - 95 && y < o.y + 6);
     if (hit) return playerCard(hit[0]);
+    if (EXT.plazaTap.some(f => { try { return f(x, y); } catch(e){ return false; } })) return;
     const sign = SIGNS.find(s => Math.abs(s.x - x) < 60 && Math.abs(s.y - y) < 34);
     if (sign) return townTab(sign.go);
     [me.tx, me.ty] = clampWalk(x, y); send();
@@ -333,6 +344,7 @@ function paintPlaza(el){
   }));
   VIEW_SUBS.push(NET.watchChat(rows => { if (!rows) return; CHAT = rows; paintChatLog(); }));
   VIEW_SUBS.push(NET.watchPub(rows => { if (rows) rows.forEach(p => PUB[p.id] = p); }));
+  run(EXT.plazaSub, el);
   const loop = (t0 => function tick(t){
     if (!PL || !cv.isConnected) { stopPlaza(); return; }
     const dt = Math.min(0.05, (t - (PL.t || t)) / 1000); PL.t = t;
@@ -359,11 +371,13 @@ function drawPlaza(){
     cx.fillStyle = "#9AA7B8"; cx.beginPath(); cx.ellipse(480, 330, 70, 26, 0, 0, Math.PI * 2); cx.fill();
     cx.fillStyle = "#5BB7F0"; cx.beginPath(); cx.ellipse(480, 326, 54, 18, 0, 0, Math.PI * 2); cx.fill();
   }
+  run(EXT.plazaBack, cx);
   SIGNS.forEach(s => { cx.fillStyle = "rgba(255,255,255,.92)"; cx.strokeStyle = "#1d1b2e"; cx.lineWidth = 3;
     rr(cx, s.x - 58, s.y - 22, 116, 40, 12); cx.fill(); cx.stroke();
     cx.fillStyle = "#1d1b2e"; cx.font = "800 18px 'Baloo 2', sans-serif"; cx.textAlign = "center"; cx.fillText(`${s.e} ${S.lang === "es" ? s.l[1] : s.l[0]}`, s.x, s.y + 6); });
   const all = Object.entries(PL.others).map(([sid, o]) => ({...o, sid})).concat([{...PL.me, sid:SESS.sid, name:SESS.name, eq:myEq(), me:true, emote:PL.myEmote, emoteAt:PL.myEmoteAt}]);
   all.sort((a, b) => a.y - b.y).forEach(drawPerson);
+  run(EXT.plazaFront, cx);
 }
 function drawPerson(p){
   const {cx} = PL, im = sprite(p.eq), h = 100, w = h * 0.4, bob = p.moving ? Math.sin(performance.now() / 90) * 2 : 0;
@@ -436,7 +450,7 @@ function paintStreet(el){
       return `<button class="thouse ${mine ? "mine" : ""}" onclick="townVisit('${p.sid}')">
         <span class="tlot">#${i + 1}</span>
         ${artImg(`${TA}houses/house_${hs}.webp`, "🏠", true)}
-        <b>${esc(p.name || "")}${mine ? ` · ${WL("you","tú")}` : ""}</b></button>`; }).join("") || `<p class="muted">${WL("No houses yet.","Aún no hay casas.")}</p>`}</div></section>`;
+        <b>${esc(p.name || "")}${mine ? ` · ${WL("you","tú")}` : ""}</b>${EXT.streetBadge.map(f => f(p) || "").join("")}</button>`; }).join("") || `<p class="muted">${WL("No houses yet.","Aún no hay casas.")}</p>`}</div></section>`;
 }
 function paintHouse(el, sid){
   const mine = sid === SESS.sid, p = mine ? {name:SESS.name, house:town().house, eq:myEq()} : PUB[sid];
@@ -457,7 +471,9 @@ function paintHouse(el, sid){
         <p class="muted" style="font-size:13px">${WL("Tap a + spot in your room to place furniture from your inventory.","Toca un + en tu cuarto para poner muebles de tu inventario.")}</p></section>`
       : `<div class="tstick">${window.TOWN_STICKERS.map(([k, e]) => `<button onclick="townSticker('${sid}','${k}')" aria-label="${k}">${e}</button>`).join("")}
          <button class="btn primary" onclick="townTrade('${sid}')">🤝 ${WL("Trade","Intercambiar")}</button></div>`}
-    <section class="panel"><div class="eyebrow">${WL("Guest stickers","Calcomanías de visitas")}</div><div id="tStk" class="tstk"></div></section>`;
+    <section class="panel"><div class="eyebrow">${WL("Guest stickers","Calcomanías de visitas")}</div><div id="tStk" class="tstk"></div></section>
+    ${EXT.houseExtra.map(f => f.html(sid) || "").join("")}`;
+  run(EXT.houseExtra.map(f => f.after || (() => {})), sid);
   const im = el.querySelector(".towner"); if (im && p.eq && typeof composeAvatar === "function") composeAvatar(p.eq).then(r => { if (r) im.src = r.full; });
   VIEW_SUBS.push(NET.watchStickers(sid, rows => { const box = document.getElementById("tStk"); if (!box || !rows) return;
     rows.sort((a, b) => b.at - a.at);
@@ -552,6 +568,7 @@ window.townList = async function(){
   if (!id || !freeInv()[id]) return toast(WL("Pick something you own (and that isn't in your house).", "Elige algo tuyo (que no esté en tu casa)."));
   if (!(price >= 1 && price <= 999)) return toast(WL("Set a price from 1 to 999 coins.", "Pon un precio de 1 a 999 monedas."));
   if (ceil && price > ceil) return toast(WL(`The price ceiling is ${ceil} coins.`, `El precio máximo es ${ceil} monedas.`));
+  for (const f of EXT.listCheck) { const msg = f(id, price); if (msg) return toast(msg); }
   addItem(id, -1); save();                                      /* escrow first, so it can't be sold twice */
   try { const lid = await NET.listItem(id, price); town().applied["list:" + lid] = Date.now(); persist(); toast(WL("Listed!", "¡Publicado!")); paintSub(); }
   catch(e){ addItem(id, 1); save(); toast(WL("Couldn't list it right now.", "No se pudo publicar.")); }
@@ -675,9 +692,11 @@ function paintAdminClass(c){
         <button class="btn" onclick="townGift()">🎁 ${WL("Give every student a crate","Dar una caja a todos")}</button></div>
       <p class="muted" style="font-size:13px">${WL("Try it in class: raise shop prices (inflation), set a price ceiling below what pets sell for and watch the shortage, or pay a stimulus and watch Market prices climb.",
         "Pruébalo en clase: sube los precios (inflación), pon un precio máximo menor al de las mascotas y observa la escasez, o da un estímulo y mira subir los precios.")}</p></section>
+    ${EXT.adminPanels.map(f => f.html(c) || "").join("")}
     <section class="panel tadm"><div class="eyebrow">${WL("Roster","Lista")}</div><div id="tRos">…</div></section>
     <section class="panel tadm"><div class="eyebrow">${WL("Chat log","Registro del chat")}</div><ul id="tChat" class="tlogl"></ul></section>
     <section class="panel tadm"><div class="eyebrow">${WL("Sales and trades","Ventas e intercambios")}</div><div id="tDeals"></div></section>`;
+  run(EXT.adminPanels.map(f => f.after || (() => {})), c);
   NET.roster(c.id).then(rows => { const r = document.getElementById("tRos"); if (!r) return;
     r.innerHTML = `<table class="ttab"><tr><th>${WL("Student","Estudiante")}</th><th>${WL("Last save","Último guardado")}</th><th></th></tr>${rows.map(s => `<tr><td>${esc(s.name)}</td>
       <td>${s.saveAt ? new Date(s.saveAt).toLocaleString() : "—"}</td><td>
@@ -700,7 +719,7 @@ function paintAdminClass(c){
 const adminSet = patch => NET.setClass(ADMIN_CID, patch).then(paintAdmin).catch(e => alert(e.message || e));
 window.townSet = (k, v) => adminSet({[k]:v});
 window.townEcon = async function(k, v){ const list = await NET.myClasses(), c = list.find(x => x.id === ADMIN_CID);
-  const e = {...(c.econ || {shopMult:1, ceiling:0})}; e[k] = k === "ceiling" ? Math.max(0, parseInt(v, 10) || 0) : Math.max(0.25, Math.min(5, +v || 1)); adminSet({econ:e}); };
+  const e = {...(c.econ || {shopMult:1, ceiling:0})}; e[k] = k === "ceiling" ? Math.max(0, parseInt(v, 10) || 0) : k === "rate" ? Math.max(0, Math.min(10, +v || 0)) : Math.max(0.25, Math.min(5, +v || 1)); adminSet({econ:e}); };
 window.townStim = () => { const n = parseInt(prompt(WL("How many coins for every student?","¿Cuántas monedas para cada estudiante?"), "5"), 10); if (n > 0 && n <= 100) adminSet({stimulus:{id:Date.now().toString(36), coins:n}}); };
 window.townGift = () => { if (confirm(WL("Give every student 1 crate?","¿Dar 1 caja a cada estudiante?"))) adminSet({gift:{id:Date.now().toString(36), crates:1, to:"all"}}); };
 window.townMute = async sid => { const list = await NET.myClasses(), c = list.find(x => x.id === ADMIN_CID); const m = {...(c.muted || {})}; if (m[sid]) delete m[sid]; else m[sid] = true; adminSet({muted:m}); };
@@ -712,7 +731,8 @@ window.townProjector = function(){
   const cid = ADMIN_CID; clearView();
   V().innerHTML = `<div class="eprow"><button class="btn ghost" onclick="paintTownAdmin()">← ${WL("Controls","Controles")}</button></div>
     <div class="tplaza"><canvas id="plz" width="${PLAZA_W}" height="${PLAZA_H}"></canvas><div class="tonline" id="tOnline"></div></div>
-    <section class="panel tlog"><ul id="chatLog"></ul></section>`;
+    <div id="tProjX"></div><section class="panel tlog"><ul id="chatLog"></ul></section>`;
+  run(EXT.projector, cid);
   const cv = document.getElementById("plz"), bg = new Image(); bg.src = TA + "plaza_bg.jpg";
   PL = {cv, cx:cv.getContext("2d"), bg, props:{}, me:{x:-999, y:-999}, others:{}, send(){}, raf:0, beat:0};
   VIEW_SUBS.push(NET.watchPlaza(rows => { if (!rows) return; const cut = Date.now() - 3 * 60e3, seen = {};
@@ -730,10 +750,15 @@ window.paintTownAdmin = () => { clearView(); TT = "admin"; paintTown(); };
 function drawPlazaOthers(){
   const {cx, bg} = PL;
   if (bg.complete && bg.naturalWidth) cx.drawImage(bg, 0, 0, PLAZA_W, PLAZA_H); else { cx.fillStyle = "#7BC86C"; cx.fillRect(0, 0, PLAZA_W, PLAZA_H); }
+  run(EXT.plazaBack, cx);
   Object.entries(PL.others).map(([sid, o]) => ({...o, sid})).sort((a, b) => a.y - b.y).forEach(drawPerson);
+  run(EXT.plazaFront, cx);
 }
 
-window.TOWN = {boot, get net(){ return NET; }, get session(){ return SESS; }, town, crateTick};
+window.TOWN = {boot, get net(){ return NET; }, get session(){ return SESS; }, town, crateTick,
+  EXT, get cls(){ return CLS; }, get pub(){ return PUB; }, get tt(){ return TT; }, get plaza(){ return PL; }, get adminCid(){ return ADMIN_CID; },
+  viewSub: u => VIEW_SUBS.push(u), publishNow, paintSub, paintTown, paintAdmin, toast, coins, persist, once, addItem, has, freeInv, itemArt, itemName, artImg, rarityChip,
+  ITEMS, L2, TA, isTown, shopMult, priceOf, rr, publishSoon, lots, adminSet: patch => adminSet(patch)};
 boot();
 })();
 
