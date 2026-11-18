@@ -167,3 +167,7 @@
 .cform{display:grid;gap:4px;font-weight:800;margin:8px 0}
 .cform input,.cform textarea{border:2.5px solid var(--char);border-radius:12px;padding:10px 12px;font:700 16px var(--body);background:#fff}
 .claw i{font-size:13px}
+.cstamps,.cset{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin:6px 0}
+.cstamps span,.cset span{width:34px;height:34px;border-radius:50%;border:2.5px dashed var(--char);display:grid;place-items:center;font-size:18px;background:#fff;opacity:.5}
+.cstamps span.on,.cset span.on{border-style:solid;background:#FFF1C9;opacity:1}
+.cstamps small,.cset small{flex:1;min-width:180px;font-weight:700;font-size:13px}

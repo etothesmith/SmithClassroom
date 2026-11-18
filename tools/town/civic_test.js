@@ -161,6 +161,14 @@ const check = (n, ok, info) => { results.push((ok ? 'PASS ' : 'FAIL ') + n + (in
   await A.p.screenshot({ path: SHOTS + '/civic_reveal.png' });
   await T.evaluate(() => { townTab('admin'); }); await T.waitForTimeout(700); await T.screenshot({ path: SHOTS + '/civic_admin.png', fullPage: true });
 
+  /* 8. unit paychecks + shop local */
+  const up = await A.p.evaluate(async () => { CIVIC.civ().unitPaid = {}; CIVIC.civ().unitBack = false; const t0 = S.tokens;
+    S.certs.push({ code: 'X1', unit: 'Macro Unit 2', course: 'AP Economics', score: 90 }); await new Promise(r => setTimeout(r, 16000)); const t1 = S.tokens;
+    S.certs.push({ code: 'X2', unit: 'Macro Unit 2', course: 'AP Economics', score: 95 }); await new Promise(r => setTimeout(r, 16000)); return [t1 - t0, S.tokens - t1]; });
+  check('finishing a unit pays 15 coins, once per unit', up[0] === 15 && up[1] === 0, up);
+  const sl = await B.p.evaluate(() => ({ stamps: CIVIC.civ().stamps, flag: CIVIC.civ().jobs.flags.buylocal }));
+  check('buying from a classmate stamps the Shop Local card', sl.stamps === 1 && sl.flag === 1, sl);
+  await tab(B.p, 'market'); await B.p.screenshot({ path: SHOTS + '/civic_shoplocal.png' });
   check('no page errors', !errs.length, errs);
   console.log(results.join('\n')); console.log(fail ? fail + ' FAILED' : 'all passed');
   await b.close(); process.exit(fail ? 1 : 0);

@@ -78,6 +78,10 @@ const EVENTS = {
     what:{en:"Business is great! Jobs pay double, and prices are creeping up 15%.", es:"¡Hay mucho negocio! Los trabajos pagan el doble y los precios suben 15%."},
     q:{q:{en:"During a boom, the Fed is most likely to…", es:"Durante un auge, la Fed probablemente…"},
        c:{en:["Raise interest rates to cool inflation","Cut taxes to zero","Print more money"], es:["Subir las tasas para frenar la inflación","Bajar los impuestos a cero","Imprimir más dinero"]}, a:0}},
+  buylocal: {e:"🛍️", en:"Buy Local Week", es:"Semana de comprar local", mult:() => 1,
+    what:{en:"Buying from a classmate in the Market gives you 20% of the price back.", es:"Comprar a un compañero en el Mercado te devuelve el 20% del precio."},
+    q:{q:{en:"Why might a town encourage people to buy from local businesses?", es:"¿Por qué un pueblo animaría a comprar en negocios locales?"},
+       c:{en:["Money spent locally keeps circulating in the town's economy","It makes prices go down everywhere","It stops all imports"], es:["El dinero gastado localmente sigue circulando en la economía del pueblo","Hace que bajen todos los precios","Detiene todas las importaciones"]}, a:0}},
   shock: {e:"🏭", en:"Supply shock", es:"Choque de oferta", mult:it => /^(bed|sofa)/.test(it.id) ? 2 : 1,
     what:{en:"The furniture factory flooded. Beds and sofas are scarce, so their prices doubled.", es:"La fábrica de muebles se inundó. Camas y sofás escasean y su precio se duplicó."},
     q:{q:{en:"A factory shutdown shifts the supply curve for sofas…", es:"El cierre de una fábrica desplaza la curva de oferta de sofás…"},
@@ -117,7 +121,8 @@ const JOBS = {
   bank:   {e:"🏦", en:"Put coins in the Town Bank", es:"Pon monedas en el Banco"},
   market: {e:"🛒", en:"List or buy something in the Market", es:"Publica o compra algo en el Mercado"},
   vote:   {e:"🏆", en:"Vote for Home of the Week", es:"Vota por la Casa de la Semana"},
-  hall:   {e:"🏛️", en:"Check the Town Hall", es:"Visita el Ayuntamiento"}
+  hall:   {e:"🏛️", en:"Check the Town Hall", es:"Visita el Ayuntamiento"},
+  buylocal:{e:"🤝", en:"Buy something from a classmate in the Market", es:"Compra algo a un compañero en el Mercado"}
 };
 
 /* ---------------------------------------------------------------- shared helpers */
@@ -600,6 +605,7 @@ EXT.streetBadge.push(p => { const s = [];
   if (CLS().mayor && CLS().mayor.sid === p.sid) s.push(`<span class="cbadge" title="${W2("Mayor","Alcalde")}">🎖️</span>`);
   if (p.biz && BIZ[p.biz.type]) s.push(`<span class="cbadge" title="${E(L2(BIZ[p.biz.type]))}">${BIZ[p.biz.type].e}</span>`);
   if (p.streak >= 5) s.push(`<span class="cbadge">🔥${p.streak}</span>`);
+  if (p.patron) s.push(`<span class="cbadge" title="${W2("Shops local","Compra local")}">🏅</span>`);
   return s.join(""); });
 EXT.houseExtra.push({
   html: sid => { if (!SESS()) return ""; const mine = sid === SESS().sid, votes = tally(HOTW), mineV = HOTW.find(r => r.sid === SESS().sid);
@@ -689,18 +695,61 @@ let BGS = [];
 EXT.onLeave.push(() => { BGS.forEach(u => { try { u(); } catch(e){} }); BGS = []; });
 EXT.onSession.push(() => {
   BGS.forEach(u => { try { u(); } catch(e){} }); BGS = [];
-  rollJobs(); visitStreak(); xpSince("wk:" + week()); accrue();
+  rollJobs(); visitStreak(); xpSince("wk:" + week()); accrue(); cozyBonus(); unitPaychecks();
   BGS.push(store().watch(`${C()}/payouts`, {where:[["to","==",SESS().sid]]}, rows => { if (rows && SESS()) settlePayouts(rows); }));
   BGS.push(watchHotw());
 });
 EXT.pubExtra.push(() => {
   const g = goal(), c = civ();
   return {wk:{w:week(), n:xpSince("wk:" + week())}, goal:g ? {id:g.id, n:myGoalN()} : null, streak:c.streak.n,
-          biz:c.biz ? {type:c.biz.type, partner:c.biz.partner || null} : null, bizWith:c.bizWith || null};
+          biz:c.biz ? {type:c.biz.type, partner:c.biz.partner || null} : null, bizWith:c.bizWith || null, patron:!!T.town().applied.prodset};
 });
 /* keep my numbers fresh for the class goal and the league while I study */
 let _pubXp = -1;   /* only re-publish when XP actually changed (keeps Firestore writes low) */
 setInterval(() => { if (SESS() && myXp() !== _pubXp) { _pubXp = myXp(); T.publishSoon(); } }, 180000);
+
+/* ================================================================ unit paychecks + shop local */
+/* Finishing a unit (its certificate) pays a paycheck, once per unit. Certificates
+   earned before this existed get back pay, up to 60 coins. */
+const UNIT_PAY = 15;
+function unitPaychecks(){
+  const c = civ(), certs = S.certs || []; if (!c.unitPaid) { c.unitPaid = {}; c.unitBack = true; }
+  let n = 0, back = 0;
+  certs.forEach(ct => { const k = (ct.course || "") + "|" + (ct.unit || ""); if (!ct.unit || c.unitPaid[k]) return; c.unitPaid[k] = Date.now();
+    if (c.unitBack) back++; else n++; });
+  if (c.unitBack) { const pay = Math.min(60, back * UNIT_PAY); c.unitBack = false; if (pay) { T.coins(pay); T.toast(W2(`Back pay for ${back} finished unit${back > 1 ? "s" : ""}: +${pay} coins!`, `Pago atrasado por ${back} unidad(es) terminada(s): ¡+${pay} monedas!`)); } save(); return; }
+  if (n) { T.coins(n * UNIT_PAY); save(); T.toast(W2(`🎓 Unit complete! Paycheck: +${n * UNIT_PAY} coins.`, `🎓 ¡Unidad terminada! Pago: +${n * UNIT_PAY} monedas.`)); if (typeof paintBar === "function") paintBar(); }
+}
+setInterval(unitPaychecks, 15000); setTimeout(unitPaychecks, 2500);
+
+/* Shop local: buying from classmates fills a stamp card (every 5 stamps = a
+   crate + 5 coins), collecting one product from every kind of business pays a
+   big bonus and a badge, and classmate-made decor in your house pays a small
+   "cozy home" bonus every day. During Buy Local Week, 20% comes back. */
+const STAMPS = 5, SET_BONUS = 25;
+const prodType = id => { const p = prodOf(id); return p ? p[0] : null; };
+function setProgress(){ const have = new Set(Object.keys(T.town().inv).map(prodType).filter(Boolean)); return {have, n:have.size, total:Object.keys(BIZ).length}; }
+EXT.onBuy.push(m => {
+  const c = civ(); flag("buylocal");
+  c.stamps = (c.stamps || 0) + 1;
+  if (c.stamps % STAMPS === 0) { T.town().crates++; T.coins(5); T.toast(W2("🛍️ Shop Local card full! +1 crate and +5 coins.","🛍️ ¡Tarjeta llena! +1 caja y +5 monedas.")); }
+  const e = cur(); if (e && e.kind === "buylocal") { const back = Math.max(1, Math.round(m.price * 0.2)); T.coins(back); T.toast(W2(`Buy Local Week: +${back} coins back.`, `Semana local: +${back} monedas de vuelta.`)); }
+  const sp = setProgress(); if (sp.n >= sp.total) T.once("prodset", () => { T.coins(SET_BONUS); T.toast(W2(`🏅 You own something from every business in town! +${SET_BONUS} coins.`, `🏅 ¡Tienes algo de cada negocio del pueblo! +${SET_BONUS} monedas.`)); if (typeof fireConfetti === "function") fireConfetti(); });
+});
+function cozyBonus(){
+  const c = civ(), d = day(); if (c.cozyDay === d) return;
+  const mine = c.biz && c.biz.type, slots = Object.values(T.town().house.slots || {});
+  const n = Math.min(3, new Set(slots.filter(id => prodType(id) && prodType(id) !== mine)).size);
+  c.cozyDay = d; if (n) { T.coins(n); T.toast(W2(`🏡 Cozy home bonus: +${n} coin${n > 1 ? "s" : ""} for classmate-made decor.`, `🏡 Bono de hogar: +${n} moneda(s) por decoración de tus compañeros.`)); } save();
+}
+EXT.marketTop.push(() => {
+  const c = civ(), st = (c.stamps || 0) % STAMPS, sp = setProgress(), e = cur();
+  return `<section class="panel cshop"><div class="eyebrow">🛍️ ${W2("Shop local","Compra local")}${e && e.kind === "buylocal" ? " · " + W2("Buy Local Week: 20% back!","Semana local: ¡20% de vuelta!") : ""}</div>
+    <div class="cstamps">${Array.from({length:STAMPS}, (_, i) => `<span class="${i < st ? "on" : ""}">${i < st ? "🛍️" : ""}</span>`).join("")}<small>${W2(`Buy from classmates: every ${STAMPS} purchases = 1 crate + 5 coins`, `Compra a compañeros: cada ${STAMPS} compras = 1 caja + 5 monedas`)}</small></div>
+    <div class="cset">${Object.entries(BIZ).map(([k, z]) => `<span class="${sp.have.has(k) ? "on" : ""}" title="${E(L2(z))}">${z.e}</span>`).join("")}
+      <small>${T.town().applied.prodset ? "🏅 " + W2("Collection complete!","¡Colección completa!") : W2(`Own one product from every kind of business: +${SET_BONUS} coins and a badge (${sp.n}/${sp.total})`, `Ten un producto de cada tipo de negocio: +${SET_BONUS} monedas y una insignia (${sp.n}/${sp.total})`)}</small></div>
+    <p class="muted" style="font-size:12px;margin:6px 0 0">${W2("Put classmate-made products in your house for a daily cozy-home bonus (up to 3 coins a day).","Pon productos de tus compañeros en tu casa para un bono diario (hasta 3 monedas al día).")}</p></section>`;
+});
 
 /* ---------------------------------------------------------------- tabs */
 EXT.tabs.push({key:"hall", icon:"🏛️", label:() => W2("Town Hall","Ayuntamiento"), paint:paintHall},

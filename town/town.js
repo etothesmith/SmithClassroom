@@ -25,7 +25,7 @@ let MARKET = [], CHAT = [], PLAZA = {}, MY_SALES = [], MY_BUYS = [], T_FROM = []
 let toastEl = null;
 /* extension points used by town/civic.js (Town Hall, Bank, Jobs, businesses, events, plaza quiz) */
 const EXT = {tabs:[], onClass:[], onSession:[], priceMult:[], listCheck:[], onSold:[], plazaBack:[], plazaFront:[], plazaTap:[],
-             adminPanels:[], streetBadge:[], houseExtra:[], plazaSub:[], banner:[], pubExtra:[], projector:[], onLeave:[]};
+             adminPanels:[], streetBadge:[], houseExtra:[], plazaSub:[], banner:[], pubExtra:[], projector:[], onLeave:[], onBuy:[], marketTop:[]};
 const run = (list, ...a) => list.forEach(f => { try { f(...a); } catch(e){ console.warn("town ext", e); } });
 
 /* ---------------------------------------------------------------- state */
@@ -592,7 +592,7 @@ window.townOpenCrate = function(){
 /* ---------------------------------------------------------------- market */
 function paintMarket(el){
   const ceil = CLS && CLS.econ && CLS.econ.ceiling | 0;
-  el.innerHTML = `<section class="panel"><div class="eyebrow">${WL("Sell something","Vende algo")}</div>
+  el.innerHTML = `${EXT.marketTop.map(f => { try { return f() || ""; } catch(e){ return ""; } }).join("")}<section class="panel"><div class="eyebrow">${WL("Sell something","Vende algo")}</div>
       <div class="tsell"><select id="mItem">${Object.entries(freeInv()).map(([id, n]) => `<option value="${id}">${itemName(id)} (${n})</option>`).join("")}</select>
       <input id="mPrice" type="number" min="1" ${ceil ? `max="${ceil}"` : ""} placeholder="${WL("Price","Precio")}" inputmode="numeric">
       <button class="btn primary" onclick="townList()">${WL("List it","Publicar")}</button></div>
@@ -631,7 +631,7 @@ window.townBuy = async function(id){
   if (!confirm(WL(`Buy ${itemName(m.item)} from ${m.sellerName} for ${m.price} coins?`, `¿Comprar ${itemName(m.item)} a ${m.sellerName} por ${m.price} monedas?`))) return;
   try { const r = await NET.buy(id);
     if (r.err) return toast(WL("Someone bought it first!", "¡Alguien lo compró primero!"));
-    once("buy:" + id, () => { coins(-m.price); addItem(m.item, 1); }); persist();
+    once("buy:" + id, () => { coins(-m.price); addItem(m.item, 1); run(EXT.onBuy, m); }); persist();
     toast(WL(`You bought ${itemName(m.item)}!`, `¡Compraste ${itemName(m.item)}!`));
   } catch(e){ toast(WL("Someone bought it first!", "¡Alguien lo compró primero!")); }
 };
