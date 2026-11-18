@@ -185,7 +185,7 @@ function leaguePush(){
   const P = `league/${c.ownerUid}/periods/${SESS().cid}`, row = LEAGUE.find(r => r.id === SESS().cid);
   if (row && row.w === wk && row.total >= total) return;
   if (Date.now() - _leagueAt < 120000) return; _leagueAt = Date.now();
-  store().set(P, {name:SESS().className || "", w:wk, total, n, at:Date.now()}).catch(e => console.warn("league", e));
+  store().set(P, {name:SESS().className || "", w:wk, total, n, at:Date.now()}, true).catch(e => console.warn("league", e));
 }
 function paintGoalCard(){
   const g = goal();

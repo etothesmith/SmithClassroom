@@ -625,14 +625,15 @@ window.townPut = function(slot, id){ town().house.slots[slot] = id || null; if (
 
 /* ---------------------------------------------------------------- shop & crates */
 function paintShop(el){
-  const t = town(), forSale = Object.values(ITEMS).filter(i => i.p > 0);
+  const t = town(), mo = new Date().getMonth() + 1, forSale = Object.values(ITEMS).filter(i => i.p > 0 && (!i.season || i.season === mo))
+    .sort((a, b) => (b.season ? 1 : 0) - (a.season ? 1 : 0));
   el.innerHTML = `<section class="panel tcrates">${artImg(`${TA}ui/crate.webp`, "🎁", true)}
       <div><div class="eyebrow">${WL("Crates","Cajas")}</div><h2>${WL(`You have ${t.crates}`, `Tienes ${t.crates}`)}</h2>
       <p class="muted">${WL("Earn a crate for every certificate and every level up. Rare pets and trophies only come from crates, so trade for the ones you want!",
         "Gana una caja por cada certificado y cada nivel. Las mascotas y trofeos raros solo salen de cajas: ¡intercambia por los que quieras!")}</p>
       <button class="btn primary" ${t.crates ? "" : "disabled"} onclick="townOpenCrate()">${WL("Open a crate","Abrir una caja")}</button></div></section>
     <section class="panel"><div class="eyebrow">${WL("Furniture shop","Tienda de muebles")}${shopMult() !== 1 ? ` · ${WL("prices ×","precios ×")}${shopMult()}` : ""}</div>
-      <div class="tgridi">${forSale.map(i => `<div class="tcardi">${itemArt(i.id, 64)}<b>${L2(i.name)}</b>
+      <div class="tgridi">${forSale.map(i => `<div class="tcardi ${i.season ? "tseason" : ""}">${i.season ? `<i class="tlimit">⏳ ${WL("This month only","Solo este mes")}</i>` : ""}${itemArt(i.id, 64)}<b>${L2(i.name)}</b>
         <button class="btn" onclick="townBuyShop('${i.id}')">💵 ${priceOf(i)}</button></div>`).join("")}</div></section>
     <section class="panel"><div class="eyebrow">${WL("My inventory","Mi inventario")}</div><div class="tgridi">${invCards()}</div></section>`;
 }

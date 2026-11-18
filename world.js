@@ -193,7 +193,7 @@ function lastStudied(){
     if (t && !done && (!best || t > best.t)) best = {u, t}; });
   return best && best.u;
 }
-window.WORLD_TODO = {dueList, lastStudied};
+window.WORLD_TODO = {dueList, lastStudied, myCourses};
 function viewCampus(){
   touchStreak(); ensureAvatar();
   const lvl = levelOf(S.xp), into = S.xp % 250, due = dueList(), next = lastStudied();
@@ -397,6 +397,9 @@ window.viewAssignments = function(){
 };
 /* ---------- What's new: pinned to the bulletin board ---------- */
 const NEWS = [
+  {id:"2026-11-18h", d:"Nov 18", e:"🧭", t:["The world got bigger","El mundo creció"],
+   b:["New Map tab: fish at Lake Eola, ride the Theme Park, launch missions from the Space Coast (they open as the class earns certificates). A new story every week, needs bars for your avatar, townspeople with quests, an Album, seasonal furniture, pets that grow, and Best Town of the Month against the other periods.",
+      "Nueva pestaña Mapa: pesca en el lago Eola, súbete al parque de diversiones y lanza misiones desde la Costa Espacial (abren cuando la clase gana certificados). Una historia nueva cada semana, necesidades para tu avatar, vecinos con misiones, un Álbum, muebles de temporada, mascotas que crecen y el Mejor Pueblo del Mes contra los otros periodos."]},
   {id:"2026-11-18g", d:"Nov 18", e:"💵", t:["Coins are now Smithbucks","Las monedas ahora son Smithbucks"],
    b:["The town has its own money. Every certificate pays now: +20 for assignment certificates, +15 for unit certificates. Houses are private: knock and the owner lets you in. Your to-do list opens every time you sign in.",
       "El pueblo tiene su propio dinero. Ahora cada certificado paga: +20 por certificados de tareas y +15 por certificados de unidad. Las casas son privadas: toca y el dueño te deja pasar. Tu lista de pendientes se abre cada vez que entras."]},

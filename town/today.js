@@ -16,7 +16,7 @@ const {EXT} = T, V = T.CIV, {civ, sheet, closeSheet, E, W2, SESS, day} = V;
 const TODO_BONUS = 3;
 const CIV = () => window.CIVIC;
 
-function items(){
+function baseItems(){
   const out = [], C = CIV(); if (!C) return out;
   C.rollJobs(); const j = civ().jobs;
   j.picks.forEach(k => { const J = C.JOBS[k]; if (!J) return;
@@ -42,6 +42,7 @@ function items(){
   return out;
 }
 const L2 = o => T.L2(o);
+const items = () => window.TODAY.items();
 const count = list => list.filter(i => i.done || i.paid).length;
 const need = list => list.filter(i => !i.opt);
 function bonus(){
@@ -117,5 +118,5 @@ EXT.plazaFront.push(cx => {
   const tw = cx.measureText(label).width + 20; cx.fillStyle = "rgba(29,27,46,.78)"; T.rr(cx, 950 - tw, 12, tw, 28, 14); cx.fill();
   cx.fillStyle = "#fff"; cx.textAlign = "center"; cx.fillText(label, 950 - tw / 2, 31);
 });
-window.TODAY = {items, weather, SKY};
+window.TODAY = {items:baseItems, weather, SKY};
 })();
