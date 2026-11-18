@@ -651,7 +651,8 @@ function paintAdmin(){
       <label>Email<input id="tEm" type="email" autocomplete="username"></label>
       <label>${WL("Password","Contraseña")}<input id="tPw" type="password" autocomplete="current-password"></label>
       <div class="tgrid2"><button class="btn primary" onclick="townTSign(false)">${WL("Sign in","Entrar")}</button><button class="btn" onclick="townTSign(true)">${WL("Create account","Crear cuenta")}</button></div>
-      <p id="tErr" class="terr"></p><button class="btn ghost wide" onclick="townTab('plaza')">← ${WL("Back to Town","Volver al Pueblo")}</button></section>`;
+      <button class="btn ghost wide" onclick="townTReset()">🔑 ${WL("Forgot password? Email me a reset link","¿Olvidaste la contraseña? Envíame un enlace")}</button>
+      <p id="tErr" class="terr" role="alert"></p><button class="btn ghost wide" onclick="townTab('plaza')">← ${WL("Back to Town","Volver al Pueblo")}</button></section>`;
     return;
   }
   NET.myClasses().then(list => {
@@ -669,6 +670,18 @@ window.townTSign = async function(create){
   const em = document.getElementById("tEm").value.trim(), pw = document.getElementById("tPw").value, err = document.getElementById("tErr");
   try { if (create) await NET.teacherSignUp(em, pw); else await NET.teacherSignIn(em, pw); paintAdmin(); }
   catch(e){ err.textContent = (e && e.code || "").replace("auth/", "") || WL("Sign-in failed.","Error al entrar."); }
+};
+window.townTReset = async function(){
+  const em = document.getElementById("tEm").value.trim(), err = document.getElementById("tErr");
+  if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(em)) { err.style.color = ""; err.textContent = WL("Type your email above first, then tap the reset button.", "Escribe tu correo arriba y luego toca el botón."); return; }
+  err.style.color = ""; err.textContent = WL("Sending…", "Enviando…");
+  try { await NET.resetPassword(em); err.style.color = "var(--crt, #2b7a46)";
+    err.textContent = WL(`Check ${em} for a reset link (look in spam too). Then come back and sign in with the new password.`, `Revisa ${em} para el enlace (también en spam). Luego vuelve y entra con la nueva contraseña.`); }
+  catch(e){ const c = (e && e.code || "").replace("auth/", "");
+    err.textContent = c === "practice-mode" ? WL("Password reset needs the Town connected to the cloud.", "Restablecer la contraseña requiere que el Pueblo esté en la nube.")
+      : c === "user-not-found" || c === "invalid-email" ? WL("No teacher account uses that email.", "Ninguna cuenta docente usa ese correo.")
+      : c === "too-many-requests" ? WL("Too many tries. Wait a few minutes and try again.", "Demasiados intentos. Espera unos minutos.")
+      : WL("Couldn't send the email: ", "No se pudo enviar: ") + (c || "error"); }
 };
 window.townTOut = async () => { await NET.teacherSignOut(); ADMIN_CID = null; paintAdmin(); };
 window.townAdminPick = id => { ADMIN_CID = id; paintAdmin(); };

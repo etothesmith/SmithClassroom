@@ -133,6 +133,7 @@ function API(store){
     teacherSignIn: (e, p) => store.teacherSignIn(e, p),
     teacherSignUp: (e, p) => store.teacherSignUp(e, p),
     teacherSignOut: () => store.teacherSignOut(),
+    resetPassword: email => store.resetPassword ? store.resetPassword(email) : Promise.reject({code:"auth/practice-mode"}),
     async createClass(name){
       const t = store.teacherUser(); if (!t) throw new Error("teacher-only");
       let code; for (let i = 0; i < 6; i++) { code = genCode(); if (!(await store.get("codes/" + code))) break; }
