@@ -768,7 +768,7 @@ window.ARC = {
 <script>
 /* ============================================================================
    MISCONCEPTION PANIC — arena survivor in the school gym.
-   Misconception monsters pour in. Your chalk, erasers, ruler and textbook
+   Misconception monsters pour in. Power shots from your hands, erasers, a ruler and a textbook
    fire on their own; you move. Monsters drop idea bulbs. Fill the bar to
    level up — answer a question right to pick an upgrade. Survive 5 minutes.
    Which monsters show up depends on your classes (economics vs government).
@@ -789,7 +789,7 @@ const MONSTERS = {
 const BOSSES = { econ: { spr: 'boss_hydra', name: { en: 'Hydra of Hyperinflation', es: 'Hidra de la Hiperinflación' } },
                  gov: { spr: 'boss_golem', name: { en: 'Gridlock Golem', es: 'Gólem del Estancamiento' } } };
 const UPGRADES = {
-  chalk:  { icon: 'up_chalk', max: 6, name: { en: 'Chalk Toss', es: 'Lanzar tiza' }, desc: { en: 'More chalk, thrown faster', es: 'Más tiza, más rápido' } },
+  chalk:  { icon: 'bullet', max: 6, name: { en: 'Power Shot', es: 'Disparo' }, desc: { en: 'More shots from your hands, fired faster', es: 'Más disparos desde tus manos, más rápido' } },
   eraser: { icon: 'up_eraser', max: 5, name: { en: 'Eraser Orbit', es: 'Órbita de borradores' }, desc: { en: 'Erasers circle you and bonk monsters', es: 'Borradores giran a tu alrededor' } },
   ruler:  { icon: 'ruler', max: 5, name: { en: 'Ruler Swipe', es: 'Golpe de regla' }, desc: { en: 'A wide swing in front of you', es: 'Un barrido amplio al frente' } },
   book:   { icon: 'book', max: 5, name: { en: 'Textbook Slam', es: 'Golpe de libro' }, desc: { en: 'A shockwave all around you', es: 'Una onda expansiva a tu alrededor' } },
@@ -811,6 +811,21 @@ function arenaCanvas() {
   if (!_arena || _arena.g !== g) { const cv = document.createElement('canvas'); cv.width = Math.round(AW * g); cv.height = Math.round(AH * g);
     cv.getContext('2d').drawImage(im, 0, 0, cv.width, cv.height); cv.g = g; _arena = cv; }
   return _arena;
+}
+/* power shot: a glowing energy ball, drawn once and blitted */
+let _bullet = null;
+function bulletSprite() {
+  if (_bullet) return _bullet;
+  const cv = document.createElement('canvas'); cv.width = cv.height = 64; const x = cv.getContext('2d');
+  const g = x.createRadialGradient(32, 32, 2, 32, 32, 30); g.addColorStop(0, 'rgba(255,255,255,1)'); g.addColorStop(0.3, 'rgba(255,240,150,1)');
+  g.addColorStop(0.6, 'rgba(255,190,40,.55)'); g.addColorStop(1, 'rgba(255,160,0,0)'); x.fillStyle = g; x.fillRect(0, 0, 64, 64);
+  return (_bullet = cv);
+}
+function drawBullet(c, s) {
+  c.save(); c.globalAlpha = 0.6; c.strokeStyle = '#FF9F1C'; c.lineWidth = 9; c.lineCap = 'round';
+  c.beginPath(); c.moveTo(s.x - s.vx * 0.035, s.y - s.vy * 0.035); c.lineTo(s.x, s.y); c.stroke(); c.restore();
+  c.drawImage(bulletSprite(), s.x - 22, s.y - 22, 44, 44);
+  c.fillStyle = '#FFFFFF'; c.strokeStyle = '#E8590C'; c.lineWidth = 2.5; c.beginPath(); c.arc(s.x, s.y, 6.5, 0, 7); c.fill(); c.stroke();
 }
 function monsterPool() {
   const econ = ['blob', 'dragon', 'moth', 'troll'], gov = ['sloth', 'snake', 'gremlin', 'mummy'];
@@ -910,7 +925,7 @@ function newArena() {
       title: Lang.t('LEVEL UP! Answer to power up', '¡SUBES DE NIVEL! Responde para mejorar'), titleColor: COL.gold,
       onDone: ok => {
         if (ok) { M.qRight++; M.overlay = upgradePicker(upgradeChoices()); }
-        else { M.qWrong++; M.p.hp = Math.min(M.p.maxHp, M.p.hp + 1); if (M.lv.chalk < 3) M.lv.chalk++; M.banner = { str: M.lv.chalk <= 3 ? Lang.t('Study snack: +1 heart, +chalk', 'Merienda: +1 corazón, +tiza') : Lang.t('Study snack: +1 heart', 'Merienda: +1 corazón'), t: 0 }; M.overlay = null; Touch.set([], { x: 150, y: 560, r: 90 }); }
+        else { M.qWrong++; M.p.hp = Math.min(M.p.maxHp, M.p.hp + 1); if (M.lv.chalk < 3) M.lv.chalk++; M.banner = { str: M.lv.chalk <= 3 ? Lang.t('Study snack: +1 heart, +power', 'Merienda: +1 corazón, +poder') : Lang.t('Study snack: +1 heart', 'Merienda: +1 corazón'), t: 0 }; M.overlay = null; Touch.set([], { x: 150, y: 560, r: 90 }); }
       }
     });
     Audio2.sfx('level'); Touch.set([]);
@@ -937,7 +952,7 @@ function newArena() {
         UI.panel(c, r.x, r.y - (on ? 12 : 0), r.w, r.h, { fill: on ? '#FFF1B8' : COL.cream });
         const yy = r.y - (on ? 12 : 0);
         if (u.icon.startsWith('up_')) drawFrame(c, u.icon, r.x + r.w / 2, yy + 145, { h: 120 });
-        else { c.fillStyle = '#2B2D42'; c.beginPath(); c.arc(r.x + r.w / 2, yy + 85, 60, 0, 7); c.fill(); c.fillStyle = '#FFD23F'; c.beginPath(); c.arc(r.x + r.w / 2, yy + 85, 52, 0, 7); c.fill(); drawFrame(c, u.icon, r.x + r.w / 2, yy + 85, { h: 70, ay: 0.5 }); }
+        else { c.fillStyle = '#2B2D42'; c.beginPath(); c.arc(r.x + r.w / 2, yy + 85, 60, 0, 7); c.fill(); c.fillStyle = '#FFD23F'; c.beginPath(); c.arc(r.x + r.w / 2, yy + 85, 52, 0, 7); c.fill(); if (u.icon === 'bullet') c.drawImage(bulletSprite(), r.x + r.w / 2 - 40, yy + 45, 80, 80); else drawFrame(c, u.icon, r.x + r.w / 2, yy + 85, { h: 70, ay: 0.5 }); }
         UI.text(c, Lang.of(u.name), r.x + r.w / 2, yy + 190, { size: 30, color: COL.ink, stroke: 0 });
         UI.text(c, (M.lv[k] ? Lang.t('Level ', 'Nivel ') + (M.lv[k] + 1) : Lang.t('NEW!', '¡NUEVO!')), r.x + r.w / 2, yy + 228, { size: 22, color: M.lv[k] ? COL.blue : COL.red, stroke: 0 });
         UI.para(c, Lang.of(u.desc), r.x + 20, yy + 250, r.w - 40, 90, { size: 22, min: 14, weight: 700 });
@@ -955,14 +970,17 @@ function newArena() {
   }
   function weapons() {
     const p = M.p, L = M.lv;
-    /* chalk: aimed at the nearest monsters */
+    /* power shots: fired from the hand on the side of the target */
     M.cd.chalk -= DT;
     if (L.chalk && M.cd.chalk <= 0) {
       const n = 1 + Math.floor(L.chalk / 2), targets = nearestFoes(n, 560);
       if (targets.length) {
         M.cd.chalk = Math.max(0.25, 0.75 - L.chalk * 0.08);
-        targets.forEach((f, i) => { const a = Math.atan2(f.y - f.h * 0.4 - (p.y - 50), f.x - p.x) + (i ? rand(-0.08, 0.08) : 0);
-          M.shots.push({ x: p.x, y: p.y - 50, vx: Math.cos(a) * 760, vy: Math.sin(a) * 760, a, life: 0.9, dmg: 1 + L.chalk * 0.5, pierce: L.chalk >= 4 ? 2 : 0, hit: new Set() }); });
+        targets.forEach((f, i) => {
+          const front = (f.x >= p.x) === (p.dir === 1), hx = p.x + (front ? 30 : -30) * p.dir, hy = p.y - (front ? 64 : 48);
+          const a = Math.atan2(f.y - f.h * 0.4 - hy, f.x - hx) + (i ? rand(-0.08, 0.08) : 0);
+          M.flash = { x: hx, y: hy, t: 0.08 };
+          M.shots.push({ x: hx, y: hy, vx: Math.cos(a) * 760, vy: Math.sin(a) * 760, a, life: 0.9, dmg: 1 + L.chalk * 0.5, pierce: L.chalk >= 4 ? 2 : 0, hit: new Set() }); });
         Audio2.sfx('shoot');
       }
     }
@@ -1053,7 +1071,7 @@ function newArena() {
     }
     weapons();
 
-    /* chalk flight */
+    /* power shots in flight */
     for (const s of M.shots) {
       s.life -= DT; s.x += s.vx * DT; s.y += s.vy * DT;
       for (const f of near(s.x, s.y, 80, tmp)) {
@@ -1118,7 +1136,8 @@ function newArena() {
       const fr = f.kind + (Math.floor(f.ph * 6) % 2);
       drawFrame(c, fr, f.x, f.y - (MONSTERS[f.kind].flutter ? 20 + Math.sin(f.ph * 8) * 6 : 0), { h: f.h, dir: p.x < f.x ? -1 : 1, flash: f.flash > 0 ? 0.8 : 0, cache: true });
     }
-    for (const s of M.shots) drawFrame(c, 'chalk', s.x, s.y, { h: 22, rot: s.a, ay: 0.5 });
+    for (const s of M.shots) drawBullet(c, s);
+    if (M.flash && M.flash.t > 0) { M.flash.t -= 1 / 60; c.drawImage(bulletSprite(), M.flash.x - 22, M.flash.y - 22, 44, 44); }
     for (const w of M.waves) if (w.k === 'poof') drawFrame(c, 'poof', w.x, w.y, { h: 60 + w.t * 120, ay: 0.5, alpha: 1 - w.t / 0.45 });
     if (M.lv.eraser) { const R = 100 + M.lv.eraser * 8; for (let i = 0; i < M.lv.eraser; i++) { const a = M.eraserA + i * Math.PI * 2 / M.lv.eraser; drawFrame(c, 'eraser', p.x + Math.cos(a) * R, p.y - 45 + Math.sin(a) * R * 0.75, { h: 44, ay: 0.5, rot: a * 2 }); } }
     for (const s of M.swings) { const k = s.t / 0.22; drawFrame(c, 'ruler', p.x + Math.cos(s.a - 1.2 + k * 2.4) * s.R * 0.7, p.y - 45 + Math.sin(s.a - 1.2 + k * 2.4) * s.R * 0.6, { h: 90, ay: 0.5, rot: s.a - 1.2 + k * 2.4 + Math.PI / 2 });
@@ -1149,7 +1168,7 @@ function newArena() {
     UI.text(c, '✖ ' + M.kills, W - 150, 84, { size: 28, stroke: 6 });
     /* weapons you have */
     let x = 40; for (const k of ['chalk', 'eraser', 'ruler', 'book']) if (M.lv[k]) { c.fillStyle = 'rgba(255,248,231,.92)'; c.beginPath(); c.arc(x, H - 44, 28, 0, 7); c.fill(); c.lineWidth = 3; c.strokeStyle = COL.ink; c.stroke();
-      drawFrame(c, k, x, H - 44, { h: 34, ay: 0.5 }); UI.text(c, String(M.lv[k]), x + 22, H - 22, { size: 18, stroke: 4 }); x += 66; }
+      if (k === 'chalk') c.drawImage(bulletSprite(), x - 20, H - 64, 40, 40); else drawFrame(c, k, x, H - 44, { h: 34, ay: 0.5 }); UI.text(c, String(M.lv[k]), x + 22, H - 22, { size: 18, stroke: 4 }); x += 66; }
     if (M.boss) { UI.text(c, Lang.of(M.boss.bname), W / 2, 136, { size: 26, color: '#FF8C69', stroke: 6 }); UI.bar(c, W / 2 - 260, 154, 520, 22, M.boss.hp / M.boss.max, COL.bad); }
     if (M.banner) { const a = clamp(Math.min(M.banner.t * 4, (2.6 - M.banner.t) * 3), 0, 1); c.globalAlpha = a; UI.text(c, M.banner.str, W / 2, 230, { size: 48, color: COL.gold, stroke: 10 }); c.globalAlpha = 1; }
     drawPauseBtn(c);
@@ -1164,13 +1183,13 @@ const MP = {
   title: { en: 'Misconception Panic', es: 'Pánico de Ideas Erróneas' },
   tagline: { en: 'Survive the gym. Bust the myths.', es: 'Sobrevive en el gimnasio. Destruye los mitos.' },
   howto: {
-    en: ['Move with arrows / WASD (or drag the left stick). Your chalk, erasers, ruler and textbook attack on their own.',
+    en: ['Move with arrows / WASD (or drag the left stick). Power shots from your hands, erasers, a ruler and a textbook attack on their own.',
          'Monsters are misconceptions from your classes. Bust them to drop 💡 idea bulbs.',
          'Fill the bar to level up. Answer the question right to pick a power-up (1, 2 or 3).',
          'Wrong answer? You see the explanation and get a small study snack (+1 heart) instead.',
          'A boss shows up every 90 seconds. ♥ hearts heal you; the magnet pulls in every bulb.',
          'Survive 5 minutes to win!'],
-    es: ['Muévete con flechas / WASD (o arrastra el control izquierdo). Tu tiza, borradores, regla y libro atacan solos.',
+    es: ['Muévete con flechas / WASD (o arrastra el control izquierdo). Los disparos de tus manos, los borradores, la regla y el libro atacan solos.',
          'Los monstruos son ideas erróneas de tus clases. Véncelos para soltar 💡 bombillas.',
          'Llena la barra para subir de nivel. Responde bien la pregunta para elegir una mejora (1, 2 o 3).',
          '¿Respuesta incorrecta? Ves la explicación y recibes una merienda (+1 corazón).',
