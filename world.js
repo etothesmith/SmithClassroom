@@ -790,7 +790,22 @@ const _refreshMe0 = refreshMe;
 refreshMe = async function(){ const r = await _refreshMe0(); cacheAvatarForGames(r); return r; };
 
 /* Money Moves: hand it the current avatar before it loads */
-window.viewMoneyMoves = function(){ pushAvatarToMM(); _o.viewMoneyMoves(); };
+window.viewMoneyMoves = function(){
+  try { pushAvatarToMM(); } catch(e){ console.warn("avatar to Money Moves", e); }
+  _o.viewMoneyMoves();
+  /* Money Moves is a big page: say it's loading, and if it still shows nothing
+     after a while, offer the new-tab link and a reload instead of a blank box */
+  const f = document.getElementById("mmGame"); if (!f) return;
+  const note = document.createElement("div");
+  note.style.cssText = "position:absolute;inset:0;display:grid;place-items:center;background:#eaf3ee;font-weight:800;text-align:center;padding:20px";
+  note.innerHTML = `<div>💵<br>${WL("Loading Money Moves…","Cargando Money Moves…")}</div>`;
+  f.parentElement.appendChild(note);
+  const empty = () => { try { const r = f.contentDocument && f.contentDocument.getElementById("root"); return !r || !r.innerHTML.trim(); } catch(e){ return false; } };
+  f.addEventListener("load", () => setTimeout(() => { if (!empty()) note.remove(); else note.innerHTML = `<div>${WL("Money Moves is taking a while.","Money Moves está tardando.")}<br><br>
+    <button class="btn primary" onclick="document.getElementById('mmGame').contentWindow.location.reload()">${WL("Try again","Intentar de nuevo")}</button>
+    <a class="btn" href="money_moves.html" target="_blank" rel="noopener">${WL("Open in a new tab","Abrir en pestaña nueva")}</a></div>`; }, 1500));
+  setTimeout(() => { if (note.isConnected && !empty()) note.remove(); }, 20000);
+};
 
 /* Smitty's Chill Grill runs inside the hub. Its progress used to live only in
    memory (gone on refresh, so the assignment never stayed done) and every
