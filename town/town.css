@@ -164,3 +164,6 @@
 .cqopts{display:grid;gap:8px;margin:10px 0}
 .cqopts .btn{text-align:left;justify-content:flex-start}
 @media (max-width:600px){.cgoalh,.cbank,.chall,.cjobs,.cbizc{flex-wrap:wrap}.cstreak{margin-left:0}}
+.cform{display:grid;gap:4px;font-weight:800;margin:8px 0}
+.cform input,.cform textarea{border:2.5px solid var(--char);border-radius:12px;padding:10px 12px;font:700 16px var(--body);background:#fff}
+.claw i{font-size:13px}

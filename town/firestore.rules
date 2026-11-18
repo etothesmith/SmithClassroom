@@ -129,8 +129,13 @@ service cloud.firestore {
       // Laws: only the mayor proposes; the teacher counts and can strike one down
       match /proposals/{id} {
         allow read: if member(cid) || owns(cid);
-        allow create: if isSid(cid, request.resource.data.sid) && live(cid)
-          && cls(cid).mayor.sid == request.resource.data.sid && request.resource.data.status == 'voting';
+        // preset laws go straight to a vote; a law in the mayor's own words waits for the teacher's review
+        allow create: if owns(cid) || (isSid(cid, request.resource.data.sid) && live(cid)
+          && cls(cid).mayor.sid == request.resource.data.sid
+          && ((request.resource.data.key != 'custom' && request.resource.data.status == 'voting')
+              || (request.resource.data.key == 'custom' && request.resource.data.status == 'review'
+                  && request.resource.data.title is string && request.resource.data.title.size() <= 40
+                  && request.resource.data.desc is string && request.resource.data.desc.size() <= 140)));
         allow update, delete: if owns(cid);
       }
       match /lawvotes/{id} {

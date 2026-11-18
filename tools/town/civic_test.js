@@ -94,6 +94,36 @@ const check = (n, ok, info) => { results.push((ok ? 'PASS ' : 'FAIL ') + n + (in
   await T.evaluate(async pid => { window.confirm = () => true; await civStrike(pid); }, pid); await A.p.waitForTimeout(300);
   check('Supreme Court strikes it down', !(await A.p.evaluate(() => TOWN.cls.laws || [])).includes('pet_cap'));
 
+  /* 4b. laws in the mayor's own words + the word filter */
+  check('word filter blocks bad words (and disguised ones)', await A.p.evaluate(() => !civCleanText('this is sh1t') && !civCleanText('F.U.C.K') && !civCleanText('pendejo') && civCleanText('Homework-Free Fridays') && civCleanText('Class assets and grass')));
+  const cl = await A.p.evaluate(async () => { townTab('hall'); civWriteLaw(); document.getElementById('lwT').value = 'Dumb ass rule'; document.getElementById('lwD').value = 'whatever goes here ok';
+    await civWriteLawGo(); const blocked = document.getElementById('lwErr').textContent;
+    document.getElementById('lwT').value = 'Homework-Free Fridays'; document.getElementById('lwD').value = 'No new homework is assigned on Fridays.'; await civWriteLawGo();
+    const rows = await TOWN.net.store.list(`classes/${TOWN.session.cid}/proposals`); return { blocked, rows: rows.filter(r => r.key === 'custom').map(r => [r.id, r.status, r.title]) }; });
+  check('custom law: bad word blocked, clean one goes to review', /allowed/.test(cl.blocked) && cl.rows.length === 1 && cl.rows[0][1] === 'review', cl);
+  const cpid = cl.rows[0][0];
+  await T.evaluate(async pid => { window.confirm = () => true; window.alert = () => {}; const answers = ['Homework-Free Fridays!', 'No new homework on Fridays, ever.']; window.prompt = () => answers.shift();
+    await civEditLaw(pid); await civApprove(pid); }, cpid);
+  await B.p.evaluate(pid => civLawVote(pid, true), cpid); await B.p.waitForTimeout(300);
+  await T.evaluate(async pid => { await civLawTally(pid); }, cpid); await A.p.waitForTimeout(500);
+  const cust = await A.p.evaluate(() => TOWN.cls.customLaws);
+  check('teacher edits, approves; class passes it into the town laws', cust && cust[0] && cust[0].title === 'Homework-Free Fridays!', cust);
+
+  /* 4c. impeachment */
+  await B.p.evaluate(async () => { townTab('hall'); await civPetitionGo('promise'); });
+  await T.evaluate(async () => { window.confirm = () => true; await civImpeach('house'); }); await B.p.waitForTimeout(400);
+  const iid = await B.p.evaluate(() => TOWN.cls.impeach.id);
+  await B.p.evaluate(id => civLawVote(id + '_house', true), iid); await B.p.waitForTimeout(300);
+  await T.evaluate(async () => { await civImpCount('house'); }); await B.p.waitForTimeout(400);
+  const ph = await B.p.evaluate(() => TOWN.cls.impeach.phase);
+  await tab(A.p, 'hall'); await A.p.screenshot({ path: SHOTS + '/civic_impeach.png', fullPage: true });
+  await B.p.evaluate(id => civLawVote(id + '_senate', true), iid); await B.p.waitForTimeout(300);
+  await T.evaluate(async () => { await civImpCount('senate'); }); await A.p.waitForTimeout(500);
+  const after = await A.p.evaluate(() => ({ mayor: TOWN.cls.mayor, res: TOWN.cls.impeach.result }));
+  check('impeached by the House, removed by 2/3 in the trial', ph === 'senate' && !after.mayor && /removed/.test(after.res.en), { ph, after });
+  /* put a mayor back for the rest of the test */
+  await T.evaluate(async () => { await TOWN.net.setClass(TOWN.adminCid, { mayor: { sid: 'ana-r', name: 'Ana R.', eid: 'el1' } }); });
+
   /* 5. business + partner payout */
   await tab(A.p, 'jobs');
   await A.p.evaluate(() => { window.confirm = () => true; civStartBiz('bakery'); civPartnerGo('ben-t'); TOWN.publishNow(); }); await B.p.waitForTimeout(1200);
@@ -124,7 +154,7 @@ const check = (n, ok, info) => { results.push((ok ? 'PASS ' : 'FAIL ') + n + (in
   await T.evaluate(async () => { const pk = allPacks()[0]; const it = pk.units[0].items.find(i => i.type === 'mcq'); await TOWN.net.setClass(TOWN.adminCid, { quiz: { id: 'q1', phase: 'open', at: Date.now(), q: { q: it.q, c: it.c, a: it.a } } }); });
   await A.p.waitForTimeout(800);
   await A.p.screenshot({ path: SHOTS + '/civic_quiz.png' });
-  await A.p.evaluate(async () => { const q = TOWN.cls.quiz; await civQuizAns(q.q.a); });
+  await A.p.evaluate(async () => { const q = TOWN.cls.quiz; await civQuizAns(q.q.a); }); await T.waitForTimeout(600);
   await T.evaluate(async () => { await civReveal(); }); await A.p.waitForTimeout(600);
   const qz = await A.p.evaluate(() => ({ phase: TOWN.cls.quiz.phase, first: TOWN.cls.quiz.first, paid: !!TOWN.town().applied['quiz:q1'] }));
   check('plaza quiz: answer, reveal, fastest list, coin', qz.phase === 'reveal' && qz.first[0] === 'Ana R.' && qz.paid, qz);
