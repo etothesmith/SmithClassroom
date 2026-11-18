@@ -286,6 +286,51 @@ window.civEventQ = function(){
 /* ================================================================ 4. elections and laws */
 const elec = () => { const e = CLS().election; return e && e.id ? e : null; };
 let CANDS = [], PROPS = [];
+/* ---------------- impeachment ----------------
+   Like the Constitution: students petition, the "House" (the class) impeaches
+   by a simple majority, then the "Senate" trial needs two-thirds to remove the
+   mayor. Coach Smith presides like the Chief Justice and counts every vote. */
+const IMP_WHY = {
+  promise: {e:"🤥", en:"Broke a campaign promise", es:"Rompió una promesa de campaña"},
+  power:   {e:"👑", en:"Abused the mayor's power", es:"Abusó del poder de la alcaldía"},
+  ignore:  {e:"🙉", en:"Ignores what the class wants", es:"Ignora lo que quiere la clase"},
+  absent:  {e:"💤", en:"Never shows up or does the job", es:"No aparece ni hace su trabajo"},
+  unfair:  {e:"⚖️", en:"Treats people unfairly", es:"Trata a la gente injustamente"}
+};
+const LW = (en, es) => ({en, es});
+const imp = () => { const i = CLS().impeach, m = CLS().mayor; return i && i.id && m && m.sid && i.sid === m.sid ? i : null; };
+const impKey = () => { const m = CLS().mayor; return m && m.sid ? "imp_" + (m.eid || m.sid) : null; };
+function paintImpeach(){
+  const m = CLS().mayor, ci = CLS().impeach;
+  if (!m || !m.sid) return ci && ci.phase === "done" && ci.result ? `<section class="panel"><div class="eyebrow">⚖️ ${W2("Impeachment","Juicio político")}</div><p class="tnote">${E(L2(ci.result))}</p></section>` : "";
+  const i = imp(), me = SESS().sid, isMayor = m.sid === me, k = impKey(), signed = civ().voted["pet:" + k];
+  const last = CLS().impeach && CLS().impeach.sid === m.sid && CLS().impeach.phase === "done" ? CLS().impeach : null;
+  let body = "";
+  if (i && i.phase === "house") body = `<p><b>${W2("Impeachment vote (the House)","Votación de juicio político (la Cámara)")}</b>: ${W2(`Should ${E(m.name)} be impeached? A simple majority impeaches.`, `¿Se debe acusar a ${E(m.name)}? Basta la mayoría simple.`)}</p>`
+    + voteBtns(i.id + "_house", isMayor);
+  else if (i && i.phase === "senate") body = `<p class="tnote">⚖️ ${W2(`${E(m.name)} was impeached. Now the trial (the Senate): it takes two-thirds to remove the mayor from office.`, `${E(m.name)} fue acusado. Ahora el juicio (el Senado): se necesitan dos tercios para destituir.`)}</p>`
+    + voteBtns(i.id + "_senate", isMayor);
+  else if (!isMayor) body = signed ? `<p class="muted">${W2("You signed the petition. Coach Smith decides if there's enough support to hold an impeachment vote.","Firmaste la petición. Coach Smith decide si hay apoyo suficiente para votar.")}</p>`
+    : `<button class="btn ghost" onclick="civPetition()">📜 ${W2("Sign a petition to impeach the mayor","Firmar una petición de juicio político")}</button>`;
+  if (last && last.result) body = `<p class="muted">${E(L2(last.result))}</p>` + body;
+  return `<section class="panel"><div class="eyebrow">⚖️ ${W2("Impeachment","Juicio político")}</div>${body}
+    <p class="muted" style="font-size:12px">${W2("Like the U.S. Constitution: the House impeaches by majority, the Senate removes by two-thirds. Votes are secret.","Como en la Constitución de EE. UU.: la Cámara acusa por mayoría y el Senado destituye con dos tercios. El voto es secreto.")}</p></section>`;
+}
+function voteBtns(pid, isMayor){
+  if (isMayor) return `<p class="muted">${W2("You're the one on trial, so you don't vote.","Eres quien está en juicio, así que no votas.")}</p>`;
+  if (civ().voted["law:" + pid]) return `<p class="muted">${W2("You voted. Coach Smith will count the votes.","Votaste. Coach Smith contará los votos.")}</p>`;
+  return `<span class="cyn"><button class="btn primary" onclick="civLawVote('${pid}',true)">👍 ${W2("Yes","Sí")}</button><button class="btn" onclick="civLawVote('${pid}',false)">👎 ${W2("No","No")}</button></span>`;
+}
+window.civPetition = function(){
+  sheet(`<h2>📜 ${W2("Petition to impeach","Petición de juicio político")}</h2><p class="muted">${W2("Pick the reason. Your signature is private: only Coach Smith sees who signed.","Elige la razón. Tu firma es privada: solo Coach Smith ve quién firmó.")}</p>
+    <div class="cpick col">${Object.entries(IMP_WHY).map(([k, w]) => `<button onclick="civPetitionGo('${k}')">${w.e} <b>${E(L2(w))}</b></button>`).join("")}</div>
+    <button class="btn ghost wide" onclick="townCloseCard()">${W2("Cancel","Cancelar")}</button>`);
+};
+window.civPetitionGo = async function(why){
+  const k = impKey(); if (!k) return;
+  try { await store().set(`${C()}/lawvotes/${k}_pet_${SESS().sid}`, {pid:k + "_pet", sid:SESS().sid, v:true, why, at:Date.now()}); } catch(e){}
+  civ().voted["pet:" + k] = 1; save(); closeSheet(); T.toast(W2("Petition signed.","Petición firmada.")); paint();
+};
 function paintElection(){
   const e = elec(), m = CLS().mayor;
   const mayorLine = m && m.sid ? `<div class="cmayor">${img(`${TA}civic/mayor_sash.webp`, "🎖️")}<div><small>${W2("Mayor","Alcalde")}</small><b>${E(m.name)}</b></div></div>` : "";
@@ -331,21 +376,62 @@ window.civVote = async function(sid){
     civ().voted[e.id] = 1; save(); T.toast(W2("Vote cast!","¡Voto emitido!")); paint(); }
   catch(err){ civ().voted[e.id] = 1; save(); T.toast(W2("You already voted.","Ya votaste.")); paint(); }
 };
+/* ---------------- student-written laws ----------------
+   The mayor can write a law in their own words. It goes to Coach Smith first
+   (he can edit, approve for a vote, or reject); nobody else sees it until then.
+   A word list blocks inappropriate words before it is even sent. */
+const BAD = ("fuck fuk fck shit sht bitch biatch bastard asshole ass arse dick dik cock cok pussy puss cunt cum jizz porn porno sex sexy " +
+  "nude nudes naked boob boobs tit tits titty penis vagina dildo horny hoe hoes whore slut thot twat wank wanker prick douche damn goddamn hell crap piss " +
+  "nigger nigga niga negro chink gook spic wetback beaner kike faggot fag fagot dyke tranny retard retarded rape rapist molest pedo pedophile nazi hitler " +
+  "kkk kill murder suicide gun guns shoot bomb terrorist weed cocaine meth drunk vape " +
+  "puta puto pendejo pendeja chinga chingar chingada verga pinche culo mierda cabron cabrona marica maricon joder coño cono culero zorra perra malparido gonorrea").split(" ");
+const BAD_STEMS = ["fuck","shit","bitch","nigg","fagg","cunt","whore","slut","rapist","porn","penis","vagin","dildo","pedoph","retard","molest","chinga","pendej","maric","mierd","cabron","culer","asshol","motherf"];
+function cleanText(t){
+  const n = String(t || "").toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "")
+    .replace(/[0@4]/g, m => ({"0":"o","@":"a","4":"a"})[m]).replace(/[1!|]/g, "i").replace(/3/g, "e").replace(/[5$]/g, "s").replace(/7/g, "t").replace(/8/g, "b");
+  const words = n.replace(/[^a-zñ\s]/g, " ").split(/\s+/).filter(Boolean).map(w => w.replace(/(.)\1{2,}/g, "$1$1"));
+  const squished = n.replace(/[^a-zñ]/g, "").replace(/(.)\1+/g, "$1");
+  return !words.some(w => BAD.includes(w) || BAD.includes(w.replace(/(.)\1+/g, "$1")) || BAD.includes(w.replace(/e?s$/, ""))) && !BAD_STEMS.some(b => squished.includes(b.replace(/(.)\1+/g, "$1")));
+}
+window.civCleanText = cleanText;
+const customs = () => (CLS().customLaws || []).filter(l => l && l.id);
+function lawInfo(p){ if (p.key === "custom") return {e:"✍️", title:p.title || "", what:p.desc || ""};
+  const l = LAWS[p.key] || {e:"📜", en:p.key, what:{en:""}}; return {e:l.e, title:L2(l), what:L2(l.what)}; }
 function paintLaws(){
   const m = CLS().mayor, isMayor = m && m.sid === SESS().sid, open = PROPS.filter(p => p.status === "voting"), active = laws();
-  const past = PROPS.filter(p => p.status !== "voting").sort((a, b) => b.at - a.at).slice(0, 5);
+  const mine = PROPS.filter(p => p.status === "review" && p.sid === SESS().sid);
+  const past = PROPS.filter(p => !["voting","review","rejected"].includes(p.status)).sort((a, b) => b.at - a.at).slice(0, 5);
   return `<section class="panel"><div class="eyebrow">📜 ${W2("Town laws","Leyes del pueblo")}</div>
-    ${active.length ? active.map(k => `<div class="claw on">${LAWS[k].e} <b>${E(L2(LAWS[k]))}</b><span>${E(L2(LAWS[k].what))}</span></div>`).join("") : `<p class="muted">${W2("No laws yet.","Aún no hay leyes.")}</p>`}
-    ${open.map(p => `<div class="claw vote">${LAWS[p.key].e} <b>${W2("Proposed","Propuesta")}: ${E(L2(LAWS[p.key]))}</b><span>${E(L2(LAWS[p.key].what))} · ${W2("by Mayor","de la alcaldía:")} ${E(p.name)}</span>
-      ${civ().voted["law:" + p.id] ? `<i>${W2("You voted.","Votaste.")}</i>` : `<span class="cyn"><button class="btn primary" onclick="civLawVote('${p.id}',true)">👍 ${W2("Yes","Sí")}</button><button class="btn" onclick="civLawVote('${p.id}',false)">👎 ${W2("No","No")}</button></span>`}</div>`).join("")}
-    ${isMayor && !open.length ? `<button class="btn primary" onclick="civPropose()">🖋️ ${W2("Mayor: propose a law","Alcalde: proponer una ley")}</button>` : ""}
-    ${past.length ? `<div class="cmini">${past.map(p => `<span>${LAWS[p.key] ? LAWS[p.key].e : ""} ${E(L2(LAWS[p.key] || {en:p.key}))}: <b>${{passed:W2("passed","aprobada"), failed:W2("failed","rechazada"), struck:W2("struck down by the Court","anulada por la Corte")}[p.status] || p.status}</b>${p.yes != null ? ` (${p.yes}–${p.no})` : ""}</span>`).join("")}</div>` : ""}
+    ${active.length || customs().length ? active.map(k => `<div class="claw on">${LAWS[k].e} <b>${E(L2(LAWS[k]))}</b><span>${E(L2(LAWS[k].what))}</span></div>`).join("")
+        + customs().map(l => `<div class="claw on">✍️ <b>${E(l.title)}</b><span>${E(l.desc)}${l.by ? " · " + E(l.by) : ""}</span></div>`).join("") : `<p class="muted">${W2("No laws yet.","Aún no hay leyes.")}</p>`}
+    ${mine.map(p => `<div class="claw">✍️ <b>${E(p.title)}</b><span>${E(p.desc)}</span><i>⏳ ${W2("Waiting for Coach Smith to review it before the class votes.","Esperando que Coach Smith la revise antes de que vote la clase.")}</i></div>`).join("")}
+    ${open.map(p => { const li = lawInfo(p); return `<div class="claw vote">${li.e} <b>${W2("Proposed","Propuesta")}: ${E(li.title)}</b><span>${E(li.what)} · ${p.teacher ? "Coach Smith" : W2("by Mayor","de la alcaldía:") + " " + E(p.name)}</span>
+      ${civ().voted["law:" + p.id] ? `<i>${W2("You voted.","Votaste.")}</i>` : `<span class="cyn"><button class="btn primary" onclick="civLawVote('${p.id}',true)">👍 ${W2("Yes","Sí")}</button><button class="btn" onclick="civLawVote('${p.id}',false)">👎 ${W2("No","No")}</button></span>`}</div>`; }).join("")}
+    ${isMayor && !open.length && !mine.length ? `<button class="btn primary" onclick="civPropose()">🖋️ ${W2("Mayor: propose a law","Alcalde: proponer una ley")}</button>` : ""}
+    ${past.length ? `<div class="cmini">${past.map(p => `<span>${lawInfo(p).e} ${E(lawInfo(p).title)}: <b>${{passed:W2("passed","aprobada"), failed:W2("failed","rechazada"), struck:W2("struck down by the Court","anulada por la Corte")}[p.status] || p.status}</b>${p.yes != null ? ` (${p.yes}–${p.no})` : ""}</span>`).join("")}</div>` : ""}
     <p class="muted" style="font-size:12px">${W2("The mayor proposes, the class votes (secret ballot), and Coach Smith, as the Supreme Court, can strike a law down.","La alcaldía propone, la clase vota (voto secreto) y Coach Smith, como la Corte Suprema, puede anular una ley.")}</p></section>`;
 }
 window.civPropose = function(){
-  sheet(`<h2>${W2("Propose a law","Proponer una ley")}</h2><div class="cpick col">${Object.entries(LAWS).filter(([k]) => !laws().includes(k)).map(([k, l]) =>
+  sheet(`<h2>${W2("Propose a law","Proponer una ley")}</h2><div class="cpick col">
+    <button onclick="civWriteLaw()">✍️ <b>${W2("Write your own law","Escribe tu propia ley")}</b><small>${W2("In your own words. Coach Smith reviews it before the class votes.","Con tus palabras. Coach Smith la revisa antes de que vote la clase.")}</small></button>${Object.entries(LAWS).filter(([k]) => !laws().includes(k)).map(([k, l]) =>
     `<button onclick="civProposeGo('${k}')">${l.e} <b>${E(L2(l))}</b><small>${E(L2(l.what))}</small></button>`).join("")}</div>
     <button class="btn ghost wide" onclick="townCloseCard()">${W2("Cancel","Cancelar")}</button>`);
+};
+window.civWriteLaw = function(){
+  sheet(`<h2>✍️ ${W2("Write a law","Escribe una ley")}</h2>
+    <label class="cform">${W2("Name of the law","Nombre de la ley")}<input id="lwT" maxlength="40" placeholder="${W2("Example: Homework-Free Fridays","Ejemplo: Viernes sin tarea")}"></label>
+    <label class="cform">${W2("What it does (one or two sentences)","Qué hace (una o dos oraciones)")}<textarea id="lwD" maxlength="140" rows="3"></textarea></label>
+    <p class="muted" style="font-size:12px">${W2("Keep it school-appropriate. Coach Smith reviews every law, and can edit it, before the class votes.","Que sea apropiada para la escuela. Coach Smith revisa cada ley, y puede editarla, antes de que vote la clase.")}</p>
+    <p id="lwErr" class="terr"></p>
+    <button class="btn primary wide" onclick="civWriteLawGo()">${W2("Send to Coach Smith","Enviar a Coach Smith")}</button><button class="btn ghost wide" onclick="townCloseCard()">${W2("Cancel","Cancelar")}</button>`);
+};
+window.civWriteLawGo = async function(){
+  const t = document.getElementById("lwT").value.trim().replace(/\s+/g, " "), d = document.getElementById("lwD").value.trim().replace(/\s+/g, " "), err = document.getElementById("lwErr");
+  if (t.length < 3 || d.length < 8) { err.textContent = W2("Give your law a name and say what it does.","Dale un nombre a tu ley y di qué hace."); return; }
+  if (!cleanText(t) || !cleanText(d)) { err.textContent = W2("That has a word that isn't allowed. Try again with school-appropriate words.","Eso tiene una palabra que no se permite. Inténtalo con palabras apropiadas."); return; }
+  try { await store().add(`${C()}/proposals`, {key:"custom", title:t.slice(0, 40), desc:d.slice(0, 140), sid:SESS().sid, uid:store().uid(), name:SESS().name, status:"review", at:Date.now()});
+    closeSheet(); T.toast(W2("Sent! Coach Smith will review it.","¡Enviada! Coach Smith la revisará.")); }
+  catch(e){ err.textContent = W2("Only the mayor can propose laws.","Solo la alcaldía puede proponer leyes."); }
 };
 window.civProposeGo = async function(k){
   try { await store().add(`${C()}/proposals`, {key:k, sid:SESS().sid, uid:store().uid(), name:SESS().name, status:"voting", at:Date.now()});
@@ -364,14 +450,14 @@ function paintHall(el){
   flag("hall");
   const draw = () => { el.innerHTML = `<section class="panel raised chall">${img(`${TA}civic/town_hall.webp`, "🏛️", "big")}<div><div class="eyebrow">${E(SESS().className || "")}</div>
       <h2>${W2("Town Hall","Ayuntamiento")}</h2><p class="muted">${W2("Class goals, the period league, elections and laws.","Metas de la clase, la liga de periodos, elecciones y leyes.")}</p></div></section>
-    ${paintGoalCard()}${paintLeague()}${paintElection()}${paintLaws()}`; };
+    ${paintGoalCard()}${paintLeague()}${paintElection()}${paintImpeach()}${paintLaws()}`; };
   draw();
   sub(NET().watchPub(rows => { if (!rows) return; rows.forEach(p => T.pub[p.id] = p); leaguePush(); draw(); }));
   const c = CLS();
   if (c.ownerUid) sub(store().watch(`league/${c.ownerUid}/periods`, {}, rows => { if (rows) { LEAGUE = rows; draw(); } }));
   const e = elec();
   if (e) sub(store().watch(`${C()}/candidates`, {where:[["eid","==",e.id]]}, rows => { if (rows) { CANDS = rows.sort((a, b) => a.at - b.at); draw(); } }));
-  sub(store().watch(`${C()}/proposals`, {}, rows => { if (rows) { PROPS = rows.filter(p => LAWS[p.key]); draw(); } }));
+  sub(store().watch(`${C()}/proposals`, {}, rows => { if (rows) { PROPS = rows.filter(p => LAWS[p.key] || p.key === "custom"); draw(); } }));
 }
 
 /* ================================================================ 5. businesses */
@@ -586,7 +672,7 @@ EXT.onClass.push((was, c) => {
     if (typeof fireConfetti === "function") fireConfetti(); });
   const q = c.quiz; if (q && q.id && q.phase === "reveal") quizReveal(q);
   if (q && q.id && q.phase === "open" && (!was || !was.quiz || was.quiz.id !== q.id) && T.isTown() && T.tt === "plaza") setTimeout(civQuizOpen, 300);
-  if (T.isTown() && ["hall","bank","jobs"].includes(T.tt) && (!was || JSON.stringify([was.goal, was.election, was.mayor, was.laws, was.econ, was.event]) !== JSON.stringify([c.goal, c.election, c.mayor, c.laws, c.econ, c.event]))) T.paintTown();
+  if (T.isTown() && ["hall","bank","jobs"].includes(T.tt) && (!was || JSON.stringify([was.goal, was.election, was.mayor, was.laws, was.customLaws, was.impeach, was.econ, was.event]) !== JSON.stringify([c.goal, c.election, c.mayor, c.laws, c.customLaws, c.impeach, c.econ, c.event]))) T.paintTown();
 });
 let BGS = [];
 EXT.onSession.push(() => {
@@ -635,7 +721,7 @@ EXT.adminPanels.push({
       <div class="tsw">${!el || el.phase === "closed" ? `<button class="btn" onclick="civElection('filing')">📣 ${W2("Open sign-ups for mayor","Abrir inscripciones")}</button>` : ""}
         ${el && el.phase === "filing" ? `<button class="btn primary" onclick="civElection('voting')">🗳️ ${W2("Open voting","Abrir votación")}</button>` : ""}
         ${el && el.phase === "voting" ? `<button class="btn primary" onclick="civTally()">✅ ${W2("Close polls and count","Cerrar y contar")}</button>` : ""}</div>
-      <div id="aLaws"></div></section>
+      <div id="aImp"></div><div id="aLaws"></div></section>
     <section class="panel tadm"><div class="eyebrow">❓ ${W2("Plaza quiz and decorations","Quiz en la plaza y decoración")}</div>
       <div class="tlev"><label>${W2("Course","Curso")}<select id="aQC">${(typeof allPacks === "function" ? allPacks() : []).map(p => `<option value="${p.id}">${E(L2(p.name))}</option>`).join("")}</select></label>
         <button class="btn primary" onclick="civQuiz()">❓ ${q && q.phase === "open" ? W2("Next question","Siguiente pregunta") : W2("Start a plaza quiz","Empezar un quiz")}</button>
@@ -654,11 +740,24 @@ EXT.adminPanels.push({
     if (q) T.viewSub(store().watch(`classes/${c.id}/buzz`, {where:[["qid","==",q.id]]}, rows => { if (!rows) return; A_BUZZ = rows.sort((a, b) => a.at - b.at);
       const el = document.getElementById("aBuzz"); if (!el) return; const right = A_BUZZ.filter(r => r.a === q.q.a);
       el.innerHTML = `${A_BUZZ.length} ${W2("answered","respondieron")} · ${right.length} ${W2("right","correctas")}${right.length ? " · ⚡ " + right.slice(0, 3).map(r => E(r.name)).join(", ") : ""}`; }));
+    if (c.mayor && c.mayor.sid) { const k = "imp_" + (c.mayor.eid || c.mayor.sid), i = c.impeach && c.impeach.id && c.impeach.sid === c.mayor.sid && c.impeach.phase !== "done" ? c.impeach : null;
+      T.viewSub(store().watch(`classes/${c.id}/lawvotes`, {where:[["pid","==",k + "_pet"]]}, rows => { const box = document.getElementById("aImp"); if (!box || !rows) return;
+        const why = {}; rows.forEach(r => { why[r.why] = (why[r.why] || 0) + 1; });
+        box.innerHTML = `<div class="tdeal"><span>⚖️ <b>${W2("Impeachment","Juicio político")}</b> · ${rows.length} ${W2("petition signature(s)","firma(s)")}${rows.length ? ": " + Object.entries(why).map(([w, n]) => (IMP_WHY[w] ? IMP_WHY[w].e + " " + IMP_WHY[w].en : w) + " " + n).join(", ") : ""}
+          ${i ? ` · <b>${i.phase === "house" ? W2("House vote open","Votación en la Cámara") : W2("Senate trial open","Juicio en el Senado")}</b>` : ""}</span>
+          ${!i ? `<button class="btn" onclick="civImpeach('house')">${W2("Open impeachment vote (House)","Abrir votación (Cámara)")}</button>` : ""}
+          ${i && i.phase === "house" ? `<button class="btn primary" onclick="civImpCount('house')">${W2("Count House votes","Contar votos de la Cámara")}</button>` : ""}
+          ${i && i.phase === "senate" ? `<button class="btn primary" onclick="civImpCount('senate')">${W2("Count trial votes (2/3 to remove)","Contar votos del juicio (2/3)")}</button>` : ""}</div>`; })); }
     T.viewSub(store().watch(`classes/${c.id}/proposals`, {}, rows => { const box = document.getElementById("aLaws"); if (!box || !rows) return;
-      box.innerHTML = rows.filter(p => LAWS[p.key]).sort((a, b) => b.at - a.at).slice(0, 8).map(p => `<div class="tdeal"><span>${LAWS[p.key].e} ${LAWS[p.key].en} · ${E(p.name)} · <b>${p.status}</b>${p.yes != null ? ` (${p.yes}–${p.no})` : ""}</span>
+      const live = p => p.key === "custom" ? (c.customLaws || []).some(l => l.id === p.id) : (c.laws || []).includes(p.key);
+      const list = rows.filter(p => LAWS[p.key] || p.key === "custom").sort((a, b) => (b.status === "review") - (a.status === "review") || b.at - a.at).slice(0, 12);
+      box.innerHTML = `<button class="btn" onclick="civTeacherLaw()">✍️ ${W2("Write a law","Escribir una ley")}</button>` + list.map(p => { const li = lawInfo(p);
+        return `<div class="tdeal"><span>${li.e} <b>${E(li.title)}</b>${p.key === "custom" ? ` <small>${E(li.what)}</small>` : ""} · ${p.teacher ? "Coach Smith" : E(p.name)} · <b>${{review:W2("needs your review","por revisar"), voting:W2("voting","en votación"), passed:W2("passed","aprobada"), failed:W2("failed","rechazada"), struck:W2("struck down","anulada"), rejected:W2("rejected","rechazada")}[p.status] || p.status}</b>${p.yes != null ? ` (${p.yes}–${p.no})` : ""}</span>
+        ${p.key === "custom" && ["review","voting"].includes(p.status) || p.key === "custom" && live(p) ? `<button class="btn ghost" onclick="civEditLaw('${p.id}')">✏️ ${W2("Edit","Editar")}</button>` : ""}
+        ${p.status === "review" ? `<button class="btn primary" onclick="civApprove('${p.id}')">✅ ${W2("Approve for a vote","Aprobar para votar")}</button><button class="btn ghost" onclick="civReject('${p.id}')">✖ ${W2("Reject","Rechazar")}</button>` : ""}
         ${p.status === "voting" ? `<button class="btn primary" onclick="civLawTally('${p.id}')">${W2("Count votes","Contar votos")}</button>` : ""}
-        ${p.status === "passed" && (c.laws || []).includes(p.key) ? `<button class="btn ghost" onclick="civStrike('${p.id}')">⚖️ ${W2("Strike down","Anular")}</button>` : ""}</div>`).join("")
-        || `<p class="muted" style="font-size:12px">${W2("When there's a mayor, they can propose laws here for the class to vote on.","Cuando haya alcalde, podrá proponer leyes para que la clase vote.")}</p>`; }));
+        ${p.status === "passed" && live(p) ? `<button class="btn ghost" onclick="civStrike('${p.id}')">⚖️ ${W2("Strike down","Anular")}</button>` : ""}</div>`; }).join("")
+        + (list.length ? "" : `<p class="muted" style="font-size:12px">${W2("When there's a mayor, they can propose laws (from the list or in their own words) for the class to vote on. You can write laws too.","Cuando haya alcalde, podrá proponer leyes (de la lista o con sus palabras) para que la clase vote. Tú también puedes escribir leyes.")}</p>`); }));
   }
 });
 const tc = () => T.adminCid;
@@ -690,12 +789,55 @@ window.civLawTally = async function(pid){
   const v = await store().list(`classes/${c.id}/lawvotes`, {where:[["pid","==",pid]]});
   const yes = v.filter(x => x.v).length, no = v.length - yes, passed = yes > no;
   await store().update(`classes/${c.id}/proposals/${pid}`, {status:passed ? "passed" : "failed", yes, no});
-  if (passed) T.adminSet({laws:[...new Set([...(c.laws || []), p.key])]}); else T.paintAdmin();
+  if (passed && p.key === "custom") T.adminSet({customLaws:[...(c.customLaws || []).filter(l => l.id !== pid), {id:pid, title:p.title, desc:p.desc, by:p.teacher ? "Coach Smith" : p.name}]});
+  else if (passed) T.adminSet({laws:[...new Set([...(c.laws || []), p.key])]}); else T.paintAdmin();
 };
 window.civStrike = async function(pid){
   if (!confirm(W2("As the Supreme Court, strike this law down?","Como la Corte Suprema, ¿anular esta ley?"))) return;
   const c = await getCls(), p = (await store().list(`classes/${c.id}/proposals`)).find(x => x.id === pid); if (!p) return;
-  await store().update(`classes/${c.id}/proposals/${pid}`, {status:"struck"}); T.adminSet({laws:(c.laws || []).filter(k => k !== p.key)});
+  await store().update(`classes/${c.id}/proposals/${pid}`, {status:"struck"});
+  if (p.key === "custom") T.adminSet({customLaws:(c.customLaws || []).filter(l => l.id !== pid)}); else T.adminSet({laws:(c.laws || []).filter(k => k !== p.key)});
+};
+/* teacher: impeachment */
+window.civImpeach = async function(){
+  const c = await getCls(); if (!c.mayor || !c.mayor.sid) return;
+  if (!confirm(W2(`Open an impeachment vote on Mayor ${c.mayor.name}? The class votes; a simple majority impeaches.`, `¿Abrir votación de juicio político contra ${c.mayor.name}? Basta la mayoría simple.`))) return;
+  T.adminSet({impeach:{id:"imp" + Date.now().toString(36), sid:c.mayor.sid, phase:"house", at:Date.now()}});
+};
+window.civImpCount = async function(stage){
+  const c = await getCls(), i = c.impeach; if (!i || !c.mayor) return;
+  const v = (await store().list(`classes/${c.id}/lawvotes`, {where:[["pid","==",i.id + "_" + stage]]})).filter(x => x.sid !== c.mayor.sid);
+  const yes = v.filter(x => x.v).length, no = v.length - yes, nm = c.mayor.name;
+  if (stage === "house") {
+    if (yes > no) { alert(W2(`Impeached ${yes}–${no}. Now the trial: the class votes again, and it takes two-thirds to remove.`, `Acusado ${yes}–${no}. Ahora el juicio: la clase vota de nuevo y se necesitan dos tercios.`));
+      T.adminSet({impeach:{...i, phase:"senate", house:[yes, no]}}); }
+    else T.adminSet({impeach:{...i, phase:"done", house:[yes, no], result:LW(`The House voted ${yes}–${no}: ${nm} was not impeached.`, `La Cámara votó ${yes}–${no}: ${nm} no fue acusado.`)}});
+    return;
+  }
+  const removed = v.length > 0 && yes >= Math.ceil(v.length * 2 / 3);
+  if (removed) T.adminSet({mayor:null, impeach:{...i, phase:"done", senate:[yes, no], result:LW(`Impeached and removed: the trial voted ${yes}–${no}. The town needs a new election.`, `Acusado y destituido: el juicio votó ${yes}–${no}. El pueblo necesita una nueva elección.`)}});
+  else T.adminSet({impeach:{...i, phase:"done", senate:[yes, no], result:LW(`Impeached but acquitted: the trial voted ${yes}–${no}, short of two-thirds. ${nm} stays mayor.`, `Acusado pero absuelto: el juicio votó ${yes}–${no}, sin los dos tercios. ${nm} sigue como alcalde.`)}});
+};
+/* teacher: review, edit and write laws */
+function askLaw(t0, d0){
+  const t = prompt(W2("Name of the law (40 characters max)","Nombre de la ley (máx. 40 caracteres)"), t0 || ""); if (t == null || !t.trim()) return null;
+  const d = prompt(W2("What it does (140 characters max)","Qué hace (máx. 140 caracteres)"), d0 || ""); if (d == null || !d.trim()) return null;
+  return {title:t.trim().slice(0, 40), desc:d.trim().slice(0, 140)};
+}
+window.civEditLaw = async function(pid){
+  const c = await getCls(), p = (await store().list(`classes/${c.id}/proposals`)).find(x => x.id === pid); if (!p) return;
+  const v = askLaw(p.title, p.desc); if (!v) return;
+  await store().update(`classes/${c.id}/proposals/${pid}`, v);
+  if ((c.customLaws || []).some(l => l.id === pid)) T.adminSet({customLaws:c.customLaws.map(l => l.id === pid ? {...l, ...v} : l)}); else T.paintAdmin();
+};
+window.civApprove = async pid => { await store().update(`classes/${T.adminCid}/proposals/${pid}`, {status:"voting"}); T.paintAdmin(); };
+window.civReject = async pid => { if (confirm(W2("Reject this law? The mayor can write a new one.","¿Rechazar esta ley? La alcaldía puede escribir otra.")))
+  { await store().update(`classes/${T.adminCid}/proposals/${pid}`, {status:"rejected"}); T.paintAdmin(); } };
+window.civTeacherLaw = async function(){
+  const v = askLaw(); if (!v) return;
+  const vote = confirm(W2("Put this law to a class vote?\n\nOK = the class votes on it.\nCancel = make it a law right now.","¿Someter esta ley a votación?\n\nAceptar = la clase vota.\nCancelar = es ley ahora mismo."));
+  const pid = await store().add(`classes/${T.adminCid}/proposals`, {key:"custom", ...v, teacher:true, sid:"", name:"Coach Smith", status:vote ? "voting" : "passed", at:Date.now()});
+  if (vote) T.paintAdmin(); else { const c = await getCls(); T.adminSet({customLaws:[...(c.customLaws || []), {id:pid, ...v, by:"Coach Smith"}]}); }
 };
 window.civQuiz = async function(){
   const pid = document.getElementById("aQC").value; window._lastQC = pid; const pk = (typeof allPacks === "function" ? allPacks() : []).find(p => p.id === pid); if (!pk) return;
