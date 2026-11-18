@@ -6443,6 +6443,7 @@ function epRec(uid){
 function epUnderstanding(){ return EP ? EP.und : 50; }
 
 function startEpisode(unitId, restart, topic){
+  resetOptOrder();
   const u = findUnit(unitId); if (!u) return go("study");
   /* first time through, let the student choose the world the examples live in */
   if (!S.route && !(u.pack && GOV_PACKS.has(u.pack.id)))
@@ -6675,6 +6676,7 @@ function drawDecide(sc){
     <button class="btn primary wide" style="margin-top:14px" id="epGo" disabled>${T_.makeCall}</button>`,
     sc.art);
   const wrap = document.getElementById("opts"), go = document.getElementById("epGo");
+  mixOpts(wrap, it.id);
   EP.checked = false;                 /* see wireQuestion: never inherit it */
   wrap.onclick = e => {
     const b = e.target.closest(".opt"); if (!b || EP.checked) return;
@@ -6688,7 +6690,8 @@ function drawDecide(sc){
       const ok = EP.picked === it.a;
       epScore(ok, true);
       EP.rep = Math.max(0, Math.min(100, EP.rep + (ok ? 12 : -10)));
-      [...wrap.children].forEach((el,i) => {
+      [...wrap.children].forEach(el => {
+        const i = optIndex(el);
         el.disabled = true; el.classList.remove("sel");
         if (i === it.a) el.classList.add("right");
         else if (i === EP.picked) el.classList.add("wrong");
@@ -6824,6 +6827,30 @@ function drawWrap(){
    Shared question rendering, so a check, a boss round and the old quiz all
    look and behave the same.
    ------------------------------------------------------------------------- */
+/* Answer order. Every bank stores the correct choice first, and the choices
+   used to be drawn in that order — so the top button was always right and a
+   student could click it straight through a certificate. The buttons keep
+   their original index (data-i / id="oN") so grading is untouched; only their
+   position on screen is shuffled. The order is remembered per question until
+   the next episode, practice set or test starts, so a language switch or a
+   redraw does not move the answers around under the student. */
+const OPT_ORDER = new Map();
+function resetOptOrder(){ OPT_ORDER.clear(); }
+function optIndex(el){ return el.dataset.i != null ? +el.dataset.i : +String(el.id||"").replace(/^o/,""); }
+function mixOpts(wrap, key){
+  if (!wrap) return;
+  const els = [...wrap.children].filter(el => el.classList.contains("opt"));
+  if (els.length < 2) return;
+  const k = (key||"") + "#" + els.length;
+  let ord = key ? OPT_ORDER.get(k) : null;
+  if (!ord){
+    ord = els.map((_,i)=>i);
+    for (let i = ord.length-1; i > 0; i--){ const j = Math.floor(Math.random()*(i+1)); [ord[i],ord[j]] = [ord[j],ord[i]]; }
+    if (key) OPT_ORDER.set(k, ord);
+  }
+  ord.forEach(i => wrap.appendChild(els[i]));
+}
+
 function questionBody(it){
   if (it.type === "mcq" || it.type === "multi"){
     const ch = (it.c && (it.c[S.lang] || it.c.en)) || [];
@@ -6853,6 +6880,7 @@ function wireQuestion(it, onDone){
   let picked = (it.type === "multi") ? [] : null;
   const wrap = document.getElementById("opts");
   if (wrap){
+    mixOpts(wrap, it.id);
     wrap.onclick = e => {
       const b = e.target.closest(".opt"); if (!b || EP.checked) return;
       const i = +b.dataset.i;
@@ -6898,7 +6926,8 @@ function wireQuestion(it, onDone){
     }
     if (wrap){
       const arr = (it.type === "multi") ? it.a : [it.a];
-      [...wrap.querySelectorAll(".opt")].forEach((el,i)=>{
+      [...wrap.querySelectorAll(".opt")].forEach(el=>{
+        const i = optIndex(el);
         el.disabled = true; el.classList.remove("sel");
         if (arr.includes(i)) el.classList.add("right");
         else if ((it.type==="multi" ? (picked||[]) : [picked]).includes(i)) el.classList.add("wrong");
@@ -7578,7 +7607,7 @@ function pickItems(u,n){
   while(out.length<n && u.items.length) out.push(u.items[out.length%u.items.length]); // bank too small: repeat
   return out;
 }
-function startPractice(id){ const u=findUnit(id); studyStop();
+function startPractice(id){  resetOptOrder();const u=findUnit(id); studyStop();
   Q={list:pickItems(u,Math.min(10,u.items.length)),idx:0,answers:[],picks:[],mode:"practice",unit:u,endsAt:0,picked:null,checked:false}; drawQ(); }
 
 /* ============================================================================
@@ -7704,6 +7733,7 @@ function lockedScreen(u){
 }
 
 function startExam(id){
+  resetOptOrder();
   const u=findUnit(id); if(!u) return go("study");
   if(!studyUnlocked(u)) return lockedScreen(u);
   studyStop();
@@ -7732,6 +7762,7 @@ function beginExam(id){
 }
 
 function startChallenge(id){
+  resetOptOrder();
   const u=findUnit(id); if(!u) return go("study");
   if(!studyUnlocked(u)) return lockedScreen(u);
   studyStop();
@@ -7763,7 +7794,7 @@ function drawQ(){
   let body="";
   if(it.type==="mcq"||it.type==="multi"){
     const ch=(it.c&&(it.c[S.lang]||it.c.en))||[];
-    body=ch.map((t,i)=>`<button class="opt" id="o${i}" onclick="pick(${i})">${esc(t)}</button>`).join("");
+    body=`<div id="qOpts">${ch.map((t,i)=>`<button class="opt" id="o${i}" onclick="pick(${i})">${esc(t)}</button>`).join("")}</div>`;
     if(it.type==="multi") body=`<div class="eyebrow" style="margin-bottom:6px">${T_.selectAll}</div>`+body;
   } else if(it.type==="numeric"){
     body=`<input id="ans" type="number" inputmode="decimal" step="any" placeholder="${T_.typeAnswer}">`;
@@ -7787,6 +7818,7 @@ function drawQ(){
     <div id="fb"></div>
     <button class="btn primary wide" id="go" style="margin-top:14px" onclick="checkQ()">${T_.check}</button>
   </section>`;
+  mixOpts(document.getElementById("qOpts"), it.id);
   Q.picked=(it.type==="multi")?[]:null; Q.checked=false; Q.grade=null; Q.gradeSpec=null;
   if(timed){ tick=setInterval(()=>{const el=document.getElementById("clk"); if(!el)return clearInterval(tick);
     const left=Q.endsAt-Date.now(); el.textContent=fmt(left); el.classList.toggle("low",left<120000);
@@ -7827,7 +7859,7 @@ function checkQ(){
     if(S.session){S.session.answers=Q.answers;S.session.idx=Q.idx;} save();
     if(it.type==="mcq"||it.type==="multi"){
       const arr=(it.type==="multi")?it.a:[it.a];
-      document.querySelectorAll(".opt").forEach((el,j)=>{ el.classList.remove("sel");
+      document.querySelectorAll(".opt").forEach(el=>{ const j=optIndex(el); el.classList.remove("sel");
         if(arr.includes(j)) el.classList.add("right");
         else if((it.type==="multi"?(Q.picked||[]):[Q.picked]).includes(j)) el.classList.add("wrong"); });
     }
@@ -8873,8 +8905,9 @@ function viewSmittys(){
         <div style="text-align:center;margin-bottom:10px"><span class="chip on">${es?"Verificación":"Mastery Check"}</span>
           <h3>${es?"Pregunta":"Question"} ${qi+1}/${qs.length}</h3></div>
         <p style="font-size:16px;font-weight:600;margin:6px 0 14px">${esc(L(q.q))}</p>
-        <div id="sgOpts">${(L(q.c)).map((c,i)=>`<button class="opt" onclick="window._sgAns(${i})">${esc(c)}</button>`).join("")}</div>
+        <div id="sgOpts">${(L(q.c)).map((c,i)=>`<button class="opt" data-i="${i}" onclick="window._sgAns(${i})">${esc(c)}</button>`).join("")}</div>
         <div id="sgFb"></div></section>`;
+      mixOpts(document.getElementById("sgOpts"), "sg:"+(q.id||L(q.q)));
       window._sgAns = function(i){
         const ok=i===q.a; if(ok) right++;
         ok ? SG.totalRight++ : SG.totalWrong++;
@@ -8885,7 +8918,8 @@ function viewSmittys(){
            until something came back "Correct!", with each click adding to the
            right/wrong tallies. The mastery check scored nothing meaningful.
            Mark the class only when there is one to add. */
-        document.querySelectorAll("#sgOpts .opt").forEach((b,j)=>{
+        document.querySelectorAll("#sgOpts .opt").forEach(b=>{
+          const j=optIndex(b);
           b.disabled=true;
           const mark = j===q.a ? "right" : j===i ? "wrong" : "";
           if(mark) b.classList.add(mark);
