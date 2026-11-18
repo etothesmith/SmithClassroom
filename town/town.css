@@ -225,3 +225,23 @@
 .kapp small{display:block;color:var(--muted,#666)}
 .kst{display:inline-flex;gap:4px;align-items:center;background:var(--cab2,#f6f1e4);border-radius:99px;padding:2px 4px 2px 10px;margin:2px}
 .kst .btn{padding:2px 8px;font-size:12px;min-height:0}
+
+/* ---- today's to-do, doorstep (town/today.js, town.js) ---- */
+.kto{display:grid;gap:6px;margin:6px 0}
+.kti{display:grid;grid-template-columns:34px 1fr auto;gap:10px;align-items:center;border:2.5px solid var(--char);border-radius:12px;padding:8px 10px;background:#fff}
+.kti>span{font-size:24px;text-align:center}
+.kti b{display:block;line-height:1.2}
+.kti small{display:block;color:var(--muted,#666);font-weight:700;font-size:12px}
+.kti.done{background:#E8F7EC}
+.kti.done b{color:#2b7a46}
+.klearn{display:inline-block;margin-top:3px;font-style:normal;font-size:11px;font-weight:900;color:#1F3F8F;background:#E3EBFF;border-radius:99px;padding:1px 8px}
+.ktodo{display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:10px 14px;cursor:pointer;background:#F3FFEF}
+.ktodo small{font-weight:900}
+.ktodo .btn{margin-left:auto;padding:4px 12px;min-height:0}
+.kdots{display:flex;gap:4px}
+.kdots i{font-style:normal;width:28px;height:28px;border:2px solid var(--char);border-radius:8px;display:grid;place-items:center;background:#fff;font-size:15px}
+.kdots i.on{background:#3BB273;color:#fff;font-weight:900}
+.tdoor{display:flex;gap:16px;align-items:center;flex-wrap:wrap}
+.tdoor>img,.tdoor>.tie{width:180px;height:180px;object-fit:contain;font-size:110px}
+.tdoor>div{flex:1;min-width:240px}
+.tdoor h2{margin:2px 0 6px;font-size:21px}

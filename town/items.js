@@ -49,7 +49,7 @@ window.TOWN_ITEMS = Object.fromEntries([
   ["trophy_gavel","trophy",1,0,"⚖️","Golden gavel","Mazo dorado"],
   ["trophy_bell","trophy",2,0,"🔔","Liberty Bell replica","Réplica de la Campana de la Libertad"],
   ["trophy_bull","trophy",2,0,"🐂","Bull-market statue","Estatua del mercado alcista"],
-  ["trophy_golden_coin","trophy",3,0,"🪙","Giant gold coin","Moneda de oro gigante"],
+  ["trophy_golden_coin","trophy",3,0,"💵","Giant gold Smithbuck","Smithbuck de oro gigante"],
   ["pet_goldfish","pet",0,5,"🐠","Goldfish","Pez dorado"],
   ["pet_cat","pet",1,0,"🐈","Cat","Gato"],
   ["pet_dog","pet",1,0,"🐕","Dog","Perro"],

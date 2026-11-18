@@ -33,7 +33,7 @@ const check = (n, ok, info) => { results.push((ok ? 'PASS ' : 'FAIL ') + n + (in
 
   /* login pop-up: nobody is hired, so it lists openings */
   const pop = await A.p.evaluate(() => { const b = document.getElementById('certAsk'); return b && !b.classList.contains('hidden') ? b.textContent : ''; });
-  check('login pop-up shows job openings', /Now hiring/i.test(pop) && /Town Doctor/.test(pop), pop.slice(0, 120));
+  check('login to-do shows job openings', /Now hiring/i.test(pop) && /Town Doctor/.test(pop), pop.slice(0, 120));
   await A.p.screenshot({ path: SHOTS + '/car_popup.png' });
   await A.p.evaluate(() => townCloseCard());
 

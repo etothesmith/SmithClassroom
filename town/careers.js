@@ -76,18 +76,18 @@ const CAREERS = {
 /* Cases townspeople create (or that happen on their own). need = right answers to close it */
 const KINDS = {
   sick:     {job:"doctor", e:"🤒", need:5, l:["Sick patient","Paciente enfermo"]},
-  checkup:  {job:"doctor", e:"🩺", need:3, ask:1, l:["Check-up","Chequeo"], done:["Clean bill of health! +2 coins","¡Sano! +2 monedas"], pay:2},
-  pet:      {job:"vet", e:"🐶", need:3, ask:1, l:["Pet check-up","Chequeo de mascota"], done:["Your pet is healthy and happy! +2 coins","¡Tu mascota está sana y feliz! +2 monedas"], pay:2},
-  interview:{job:"reporter", e:"🎙️", need:2, ask:1, l:["Interview me for the Gazette","Entrevístame para la Gaceta"], done:["You're in the Gazette! +2 coins","¡Saliste en la Gaceta! +2 monedas"], pay:2},
+  checkup:  {job:"doctor", e:"🩺", need:3, ask:1, l:["Check-up","Chequeo"], done:["Clean bill of health! +2 Smithbucks","¡Sano! +2 Smithbucks"], pay:2},
+  pet:      {job:"vet", e:"🐶", need:3, ask:1, l:["Pet check-up","Chequeo de mascota"], done:["Your pet is healthy and happy! +2 Smithbucks","¡Tu mascota está sana y feliz! +2 Smithbucks"], pay:2},
+  interview:{job:"reporter", e:"🎙️", need:2, ask:1, l:["Interview me for the Gazette","Entrevístame para la Gaceta"], done:["You're in the Gazette! +2 Smithbucks","¡Saliste en la Gaceta! +2 Smithbucks"], pay:2},
   loan:     {job:"banker", e:"💵", need:2, ask:1, l:["Bigger loan request (+20)","Solicitud de préstamo mayor (+20)"], decide:[["approve","✅",["Approve","Aprobar"]],["deny","✖",["Deny","Negar"]]]},
   fire:     {job:"firefighter", e:"🔥", need:5, l:["House fire!","¡Incendio!"], done:["The fire at your house is out. Phew!","Se apagó el incendio en tu casa. ¡Uf!"]},
   report:   {job:"marshal", e:"📢", need:3, ask:1, l:["Report to the Marshal","Reporte al alguacil"], opts:[["noise",["Noise on the plaza","Ruido en la plaza"]],["lost",["Lost item","Objeto perdido"]],["unfair",["Unfair trade","Intercambio injusto"]],["safety",["Safety concern","Problema de seguridad"]]], done:["The Marshal closed your report.","El alguacil cerró tu reporte."]},
   claim:    {job:"judge", e:"📜", need:3, ask:1, l:["Small-claims case","Caso de reclamo menor"], opts:[["trade",["A trade went wrong","Un intercambio salió mal"]],["partner",["My business partner didn't pay","Mi socio no me pagó"]],["price",["I was overcharged","Me cobraron de más"]]],
              decide:[["plaintiff","⚖️",["Rule for the person who filed","A favor de quien demandó"]],["dismiss","🚫",["Dismiss the case","Desestimar el caso"]]]},
-  tutor:    {job:"tutor", e:"📚", need:5, ask:1, unit:1, l:["Tutor me in a unit","Tutoría de una unidad"], done:["Your tutor worked through your unit! +3 coins","¡Tu tutor repasó tu unidad! +3 monedas"], pay:3},
-  package:  {job:"mail", e:"📦", need:1, l:["Package to deliver","Paquete por entregar"], done:["📦 Your Market order was delivered! +1 coin","📦 ¡Llegó tu pedido! +1 moneda"], pay:1},
-  order:    {job:"chef", e:"🌮", need:1, ask:1, cost:2, l:["Café order (2 coins)","Pedido del café (2 monedas)"], done:["😋 Your meal is served: daily jobs pay +1 today!","😋 ¡Tu comida está servida! Los trabajos diarios pagan +1 hoy."]},
-  photo:    {job:"photographer", e:"🖼️", need:0, ask:1, l:["Photo shoot at my house","Sesión de fotos en mi casa"], done:["📸 Your house is in the Gazette photo page! +1 coin","📸 ¡Tu casa salió en la Gaceta! +1 moneda"], pay:1}
+  tutor:    {job:"tutor", e:"📚", need:5, ask:1, unit:1, l:["Tutor me in a unit","Tutoría de una unidad"], done:["Your tutor worked through your unit! +3 Smithbucks","¡Tu tutor repasó tu unidad! +3 Smithbucks"], pay:3},
+  package:  {job:"mail", e:"📦", need:1, l:["Package to deliver","Paquete por entregar"], done:["📦 Your Market order was delivered! +1 Smithbuck","📦 ¡Llegó tu pedido! +1 Smithbuck"], pay:1},
+  order:    {job:"chef", e:"🌮", need:1, ask:1, cost:2, l:["Café order (2 Smithbucks)","Pedido del café (2 Smithbucks)"], done:["😋 Your meal is served: daily jobs pay +1 today!","😋 ¡Tu comida está servida! Los trabajos diarios pagan +1 hoy."]},
+  photo:    {job:"photographer", e:"🖼️", need:0, ask:1, l:["Photo shoot at my house","Sesión de fotos en mi casa"], done:["📸 Your house is in the Gazette photo page! +1 Smithbuck","📸 ¡Tu casa salió en la Gaceta! +1 Smithbuck"], pay:1}
 };
 const PROJECTS = {
   court:   {e:"🏀", need:20, cost:40, l:["Basketball court","Cancha de básquet"]},
@@ -179,7 +179,7 @@ function payShift(){
   k.shifts = (k.shifts | 0) + 1; k.last = day();
   const before = levelOf({...k, shifts:k.shifts - 1});
   const n = Math.max(1, Math.round(CAREERS[k.job].pay * mult())); T.coins(n); T.persist();
-  T.toast(W2(`Shift done! Paycheck: +${n} coins.`, `¡Turno terminado! Pago: +${n} monedas.`));
+  T.toast(W2(`Shift done! Paycheck: +${n} Smithbucks.`, `¡Turno terminado! Pago: +${n} Smithbucks.`));
   promoCheck(before);
 }
 function payCase(kind){
@@ -213,7 +213,7 @@ window.carApply = function(j){
   if (myJob() === j) return T.toast(W2("You already have this job.","Ya tienes este trabajo."));
   const past = (k.hist || []).map(h => CAREERS[h.job] ? L(CAREERS[h.job].title) : "").filter(Boolean);
   sheet(`<div class="eyebrow">${c.e} ${W2("Job application","Solicitud de empleo")}</div><h2>${L(c.title)}</h2>
-    <p class="muted" style="margin:0">${L(c.what)} · ${W2(`Starts at ${c.pay} coins a shift`, `Empieza en ${c.pay} monedas por turno`)}${c.per ? W2(` + ${c.per} per case`, ` + ${c.per} por caso`) : ""}</p>
+    <p class="muted" style="margin:0">${L(c.what)} · ${W2(`Starts at ${c.pay} Smithbucks a shift`, `Empieza en ${c.pay} Smithbucks por turno`)}${c.per ? W2(` + ${c.per} per case`, ` + ${c.per} por caso`) : ""}</p>
     ${mine ? `<p class="tnote">📨 ${W2("You already applied. Coach Smith will decide. You can update your résumé below.","Ya enviaste tu solicitud. Coach Smith decidirá. Puedes actualizar tu currículum.")}</p>` : ""}
     <div class="kres"><b>📄 ${W2("Your résumé","Tu currículum")}</b>
       <span>⭐ XP ${S.xp | 0}</span><span>🎓 ${(S.certs || []).length} ${W2("certificates","certificados")}</span><span>🔥 ${civ().streak.n} ${W2("day streak","días seguidos")}</span>
@@ -247,7 +247,7 @@ window.carRequest = function(kind){
   const K = KINDS[kind]; if (!K) return;
   if (!holders(K.job).length) return T.toast(W2(`There's no ${L(CAREERS[K.job].title)} yet. Apply for the job!`, `Aún no hay ${L(CAREERS[K.job].title)}. ¡Pide el trabajo!`));
   if (CASES.some(c => c.kind === kind && c.for === me() && c.status === "open")) return T.toast(W2("You already have one waiting.","Ya tienes una solicitud esperando."));
-  if (K.cost && (S.tokens | 0) < K.cost) return T.toast(W2(`That costs ${K.cost} coins.`, `Cuesta ${K.cost} monedas.`));
+  if (K.cost && (S.tokens | 0) < K.cost) return T.toast(W2(`That costs ${K.cost} Smithbucks.`, `Cuesta ${K.cost} Smithbucks.`));
   if (K.opts || K.unit) {
     const units = K.unit ? (typeof allUnits === "function" ? allUnits() : []) : [];
     sheet(`<div class="eyebrow">${K.e} ${L(K.l)}</div><h2>${L(CAREERS[K.job].place)}</h2>
@@ -272,7 +272,7 @@ function settleMine(rows){
   rows.forEach(c => { if (c.status !== "done") return; const K = KINDS[c.kind]; if (!K) return;
     ch = T.once("case:" + c.id, () => {
       if (c.kind === "sick") { civ().sick = null; T.toast(W2(`🩺 You're cured! Thanks, Dr. ${c.workerName || ""}.`, `🩺 ¡Estás curado! Gracias, Dr. ${c.workerName || ""}.`)); }
-      else if (c.kind === "loan") { if (c.result === "approve") { civ().bank.boost = {n:20, until:Date.now() + 7 * 864e5}; T.toast(W2("💵 The banker approved your request: you can borrow 20 more coins this week.","💵 El banquero aprobó: puedes pedir 20 monedas más esta semana.")); }
+      else if (c.kind === "loan") { if (c.result === "approve") { civ().bank.boost = {n:20, until:Date.now() + 7 * 864e5}; T.toast(W2("💵 The banker approved your request: you can borrow 20 more Smithbucks this week.","💵 El banquero aprobó: puedes pedir 20 Smithbucks más esta semana.")); }
         else T.toast(W2("The banker denied your bigger loan. Pay loans on time to raise your credit score.","El banquero negó tu préstamo. Paga a tiempo para subir tu crédito.")); }
       else if (c.kind === "claim") T.toast(c.result === "plaintiff" ? W2(`⚖️ Judge ${c.workerName || ""} ruled in your favor.`, `⚖️ El juez falló a tu favor.`) : W2(`⚖️ Judge ${c.workerName || ""} dismissed your case.`, `⚖️ El juez desestimó tu caso.`));
       else if (c.kind === "order") { civ().fed = day(); T.toast(L(K.done)); }
@@ -301,7 +301,7 @@ window.carDecide = (id, r) => { const c = CASES.find(x => x.id === id); closeShe
 async function closeCase(c, result){
   try {
     await store().update(`${C()}/cases/${c.id}`, {status:"done", n:c.need, worker:me(), workerName:SESS().name, doneAt:Date.now(), ...(result ? {result} : {})});
-    const n = payCase(c.kind); T.toast(W2(`Case closed! +${n} coins.`, `¡Caso cerrado! +${n} monedas.`)); paint();
+    const n = payCase(c.kind); T.toast(W2(`Case closed! +${n} Smithbucks.`, `¡Caso cerrado! +${n} Smithbucks.`)); paint();
   } catch(e){ T.toast(W2("Someone else may have closed it already.","Puede que alguien ya lo cerró.")); }
 }
 window.carDuty = function(){
@@ -369,7 +369,7 @@ window.carSnap = function(sid){
   const c = CASES.find(x => x.kind === "photo" && x.for === sid && x.status === "open"); if (c) closeCase(c, null);
   T.paintSub();
 };
-EXT.houseExtra.push({html: sid => myJob() === "photographer" && SESS() && sid !== me()
+EXT.houseExtra.push({doorstep:true, html: sid => myJob() === "photographer" && SESS() && sid !== me()
   ? `<section class="panel"><button class="btn primary" onclick="carSnap('${sid}')">📸 ${W2("Take a photo for the Gazette","Tomar foto para la Gaceta")}</button></section>` : ""});
 
 /* ---------------------------------------------------------------- things that happen on their own */
@@ -418,7 +418,7 @@ EXT.plazaTap.push((x, y) => {
     await store().set(id, {job:"sanitation", kind:"litter", by:me(), uid:store().uid(), status:"open", mask, n:0, need:0, at:Date.now(), for:me(), forName:SESS().name}).catch(() => {});
     LIT.mask = mask; const d = duty();
     if (!d.paid) { d.n = (d.n | 0) + 1; if (d.n >= CAREERS.sanitation.duty.n) payShift(); else { T.persist(); T.toast(W2(`🧹 Clean! ${d.n}/${CAREERS.sanitation.duty.n} today.`, `🧹 ¡Limpio! ${d.n}/${CAREERS.sanitation.duty.n} hoy.`)); } }
-    else { T.coins(1); T.persist(); T.toast(W2("🧹 Extra cleanup: +1 coin.","🧹 Limpieza extra: +1 moneda.")); } }});
+    else { T.coins(1); T.persist(); T.toast(W2("🧹 Extra cleanup: +1 Smithbuck.","🧹 Limpieza extra: +1 Smithbuck.")); } }});
   return true;
 });
 EXT.plazaSub.push(() => {
@@ -433,9 +433,9 @@ function mayorDaily(){
     T.once("mayor:" + (m.eid || m.sid), () => {
       const t = T.town(); t.owned.mansion = 1; t.house.style = "mansion";
       ["mayor_desk","mayor_flag","mayor_portrait"].forEach(id => T.addItem(id, 1)); T.coins(20);
-      T.toast(W2("🎖️ Welcome to office, Mayor! You moved into the Mansion, got mayor-only furniture and a 20-coin signing bonus.","🎖️ ¡Bienvenido, Alcalde! Te mudaste a la Mansión, recibiste muebles exclusivos y 20 monedas."));
+      T.toast(W2("🎖️ Welcome to office, Mayor! You moved into the Mansion, got mayor-only furniture and a 20-Smithbuck signing bonus.","🎖️ ¡Bienvenido, Alcalde! Te mudaste a la Mansión, recibiste muebles exclusivos y 20 Smithbucks."));
       if (typeof fireConfetti === "function") fireConfetti(); T.persist(); T.publishNow(); });
-    if (c.mayorPay !== day()) { c.mayorPay = day(); T.coins(MAYOR_PAY); T.persist(); T.toast(W2(`🎖️ Mayor's salary: +${MAYOR_PAY} coins.`, `🎖️ Salario de alcalde: +${MAYOR_PAY} monedas.`)); }
+    if (c.mayorPay !== day()) { c.mayorPay = day(); T.coins(MAYOR_PAY); T.persist(); T.toast(W2(`🎖️ Mayor's salary: +${MAYOR_PAY} Smithbucks.`, `🎖️ Salario de alcalde: +${MAYOR_PAY} Smithbucks.`)); }
   }
 }
 EXT.priceMult.push(() => isMayor() ? 0.8 : 1);
@@ -454,14 +454,14 @@ window.carAct = async function(kind, arg){
   if (kind === "proclaim" && !arg) return sheet(`<div class="eyebrow">📜 ${W2("Proclamation","Proclamación")}</div><div class="cpick col">${Object.entries(PROCLAIM).map(([k, l]) => `<button onclick="carAct('proclaim','${k}')">${E(L(l))}</button>`).join("")}</div>`);
   closeSheet();
   try { await store().add(`${C()}/mayoracts`, {sid:me(), uid:store().uid(), name:SESS().name, kind, arg:arg || null, day:day(), week:wk, at:Date.now()});
-    T.toast({holiday:W2("🎉 Town Holiday declared! Everyone gets a gift today.","🎉 ¡Feriado declarado! Todos reciben un regalo hoy."), challenge:W2("🏆 Mayor's Challenge is on: 30 XP today earns everyone 4 coins.","🏆 Reto del alcalde: 30 XP hoy = 4 monedas para todos."), proclaim:W2("📜 Proclamation posted.","📜 Proclamación publicada.")}[kind]);
+    T.toast({holiday:W2("🎉 Town Holiday declared! Everyone gets a gift today.","🎉 ¡Feriado declarado! Todos reciben un regalo hoy."), challenge:W2("🏆 Mayor's Challenge is on: 30 XP today earns everyone 4 Smithbucks.","🏆 Reto del alcalde: 30 XP hoy = 4 Smithbucks para todos."), proclaim:W2("📜 Proclamation posted.","📜 Proclamación publicada.")}[kind]);
   } catch(e){ T.toast(W2("Couldn't do that right now.","No se pudo ahora.")); }
 };
 function applyActs(){
   if (!SESS()) return; let ch = false;
   todayActs().forEach(a => {
-    if (a.kind === "holiday") ch = T.once("act:" + a.id, () => { T.coins(3); T.town().crates++; T.toast(W2(`🎉 Mayor ${a.name} declared a Town Holiday! +3 coins and a crate.`, `🎉 ¡El alcalde ${a.name} declaró feriado! +3 monedas y una caja.`)); }) || ch;
-    if (a.kind === "challenge" && V.xpSince("mc:" + a.id) >= 30) ch = T.once("act:" + a.id, () => { T.coins(4); T.toast(W2("🏆 You beat the Mayor's Challenge: +4 coins!","🏆 ¡Superaste el reto del alcalde: +4 monedas!")); }) || ch;
+    if (a.kind === "holiday") ch = T.once("act:" + a.id, () => { T.coins(3); T.town().crates++; T.toast(W2(`🎉 Mayor ${a.name} declared a Town Holiday! +3 Smithbucks and a crate.`, `🎉 ¡El alcalde ${a.name} declaró feriado! +3 Smithbucks y una caja.`)); }) || ch;
+    if (a.kind === "challenge" && V.xpSince("mc:" + a.id) >= 30) ch = T.once("act:" + a.id, () => { T.coins(4); T.toast(W2("🏆 You beat the Mayor's Challenge: +4 Smithbucks!","🏆 ¡Superaste el reto del alcalde: +4 Smithbucks!")); }) || ch;
   });
   if (ch) T.persist();
 }
@@ -469,25 +469,25 @@ setInterval(applyActs, 20000);
 EXT.banner.push(() => { const a = todayActs(); if (!a.length || !SESS()) return "";
   const pr = a.find(x => x.kind === "proclaim"), ch = a.find(x => x.kind === "challenge");
   return `<section class="panel kban">${pr && PROCLAIM[pr.arg] ? `<b>${E(L(PROCLAIM[pr.arg]))}</b> <small>· ${W2("Mayor","Alcalde")} ${E(pr.name)}</small>` : ""}
-    ${ch ? `<span>🏆 ${W2("Mayor's Challenge: earn 30 XP today for +4 coins","Reto del alcalde: gana 30 XP hoy y recibe 4 monedas")} (${Math.min(30, V.xpSince("mc:" + ch.id))}/30)</span>` : ""}</section>`; });
+    ${ch ? `<span>🏆 ${W2("Mayor's Challenge: earn 30 XP today for +4 Smithbucks","Reto del alcalde: gana 30 XP hoy y recibe 4 Smithbucks")} (${Math.min(30, V.xpSince("mc:" + ch.id))}/30)</span>` : ""}</section>`; });
 /* ribbon cuttings, builder and donor rewards, and the daily town-pride bonus */
 function projectRewards(){
   if (!SESS()) return; let ch = false;
   REQS.filter(r => r.status === "done").forEach(r => { const P = PROJECTS[r.proj] || {l:[r.proj, r.proj]};
-    if (isMayor()) ch = T.once("ribbon:" + r.id, () => { T.coins(RIBBON); T.toast(W2(`✂️ You cut the ribbon on the ${L(P.l)}: +${RIBBON} coins.`, `✂️ Cortaste el listón de ${L(P.l)}: +${RIBBON} monedas.`)); }) || ch;
+    if (isMayor()) ch = T.once("ribbon:" + r.id, () => { T.coins(RIBBON); T.toast(W2(`✂️ You cut the ribbon on the ${L(P.l)}: +${RIBBON} Smithbucks.`, `✂️ Cortaste el listón de ${L(P.l)}: +${RIBBON} Smithbucks.`)); }) || ch;
     if ((r.builders || []).includes(me()) || (r.donors || []).includes(me())) ch = T.once("built:" + r.id, () => { T.town().crates++; T.toast(W2(`🏗️ You helped build the ${L(P.l)}! +1 crate.`, `🏗️ ¡Ayudaste a construir ${L(P.l)}! +1 caja.`)); }) || ch;
   });
   const n = Math.min(PRIDE_MAX, REQS.filter(r => r.status === "done").length), c = civ();
-  if (n && c.pride !== day()) { c.pride = day(); T.coins(n); ch = true; T.toast(W2(`🏙️ Town pride: +${n} coin${n > 1 ? "s" : ""} for ${n} landmark${n > 1 ? "s" : ""}.`, `🏙️ Orgullo del pueblo: +${n} moneda(s).`)); }
+  if (n && c.pride !== day()) { c.pride = day(); T.coins(n); ch = true; T.toast(W2(`🏙️ Town pride: +${n} Smithbuck${n > 1 ? "s" : ""} for ${n} landmark${n > 1 ? "s" : ""}.`, `🏙️ Orgullo del pueblo: +${n} Smithbuck(s).`)); }
   if (ch) T.persist();
 }
 
 /* ---------------------------------------------------------------- town requests (projects) */
 window.carPropose = function(){
   sheet(`<div class="eyebrow">📌 ${W2("Request something for the town","Pide algo para el pueblo")}</div>
-    <p class="muted">${W2("The mayor approves requests. Then builders build it and everyone can chip in coins. Finished projects become landmarks that pay everyone every day.",
+    <p class="muted">${W2("The mayor approves requests. Then builders build it and everyone can chip in Smithbucks. Finished projects become landmarks that pay everyone every day.",
       "El alcalde aprueba las solicitudes. Luego los constructores la construyen y todos pueden aportar. Las obras terminadas pagan a todos cada día.")}</p>
-    <div class="cbiz">${Object.entries(PROJECTS).map(([k, p]) => `<button onclick="carPropose2('${k}')"><span class="tie big">${p.e}</span><b>${L(p.l)}</b><small>🏗️ ${p.need} · 🪙 ${p.cost}</small></button>`).join("")}</div>
+    <div class="cbiz">${Object.entries(PROJECTS).map(([k, p]) => `<button onclick="carPropose2('${k}')"><span class="tie big">${p.e}</span><b>${L(p.l)}</b><small>🏗️ ${p.need} · 💵 ${p.cost}</small></button>`).join("")}</div>
     <button class="btn ghost wide" onclick="townCloseCard()">${W2("Cancel","Cancelar")}</button>`);
 };
 window.carPropose2 = function(k){
@@ -507,10 +507,10 @@ window.carSecond = async function(rid){
 };
 window.carDonate = async function(rid){
   const r = REQS.find(x => x.id === rid); if (!r) return; const amt = Math.min(5, r.cost - (r.coins | 0));
-  if (amt <= 0) return; if ((S.tokens | 0) < amt) return T.toast(W2("Not enough coins.","No tienes suficientes monedas."));
+  if (amt <= 0) return; if ((S.tokens | 0) < amt) return T.toast(W2("Not enough Smithbucks.","No tienes suficientes Smithbucks."));
   T.coins(-amt); T.persist();
   try { await store().update(`${C()}/requests/${rid}`, {coins:(r.coins | 0) + amt, donors:[...new Set([...(r.donors || []), me()])]});
-    T.toast(W2(`You chipped in ${amt} coins. Thank you!`, `Aportaste ${amt} monedas. ¡Gracias!`)); finishProject({...r, coins:(r.coins | 0) + amt}); }
+    T.toast(W2(`You chipped in ${amt} Smithbucks. Thank you!`, `Aportaste ${amt} Smithbucks. ¡Gracias!`)); finishProject({...r, coins:(r.coins | 0) + amt}); }
   catch(e){ T.coins(amt); T.persist(); T.toast(W2("Couldn't donate right now.","No se pudo aportar.")); }
 };
 window.carReqSet = async function(rid, status){
@@ -570,7 +570,7 @@ function paintBuilding(el, k){
   el.innerHTML = `${back}
     <section class="panel raised kbld">${img(`${DT}${k}.webp`, C2.e, "big")}<div><div class="eyebrow">${E(L(C2.place))}</div><h2>${E(L(C2.title))}</h2>
       <p class="muted" style="margin:0">${E(L(C2.what))}</p>
-      <div class="cstats"><span>💰 ${C2.pay} ${W2("coins a shift","monedas por turno")}${C2.per ? ` + ${C2.per} ${W2("per case","por caso")}` : ""}</span><span>🪑 ${hs.length}/${C2.seats} ${W2("hired","contratados")}</span></div></div></section>
+      <div class="cstats"><span>💰 ${C2.pay} ${W2("Smithbucks a shift","Smithbucks por turno")}${C2.per ? ` + ${C2.per} ${W2("per case","por caso")}` : ""}</span><span>🪑 ${hs.length}/${C2.seats} ${W2("hired","contratados")}</span></div></div></section>
     ${mine ? `<section class="panel kshift"><div class="eyebrow">🗓️ ${W2("Your shift today","Tu turno de hoy")}</div>
         <h3 style="margin:2px 0">${E(jobTitle(k, kk))}</h3>${bar(d.paid ? 1 : (d.n | 0) / C2.duty.n, "#3BB273")}
         <p>${d.paid ? "✅ " + W2("Shift done. See you tomorrow!","Turno hecho. ¡Nos vemos mañana!") : `${E(L(C2.duty.l))} · ${d.n | 0}/${C2.duty.n}`}</p>
@@ -593,13 +593,13 @@ function paintBoard(el, back){
   const row = r => { const P = PROJECTS[r.proj] || {e:"🏗️", l:[r.proj, r.proj]};
     return `<div class="kreq">${img(`${DT}land_${r.proj}.webp`, P.e)}<div><b>${E(L(P.l))}</b> <small class="muted">${W2("asked by","pedido por")} ${E(r.name)} · 👍 ${VOTES[r.id] || 0}</small>
       ${r.note ? `<p style="margin:2px 0;font-size:14px">“${E(r.note)}”</p>` : ""}
-      ${r.status === "approved" ? `<small>🏗️ ${W2("Built","Construido")} ${r.n | 0}/${r.need}</small>${bar((r.n | 0) / r.need, "#2F7FD8")}<small>🪙 ${W2("Funded","Fondos")} ${r.coins | 0}/${r.cost}</small>${bar((r.coins | 0) / r.cost)}` : ""}</div>
+      ${r.status === "approved" ? `<small>🏗️ ${W2("Built","Construido")} ${r.n | 0}/${r.need}</small>${bar((r.n | 0) / r.need, "#2F7FD8")}<small>💵 ${W2("Funded","Fondos")} ${r.coins | 0}/${r.cost}</small>${bar((r.coins | 0) / r.cost)}` : ""}</div>
       <div class="kreqb">${r.status === "review" ? `<button class="btn ghost" onclick="carSecond('${r.id}')">👍</button>` : ""}
         ${r.status === "review" && may ? `<button class="btn primary" onclick="carReqSet('${r.id}','approved')">✅ ${W2("Approve","Aprobar")}</button><button class="btn ghost" onclick="carReqSet('${r.id}','declined')">✖</button>` : ""}
-        ${r.status === "approved" && (r.coins | 0) < r.cost ? `<button class="btn" onclick="carDonate('${r.id}')">🪙 ${W2("Chip in 5","Aportar 5")}</button>` : ""}</div></div>`; };
+        ${r.status === "approved" && (r.coins | 0) < r.cost ? `<button class="btn" onclick="carDonate('${r.id}')">💵 ${W2("Chip in 5","Aportar 5")}</button>` : ""}</div></div>`; };
   el.innerHTML = `${back}<section class="panel raised kbld">${img(`${DT}board.webp`, "📌", "big")}<div><div class="eyebrow">${W2("Community Board","Tablero comunitario")}</div>
-      <h2>${W2("What should the town build next?","¿Qué debe construir el pueblo?")}</h2><p class="muted" style="margin:0">${W2("Anyone can ask. The mayor approves. Builders build, everyone can chip in coins, and every finished landmark pays the whole town 1 coin a day (up to 5).",
-        "Cualquiera puede pedir. El alcalde aprueba. Los constructores construyen, todos aportan, y cada obra terminada paga 1 moneda al día a todo el pueblo (hasta 5).")}</p>
+      <h2>${W2("What should the town build next?","¿Qué debe construir el pueblo?")}</h2><p class="muted" style="margin:0">${W2("Anyone can ask. The mayor approves. Builders build, everyone can chip in Smithbucks, and every finished landmark pays the whole town 1 Smithbuck a day (up to 5).",
+        "Cualquiera puede pedir. El alcalde aprueba. Los constructores construyen, todos aportan, y cada obra terminada paga 1 Smithbuck al día a todo el pueblo (hasta 5).")}</p>
       <button class="btn primary" onclick="carPropose()">📌 ${W2("Request a project","Pedir un proyecto")}</button></div></section>
     ${ap.length ? `<section class="panel"><div class="eyebrow">🏗️ ${W2("Being built","En construcción")}</div>${ap.map(row).join("")}</section>` : ""}
     <section class="panel"><div class="eyebrow">🗳️ ${W2("Waiting for the mayor","Esperando al alcalde")}${may ? " · " + W2("you decide!","¡tú decides!") : ""}</div>${rv.map(row).join("") || `<p class="muted">${W2("No requests yet. Be the first!","Aún no hay solicitudes. ¡Sé el primero!")}</p>`}</section>
@@ -617,10 +617,10 @@ function paintMansion(el, back){
         <button class="btn" onclick="carGo('board')">📌 ${W2("Review town requests","Revisar solicitudes")} (${REQS.filter(r => r.status === "review").length})</button>
         <button class="btn" onclick="townTab('hall')">🖋️ ${W2("Propose a law","Proponer una ley")}</button></div></section>` : ""}
     <section class="panel"><div class="eyebrow">⭐ ${W2("What the mayor gets","Lo que recibe el alcalde")}</div><ul class="kperks">
-      <li>💰 ${W2(`A salary: ${MAYOR_PAY} coins every day in office, plus a 20-coin signing bonus`, `Un salario: ${MAYOR_PAY} monedas cada día, más 20 de bienvenida`)}</li>
+      <li>💰 ${W2(`A salary: ${MAYOR_PAY} Smithbucks every day in office, plus a 20-Smithbuck signing bonus`, `Un salario: ${MAYOR_PAY} Smithbucks cada día, más 20 de bienvenida`)}</li>
       <li>🏛️ ${W2("The Mansion (yours to keep) and mayor-only furniture: desk, flag and portrait","La Mansión (para siempre) y muebles exclusivos: escritorio, bandera y retrato")}</li>
       <li>🏷️ ${W2("20% off everything in the Shop while in office","20% de descuento en la Tienda durante el cargo")}</li>
-      <li>✂️ ${W2(`Ribbon cuttings: +${RIBBON} coins every time a landmark is finished`, `Cortes de listón: +${RIBBON} monedas por cada obra terminada`)}</li>
+      <li>✂️ ${W2(`Ribbon cuttings: +${RIBBON} Smithbucks every time a landmark is finished`, `Cortes de listón: +${RIBBON} Smithbucks por cada obra terminada`)}</li>
       <li>🎉 ${W2("Powers: Town Holidays, the Mayor's Challenge, proclamations, approving town projects and proposing laws","Poderes: feriados, el reto del alcalde, proclamaciones, aprobar obras y proponer leyes")}</li>
       <li>🎖️ ${W2("A 🎖️ over your name on the plaza, and a place in the Hall of Mayors forever","Una 🎖️ sobre tu nombre en la plaza y un lugar en el Salón de Alcaldes")}</li></ul>
       ${e && e.phase === "filing" && !may ? `<button class="btn primary" onclick="townTab('hall')">🗳️ ${W2("Sign-ups are open: run for mayor!","¡Inscripciones abiertas: postúlate!")}</button>` : ""}</section>
@@ -670,14 +670,13 @@ EXT.onSession.push(() => {
   BGS.push(store().watch(`${C()}/apps`, {where:[["sid","==",me()]]}, rows => { if (!rows || !SESS()) return; MYAPPS = rows;
     rows.filter(a => a.status === "denied").forEach(a => T.once("deny:" + a.id + ":" + (a.decidedAt || 0), () => T.toast(W2(`Your application for ${CAREERS[a.job] ? L(CAREERS[a.job].title) : a.job} wasn't picked this time. Try again or apply for another job!`, `Tu solicitud no fue elegida esta vez. ¡Inténtalo de nuevo u otra!`)))); }));
   BGS.push(store().watch(`${C()}/news`, {where:[["sid","==",me()]]}, rows => { if (!rows || !SESS()) return; let ch = false;
-    rows.filter(n => n.status === "published").forEach(n => { ch = T.once("pub:" + n.id, () => { T.coins(3); T.toast(W2(`📰 Your story “${n.headline}” was published! +3 coins.`, `📰 ¡Se publicó tu noticia! +3 monedas.`)); }) || ch; });
+    rows.filter(n => n.status === "published").forEach(n => { ch = T.once("pub:" + n.id, () => { T.coins(3); T.toast(W2(`📰 Your story “${n.headline}” was published! +3 Smithbucks.`, `📰 ¡Se publicó tu noticia! +3 Smithbucks.`)); }) || ch; });
     if (ch) T.persist(); }));
   BGS.push(store().watch(`${C()}/mayoracts`, {where:[["day","==",day()]]}, rows => { if (rows) { ACTS = rows.concat(ACTS.filter(a => a.day !== day())); applyActs(); } }));
   store().list(`${C()}/mayoracts`, {where:[["week","==",week()]]}).then(rows => { const ids = new Set(ACTS.map(a => a.id)); rows.forEach(r => { if (!ids.has(r.id)) ACTS.push(r); }); }).catch(() => {});
   BGS.push(store().watch(`${C()}/requests`, {}, rows => { if (rows) { REQS = rows.sort((a, b) => b.at - a.at); projectRewards(); } }));
   BGS.push(store().watch(`${C()}/cases`, {where:[["status","==","open"]]}, rows => { if (rows) CASES = rows; }));
   setTimeout(() => { syncCareer(); lifeEvents(); mayorDaily(); }, 600);
-  setTimeout(popup, 2200);
 });
 EXT.onClass.push((was, c) => {
   if (!SESS()) return; syncCareer(); mayorDaily();
@@ -714,7 +713,7 @@ EXT.adminPanels.push({
         || `<p class="muted" style="font-size:13px">${W2("No stories waiting.","No hay noticias pendientes.")}</p>`; }));
     T.viewSub(store().watch(`classes/${cid}/requests`, {}, rows => { const box = document.getElementById("aReqs"); if (!box || !rows) return;
       box.innerHTML = rows.filter(r => r.status !== "declined").sort((a, b) => b.at - a.at).slice(0, 15).map(r => { const P = PROJECTS[r.proj] || {e:"🏗️", l:[r.proj]};
-        return `<div class="tdeal"><span>${P.e} <b>${P.l[0]}</b> · ${E(r.name)} · <b>${r.status}</b>${r.status === "approved" ? ` (🏗️ ${r.n | 0}/${r.need} · 🪙 ${r.coins | 0}/${r.cost})` : ""}${r.note ? ` <small>“${E(r.note)}”</small>` : ""}</span>
+        return `<div class="tdeal"><span>${P.e} <b>${P.l[0]}</b> · ${E(r.name)} · <b>${r.status}</b>${r.status === "approved" ? ` (🏗️ ${r.n | 0}/${r.need} · 💵 ${r.coins | 0}/${r.cost})` : ""}${r.note ? ` <small>“${E(r.note)}”</small>` : ""}</span>
           ${r.status === "review" ? `<button class="btn primary" onclick="carTReq('${r.id}','approved')">✅</button><button class="btn ghost" onclick="carTReq('${r.id}','declined')">✖</button>` : ""}
           ${r.status === "approved" ? `<button class="btn" onclick="carTReq('${r.id}','done')">🏁 ${W2("Finish now","Terminar ya")}</button>` : ""}</div>`; }).join("")
         || `<p class="muted" style="font-size:13px">${W2("No requests yet.","Aún no hay solicitudes.")}</p>`; }));
@@ -742,5 +741,5 @@ window.carTReq = async function(id, status){ const c = await getCls(); if (!c) r
   const r = await store().get(`classes/${c.id}/requests/${id}`); if (!r) return;
   await store().update(`classes/${c.id}/requests/${id}`, {status, ...(status === "done" ? {doneAt:Date.now(), n:r.need, coins:Math.max(r.coins | 0, r.cost)} : {decidedAt:Date.now()})}); };
 
-window.CAREERS = {CAREERS, KINDS, PROJECTS, myJob, car, duty, levelOf};
+window.CAREERS = {CAREERS, KINDS, PROJECTS, myJob, car, duty, levelOf, openSeats};
 })();

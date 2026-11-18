@@ -179,8 +179,8 @@
         <p class="muted">${W("Score","Puntaje")}: <b>${st.score}%</b> · ${date}</p>
       </div>
       <div class="guide"><img src="${npc("cheer")}" alt=""><div class="bub">${md(W(
-        "**Nice work.** This certificate is now in your **Trophy Hall** in Smith's Classroom, with **+4 coins** and **+200 XP**. Download it there to turn in on Canvas.",
-        "**Buen trabajo.** Este certificado ya está en tu **salón de trofeos** de Smith's Classroom, con **+4 monedas** y **+200 XP**. Descárgalo ahí para entregarlo en Canvas."))}</div></div>
+        "**Nice work.** This certificate is now in your **Trophy Hall** in Smith's Classroom, with **+4 Smithbucks** and **+200 XP**. Download it there to turn in on Canvas.",
+        "**Buen trabajo.** Este certificado ya está en tu **salón de trofeos** de Smith's Classroom, con **+4 Smithbucks** y **+200 XP**. Descárgalo ahí para entregarlo en Canvas."))}</div></div>
       <button class="btn wide" id="again">${W("Play it again (practice)","Jugar otra vez (práctica)")}</button>`, {bar:100});
     document.getElementById("again").onclick = () => { localStorage.removeItem(KEY); load(); st.stage = "brief"; save(); render(); };
   }

@@ -110,7 +110,7 @@ window.paintBar = function(){
   const hud = document.getElementById("hud"); if (!hud) return;
   const lvl = levelOf(S.xp);
   hud.innerHTML = `
-    <span class="hudpill" title="${WL("Coins","Monedas")}"><img src="${icon("coin")}" alt="">${S.tokens}</span>
+    <span class="hudpill" title="Smithbucks"><img src="${icon("smithbuck")}" alt="">${S.tokens}</span>
     <span class="hudpill lvl" title="${WL("Level","Nivel")}"><img src="${icon("xp")}" alt="">${WL("Lv","Nv")} ${lvl}</span>
     <span class="hudpill" title="${WL("Day streak","Racha")}"><img src="${icon("streak")}" alt="">${S.streak || 0}</span>
     <button class="hudme" onclick="go('locker')" aria-label="${WL("My avatar","Mi avatar")}">
@@ -193,6 +193,7 @@ function lastStudied(){
     if (t && !done && (!best || t > best.t)) best = {u, t}; });
   return best && best.u;
 }
+window.WORLD_TODO = {dueList, lastStudied};
 function viewCampus(){
   touchStreak(); ensureAvatar();
   const lvl = levelOf(S.xp), into = S.xp % 250, due = dueList(), next = lastStudied();
@@ -396,6 +397,9 @@ window.viewAssignments = function(){
 };
 /* ---------- What's new: pinned to the bulletin board ---------- */
 const NEWS = [
+  {id:"2026-11-18g", d:"Nov 18", e:"💵", t:["Coins are now Smithbucks","Las monedas ahora son Smithbucks"],
+   b:["The town has its own money. Every certificate pays now: +20 for assignment certificates, +15 for unit certificates. Houses are private: knock and the owner lets you in. Your to-do list opens every time you sign in.",
+      "El pueblo tiene su propio dinero. Ahora cada certificado paga: +20 por certificados de tareas y +15 por certificados de unidad. Las casas son privadas: toca y el dueño te deja pasar. Tu lista de pendientes se abre cada vez que entras."]},
   {id:"2026-11-18f", d:"Nov 18", e:"🗺️", t:["Downtown is open: get a job!","¡El Centro abrió: consigue trabajo!"],
    b:["14 town jobs (Doctor, Vet, Reporter, Banker, Firefighter, Marshal, Judge, Tutor, Mail Carrier, Chef, Builder, Sanitation, Park Ranger, Photographer). Send a résumé, do your shift every day, and get promoted. Ask for new landmarks on the Community Board, and run for mayor: the mayor gets a salary and the Mansion.",
       "14 trabajos en el pueblo (médico, veterinario, reportero, banquero, bombero, alguacil, juez, tutor, cartero, chef, constructor, limpieza, guardaparques, fotógrafo). Envía tu currículum, haz tu turno cada día y asciende. Pide obras nuevas en el Tablero comunitario y postúlate a alcalde: el alcalde recibe salario y la Mansión."]},
@@ -407,11 +411,11 @@ const NEWS = [
    b:["Twenty new looks for girls and ten for guys are being drawn now, for the Locker and Money Moves. Plus 16 new pieces of furniture and pets for your Town house.",
       "Se están dibujando veinte looks nuevos para chicas y diez para chicos, para el Casillero y Money Moves. Además, 16 muebles y mascotas nuevos para tu casa del Pueblo."]},
   {id:"2026-11-18b", d:"Nov 18", e:"🎓", t:["Finishing a unit pays you","Terminar una unidad te paga"],
-   b:["Every unit certificate now comes with a 15-coin paycheck. Units you already finished got back pay. Money from Money Moves and CFE Review Quest turns into Town coins too.",
-      "Cada certificado de unidad ahora trae un pago de 15 monedas. Las unidades que ya terminaste recibieron pago atrasado. El dinero de Money Moves y de la Misión CFE también se vuelve monedas del Pueblo."]},
+   b:["Every unit certificate now comes with a 15-Smithbuck paycheck. Units you already finished got back pay. Money from Money Moves and CFE Review Quest turns into Town Smithbucks too.",
+      "Cada certificado de unidad ahora trae un pago de 15 Smithbucks. Las unidades que ya terminaste recibieron pago atrasado. El dinero de Money Moves y de la Misión CFE también se vuelve Smithbucks del Pueblo."]},
   {id:"2026-11-18a", d:"Nov 18", e:"🔐", t:["Your account follows you","Tu cuenta te sigue"],
-   b:["Sign in with your Town ID (class code, name and PIN) from the card on Campus. Your progress, coins, avatar and games follow you to any computer. On a shared Chromebook, choose “Sign out and clear this computer.”",
-      "Entra con tu ID del Pueblo (código, nombre y PIN) desde la tarjeta del Campus. Tu progreso, monedas, avatar y juegos te siguen a cualquier computadora. En una Chromebook compartida, elige “Cerrar sesión y limpiar esta computadora.”"]},
+   b:["Sign in with your Town ID (class code, name and PIN) from the card on Campus. Your progress, Smithbucks, avatar and games follow you to any computer. On a shared Chromebook, choose “Sign out and clear this computer.”",
+      "Entra con tu ID del Pueblo (código, nombre y PIN) desde la tarjeta del Campus. Tu progreso, Smithbucks, avatar y juegos te siguen a cualquier computadora. En una Chromebook compartida, elige “Cerrar sesión y limpiar esta computadora.”"]},
   {id:"2026-11-18t", d:"Nov 18", e:"🏛️", t:["The Town grew up","El Pueblo creció"],
    b:["New tabs: Town Hall (class goals that unlock plaza upgrades, period-vs-period league, mayor elections, laws you can write, impeachment), Bank (savings with interest, loans, credit score) and Jobs (daily jobs, streaks, and your own business). Buying from classmates fills your Shop Local card.",
       "Pestañas nuevas: Ayuntamiento (metas de clase que mejoran la plaza, liga de periodos, elecciones, leyes que puedes escribir, juicio político), Banco (ahorros con interés, préstamos, puntaje de crédito) y Trabajos (trabajos diarios, rachas y tu propio negocio). Comprar a tus compañeros llena tu tarjeta de Compra Local."]},
@@ -816,7 +820,7 @@ function mirrorEarnings(){
     E.seen[src.id] = v;
     const room = EARN_CAP - E.day.n, n = Math.min(Math.floor(E.credit[src.id] || 0), room);
     if (n > 0) { E.credit[src.id] -= n; E.day.n += n; E.moved[src.id] = (E.moved[src.id] || 0) + n; S.tokens = (S.tokens | 0) + n; paidNow += n;
-      _payNotes.push(`+${n} ${WL("coins from","monedas de")} ${L(src.name)}`); }
+      _payNotes.push(`+${n} ${WL("Smithbucks from","Smithbucks de")} ${L(src.name)}`); }
   });
   return paidNow;
 }
@@ -897,7 +901,7 @@ window.viewSmittys = function(){
     }
     S.smittys = JSON.parse(JSON.stringify(window._SG)); save(); paintBar();
     if (_payNotes.length) { const n = _payNotes.splice(0); toast("🎉 " + n.join("  ·  ")); }
-    else if (passed) toast(WL("Level passed again. Coins were already paid for this one.","Nivel aprobado otra vez. Las monedas de este ya se pagaron."));
+    else if (passed) toast(WL("Level passed again. Smithbucks were already paid for this one.","Nivel aprobado otra vez. Los Smithbucks de este ya se pagaron."));
   };
   window.sgFinalReport = function(){
     fin();
@@ -991,7 +995,7 @@ function showBonusQ(){
   const {it, u} = BONUS.qs[BONUS.i], c = (S.lang === "es" && it.c.es) ? it.c.es : it.c.en;
   d.innerHTML = `<div class="panel" style="max-width:620px;width:100%">
     <div class="row spread"><span class="eyebrow">⭐ ${WL("Bonus round","Ronda extra")} · ${BONUS.i + 1}/3</span>
-      <span class="chip warn">${bonusLeft()} ${WL("coins left today","monedas hoy")}</span></div>
+      <span class="chip warn">${bonusLeft()} ${WL("Smithbucks left today","Smithbucks hoy")}</span></div>
     <div class="muted" style="font-size:12px;font-weight:700;margin-top:6px">${esc(L(u.title))}</div>
     <h3 style="font-size:20px;margin:6px 0 12px;font-family:var(--body)">${esc(L(it.q))}</h3>
     <div class="opts" style="display:grid;gap:8px">${shuffled(c.map((t, i) => [t, i])).map(([t, i]) => `<button class="opt" data-i="${i}" onclick="answerBonus(${i})">${esc(t)}</button>`).join("")}</div>
@@ -1013,7 +1017,7 @@ window.endGame = function(id, score, won){
   _endGameV2(id, score, won);
   if (!first) return;
   const el = document.getElementById("hint");
-  if (el) el.insertAdjacentHTML("beforeend", `<div style="margin-top:10px"><button class="btn primary" onclick="startBonus()">⭐ ${WL("Bonus round: 3 questions, up to +3 coins","Ronda extra: 3 preguntas, hasta +3 monedas")}</button></div>`);
+  if (el) el.insertAdjacentHTML("beforeend", `<div style="margin-top:10px"><button class="btn primary" onclick="startBonus()">⭐ ${WL("Bonus round: 3 questions, up to +3 Smithbucks","Ronda extra: 3 preguntas, hasta +3 Smithbucks")}</button></div>`);
 };
 
 /* ---------- boot ---------- */
@@ -1066,12 +1070,12 @@ window.viewArcade = function(){
     <div><div class="eyebrow">${ME && ME.head ? WL("Starring you","Protagonizado por ti") : WL("Arcade","Arcade")}</div><h1 style="font-size:28px;margin:0">${WL("Arcade","Arcade")}</h1>
     ${S.avatar ? "" : `<button class="chip bad" style="cursor:pointer" onclick="go('locker')">${WL("Build your avatar to star in the games","Crea tu avatar para salir en los juegos")}</button>`}</div>`;
   v.insertAdjacentHTML("beforeend", `<p class="muted" style="margin:8px 2px">${TEACHER_OK ? WL("Teacher: free play.","Docente: juego libre.") :
-    WL("Each play costs 1 coin. Win coins back by answering questions in the games (up to " + ARC3_DAILY + " a day).",
-       "Cada partida cuesta 1 moneda. Gana monedas respondiendo preguntas en los juegos (hasta " + ARC3_DAILY + " al día).")}</p>` + ARC3.map(arc3Card).join(""));
+    WL("Each play costs 1 Smithbuck. Win Smithbucks back by answering questions in the games (up to " + ARC3_DAILY + " a day).",
+       "Cada partida cuesta 1 Smithbuck. Gana Smithbucks respondiendo preguntas en los juegos (hasta " + ARC3_DAILY + " al día).")}</p>` + ARC3.map(arc3Card).join(""));
 };
 window.playArc3 = function(id){
   const g = ARC3.find(x => x.id === id); if (!g) return;
-  if (!TEACHER_OK) { if (S.tokens < 1) return toast(WL("You need 1 coin to play.","Necesitas 1 moneda para jugar.")); S.tokens--; save(); paintBar(); }
+  if (!TEACHER_OK) { if (S.tokens < 1) return toast(WL("You need 1 Smithbuck to play.","Necesitas 1 Smithbuck para jugar.")); S.tokens--; save(); paintBar(); }
   stopGame(); TAB = "arc3:" + id; render();
 };
 function viewArc3(id){

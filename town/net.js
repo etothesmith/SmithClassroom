@@ -49,10 +49,10 @@ function LocalStore(){
     async teacherSignOut(){ teacher = null; localStorage.removeItem("town.teacher"); uid = sessionStorage.getItem("town.uid"); },
     async studentAuth(){ if (teacher && uid === teacher.uid) uid = sessionStorage.getItem("town.uid"); return uid; },
     async get(p){ return db[p] ? {...db[p]} : null; },
-    async set(p, d, merge){ db[p] = merge ? {...(db[p] || {}), ...d} : {...d}; write(); },
-    async update(p, d){ if (!db[p]) throw new Error("not-found"); db[p] = {...db[p], ...d}; write(); },
-    async add(c, d){ const id = rid(); db[c + "/" + id] = {...d}; write(); return id; },
-    async del(p){ delete db[p]; write(); },
+    async set(p, d, merge){ db = read(); db[p] = merge ? {...(db[p] || {}), ...d} : {...d}; write(); },
+    async update(p, d){ db = read(); if (!db[p]) throw new Error("not-found"); db[p] = {...db[p], ...d}; write(); },
+    async add(c, d){ db = read(); const id = rid(); db[c + "/" + id] = {...d}; write(); return id; },
+    async del(p){ db = read(); delete db[p]; write(); },
     async list(c, o){ return applyQuery(col(c), o); },
     watch(c, o, cb){ const run = () => cb(applyQuery(col(c), o)); watchers.add(run); run(); return () => watchers.delete(run); },
     watchDoc(p, cb){ const run = () => cb(db[p] ? {...db[p]} : null); watchers.add(run); run(); return () => watchers.delete(run); }
@@ -173,7 +173,7 @@ function API(store){
       } else {
         /* existing student: prove the PIN (or set one if the teacher reset it) */
         if (rec !== "locked" && rec.pinHash && rec.pinHash !== hash) return {err:"pin"};
-        try { await store.update(P, {uid, pinProof:hash, ...(rec !== "locked" && !rec.pinHash ? {pinHash:hash} : {})}); }
+        try { await store.update(P, {uid, pinProof:hash, left:null, ...(rec !== "locked" && !rec.pinHash ? {pinHash:hash} : {})}); }
         catch(e){ return {err:"pin"}; }
         rec = await store.get(P);
         if (!rec || rec.uid !== uid || (rec.pinHash && rec.pinHash !== hash)) return {err:"pin"};
@@ -183,6 +183,17 @@ function API(store){
       return {ok:true, cid, sid, name};
     },
     leave(){ keep(null); },
+    /* joined the wrong class: mark the record as left, take the house off the street, sign out.
+       Progress lives in the student's own save, so it comes along to the right class. */
+    async leaveClass(){ if (!sess) return; const s = sess;
+      try { await store.update(`classes/${s.cid}/students/${s.sid}`, {left:now()}); } catch(e){}
+      try { await store.del(`classes/${s.cid}/pub/${s.sid}`); } catch(e){}
+      keep(null); },
+    /* ---------- knocking ---------- */
+    knock: (to, toName) => store.set(`${C()}/knocks/${to}_${sess.sid}`, {to, toName:toName || "", from:sess.sid, fromName:sess.name, uid:store.uid(), status:"knock", day:new Date().toISOString().slice(0, 10), at:now()}),
+    answerKnock: (id, status) => store.update(`${C()}/knocks/${id}`, {status, respondedAt:now()}),
+    watchKnocksTo: cb => store.watch(`${C()}/knocks`, {where:[["to","==",sess.sid]]}, cb),
+    watchKnocksFrom: cb => store.watch(`${C()}/knocks`, {where:[["from","==",sess.sid]]}, cb),
     async resume(){ if (!sess) return null; await store.studentAuth();
       try { const r = await store.get(`${C()}/students/${sess.sid}`); if (!r || r.uid !== store.uid()) { keep(null); return null; } }
       catch(e){ keep(null); return null; }

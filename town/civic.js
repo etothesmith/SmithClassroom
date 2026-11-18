@@ -64,8 +64,8 @@ const UPGRADES = {   /* at: [x, feet y] on the 960x540 plaza */
 const EVENTS = {
   inflation: {e:"🎈", en:"Inflation hits!", es:"¡Llega la inflación!", mult:() => 1.3,
     what:{en:"Too much money is chasing too few goods. Shop prices are up 30%.", es:"Demasiado dinero persigue muy pocos bienes. Los precios de la tienda suben 30%."},
-    q:{q:{en:"Prices in the shop went up 30%. What happens to the purchasing power of your coins?", es:"Los precios subieron 30%. ¿Qué pasa con el poder adquisitivo de tus monedas?"},
-       c:{en:["It falls: each coin buys less","It rises: each coin buys more","It stays the same"], es:["Baja: cada moneda compra menos","Sube: cada moneda compra más","No cambia"]}, a:0}},
+    q:{q:{en:"Prices in the shop went up 30%. What happens to the purchasing power of your Smithbucks?", es:"Los precios subieron 30%. ¿Qué pasa con el poder adquisitivo de tus Smithbucks?"},
+       c:{en:["It falls: each Smithbuck buys less","It rises: each Smithbuck buys more","It stays the same"], es:["Baja: cada Smithbuck compra menos","Sube: cada Smithbuck compra más","No cambia"]}, a:0}},
   tariff: {e:"🚢", en:"Tariff on imported furniture", es:"Arancel a muebles importados", mult:it => /^(bed|sofa|lamp|table)/.test(it.id) ? 1.5 : 1,
     what:{en:"Beds, sofas, tables and lamps are imported, and a 50% tariff was added to their price.", es:"Camas, sofás, mesas y lámparas son importados y tienen un arancel del 50%."},
     q:{q:{en:"Who usually ends up paying most of a tariff on imported goods?", es:"¿Quién suele pagar la mayor parte de un arancel a productos importados?"},
@@ -99,7 +99,7 @@ const PLANKS = {
 };
 const LAWS = {
   park_tax:    {e:"🌳", en:"Park Tax", es:"Impuesto del parque", what:{en:"10% sales tax on Market sales. The tax counts toward the class goal.", es:"Impuesto del 10% en ventas del Mercado. Cuenta para la meta de la clase."}},
-  pet_cap:     {e:"🐶", en:"Pet Price Cap", es:"Tope a mascotas", what:{en:"Pets can't be listed for more than 25 coins.", es:"Las mascotas no pueden venderse por más de 25 monedas."}},
+  pet_cap:     {e:"🐶", en:"Pet Price Cap", es:"Tope a mascotas", what:{en:"Pets can't be listed for more than 25 Smithbucks.", es:"Las mascotas no pueden venderse por más de 25 Smithbucks."}},
   save_bonus:  {e:"🏦", en:"Savers' Bonus", es:"Bono de ahorro", what:{en:"The Town Bank pays 1% more interest every week.", es:"El Banco paga 1% más de interés cada semana."}},
   crate_friday:{e:"🎁", en:"Crate Fridays", es:"Viernes de cajas", what:{en:"Every resident gets a crate each Friday.", es:"Cada residente recibe una caja cada viernes."}},
   shop_sale:   {e:"🏷️", en:"Shop Subsidy", es:"Subsidio a la tienda", what:{en:"The town pays 10% of shop prices for you.", es:"El pueblo paga el 10% de los precios de la tienda."}}
@@ -113,23 +113,26 @@ const BIZ = {
   smoothie:{e:"🥤", en:"Smoothie bar", es:"Barra de batidos", items:["prod_smoothie","prod_fruit_bowl"]}
 };
 const START_COST = 10, DAILY_MAKE = 5;
+/* questions answered today (any practice, challenge or review) */
+const answeredToday = () => { const d = typeof today === "function" ? today() : ""; return Object.values(S.prog || {}).filter(p => p && p.last === d).length; };
 const JOBS = {
-  study:  {e:"📚", en:"Earn 20 XP studying or playing today", es:"Gana 20 XP estudiando o jugando hoy", check:() => myXp() - (civ().jobs.xp0 || myXp()) >= 20},
+  answer10:{e:"✏️", en:"Answer 10 practice questions in your classes", es:"Responde 10 preguntas de práctica de tus clases", pay:3, learn:1, check:() => answeredToday() >= 10},
+  study:  {e:"📚", en:"Earn 20 XP studying today", es:"Gana 20 XP estudiando hoy", learn:1, check:() => myXp() - (civ().jobs.xp0 || myXp()) >= 20},
   visit:  {e:"🏡", en:"Visit a classmate's house", es:"Visita la casa de un compañero"},
   sticker:{e:"⭐", en:"Leave a sticker on a house", es:"Deja una calcomanía en una casa"},
   chat:   {e:"💬", en:"Say something in Quick chat", es:"Di algo en el chat rápido"},
-  bank:   {e:"🏦", en:"Put coins in the Town Bank", es:"Pon monedas en el Banco"},
+  bank:   {e:"🏦", en:"Put Smithbucks in the Town Bank", es:"Pon Smithbucks en el Banco"},
   market: {e:"🛒", en:"List or buy something in the Market", es:"Publica o compra algo en el Mercado"},
   vote:   {e:"🏆", en:"Vote for Home of the Week", es:"Vota por la Casa de la Semana"},
   hall:   {e:"🏛️", en:"Check the Town Hall", es:"Visita el Ayuntamiento"},
   buylocal:{e:"🤝", en:"Buy something from a classmate in the Market", es:"Compra algo a un compañero en el Mercado"},
-  study50:{e:"🧠", en:"Earn 50 XP today (pays 2)", es:"Gana 50 XP hoy (paga 2)", pay:2, check:() => myXp() - (civ().jobs.xp0 || myXp()) >= 50},
+  study50:{e:"🧠", en:"Earn 50 XP today (pays 2)", es:"Gana 50 XP hoy (paga 2)", pay:2, learn:1, check:() => myXp() - (civ().jobs.xp0 || myXp()) >= 50},
   crate:  {e:"🎁", en:"Open a crate", es:"Abre una caja"},
   decorate:{e:"🛋️", en:"Place or move furniture in your house", es:"Pon o mueve un mueble en tu casa"},
   trade:  {e:"🔄", en:"Send or accept a trade", es:"Envía o acepta un intercambio"},
   make:   {e:"🧁", en:"Make a product for a business", es:"Haz un producto para un negocio"},
   sell:   {e:"💰", en:"Sell something in the Market", es:"Vende algo en el Mercado"},
-  save:   {e:"🐷", en:"Have 10+ coins in savings", es:"Ten 10+ monedas en ahorros", check:() => civ().bank.bal >= 10}
+  save:   {e:"🐷", en:"Have 10+ Smithbucks in savings", es:"Ten 10+ Smithbucks en ahorros", check:() => civ().bank.bal >= 10}
 };
 
 /* ---------------------------------------------------------------- shared helpers */
@@ -238,22 +241,22 @@ function creditWord(c){ return c >= 750 ? W2("Excellent","Excelente") : c >= 680
 function paintBank(el){
   accrue(); const b = civ().bank, l = b.loan;
   el.innerHTML = `<section class="panel raised cbank">${img(`${TA}civic/bank.webp`, "🏦", "big")}
-      <div><div class="eyebrow">${W2("Town Bank","Banco del Pueblo")}</div><h2>${W2("Savings","Ahorros")}: 🪙 ${b.bal.toFixed(2)}</h2>
+      <div><div class="eyebrow">${W2("Town Bank","Banco del Pueblo")}</div><h2>${W2("Savings","Ahorros")}: 💵 ${b.bal.toFixed(2)}</h2>
       <p class="muted">${W2(`Interest: ${saveRate()}% a week, added every day.`, `Interés: ${saveRate()}% por semana, se suma cada día.`)}
         ${W2("Coach Smith sets the rate, like the Fed.","Coach Smith fija la tasa, como la Fed.")}</p></div></section>
     <section class="panel"><div class="eyebrow">${W2("Deposit or withdraw","Depositar o retirar")}</div>
-      <p class="muted">${W2(`Cash: 🪙 ${S.tokens}. Savings grow; cash doesn't.`, `Efectivo: 🪙 ${S.tokens}. Los ahorros crecen; el efectivo no.`)}</p>
+      <p class="muted">${W2(`Cash: 💵 ${S.tokens}. Savings grow; cash doesn't.`, `Efectivo: 💵 ${S.tokens}. Los ahorros crecen; el efectivo no.`)}</p>
       <div class="tsell"><input id="bAmt" type="number" min="1" inputmode="numeric" placeholder="${W2("Coins","Monedas")}">
         <button class="btn primary" onclick="civBank('in')">${W2("Deposit","Depositar")}</button><button class="btn" onclick="civBank('out')">${W2("Withdraw","Retirar")}</button></div>
-      <p class="muted" style="font-size:12px">${W2(`In 4 weeks, 20 coins grows to about ${(20 * Math.pow(1 + saveRate() / 700, 28)).toFixed(1)}: that's compound interest.`,
-        `En 4 semanas, 20 monedas crecen a unas ${(20 * Math.pow(1 + saveRate() / 700, 28)).toFixed(1)}: eso es interés compuesto.`)}</p></section>
+      <p class="muted" style="font-size:12px">${W2(`In 4 weeks, 20 Smithbucks grows to about ${(20 * Math.pow(1 + saveRate() / 700, 28)).toFixed(1)}: that's compound interest.`,
+        `En 4 semanas, 20 Smithbucks crecen a unas ${(20 * Math.pow(1 + saveRate() / 700, 28)).toFixed(1)}: eso es interés compuesto.`)}</p></section>
     ${gameMoneyPanel()}
     <section class="panel"><div class="eyebrow">${W2("Loans and credit","Préstamos y crédito")}</div>
       <div class="ccredit"><b>${b.credit}</b><span>${creditWord(b.credit)}</span>${bar((b.credit - 300) / 550, b.credit >= 680 ? "#3BB273" : b.credit >= 600 ? "#E3A21A" : "#E4572E")}</div>
-      ${l ? `<p>${W2("You owe","Debes")} <b>🪙 ${loanOwed()}</b> · ${W2("due","vence")} ${new Date(l.due).toLocaleDateString()}${l.late ? " ⚠️" : ""}</p>
+      ${l ? `<p>${W2("You owe","Debes")} <b>💵 ${loanOwed()}</b> · ${W2("due","vence")} ${new Date(l.due).toLocaleDateString()}${l.late ? " ⚠️" : ""}</p>
            <button class="btn primary" onclick="civRepay()">${W2("Pay it back","Pagar")}</button>`
-         : `<p class="muted">${W2(`You can borrow up to ${loanLimit()} coins at ${loanRate()}% a week. Pay it back within 7 days to raise your credit score. Late loans lower it.`,
-              `Puedes pedir hasta ${loanLimit()} monedas al ${loanRate()}% por semana. Págalo en 7 días para subir tu puntaje. Si te atrasas, baja.`)}</p>
+         : `<p class="muted">${W2(`You can borrow up to ${loanLimit()} Smithbucks at ${loanRate()}% a week. Pay it back within 7 days to raise your credit score. Late loans lower it.`,
+              `Puedes pedir hasta ${loanLimit()} Smithbucks al ${loanRate()}% por semana. Págalo en 7 días para subir tu puntaje. Si te atrasas, baja.`)}</p>
            <div class="tsell"><input id="lAmt" type="number" min="1" max="${loanLimit()}" inputmode="numeric" placeholder="${W2("Coins","Monedas")}">
            <button class="btn" onclick="civBorrow()">${W2("Borrow","Pedir prestado")}</button></div>`}</section>
     <section class="panel"><div class="eyebrow">${W2("History","Historial")}</div>
@@ -265,29 +268,29 @@ function gameMoneyPanel(){
   if (typeof window.EARNINGS !== "function") return "";
   const g = window.EARNINGS();
   return `<section class="panel"><div class="eyebrow">💱 ${W2("Game money comes to town","El dinero de los juegos llega al pueblo")}</div>
-    <p class="muted">${W2(`Money you earn inside games turns into Town coins automatically (up to ${g.cap} a day). Spending in a game never costs Town coins.`,
-      `El dinero que ganas en los juegos se convierte solo en monedas del pueblo (hasta ${g.cap} al día). Gastar en un juego nunca cuesta monedas del pueblo.`)}</p>
-    ${g.src.map(s => `<div class="chist"><span><b>${E(s.name)}</b> · ${s.unit === "$" ? "$" + s.rate : s.rate + " " + s.unit} = 🪙1</span>
+    <p class="muted">${W2(`Money you earn inside games turns into Town Smithbucks automatically (up to ${g.cap} a day). Spending in a game never costs Town Smithbucks.`,
+      `El dinero que ganas en los juegos se convierte solo en Smithbucks del pueblo (hasta ${g.cap} al día). Gastar en un juego nunca cuesta Smithbucks del pueblo.`)}</p>
+    ${g.src.map(s => `<div class="chist"><span><b>${E(s.name)}</b> · ${s.unit === "$" ? "$" + s.rate : s.rate + " " + s.unit} = 💵1</span>
       <b>+${s.moved}</b><small class="muted">${s.active ? (s.waiting ? W2(`${s.waiting} waiting for tomorrow`, `${s.waiting} esperan a mañana`) : W2("so far","hasta ahora")) : W2("not played yet","aún no juegas")}</small></div>`).join("")}
-    <p class="muted" style="font-size:12px">${W2(`Today: ${g.today}/${g.cap}. The arcade games and assignments already pay coins straight to you.`, `Hoy: ${g.today}/${g.cap}. Los juegos del arcade y las tareas ya te pagan monedas directamente.`)}</p></section>`;
+    <p class="muted" style="font-size:12px">${W2(`Today: ${g.today}/${g.cap}. The arcade games and assignments already pay Smithbucks straight to you.`, `Hoy: ${g.today}/${g.cap}. Los juegos del arcade y las tareas ya te pagan Smithbucks directamente.`)}</p></section>`;
 }
 window.civBank = function(dir){
   accrue(); const b = civ().bank, n = parseInt(document.getElementById("bAmt").value, 10);
-  if (!(n > 0)) return T.toast(W2("Type how many coins.","Escribe cuántas monedas."));
+  if (!(n > 0)) return T.toast(W2("Type how many Smithbucks.","Escribe cuántas Smithbucks."));
   if (dir === "in") { if (n > S.tokens) return T.toast(W2("You don't have that much cash.","No tienes tanto efectivo.")); T.coins(-n); b.bal += n; log("in", n); flag("bank"); }
   else { if (n > Math.floor(b.bal)) return T.toast(W2("Not enough in savings.","No hay suficiente en ahorros.")); b.bal -= n; T.coins(n); log("out", -n); }
   T.persist(); paint();
 };
 window.civBorrow = function(){
   accrue(); const b = civ().bank, n = parseInt(document.getElementById("lAmt").value, 10);
-  if (b.loan) return; if (!(n > 0 && n <= loanLimit())) return T.toast(W2(`You can borrow 1 to ${loanLimit()} coins.`, `Puedes pedir de 1 a ${loanLimit()} monedas.`));
-  if (!confirm(W2(`Borrow ${n} coins at ${loanRate()}% a week? You'll owe about ${n + Math.ceil(n * loanRate() / 100)} if you repay this week.`,
-                  `¿Pedir ${n} monedas al ${loanRate()}% semanal? Deberás unas ${n + Math.ceil(n * loanRate() / 100)} si pagas esta semana.`))) return;
+  if (b.loan) return; if (!(n > 0 && n <= loanLimit())) return T.toast(W2(`You can borrow 1 to ${loanLimit()} Smithbucks.`, `Puedes pedir de 1 a ${loanLimit()} Smithbucks.`));
+  if (!confirm(W2(`Borrow ${n} Smithbucks at ${loanRate()}% a week? You'll owe about ${n + Math.ceil(n * loanRate() / 100)} if you repay this week.`,
+                  `¿Pedir ${n} Smithbucks al ${loanRate()}% semanal? Deberás unas ${n + Math.ceil(n * loanRate() / 100)} si pagas esta semana.`))) return;
   b.loan = {amt:n, rate:loanRate(), at:Date.now(), due:Date.now() + 7 * 864e5}; T.coins(n); log("loan", n); T.persist(); paint();
 };
 window.civRepay = function(){
   accrue(); const b = civ().bank, owe = loanOwed(); if (!b.loan) return;
-  if (S.tokens < owe) return T.toast(W2(`You need ${owe} coins in cash (withdraw from savings first).`, `Necesitas ${owe} monedas en efectivo (retira de tus ahorros).`));
+  if (S.tokens < owe) return T.toast(W2(`You need ${owe} Smithbucks in cash (withdraw from savings first).`, `Necesitas ${owe} Smithbucks en efectivo (retira de tus ahorros).`));
   T.coins(-owe); log("repay", -owe); if (!b.loan.late) b.credit = Math.min(850, b.credit + 25); b.loan = null; T.persist(); paint();
   T.toast(W2("Loan repaid! Your credit score went up.", "¡Préstamo pagado! Tu puntaje de crédito subió."));
 };
@@ -298,7 +301,7 @@ EXT.banner.push(() => {
   const e = cur(); if (!e || !EVENTS[e.kind]) return "";
   const ev = EVENTS[e.kind], answered = civ().evq && civ().evq[e.id];
   return `<section class="panel cevent"><span class="cevi">${ev.e}</span><div><b>${E(L2(ev))}</b> ${E(L2(ev.what))}</div>
-    ${answered ? "" : `<button class="btn primary" onclick="civEventQ()">${W2("Econ check: +2 coins","Pregunta: +2 monedas")}</button>`}</section>`;
+    ${answered ? "" : `<button class="btn primary" onclick="civEventQ()">${W2("Econ check: +2 Smithbucks","Pregunta: +2 Smithbucks")}</button>`}</section>`;
 });
 window.civEventQ = function(){
   const e = cur(); if (!e) return; const ev = EVENTS[e.kind]; const c = civ(); c.evq = c.evq || {};
@@ -464,9 +467,9 @@ window.civLawVote = async function(pid, v){
   try { await store().set(`${C()}/lawvotes/${pid}_${SESS().sid}`, {pid, sid:SESS().sid, v:!!v, at:Date.now()}); } catch(e){}
   civ().voted["law:" + pid] = 1; save(); T.toast(W2("Vote cast!","¡Voto emitido!")); paint();
 };
-EXT.listCheck.push((id, price) => hasLaw("pet_cap") && /^pet_/.test(id) && price > 25 ? W2("The Pet Price Cap law limits pets to 25 coins.", "La ley de tope a mascotas limita el precio a 25 monedas.") : null);
+EXT.listCheck.push((id, price) => hasLaw("pet_cap") && /^pet_/.test(id) && price > 25 ? W2("The Pet Price Cap law limits pets to 25 Smithbucks.", "La ley de tope a mascotas limita el precio a 25 Smithbucks.") : null);
 EXT.onSold.push(m => { if (!hasLaw("park_tax")) return; const tax = Math.max(1, Math.round(m.price * 0.1)); T.coins(-tax); civ().tax += tax;
-  T.toast(W2(`Park Tax: ${tax} coin${tax > 1 ? "s" : ""} went to the class goal.`, `Impuesto del parque: ${tax} moneda(s) para la meta de la clase.`)); });
+  T.toast(W2(`Park Tax: ${tax} Smithbuck${tax > 1 ? "s" : ""} went to the class goal.`, `Impuesto del parque: ${tax} Smithbuck(s) para la meta de la clase.`)); });
 
 /* ---------------- Town Hall tab */
 function paintHall(el){
@@ -496,8 +499,8 @@ function paintBiz(){
       <button class="btn primary" onclick="civJoinBiz('${inv[0]}')">${W2("Join","Unirme")}</button></p>` : "";
     const working = civ().bizWith && T.pub[civ().bizWith] && T.pub[civ().bizWith].biz ? bizCard(civ().bizWith) : "";
     return `<section class="panel"><div class="eyebrow">🏪 ${W2("Start a business","Empieza un negocio")}</div>${offer}${working}
-      <p class="muted">${W2(`Startup cost: ${START_COST} coins. You buy supplies, make products, and sell them in the Market. Profit = price − cost.`,
-        `Costo inicial: ${START_COST} monedas. Compras insumos, haces productos y los vendes en el Mercado. Ganancia = precio − costo.`)}</p>
+      <p class="muted">${W2(`Startup cost: ${START_COST} Smithbucks. You buy supplies, make products, and sell them in the Market. Profit = price − cost.`,
+        `Costo inicial: ${START_COST} Smithbucks. Compras insumos, haces productos y los vendes en el Mercado. Ganancia = precio − costo.`)}</p>
       <div class="cbiz">${Object.entries(BIZ).map(([k, z]) => `<button onclick="civStartBiz('${k}')">${img(`${TA}civic/stall_${k}.webp`, z.e)}<b>${E(L2(z))}</b>
         <small>${z.items.map(id => T.ITEMS[id] ? T.ITEMS[id].e : "").join(" ")}</small></button>`).join("")}</div></section>`;
   }
@@ -512,23 +515,23 @@ function bizCard(ownerSid){
       <h2>${E(mine ? SESS().name : T.pub[ownerSid].name)}'s ${E(L2(z))}</h2>
       <p class="muted">${pp ? W2(`Partner: ${E(pp.name)}${mine && !bizPartner() ? " (waiting for them to join)" : ""}. Profit on every sale is split 50/50.`, `Socio: ${E(pp.name)}${mine && !bizPartner() ? " (esperando que acepte)" : ""}. La ganancia de cada venta se divide 50/50.`)
         : W2("Sole proprietor: you keep all the profit and take all the risk.","Propietario único: te quedas con toda la ganancia y todo el riesgo.")}</p>
-      <div class="cstats"><span>${W2("Sold","Vendidos")} <b>${st.sold | 0}</b></span><span>${W2("Revenue","Ingresos")} <b>🪙${st.rev | 0}</b></span>
-        <span>${W2("Costs","Costos")} <b>🪙${st.cost | 0}</b></span><span>${W2("Profit","Ganancia")} <b>🪙${(st.rev | 0) - (st.cost | 0)}</b></span></div>
+      <div class="cstats"><span>${W2("Sold","Vendidos")} <b>${st.sold | 0}</b></span><span>${W2("Revenue","Ingresos")} <b>💵${st.rev | 0}</b></span>
+        <span>${W2("Costs","Costos")} <b>💵${st.cost | 0}</b></span><span>${W2("Profit","Ganancia")} <b>💵${(st.rev | 0) - (st.cost | 0)}</b></span></div>
       <div class="cmake">${z.items.map(id => { const it = T.ITEMS[id]; return `<button class="btn" onclick="civMake('${id}')" ${made >= DAILY_MAKE ? "disabled" : ""}>${T.itemArt(id, 40)}
-        ${E(T.itemName(id))}<small>${W2("supplies","insumos")} 🪙${it.cost}</small></button>`; }).join("")}</div>
+        ${E(T.itemName(id))}<small>${W2("supplies","insumos")} 💵${it.cost}</small></button>`; }).join("")}</div>
       <p class="muted" style="font-size:12px">${W2(`Made today: ${made}/${DAILY_MAKE}. Products go to your inventory; list them in the Market at a price above your cost.`, `Hechos hoy: ${made}/${DAILY_MAKE}. Los productos van a tu inventario; véndelos en el Mercado a más de su costo.`)}</p>
       ${mine && !b.partner ? `<button class="btn ghost" onclick="civPartner()">🤝 ${W2("Add a partner","Agregar socio")}</button>` : ""}
       ${mine ? `<button class="btn ghost" onclick="civCloseBiz()">${W2("Close the business","Cerrar el negocio")}</button>` : ""}</div></section>`;
 }
 window.civStartBiz = function(k){
-  if (S.tokens < START_COST) return T.toast(W2(`You need ${START_COST} coins to start.`, `Necesitas ${START_COST} monedas para empezar.`));
-  if (!confirm(W2(`Open a ${BIZ[k].en} for ${START_COST} coins?`, `¿Abrir una ${BIZ[k].es} por ${START_COST} monedas?`))) return;
+  if (S.tokens < START_COST) return T.toast(W2(`You need ${START_COST} Smithbucks to start.`, `Necesitas ${START_COST} Smithbucks para empezar.`));
+  if (!confirm(W2(`Open a ${BIZ[k].en} for ${START_COST} Smithbucks?`, `¿Abrir una ${BIZ[k].es} por ${START_COST} Smithbucks?`))) return;
   T.coins(-START_COST); civ().biz = {type:k, sold:0, rev:0, cost:START_COST, partner:null, since:Date.now()}; T.persist(); paint();
 };
 window.civMake = function(id){
   const it = T.ITEMS[id], c = civ(); c.made = c.made || {}; const n = c.made[day()] || 0;
   if (n >= DAILY_MAKE) return T.toast(W2("Your shop is closed for today. Make more tomorrow!","Tu tienda cerró por hoy. ¡Haz más mañana!"));
-  if (S.tokens < it.cost) return T.toast(W2(`Supplies cost ${it.cost} coins.`, `Los insumos cuestan ${it.cost} monedas.`));
+  if (S.tokens < it.cost) return T.toast(W2(`Supplies cost ${it.cost} Smithbucks.`, `Los insumos cuestan ${it.cost} Smithbucks.`));
   T.coins(-it.cost); T.addItem(id, 1); c.made = {[day()]:n + 1}; flag("make");
   if (c.biz) c.biz.cost += it.cost; else { c.bizStats = c.bizStats || {sold:0, rev:0, cost:0}; c.bizStats.cost += it.cost; }
   T.persist(); paint(); T.toast(W2(`Made: ${T.itemName(id)}. List it in the Market!`, `Hiciste: ${T.itemName(id)}. ¡Véndelo en el Mercado!`));
@@ -556,7 +559,7 @@ function settlePayouts(rows){
   let changed = false;
   rows.forEach(r => { changed = T.once("pay:" + r.id, () => { T.coins(r.coins | 0);
     const c = civ(), st = c.biz || (c.bizStats = c.bizStats || {sold:0, rev:0, cost:0}); st.rev = (st.rev | 0) + (r.coins | 0);
-    T.toast(W2(`Partner payout: ${r.fromName} sold a ${T.itemName(r.item)}. +${r.coins} coins.`, `Pago de socio: ${r.fromName} vendió ${T.itemName(r.item)}. +${r.coins} monedas.`));
+    T.toast(W2(`Partner payout: ${r.fromName} sold a ${T.itemName(r.item)}. +${r.coins} Smithbucks.`, `Pago de socio: ${r.fromName} vendió ${T.itemName(r.item)}. +${r.coins} Smithbucks.`));
     if (!r.settled) store().update(`${C()}/payouts/${r.id}`, {settled:true}).catch(() => {}); }) || changed; });
   if (changed) T.persist();
 }
@@ -564,9 +567,8 @@ function settlePayouts(rows){
 /* ================================================================ 6. daily jobs, streak, Home of the Week */
 function rollJobs(){
   const j = civ().jobs, d = day(); if (j.day === d) return;
-  const keys = Object.keys(JOBS), h = hashN(d + (SESS() ? SESS().sid : "")), picks = [];
-  for (let i = 0; picks.length < 3; i++) { const k = keys[(h + i * 7) % keys.length]; if (!picks.includes(k)) picks.push(k); }
-  if (!picks.includes("study")) picks[0] = "study";
+  const town = Object.keys(JOBS).filter(k => !JOBS[k].learn), h = hashN(d + (SESS() ? SESS().sid : ""));
+  const picks = ["answer10", h % 3 === 0 ? "study50" : "study", town[h % town.length]];
   Object.assign(j, {day:d, picks, done:{}, paid:{}, flags:{}, xp0:myXp()}); save();
 }
 function jobDone(k){ const j = civ().jobs; return JOBS[k] && JOBS[k].check ? JOBS[k].check() : !!j.flags[k]; }
@@ -582,7 +584,7 @@ function visitStreak(){
 function paintJobs(el){
   rollJobs(); const j = civ().jobs, s = civ().streak, pay = jobPay();
   el.innerHTML = `<section class="panel raised cjobs">${img(`${TA}civic/job_board.webp`, "📋", "big")}<div><div class="eyebrow">${W2("Job board","Tablero de trabajos")} · ${new Date().toLocaleDateString()}</div>
-      <h2>${W2("Today's jobs","Trabajos de hoy")}</h2><p class="muted">${W2(`Each job pays ${Math.max(1, Math.round(pay))} coin${pay > 1 ? "s" : ""}. New jobs every day.`, `Cada trabajo paga ${Math.max(1, Math.round(pay))} moneda(s). Trabajos nuevos cada día.`)}</p></div>
+      <h2>${W2("Today's jobs","Trabajos de hoy")}</h2><p class="muted">${W2(`Each job pays ${Math.max(1, Math.round(pay))} Smithbuck${pay > 1 ? "s" : ""}. New jobs every day.`, `Cada trabajo paga ${Math.max(1, Math.round(pay))} Smithbuck(s). Trabajos nuevos cada día.`)}</p></div>
       <div class="cstreak">${img(`${TA}civic/streak_flame.webp`, "🔥")}<b>${s.n}</b><small>${W2("day streak","días seguidos")}</small></div></section>
     <section class="panel">${j.picks.map(k => { const d = jobDone(k), paid = j.paid[k];
       return `<div class="cjob ${d ? "done" : ""}"><span>${JOBS[k].e}</span><b>${E(L2(JOBS[k]))}</b>
@@ -594,7 +596,7 @@ window.civCollect = function(k){
   const j = civ().jobs; if (j.paid[k] || !jobDone(k)) return; j.paid[k] = 1;
   const c = civ(), sick = c.sick && c.sick.since, fed = c.fed === day();
   let n = Math.max(1, Math.round(jobPay() * ((JOBS[k] && JOBS[k].pay) || 1)));
-  if (sick) n = Math.max(1, Math.floor(n / 2)); if (fed) n += 1; T.coins(n); T.persist(); paint(); T.toast(W2(`+${n} coin${n > 1 ? "s" : ""}`, `+${n} moneda(s)`));
+  if (sick) n = Math.max(1, Math.floor(n / 2)); if (fed) n += 1; T.coins(n); T.persist(); paint(); T.toast(W2(`+${n} Smithbuck${n > 1 ? "s" : ""}`, `+${n} Smithbuck(s)`));
 };
 /* job flags from things that already happen in the Town */
 const wrap = (name, k) => { const f = window[name]; if (typeof f !== "function") return; window[name] = function(){ const r = f.apply(this, arguments); flag(k); return r; }; };
@@ -683,7 +685,7 @@ window.civQuizAns = async function(i){
 function quizReveal(q){
   const c = civ(); c.quiz = c.quiz || {}; const mine = c.quiz[q.id];
   if (mine == null) return;
-  T.once("quiz:" + q.id, () => { if (mine === q.q.a) { T.coins(1); T.toast(W2("Plaza quiz: correct! +1 coin.","Quiz de la plaza: ¡correcto! +1 moneda.")); }
+  T.once("quiz:" + q.id, () => { if (mine === q.q.a) { T.coins(1); T.toast(W2("Plaza quiz: correct! +1 Smithbuck.","Quiz de la plaza: ¡correcto! +1 Smithbuck.")); }
     else T.toast(W2("Plaza quiz: not this time.","Quiz de la plaza: esta vez no.")); T.persist(); });
 }
 
@@ -723,13 +725,29 @@ setInterval(() => { if (SESS() && myXp() !== _pubXp) { _pubXp = myXp(); T.publis
 /* Finishing a unit (its certificate) pays a paycheck, once per unit. Certificates
    earned before this existed get back pay, up to 60 coins. */
 const UNIT_PAY = 15;
+/* Every new certificate pays Smithbucks: unit challenges and tests, assignment
+   games, writing labs, CFE review and review activities. Certificates earned
+   before this got back pay (up to 75). */
+const CERT_PAY = {exam:20, game:20, challenge:15, review:5};
+const certPay = ct => CERT_PAY[ct.kind] || (ct.src ? 20 : 15);
+const certLabel = ct => ct.kind === "game" || ct.src ? W2("assignment","tarea") : ct.kind === "review" ? W2("review","repaso") : W2("unit","unidad");
 function unitPaychecks(){
-  const c = civ(), certs = S.certs || []; if (!c.unitPaid) { c.unitPaid = {}; c.unitBack = true; }
-  let n = 0, back = 0;
-  certs.forEach(ct => { const k = (ct.course || "") + "|" + (ct.unit || ""); if (!ct.unit || c.unitPaid[k]) return; c.unitPaid[k] = Date.now();
-    if (c.unitBack) back++; else n++; });
-  if (c.unitBack) { const pay = Math.min(60, back * UNIT_PAY); c.unitBack = false; if (pay) { T.coins(pay); T.toast(W2(`Back pay for ${back} finished unit${back > 1 ? "s" : ""}: +${pay} coins!`, `Pago atrasado por ${back} unidad(es) terminada(s): ¡+${pay} monedas!`)); } save(); return; }
-  if (n) { T.coins(n * UNIT_PAY); save(); T.toast(W2(`🎓 Unit complete! Paycheck: +${n * UNIT_PAY} coins.`, `🎓 ¡Unidad terminada! Pago: +${n * UNIT_PAY} monedas.`)); if (typeof paintBar === "function") paintBar(); }
+  const c = civ(), certs = S.certs || [];
+  if (!c.certPaid) {   /* first run: mark what the old unit paychecks already paid, back-pay the rest */
+    c.certPaid = {}; const seen = new Set(Object.keys(c.unitPaid || {}));
+    let back = 0, n = 0;
+    certs.forEach(ct => { if (!ct.code) return; const k = (ct.course || "") + "|" + (ct.unit || "");
+      if (seen.has(k)) { seen.delete(k); c.certPaid[ct.code] = 1; return; }
+      c.certPaid[ct.code] = 1; back += certPay(ct); n++; });
+    back = Math.min(75, back); save();
+    if (back) { T.coins(back); T.persist(); T.toast(W2(`Back pay for ${n} certificate${n > 1 ? "s" : ""}: +${back} Smithbucks!`, `Pago atrasado por ${n} certificado(s): ¡+${back} Smithbucks!`)); }
+    return;
+  }
+  let total = 0, last = null;
+  certs.forEach(ct => { if (!ct.code || c.certPaid[ct.code]) return; c.certPaid[ct.code] = Date.now(); total += certPay(ct); last = ct; });
+  if (total) { T.coins(total); save(); T.persist();
+    T.toast(W2(`🎓 Certificate earned: +${total} Smithbucks (${certLabel(last)} paycheck).`, `🎓 Certificado ganado: +${total} Smithbucks (pago de ${certLabel(last)}).`));
+    if (typeof paintBar === "function") paintBar(); }
 }
 setInterval(unitPaychecks, 15000); setTimeout(unitPaychecks, 2500);
 
@@ -743,23 +761,23 @@ function setProgress(){ const have = new Set(Object.keys(T.town().inv).map(prodT
 EXT.onBuy.push(m => {
   const c = civ(); flag("buylocal");
   c.stamps = (c.stamps || 0) + 1;
-  if (c.stamps % STAMPS === 0) { T.town().crates++; T.coins(5); T.toast(W2("🛍️ Shop Local card full! +1 crate and +5 coins.","🛍️ ¡Tarjeta llena! +1 caja y +5 monedas.")); }
-  const e = cur(); if (e && e.kind === "buylocal") { const back = Math.max(1, Math.round(m.price * 0.2)); T.coins(back); T.toast(W2(`Buy Local Week: +${back} coins back.`, `Semana local: +${back} monedas de vuelta.`)); }
-  const sp = setProgress(); if (sp.n >= sp.total) T.once("prodset", () => { T.coins(SET_BONUS); T.toast(W2(`🏅 You own something from every business in town! +${SET_BONUS} coins.`, `🏅 ¡Tienes algo de cada negocio del pueblo! +${SET_BONUS} monedas.`)); if (typeof fireConfetti === "function") fireConfetti(); });
+  if (c.stamps % STAMPS === 0) { T.town().crates++; T.coins(5); T.toast(W2("🛍️ Shop Local card full! +1 crate and +5 Smithbucks.","🛍️ ¡Tarjeta llena! +1 caja y +5 Smithbucks.")); }
+  const e = cur(); if (e && e.kind === "buylocal") { const back = Math.max(1, Math.round(m.price * 0.2)); T.coins(back); T.toast(W2(`Buy Local Week: +${back} Smithbucks back.`, `Semana local: +${back} Smithbucks de vuelta.`)); }
+  const sp = setProgress(); if (sp.n >= sp.total) T.once("prodset", () => { T.coins(SET_BONUS); T.toast(W2(`🏅 You own something from every business in town! +${SET_BONUS} Smithbucks.`, `🏅 ¡Tienes algo de cada negocio del pueblo! +${SET_BONUS} Smithbucks.`)); if (typeof fireConfetti === "function") fireConfetti(); });
 });
 function cozyBonus(){
   const c = civ(), d = day(); if (c.cozyDay === d) return;
   const mine = c.biz && c.biz.type, slots = Object.values(T.town().house.slots || {});
   const n = Math.min(3, new Set(slots.filter(id => prodType(id) && prodType(id) !== mine)).size);
-  c.cozyDay = d; if (n) { T.coins(n); T.toast(W2(`🏡 Cozy home bonus: +${n} coin${n > 1 ? "s" : ""} for classmate-made decor.`, `🏡 Bono de hogar: +${n} moneda(s) por decoración de tus compañeros.`)); } save();
+  c.cozyDay = d; if (n) { T.coins(n); T.toast(W2(`🏡 Cozy home bonus: +${n} Smithbuck${n > 1 ? "s" : ""} for classmate-made decor.`, `🏡 Bono de hogar: +${n} Smithbuck(s) por decoración de tus compañeros.`)); } save();
 }
 EXT.marketTop.push(() => {
   const c = civ(), st = (c.stamps || 0) % STAMPS, sp = setProgress(), e = cur();
   return `<section class="panel cshop"><div class="eyebrow">🛍️ ${W2("Shop local","Compra local")}${e && e.kind === "buylocal" ? " · " + W2("Buy Local Week: 20% back!","Semana local: ¡20% de vuelta!") : ""}</div>
-    <div class="cstamps">${Array.from({length:STAMPS}, (_, i) => `<span class="${i < st ? "on" : ""}">${i < st ? "🛍️" : ""}</span>`).join("")}<small>${W2(`Buy from classmates: every ${STAMPS} purchases = 1 crate + 5 coins`, `Compra a compañeros: cada ${STAMPS} compras = 1 caja + 5 monedas`)}</small></div>
+    <div class="cstamps">${Array.from({length:STAMPS}, (_, i) => `<span class="${i < st ? "on" : ""}">${i < st ? "🛍️" : ""}</span>`).join("")}<small>${W2(`Buy from classmates: every ${STAMPS} purchases = 1 crate + 5 Smithbucks`, `Compra a compañeros: cada ${STAMPS} compras = 1 caja + 5 Smithbucks`)}</small></div>
     <div class="cset">${Object.entries(BIZ).map(([k, z]) => `<span class="${sp.have.has(k) ? "on" : ""}" title="${E(L2(z))}">${z.e}</span>`).join("")}
-      <small>${T.town().applied.prodset ? "🏅 " + W2("Collection complete!","¡Colección completa!") : W2(`Own one product from every kind of business: +${SET_BONUS} coins and a badge (${sp.n}/${sp.total})`, `Ten un producto de cada tipo de negocio: +${SET_BONUS} monedas y una insignia (${sp.n}/${sp.total})`)}</small></div>
-    <p class="muted" style="font-size:12px;margin:6px 0 0">${W2("Put classmate-made products in your house for a daily cozy-home bonus (up to 3 coins a day).","Pon productos de tus compañeros en tu casa para un bono diario (hasta 3 monedas al día).")}</p></section>`;
+      <small>${T.town().applied.prodset ? "🏅 " + W2("Collection complete!","¡Colección completa!") : W2(`Own one product from every kind of business: +${SET_BONUS} Smithbucks and a badge (${sp.n}/${sp.total})`, `Ten un producto de cada tipo de negocio: +${SET_BONUS} Smithbucks y una insignia (${sp.n}/${sp.total})`)}</small></div>
+    <p class="muted" style="font-size:12px;margin:6px 0 0">${W2("Put classmate-made products in your house for a daily cozy-home bonus (up to 3 Smithbucks a day).","Pon productos de tus compañeros en tu casa para un bono diario (hasta 3 Smithbucks al día).")}</p></section>`;
 });
 
 /* ---------------------------------------------------------------- tabs */
@@ -786,7 +804,7 @@ EXT.adminPanels.push({
       <div class="tlev"><label>${W2("Interest rate (% a week)","Tasa de interés (% semanal)")}<input type="number" min="0" max="10" step="0.5" value="${rate}" onchange="townEcon('rate',this.value)"></label></div>
       <p>${ev ? `${W2("Now","Ahora")}: <b>${EVENTS[ev.kind].e} ${EVENTS[ev.kind].en}</b>${ev.until ? " · " + W2("until","hasta") + " " + new Date(ev.until).toLocaleString() : ""} <button class="btn ghost" onclick="civEvent(null)">${W2("End it","Terminar")}</button>` : W2("No event running.","Ningún evento activo.")}</p>
       <div class="tsw">${Object.entries(EVENTS).map(([k, e]) => `<button class="btn" onclick="civEvent('${k}')">${e.e} ${e.en}</button>`).join("")}</div>
-      <p class="muted" style="font-size:12px">${W2("Events last one day. Each one changes Town prices or job pay and asks students an Econ check question (+2 coins).","Los eventos duran un día. Cambian precios o pagos y hacen una pregunta (+2 monedas).")}</p></section>
+      <p class="muted" style="font-size:12px">${W2("Events last one day. Each one changes Town prices or job pay and asks students an Econ check question (+2 Smithbucks).","Los eventos duran un día. Cambian precios o pagos y hacen una pregunta (+2 Smithbucks).")}</p></section>
     <section class="panel tadm"><div class="eyebrow">🗳️ ${W2("Elections and laws","Elecciones y leyes")}</div>
       <p>${c.mayor && c.mayor.sid ? W2("Mayor","Alcalde") + ": <b>" + E(c.mayor.name) + "</b>" : W2("No mayor yet.","Aún no hay alcalde.")}
         ${el ? ` · ${W2("Election","Elección")}: <b>${el.phase}</b>` : ""}</p>
@@ -944,7 +962,7 @@ EXT.projector.push(cid => {
 });
 
 /* every visit to the hub counts for the weekly league, even outside the Town */
-T.CIV = {civ, qCard, sheet, closeSheet, cleanText, flag, jobPay, day, week, dayN, hashN, img, bar, CLS, E, W2, C, store, SESS, NET, paint, cur, hasLaw, sub, xpSince, myXp,
+T.CIV = {answeredToday, certPay, unitPaychecks, civ, qCard, sheet, closeSheet, cleanText, flag, jobPay, day, week, dayN, hashN, img, bar, CLS, E, W2, C, store, SESS, NET, paint, cur, hasLaw, sub, xpSince, myXp,
   elec, get proj(){ return PROJ; }};
 window.CIVIC = {civ, week, goalProgress, unlocked, loanOwed, accrue, rollJobs, jobDone, EVENTS, LAWS, BIZ, UPGRADES, JOBS, get LEAGUE(){ return LEAGUE; }};
 })();

@@ -669,7 +669,7 @@ const Screens = {
         (st.lines || []).forEach(([k, v]) => { c.font = '700 24px ' + BODY; c.fillStyle = COL.ink; c.textAlign = 'left'; c.textBaseline = 'middle'; c.fillText(k, 360, y); c.textAlign = 'right'; c.fillText(String(v), 920, y); y += 34; });
         const pay = (paid.coins ? '+' + paid.coins + ' ' + (paid.coins === 1 ? Lang.t('coin', 'moneda') : Lang.t('coins', 'monedas')) + '  ·  ' : '') + '+' + paid.xp + ' XP';
         UI.text(c, pay, W / 2, 440, { size: 30, color: COL.green, stroke: 6 });
-        if (!paid.coins && st.coins > 0 && Reward.left() === 0) UI.text(c, Lang.t('(daily arcade coin limit reached)', '(límite diario de monedas)'), W / 2, 466, { size: 16, color: '#6B6F80', stroke: 0, font: BODY });
+        if (!paid.coins && st.coins > 0 && Reward.left() === 0) UI.text(c, Lang.t('(daily arcade Smithbuck limit reached)', '(límite diario de Smithbucks)'), W / 2, 466, { size: 16, color: '#6B6F80', stroke: 0, font: BODY });
         menu.draw(c); FX.draw(c);
       }
     };

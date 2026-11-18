@@ -140,10 +140,11 @@ const check = (n, ok, info) => { results.push((ok ? 'PASS ' : 'FAIL ') + n + (in
   await tab(A.p, 'jobs'); await A.p.screenshot({ path: SHOTS + '/civic_jobs.png', fullPage: true });
 
   /* 6. jobs + Home of the Week */
+  await B.p.evaluate(() => townDoor('open')); await A.p.waitForTimeout(500);
   await A.p.evaluate(async () => { townVisit('ben-t'); await new Promise(r => setTimeout(r, 500)); await civHotw('ben-t'); });
   await A.p.waitForTimeout(300); await A.p.screenshot({ path: SHOTS + '/civic_house.png', fullPage: true });
   const jobs = await A.p.evaluate(() => { const j = CIVIC.civ().jobs; return { picks: j.picks, done: j.picks.map(k => CIVIC.jobDone(k)), flags: j.flags }; });
-  check('jobs track visit and vote', jobs.flags.visit && jobs.flags.vote, jobs);
+  check('daily jobs are mostly class work, and still track visit and vote', jobs.picks[0] === 'answer10' && /^study/.test(jobs.picks[1]) && jobs.flags.visit && jobs.flags.vote, jobs);
   const pay = await A.p.evaluate(() => { const j = CIVIC.civ().jobs; const k = j.picks.find(k => CIVIC.jobDone(k)); if (!k) return null; const c0 = S.tokens; civCollect(k); return S.tokens - c0; });
   check('collect a finished job', pay >= 1, pay);
   const again = await A.p.evaluate(async () => { try { await civHotw('ben-t'); } catch(e){} return Object.keys(JSON.parse(localStorage.getItem('town.db'))).filter(k => k.includes('/hotw/')).length; });
@@ -162,10 +163,10 @@ const check = (n, ok, info) => { results.push((ok ? 'PASS ' : 'FAIL ') + n + (in
   await T.evaluate(() => { townTab('admin'); }); await T.waitForTimeout(700); await T.screenshot({ path: SHOTS + '/civic_admin.png', fullPage: true });
 
   /* 8. unit paychecks + shop local */
-  const up = await A.p.evaluate(async () => { CIVIC.civ().unitPaid = {}; CIVIC.civ().unitBack = false; const t0 = S.tokens;
-    S.certs.push({ code: 'X1', unit: 'Macro Unit 2', course: 'AP Economics', score: 90 }); await new Promise(r => setTimeout(r, 16000)); const t1 = S.tokens;
-    S.certs.push({ code: 'X2', unit: 'Macro Unit 2', course: 'AP Economics', score: 95 }); await new Promise(r => setTimeout(r, 16000)); return [t1 - t0, S.tokens - t1]; });
-  check('finishing a unit pays 15 coins, once per unit', up[0] === 15 && up[1] === 0, up);
+  const up = await A.p.evaluate(async () => { const t0 = S.tokens;
+    S.certs.push({ code: 'X1', unit: 'Macro Unit 2', course: 'AP Economics', score: 90 }); TOWN.CIV.unitPaychecks(); const t1 = S.tokens;
+    TOWN.CIV.unitPaychecks(); return [t1 - t0, S.tokens - t1]; });
+  check('a new certificate pays 15 Smithbucks, once', up[0] === 15 && up[1] === 0, up);
   const sl = await B.p.evaluate(() => ({ stamps: CIVIC.civ().stamps, flag: CIVIC.civ().jobs.flags.buylocal }));
   check('buying from a classmate stamps the Shop Local card', sl.stamps === 1 && sl.flag === 1, sl);
   await tab(B.p, 'market'); await B.p.screenshot({ path: SHOTS + '/civic_shoplocal.png' });

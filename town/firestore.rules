@@ -208,6 +208,15 @@ service cloud.firestore {
           && request.resource.data.body is string && request.resource.data.body.size() <= 400;
         allow update, delete: if owns(cid);
       }
+      // Knocking: a visitor asks to come in; only the owner answers (id = <owner>_<visitor>)
+      match /knocks/{id} {
+        allow read: if member(cid) || owns(cid);
+        allow create, update: if (isSid(cid, request.resource.data.from) && live(cid)
+            && id == request.resource.data.to + '_' + request.resource.data.from && request.resource.data.status == 'knock')
+          || (resource != null && isSid(cid, resource.data.to) && onlyChanges(['status','respondedAt'])
+            && request.resource.data.status in ['in','no']);
+        allow delete: if owns(cid);
+      }
       // Mayor's executive actions
       match /mayoracts/{id} {
         allow read: if member(cid) || owns(cid);
