@@ -235,6 +235,7 @@ function paintBank(el){
         <button class="btn primary" onclick="civBank('in')">${W2("Deposit","Depositar")}</button><button class="btn" onclick="civBank('out')">${W2("Withdraw","Retirar")}</button></div>
       <p class="muted" style="font-size:12px">${W2(`In 4 weeks, 20 coins grows to about ${(20 * Math.pow(1 + saveRate() / 700, 28)).toFixed(1)}: that's compound interest.`,
         `En 4 semanas, 20 monedas crecen a unas ${(20 * Math.pow(1 + saveRate() / 700, 28)).toFixed(1)}: eso es interés compuesto.`)}</p></section>
+    ${gameMoneyPanel()}
     <section class="panel"><div class="eyebrow">${W2("Loans and credit","Préstamos y crédito")}</div>
       <div class="ccredit"><b>${b.credit}</b><span>${creditWord(b.credit)}</span>${bar((b.credit - 300) / 550, b.credit >= 680 ? "#3BB273" : b.credit >= 600 ? "#E3A21A" : "#E4572E")}</div>
       ${l ? `<p>${W2("You owe","Debes")} <b>🪙 ${loanOwed()}</b> · ${W2("due","vence")} ${new Date(l.due).toLocaleDateString()}${l.late ? " ⚠️" : ""}</p>
@@ -247,6 +248,16 @@ function paintBank(el){
       ${b.hist.map(h => `<div class="chist"><span>${{in:"⬇️ " + W2("Deposit","Depósito"), out:"⬆️ " + W2("Withdrawal","Retiro"), interest:"✨ " + W2("Interest","Interés"),
         loan:"💵 " + W2("Loan","Préstamo"), repay:"✅ " + W2("Repaid","Pagado"), late:"⚠️ " + W2("Late, collected","Atrasado, cobrado")}[h.k] || h.k}</span>
         <b>${h.amt > 0 ? "+" : ""}${h.amt}</b><small class="muted">${new Date(h.at).toLocaleDateString()}</small></div>`).join("") || `<p class="muted">—</p>`}</section>`;
+}
+function gameMoneyPanel(){
+  if (typeof window.EARNINGS !== "function") return "";
+  const g = window.EARNINGS();
+  return `<section class="panel"><div class="eyebrow">💱 ${W2("Game money comes to town","El dinero de los juegos llega al pueblo")}</div>
+    <p class="muted">${W2(`Money you earn inside games turns into Town coins automatically (up to ${g.cap} a day). Spending in a game never costs Town coins.`,
+      `El dinero que ganas en los juegos se convierte solo en monedas del pueblo (hasta ${g.cap} al día). Gastar en un juego nunca cuesta monedas del pueblo.`)}</p>
+    ${g.src.map(s => `<div class="chist"><span><b>${E(s.name)}</b> · ${s.unit === "$" ? "$" + s.rate : s.rate + " " + s.unit} = 🪙1</span>
+      <b>+${s.moved}</b><small class="muted">${s.active ? (s.waiting ? W2(`${s.waiting} waiting for tomorrow`, `${s.waiting} esperan a mañana`) : W2("so far","hasta ahora")) : W2("not played yet","aún no juegas")}</small></div>`).join("")}
+    <p class="muted" style="font-size:12px">${W2(`Today: ${g.today}/${g.cap}. The arcade games and assignments already pay coins straight to you.`, `Hoy: ${g.today}/${g.cap}. Los juegos del arcade y las tareas ya te pagan monedas directamente.`)}</p></section>`;
 }
 window.civBank = function(dir){
   accrue(); const b = civ().bank, n = parseInt(document.getElementById("bAmt").value, 10);

@@ -751,19 +751,55 @@ function drainOutbox(){
   const now = readJSON("world.outbox") || [];
   try { localStorage.setItem("world.outbox", JSON.stringify(now.filter(e => !done.has(e.type + ":" + e.id)))); } catch(e){}
 }
+/* ---------- game money → Town coins ----------
+   Money earned inside games with their own currency (Money Moves dollars,
+   CFE Review Quest coins) also counts in the Town: every time a game's
+   balance goes UP, that gain converts to Town coins at the game's rate.
+   Spending inside the game never costs Town coins. A daily limit keeps the
+   Town economy sane; anything over it waits for the next day. */
+const EARN_CAP = 20;
+const EARN_SRC = [
+  {id:"mm", name:{en:"Money Moves", es:"Money Moves"}, rate:100, unit:"$",
+   read(){ const s = readJSON("money-moves-progress-v1"); return s && s.player && isFinite(+s.money) ? +s.money : null; }},
+  {id:"cfe", name:{en:"CFE Review Quest", es:"Misión de Repaso CFE"}, rate:25, unit:"🪙",
+   read(){ let t = 0, any = false;
+     for (let i = 0; i < localStorage.length; i++) { const k = localStorage.key(i); if (!/^cfeReviewQuest_v2/.test(k)) continue;
+       const db = readJSON(k) || {}; Object.values(db).forEach(p => { if (p && isFinite(+p.coins)) { t += +p.coins; any = true; } }); }
+     return any ? t : null; }}
+];
+function mirrorEarnings(){
+  const E = S.earn = S.earn || {seen:{}, credit:{}, moved:{}, day:null};
+  const d = today(); if (!E.day || E.day.d !== d) E.day = {d, n:0};
+  let paidNow = 0;
+  EARN_SRC.forEach(src => {
+    let v = null; try { v = src.read(); } catch(e){}
+    if (v == null) return;
+    const last = E.seen[src.id];
+    if (last == null) E.credit[src.id] = Math.min(20, Math.max(0, v) / src.rate);   /* first time: bring over what they already have, up to 20 coins */
+    else if (v > last) E.credit[src.id] = Math.min(200, (E.credit[src.id] || 0) + (v - last) / src.rate);
+    E.seen[src.id] = v;
+    const room = EARN_CAP - E.day.n, n = Math.min(Math.floor(E.credit[src.id] || 0), room);
+    if (n > 0) { E.credit[src.id] -= n; E.day.n += n; E.moved[src.id] = (E.moved[src.id] || 0) + n; S.tokens = (S.tokens | 0) + n; paidNow += n;
+      _payNotes.push(`+${n} ${WL("coins from","monedas de")} ${L(src.name)}`); }
+  });
+  return paidNow;
+}
+window.EARNINGS = () => ({cap:EARN_CAP, today:(S.earn && S.earn.day && S.earn.day.d === today()) ? S.earn.day.n : 0,
+  src:EARN_SRC.map(s => ({id:s.id, name:L(s.name), rate:s.rate, unit:s.unit, moved:(S.earn && S.earn.moved[s.id]) || 0,
+    waiting:Math.floor((S.earn && S.earn.credit[s.id]) || 0), active:(S.earn && S.earn.seen[s.id] != null)}))});
 let _syncing = false;
 function syncGames(){
   if (_syncing) return; _syncing = true;
   try {
     const before = JSON.stringify([S.xp, S.tokens, S.certs.length, S.avatar]);
-    syncCareer("mm"); syncCareer("cd2"); drainOutbox();
+    syncCareer("mm"); syncCareer("cd2"); drainOutbox(); mirrorEarnings();
     const avChanged = pullAvatarFromMM();
     if (JSON.stringify([S.xp, S.tokens, S.certs.length, S.avatar]) !== before || avChanged) { save(); paintBar(); }
     if (avChanged) refreshMe();
     if (_payNotes.length) { const n = _payNotes.splice(0); toast("🎉 " + n.slice(0, 2).join("  ·  ") + (n.length > 2 ? `  (+${n.length - 2})` : "")); }
   } finally { _syncing = false; }
 }
-window.addEventListener("storage", e => { if (!e.key || [CAREER.mm.key, CAREER.cd2.key, "world.outbox"].includes(e.key)) syncGames(); });
+window.addEventListener("storage", e => { if (!e.key || [CAREER.mm.key, CAREER.cd2.key, "world.outbox"].includes(e.key) || /^cfeReviewQuest_v2/.test(e.key)) syncGames(); });
 window.addEventListener("message", e => { if (e.origin === location.origin && e.data && e.data.world === "outbox") syncGames(); });
 window.addEventListener("focus", syncGames);
 document.addEventListener("visibilitychange", () => { if (!document.hidden) syncGames(); });
