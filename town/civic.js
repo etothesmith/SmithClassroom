@@ -581,7 +581,7 @@ function tally(rows){ const t = {}; rows.forEach(r => { t[r.for] = (t[r.for] || 
 function hotwWinner(){ const t = tally(HOTW_LAST); return t.length ? t[0][0] : null; }
 function watchHotw(){
   if (!SESS()) return () => {};
-  return store().watch(`${C()}/hotw`, {where:[["w","in",[week(), lastWeek()]]]}, rows => { if (!rows) return; HOTW = rows.filter(r => r.w === week()); HOTW_LAST = rows.filter(r => r.w === lastWeek());
+  return store().watch(`${C()}/hotw`, {where:[["w","in",[week(), lastWeek()]]]}, rows => { if (!rows || !SESS()) return; HOTW = rows.filter(r => r.w === week()); HOTW_LAST = rows.filter(r => r.w === lastWeek());
     const win = hotwWinner(); if (win === SESS().sid) T.once("hotw:" + lastWeek(), () => { T.town().crates++; T.persist(); T.toast(W2("🏆 Your house won Home of the Week! +1 crate.","🏆 ¡Tu casa ganó Casa de la Semana! +1 caja.")); }); });
 }
 EXT.streetBadge.push(p => { const s = [];
@@ -675,10 +675,11 @@ EXT.onClass.push((was, c) => {
   if (T.isTown() && ["hall","bank","jobs"].includes(T.tt) && (!was || JSON.stringify([was.goal, was.election, was.mayor, was.laws, was.customLaws, was.impeach, was.econ, was.event]) !== JSON.stringify([c.goal, c.election, c.mayor, c.laws, c.customLaws, c.impeach, c.econ, c.event]))) T.paintTown();
 });
 let BGS = [];
+EXT.onLeave.push(() => { BGS.forEach(u => { try { u(); } catch(e){} }); BGS = []; });
 EXT.onSession.push(() => {
   BGS.forEach(u => { try { u(); } catch(e){} }); BGS = [];
   rollJobs(); visitStreak(); xpSince("wk:" + week()); accrue();
-  BGS.push(store().watch(`${C()}/payouts`, {where:[["to","==",SESS().sid]]}, rows => { if (rows) settlePayouts(rows); }));
+  BGS.push(store().watch(`${C()}/payouts`, {where:[["to","==",SESS().sid]]}, rows => { if (rows && SESS()) settlePayouts(rows); }));
   BGS.push(watchHotw());
 });
 EXT.pubExtra.push(() => {

@@ -25,7 +25,7 @@ let MARKET = [], CHAT = [], PLAZA = {}, MY_SALES = [], MY_BUYS = [], T_FROM = []
 let toastEl = null;
 /* extension points used by town/civic.js (Town Hall, Bank, Jobs, businesses, events, plaza quiz) */
 const EXT = {tabs:[], onClass:[], onSession:[], priceMult:[], listCheck:[], onSold:[], plazaBack:[], plazaFront:[], plazaTap:[],
-             adminPanels:[], streetBadge:[], houseExtra:[], plazaSub:[], banner:[], pubExtra:[], projector:[]};
+             adminPanels:[], streetBadge:[], houseExtra:[], plazaSub:[], banner:[], pubExtra:[], projector:[], onLeave:[]};
 const run = (list, ...a) => list.forEach(f => { try { f(...a); } catch(e){ console.warn("town ext", e); } });
 
 /* ---------------------------------------------------------------- state */
@@ -78,7 +78,7 @@ function rollCrate(){
 }
 
 /* ---------------------------------------------------------------- cloud save */
-const EXTRA = /^(money-moves-progress|ag\.|cfeReviewQuest|cfd2|counsel|smittys|marginal|world\.avatar$)/i;
+const EXTRA = /^(money-moves-progress|ag\.|arc\.|cfeReviewQuest|cfd2|counsel|smittys|marginal|world\.avatar$)/i;
 function packSave(){
   const s = JSON.parse(JSON.stringify(S)); delete s.cfg;
   const extra = {}; for (let i = 0; i < localStorage.length; i++) { const k = localStorage.key(i);
@@ -86,10 +86,20 @@ function packSave(){
   return JSON.stringify({s, extra});
 }
 let _pushT = null;
-function cloudSoon(){ if (!NET || !SESS || NET.mode !== "cloud") return; clearTimeout(_pushT);
-  _pushT = setTimeout(() => { const blob = packSave(); if (blob.length < 900000) NET.pushSave(blob).catch(e => console.warn("cloud save", e)); }, 4000); }
+function cloudSoon(){ if (!NET || !SESS || NET.mode !== "cloud") return; clearTimeout(_pushT); _pushT = setTimeout(pushNow, 4000); }
+/* push right away; resolves true when the account has the latest progress */
+async function pushNow(){
+  clearTimeout(_pushT); if (!NET || !SESS || NET.mode !== "cloud") return false;
+  const blob = packSave(); if (blob.length >= 900000) { console.warn("cloud save too big", blob.length); return false; }
+  try { await NET.pushSave(blob); localStorage.setItem("town.cloudAt", String(Date.now())); return true; }
+  catch(e){ console.warn("cloud save", e); return false; }
+}
+/* games in frames (Money Moves, arcade, CFE quest…) save on their own: send those too */
+window.addEventListener("storage", e => { if (e.key && EXTRA.test(e.key)) cloudSoon(); });
+document.addEventListener("visibilitychange", () => { if (document.hidden && SESS) pushNow(); });
+setInterval(() => { if (SESS) cloudSoon(); }, 120000);
 const _save0 = window.save;
-window.save = function(){ S.savedAt = Date.now(); _save0(); cloudSoon(); };
+window.save = function(){ if (window.__wiping) return; S.savedAt = Date.now(); _save0(); cloudSoon(); };
 async function pullCloud(){
   if (NET.mode !== "cloud") return;
   const r = await NET.pullSave().catch(() => null);
@@ -98,10 +108,19 @@ async function pullCloud(){
   if (linked && (r.at || 0) <= (S.savedAt || 0)) { cloudSoon(); return; }
   try { const {s, extra} = JSON.parse(r.save);
     const keepLang = S.lang;
-    if (!linked) {
+    const blankLocal = !(S.xp > 0) && !(S.certs || []).length && !Object.keys(S.prog || {}).length && !(S.tokens > 0);
+    if (!linked && blankLocal) {
+      /* a fresh computer: the account is the whole story */
+      S = window.upgrade(s);
+      Object.entries(extra || {}).forEach(([k, v]) => { try { localStorage.setItem(k, v); } catch(e){} });
+      localStorage.setItem(linkKey, "1");
+    } else if (!linked) {
       /* first time this device meets this account: combine, never overwrite */
       const localTown = S.town; merge(s); S = window.upgrade(S);
       S.town = localTown && Object.keys(localTown.inv || {}).length ? localTown : (s.town || localTown);
+      /* anything the account has that this computer doesn't (avatar, classes, bank…) comes over */
+      Object.keys(s).forEach(k => { const cur = S[k];
+        if (cur == null || cur === "" || (typeof cur === "object" && !Array.isArray(cur) && !Object.keys(cur).length)) S[k] = s[k]; });
       Object.entries(extra || {}).forEach(([k, v]) => { const cur = localStorage.getItem(k);
         const done = j => { try { const o = JSON.parse(j); return o && o.progress ? Object.values(o.progress).filter(x => x && x.stage === "done").length : (j || "").length; } catch(e){ return 0; } };
         if (!cur || done(v) > done(cur)) try { localStorage.setItem(k, v); } catch(e){} });
@@ -235,7 +254,7 @@ function paintTown(){
     <div class="theadin"><div class="eyebrow">${esc(SESS.className || WL("Grenadier Town","Pueblo Grenadier"))}</div>
       <h1>${WL("Grenadier Town","Pueblo Grenadier")}</h1>
       <div class="tme">${esc(SESS.name)} · <img src="${icon("coin")}" alt="">${S.tokens} · 🎁 ${town().crates}
-        <button class="tlink" onclick="townLeave()">${WL("Switch account","Cambiar cuenta")}</button></div></div>
+        <button class="tlink" onclick="townLeave()">${WL("Sign out","Cerrar sesión")}</button></div></div>
   </section>
   ${EXT.banner.map(f => { try { return f() || ""; } catch(e){ return ""; } }).join("")}
   <nav class="tsub" role="tablist">${tabs.map(([k, ic, l]) => `<button role="tab" aria-selected="${TT === k}" onclick="townTab('${k}')">${ic} ${l}${k === "trades" ? '<b id="ttTradeN"></b>' : ""}</button>`).join("")}</nav>
@@ -255,17 +274,18 @@ function paintSub(){
 function paintJoin(){
   V().innerHTML = `${modeBanner()}
   <section class="panel raised thead" style="background-image:url(${TA}banner_town.jpg)"><div class="theadin">
-    <div class="eyebrow">${WL("New","Nuevo")}</div><h1>${WL("Grenadier Town","Pueblo Grenadier")}</h1>
-    <p>${WL("Walk around with your classmates, get a house, and buy, sell and trade.","Camina con tus compañeros, consigue una casa y compra, vende e intercambia.")}</p></div></section>
+    <div class="eyebrow">${WL("Your account","Tu cuenta")}</div><h1>${WL("Grenadier Town","Pueblo Grenadier")}</h1>
+    <p>${WL("Your Town ID is your account: it saves your progress, coins, avatar and games so they follow you to any computer.","Tu ID del pueblo es tu cuenta: guarda tu progreso, monedas, avatar y juegos para que te sigan a cualquier computadora.")}</p></div></section>
   <section class="panel tjoin">
-    <h2>${WL("Join your class","Únete a tu clase")}</h2>
+    <h2>${WL("Sign in or create your account","Inicia sesión o crea tu cuenta")}</h2>
+    <p class="muted" style="font-size:13px;margin:0">${WL("First time? Use a new PIN and your account is created. Coming back or on a new computer? Use the same name and PIN.","¿Primera vez? Elige un PIN y se crea tu cuenta. ¿Regresas o estás en otra computadora? Usa el mismo nombre y PIN.")}</p>
     <label>${WL("Class code (from Coach Smith)","Código de clase (de Coach Smith)")}<input id="jCode" maxlength="7" autocomplete="off" style="text-transform:uppercase" placeholder="ABC123"></label>
     <div class="tgrid2"><label>${WL("First name","Nombre")}<input id="jFirst" maxlength="20" autocomplete="given-name" value="${esc((S.name || "").split(" ")[0] || "")}"></label>
     <label>${WL("Last initial","Inicial del apellido")}<input id="jInit" maxlength="1" autocomplete="off" value="${esc(((S.name || "").split(" ")[1] || "").charAt(0))}"></label></div>
     <label>${WL("4-digit PIN (make one up and remember it)","PIN de 4 dígitos (invéntalo y recuérdalo)")}<input id="jPin" maxlength="4" inputmode="numeric" type="password" autocomplete="off"></label>
     <p class="muted" style="font-size:13px">${WL("Use your first name and last initial only. Your PIN lets you sign in on another computer and keeps your progress safe.",
       "Usa solo tu nombre y la inicial del apellido. Tu PIN te deja entrar en otra computadora y protege tu progreso.")}</p>
-    <button class="btn primary wide" id="jGo">${WL("Enter the Town","Entrar al Pueblo")}</button>
+    <button class="btn primary wide" id="jGo">${WL("Sign in","Entrar")}</button>
     <p id="jErr" class="terr" role="alert"></p>
   </section>${teacherLink()}`;
   const go = async () => {
@@ -281,13 +301,44 @@ function paintJoin(){
       if (r.err) { err.textContent = WL("Something went wrong. Try again.", "Algo salió mal. Inténtalo de nuevo."); return; }
       if (!S.name) S.name = first;
       await startSession(NET.session()); TT = "plaza"; paintTown();
-      toast(WL(`Welcome to town, ${first}! You got 2 welcome crates.`, `¡Bienvenido, ${first}! Recibiste 2 cajas de bienvenida.`));
+      pushNow();
+      toast(WL(`Signed in as ${first}. Your progress now follows you to any computer.`, `Entraste como ${first}. Tu progreso ahora te sigue a cualquier computadora.`));
     } catch(e){ console.warn(e); err.textContent = WL("Couldn't reach the Town. Check your internet and try again.", "No se pudo conectar. Revisa tu internet e inténtalo de nuevo."); }
   };
   document.getElementById("jGo").onclick = go;
   document.getElementById("jPin").onkeydown = e => { if (e.key === "Enter") go(); };
 }
-window.townLeave = function(){ if (NET && SESS) NET.leavePlaza(); stopBg(); NET.leave(); SESS = null; CLS = null; TT = "plaza"; paintTown(); };
+/* Sign out. Progress lives in the account, so on a shared computer we clear
+   this browser afterwards (only once the cloud copy is confirmed). */
+window.townLeave = function(){
+  const box = document.getElementById("certAsk"); if (!box) return;
+  box.classList.remove("hidden");
+  box.innerHTML = `<div class="certask tcard" role="dialog" aria-modal="true"><h2>${WL("Sign out","Cerrar sesión")}</h2>
+    <p>${NET.mode === "cloud" ? WL("Your progress, coins and games are saved to your account. Sign in on any computer with your class code, name and PIN to pick up where you left off.",
+      "Tu progreso, monedas y juegos están guardados en tu cuenta. Entra en cualquier computadora con tu código, nombre y PIN para seguir.") : WL("Practice mode: progress stays on this device.","Modo práctica: el progreso se queda en este dispositivo.")}</p>
+    ${NET.mode === "cloud" ? `<button class="btn primary wide" onclick="townSignOut(true)">${WL("Sign out and clear this computer (shared computers)","Cerrar sesión y limpiar esta computadora (compartidas)")}</button>` : ""}
+    <button class="btn wide" onclick="townSignOut(false)">${WL("Sign out, keep my progress on this computer","Cerrar sesión y dejar mi progreso aquí")}</button>
+    <button class="btn ghost wide" onclick="townCloseCard()">${WL("Cancel","Cancelar")}</button><p id="soErr" class="terr"></p></div>`;
+};
+window.townSignOut = async function(clear){
+  const err = document.getElementById("soErr");
+  if (clear) {
+    if (err) err.textContent = WL("Saving to your account…","Guardando en tu cuenta…");
+    save(); const ok = await pushNow();
+    if (!ok) { if (err) err.textContent = WL("Couldn't reach your account, so nothing was cleared. Check the internet and try again.","No se pudo guardar en tu cuenta, así que no se borró nada. Revisa el internet e inténtalo de nuevo."); return; }
+  }
+  try { NET.leavePlaza(); } catch(e){}
+  run(EXT.onLeave); stopBg(); NET.leave(); SESS = null; CLS = null; TT = "plaza";
+  if (clear) {
+    window.__wiping = true; S = blank();   /* nothing may write the old progress back before the reload */
+    const kill = []; for (let i = 0; i < localStorage.length; i++) { const k = localStorage.key(i);
+      if (k === "smiths.save" || k === "tokenhall.save" || EXTRA.test(k) || /^town\.(linked|cloudAt|session)/.test(k) || k === "world.outbox") kill.push(k); }
+    kill.forEach(k => { try { localStorage.removeItem(k); } catch(e){} });
+    try { sessionStorage.clear(); } catch(e){}
+    location.reload(); return;
+  }
+  townCloseCard(); paintTown();
+};
 
 /* ---------------------------------------------------------------- plaza */
 let PL = null;   /* plaza runtime */
@@ -768,14 +819,14 @@ function drawPlazaOthers(){
   run(EXT.plazaFront, cx);
 }
 
-window.TOWN = {boot, get net(){ return NET; }, get session(){ return SESS; }, town, crateTick,
+window.TOWN = {boot, get net(){ return NET; }, get session(){ return SESS; }, town, crateTick, pushNow,
   EXT, get cls(){ return CLS; }, get pub(){ return PUB; }, get tt(){ return TT; }, get plaza(){ return PL; }, get adminCid(){ return ADMIN_CID; },
   viewSub: u => VIEW_SUBS.push(u), publishNow, paintSub, paintTown, paintAdmin, toast, coins, persist, once, addItem, has, freeInv, itemArt, itemName, artImg, rarityChip,
   ITEMS, L2, TA, isTown, shopMult, priceOf, rr, publishSoon, lots, adminSet: patch => adminSet(patch)};
 boot();
 })();
 
-/* Campus: a sign for the new Town at the top of the campus screen */
+/* Campus: your account (the Town ID) at the top of the campus screen */
 (function(){
   const _vc = window.viewCampus;
   if (typeof _vc !== "function") return;
@@ -783,9 +834,19 @@ boot();
     _vc.apply(this, arguments);
     const v = document.getElementById("view"); if (!v || document.getElementById("townSign")) return;
     const d = document.createElement("section"); d.id = "townSign"; d.className = "panel raised tsign";
-    d.innerHTML = `<div><div class="eyebrow">${WL("New","Nuevo")}</div><h2 style="margin:2px 0">🏙️ ${WL("Grenadier Town is open!","¡El Pueblo Grenadier está abierto!")}</h2>
-      <p style="margin:0">${WL("Hang out with your class, get a house, and trade.","Pasa el rato con tu clase, consigue una casa e intercambia.")}</p></div>
-      <button class="btn primary" onclick="go('town')">${WL("Go to Town","Ir al Pueblo")} →</button>`;
+    const T = window.TOWN, s = T && T.session, cloud = T && T.net && T.net.mode === "cloud";
+    if (s) {
+      const at = +localStorage.getItem("town.cloudAt") || 0;
+      d.innerHTML = `<div><div class="eyebrow">☁️ ${WL("Your account","Tu cuenta")}</div><h2 style="margin:2px 0">${esc(s.name)} · ${esc(s.className || "")}</h2>
+        <p style="margin:0">${cloud ? WL("Your progress, coins and games follow you to any computer.","Tu progreso, monedas y juegos te siguen a cualquier computadora.") + (at ? ` <span class="muted">· ${WL("saved","guardado")} ${new Date(at).toLocaleTimeString([], {hour:"numeric", minute:"2-digit"})}</span>` : "")
+          : WL("Practice mode: saved on this device only.","Modo práctica: solo en este dispositivo.")}</p></div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn primary" onclick="go('town')">${WL("Go to Town","Ir al Pueblo")} →</button>
+        <button class="btn ghost" onclick="go('town');setTimeout(townLeave,300)">${WL("Sign out","Cerrar sesión")}</button></div>`;
+    } else {
+      d.innerHTML = `<div><div class="eyebrow">🔐 ${WL("Save your progress","Guarda tu progreso")}</div><h2 style="margin:2px 0">${WL("Sign in with your Town ID","Entra con tu ID del pueblo")}</h2>
+        <p style="margin:0">${WL("Use your class code, name and a PIN, and your progress, coins and games follow you to any computer.","Usa tu código de clase, nombre y un PIN, y tu progreso, monedas y juegos te siguen a cualquier computadora.")}</p></div>
+        <button class="btn primary" onclick="go('town')">${WL("Sign in / create account","Entrar / crear cuenta")} →</button>`;
+    }
     v.insertBefore(d, v.firstChild);
   };
 })();
