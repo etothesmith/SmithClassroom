@@ -907,12 +907,12 @@ function showBonusQ(){
       <span class="chip warn">${bonusLeft()} ${WL("coins left today","monedas hoy")}</span></div>
     <div class="muted" style="font-size:12px;font-weight:700;margin-top:6px">${esc(L(u.title))}</div>
     <h3 style="font-size:20px;margin:6px 0 12px;font-family:var(--body)">${esc(L(it.q))}</h3>
-    <div class="opts" style="display:grid;gap:8px">${c.map((t, i) => `<button class="opt" onclick="answerBonus(${i})">${esc(t)}</button>`).join("")}</div>
+    <div class="opts" style="display:grid;gap:8px">${shuffled(c.map((t, i) => [t, i])).map(([t, i]) => `<button class="opt" data-i="${i}" onclick="answerBonus(${i})">${esc(t)}</button>`).join("")}</div>
     <div id="bonusWhy"></div></div>`;
 }
 function answerBonus(i){
   const {it} = BONUS.qs[BONUS.i], ok = i === it.a, btns = document.querySelectorAll("#bonus .opt");
-  btns.forEach((b, k) => { b.disabled = true; if (k === it.a) b.classList.add("right"); else if (k === i) b.classList.add("wrong"); });
+  btns.forEach(b => { const k = +b.dataset.i; b.disabled = true; if (k === it.a) b.classList.add("right"); else if (k === i) b.classList.add("wrong"); });
   S.prog[it.id] = S.prog[it.id] || {seen:0, right:0}; S.prog[it.id].seen++; if (ok) S.prog[it.id].right++;
   if (ok) { BONUS.right++; if (bonusLeft()) { S.bonus.n++; S.tokens++; BONUS.paid++; } S.xp += 10; }
   save(); paintBar();
