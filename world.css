@@ -146,6 +146,7 @@ table th{color:var(--dim)}
 .startmenu button.tiny{font-size:14px;background:rgba(255,255,255,.85)}
 @keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.04)}}
 #title .hero{left:auto;right:2%;height:58%;max-height:520px;filter:drop-shadow(0 10px 0 rgba(0,0,0,.18))}
+#title .hero.coach{height:52%;max-height:470px;right:6%;bottom:4%;top:auto}
 @media(max-width:700px){#title .hero{display:none}}
 
 /* language picker */

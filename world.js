@@ -35,7 +35,9 @@ const banner = n => `${V2}world/banners/${n}.jpg`;
 const seal = n => `${V2}ui/seals/${n}.webp`;
 const icon = n => `${V2}ui/icons/ico_${n}.webp`;
 const badgeImg = n => `${V2}ui/badges/${n}.webp`;
-const npc = p => `${V2}npc/npc_smith_${p}.webp`;
+/* Coach Smith appears as his own sprites from before 2.0 (blue robe, pink tee) */
+const COACH_POSE = {wave:"idle", point:"point", cheer:"cheer", think:"hmm", clipboard:"idle", thumbs:"cheer"};
+const npc = p => `assets/smith_${COACH_POSE[p] || "idle"}.png`;
 const myCourses = () => { const all = allPacks().map(p => p.id);
   const m = (S.myCourses || []).filter(id => all.includes(id)); return m.length ? m : all; };
 
@@ -597,7 +599,7 @@ window.showTitle = function(){
   if (TEACHER_OK) { TEACHER_OK = false; TAB = "campus"; }
   const t = document.getElementById("title"); t.classList.remove("hidden");
   t.innerHTML = `<img class="v2bg" src="${V2}world/title_bg.jpg" alt=""><div class="veil"></div>
-    <img class="hero" src="${npc("wave")}" alt="">
+    <img class="hero coach" id="titleHero" src="assets/smith_idle.png" alt="Coach Smith">
     <div class="top"><div class="v2mark">
       <img class="crest" src="${V2}ui/emblem_crest.webp" alt="">
       <div class="v2word">Smith's <span>Classroom</span></div>
@@ -610,6 +612,11 @@ window.showTitle = function(){
       <button class="tiny" onclick="showCredits()">${T_.credits}</button>
       <button class="tiny" onclick="teacherSignIn()">${T_.teacherSignIn}</button>
     </div></div>`;
+  /* Coach Smith's own sprites from before 2.0: he gestures between two poses */
+  clearInterval(titleAnim);
+  const hero = document.getElementById("titleHero");
+  if (hero) { let k = 0; const poses = ["idle", "idle", "point", "idle", "cheer"];
+    titleAnim = setInterval(() => { k = (k + 1) % poses.length; hero.src = `assets/smith_${poses[k]}.png`; }, 900); }
 };
 window.mmNewsCheck = function(){};          /* 2.0's welcome replaces the old Money Moves pop-up */
 window.hideTitle = function(){
