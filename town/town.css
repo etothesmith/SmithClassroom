@@ -171,3 +171,57 @@
 .cstamps span,.cset span{width:34px;height:34px;border-radius:50%;border:2.5px dashed var(--char);display:grid;place-items:center;font-size:18px;background:#fff;opacity:.5}
 .cstamps span.on,.cset span.on{border-style:solid;background:#FFF1C9;opacity:1}
 .cstamps small,.cset small{flex:1;min-width:180px;font-weight:700;font-size:13px}
+
+/* ---- careers, Downtown, requests, mayor (town/careers.js) ---- */
+.kprog{display:flex;align-items:center;gap:5px;margin:6px 0}
+.kprog span{width:24px;height:24px;border:2.5px solid var(--char);border-radius:8px;background:#fff;display:grid;place-items:center;font-weight:900;font-size:13px}
+.kprog span.on{background:#3BB273;color:#fff}
+.kprog small{margin-left:6px;font-weight:800}
+.kres{display:flex;flex-wrap:wrap;gap:6px;align-items:center;background:#FFF8E6;border:2px dashed var(--char);border-radius:12px;padding:8px 10px;margin:8px 0}
+.kres span{background:#fff;border-radius:99px;padding:2px 9px;font-size:13px;font-weight:700}
+.kdt{display:flex;gap:14px;align-items:center;flex-wrap:wrap}
+.kdt>div:first-child{flex:1;min-width:240px}
+.kdt h2{margin:2px 0;font-size:22px}
+.kme{display:flex;gap:10px;align-items:center;background:#E8F7EC;border:2.5px solid var(--char);border-radius:14px;padding:8px 12px;font-size:34px;min-width:260px}
+.kme>div{flex:1;font-size:14px}
+.kme small{display:block;font-weight:700;color:var(--muted,#666)}
+.kme .cbar{height:10px;margin:4px 0}
+.kpaper{background:#FBF7EE;font-family:Georgia,serif}
+.kpaper article{border-top:1px solid #d9cfb8;padding:8px 0}
+.kpaper article p{margin:4px 0}
+.kmap{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px;margin:12px 0;padding:14px;border-radius:20px;
+  background:linear-gradient(#cfe9ff,#e8f5ff 30%,#d8efc9 30%,#c8e6b4);border:3px solid var(--char)}
+.kb{position:relative;border:3px solid var(--char);border-radius:16px;background:#fff;padding:10px 8px 8px;cursor:pointer;display:grid;justify-items:center;gap:2px;text-align:center;
+  box-shadow:0 5px 0 var(--char);font:inherit;transition:transform .12s}
+.kb:hover{transform:translateY(-2px)}
+.kb.mine{background:#FFF1C9}
+.kb.land{background:#F3FFEF;cursor:default}
+.kb img,.kb .tie{width:96px;height:96px;object-fit:contain;font-size:64px}
+.kb b{font-size:14px;line-height:1.15}
+.kb small{font-size:11px;color:var(--muted,#666);font-weight:700}
+.khire{position:absolute;top:-10px;left:50%;transform:translateX(-50%) rotate(-3deg);background:#E4572E;color:#fff;font:900 11px var(--bod,sans-serif);font-style:normal;
+  border:2px solid var(--char);border-radius:8px;padding:1px 7px;white-space:nowrap}
+.kq{position:absolute;top:6px;right:6px;background:#2F7FD8;color:#fff;font-style:normal;font-weight:900;font-size:12px;border-radius:99px;min-width:22px;height:22px;display:grid;place-items:center;border:2px solid var(--char)}
+.kbld{display:flex;gap:14px;align-items:center;flex-wrap:wrap}
+.kbld>img,.kbld>.tie{width:110px;height:110px;object-fit:contain;font-size:72px}
+.kbld>div{flex:1;min-width:220px}
+.kbld h2{margin:2px 0}
+.kshift{background:#F3FFEF}
+.kreq{display:grid;grid-template-columns:48px 1fr auto;gap:10px;align-items:center;padding:8px 0;border-bottom:1px dashed var(--line,#ddd)}
+.kreq>img,.kreq>.tie{width:48px;height:48px;object-fit:contain;font-size:34px}
+.kreq .cbar{height:10px;margin:2px 0 6px}
+.kreqb{display:flex;flex-wrap:wrap;gap:6px;justify-content:flex-end}
+.kperks{margin:6px 0;padding-left:4px;list-style:none;display:grid;gap:6px}
+.kperks li{font-weight:700}
+.kban{background:#FFF1C9;display:flex;flex-wrap:wrap;gap:6px 14px;align-items:center;padding:10px 14px}
+.kcar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;padding:10px 14px}
+.kcar .btn{margin-left:auto}
+.kopen{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:8px;margin:10px 0}
+.kopen button{border:2.5px solid var(--char);border-radius:12px;background:#fff;padding:8px;cursor:pointer;display:grid;justify-items:center;font-size:30px;font-family:inherit}
+.kopen b{font-size:13px}
+.kopen small{font-size:11px;font-weight:700;color:var(--muted,#666)}
+.kapp{border:2px solid var(--line,#ddd);border-radius:12px;padding:8px 10px;margin:6px 0;background:#fff}
+.kapp p{margin:3px 0;font-size:14px}
+.kapp small{display:block;color:var(--muted,#666)}
+.kst{display:inline-flex;gap:4px;align-items:center;background:var(--cab2,#f6f1e4);border-radius:99px;padding:2px 4px 2px 10px;margin:2px}
+.kst .btn{padding:2px 8px;font-size:12px;min-height:0}

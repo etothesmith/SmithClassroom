@@ -230,7 +230,7 @@ function accrue(){
   save();
 }
 function log(k, amt){ const b = civ().bank; b.hist.unshift({k, amt:Math.round(amt * 100) / 100, at:Date.now()}); b.hist = b.hist.slice(0, 12); }
-const loanLimit = () => { const c = civ().bank.credit; return c >= 750 ? 40 : c >= 680 ? 30 : c >= 600 ? 20 : 10; };
+const loanLimit = () => { const c = civ().bank.credit, b = civ().bank.boost; return (c >= 750 ? 40 : c >= 680 ? 30 : c >= 600 ? 20 : 10) + (b && b.until > Date.now() ? b.n : 0); };
 const loanRate = () => fedRate() + 3;
 function loanOwed(){ const l = civ().bank.loan; if (!l) return 0; const weeks = Math.max(1, Math.ceil((Date.now() - l.at) / (7 * 864e5)));
   return l.amt + Math.ceil(l.amt * l.rate / 100 * weeks) - (l.paid || 0); }
@@ -592,7 +592,9 @@ function paintJobs(el){
 }
 window.civCollect = function(k){
   const j = civ().jobs; if (j.paid[k] || !jobDone(k)) return; j.paid[k] = 1;
-  const n = Math.max(1, Math.round(jobPay() * ((JOBS[k] && JOBS[k].pay) || 1))); T.coins(n); T.persist(); paint(); T.toast(W2(`+${n} coin${n > 1 ? "s" : ""}`, `+${n} moneda(s)`));
+  const c = civ(), sick = c.sick && c.sick.since, fed = c.fed === day();
+  let n = Math.max(1, Math.round(jobPay() * ((JOBS[k] && JOBS[k].pay) || 1)));
+  if (sick) n = Math.max(1, Math.floor(n / 2)); if (fed) n += 1; T.coins(n); T.persist(); paint(); T.toast(W2(`+${n} coin${n > 1 ? "s" : ""}`, `+${n} moneda(s)`));
 };
 /* job flags from things that already happen in the Town */
 const wrap = (name, k) => { const f = window[name]; if (typeof f !== "function") return; window[name] = function(){ const r = f.apply(this, arguments); flag(k); return r; }; };
@@ -852,7 +854,8 @@ window.civTally = async function(){
   if (tally.length > 1 && tally[0][1] === tally[1][1] && !confirm(W2("It's a tie! Keep the first candidate who signed up as the winner? (Cancel to keep voting open.)","¡Empate! ¿Gana quien se inscribió primero? (Cancelar para seguir votando.)"))) return;
   const w = tally[0];
   T.adminSet({election:{...e, phase:"closed", result:{sid:w[2], name:w[0], votes:w[1], total:votes.length, tally:tally.map(x => [x[0], x[1]])}},
-              mayor:{sid:w[2], name:w[0], since:Date.now(), eid:e.id}});
+              mayor:{sid:w[2], name:w[0], since:Date.now(), eid:e.id},
+              mayors:[...(c.mayors || []).filter(x => x.eid !== e.id), {sid:w[2], name:w[0], since:Date.now(), eid:e.id}].slice(-30)});
 };
 window.civLawTally = async function(pid){
   const c = await getCls(), p = (await store().list(`classes/${c.id}/proposals`)).find(x => x.id === pid); if (!p) return;
@@ -941,5 +944,7 @@ EXT.projector.push(cid => {
 });
 
 /* every visit to the hub counts for the weekly league, even outside the Town */
+T.CIV = {civ, qCard, sheet, closeSheet, cleanText, flag, jobPay, day, week, dayN, hashN, img, bar, CLS, E, W2, C, store, SESS, NET, paint, cur, hasLaw, sub, xpSince, myXp,
+  elec, get proj(){ return PROJ; }};
 window.CIVIC = {civ, week, goalProgress, unlocked, loanOwed, accrue, rollJobs, jobDone, EVENTS, LAWS, BIZ, UPGRADES, JOBS, get LEAGUE(){ return LEAGUE; }};
 })();

@@ -25,7 +25,7 @@ let MARKET = [], CHAT = [], PLAZA = {}, MY_SALES = [], MY_BUYS = [], T_FROM = []
 let toastEl = null;
 /* extension points used by town/civic.js (Town Hall, Bank, Jobs, businesses, events, plaza quiz) */
 const EXT = {tabs:[], onClass:[], onSession:[], priceMult:[], listCheck:[], onSold:[], plazaBack:[], plazaFront:[], plazaTap:[],
-             adminPanels:[], streetBadge:[], houseExtra:[], plazaSub:[], banner:[], pubExtra:[], projector:[], onLeave:[], onBuy:[], marketTop:[]};
+             adminPanels:[], streetBadge:[], houseExtra:[], plazaSub:[], banner:[], pubExtra:[], projector:[], onLeave:[], onBuy:[], marketTop:[], nameTag:[]};
 const run = (list, ...a) => list.forEach(f => { try { f(...a); } catch(e){ console.warn("town ext", e); } });
 
 /* ---------------------------------------------------------------- state */
@@ -74,7 +74,7 @@ function crateTick(){
 }
 function rollCrate(){
   const r = Math.random(); const tier = r < 0.01 ? 3 : r < 0.10 ? 2 : r < 0.40 ? 1 : 0;
-  const pool = Object.values(ITEMS).filter(i => i.r === tier && !i.biz); return pool[Math.floor(Math.random() * pool.length)].id;
+  const pool = Object.values(ITEMS).filter(i => i.r === tier && !i.biz && !i.office); return pool[Math.floor(Math.random() * pool.length)].id;
 }
 
 /* ---------------------------------------------------------------- cloud save */
@@ -406,7 +406,7 @@ function paintPlaza(el){
 }
 /* sign spots match the painted plaza: street of houses (left), gift shop (top middle), market stalls (right) */
 const SIGNS = [{x:150, y:250, go:"homes", e:"🏡", l:["Homes","Casas"]}, {x:820, y:150, go:"market", e:"🛒", l:["Market","Mercado"]},
-               {x:500, y:178, go:"shop", e:"🎁", l:["Shop","Tienda"]}];
+               {x:500, y:178, go:"shop", e:"🎁", l:["Shop","Tienda"]}, {x:660, y:110, go:"downtown", e:"🗺️", l:["Downtown","Centro"]}];
 /* walkable brick: right of the sidewalk and below the shops */
 const clampWalk = (x, y) => { y = Math.max(225, Math.min(PLAZA_H - 12, y)); x = Math.max(y < 330 ? 300 : 250, Math.min(PLAZA_W - 25, x)); return [x, y]; };
 function stepTo(o, dt, sp){ if (o.tx == null) return; const dx = o.tx - o.x, dy = o.ty - o.y, d = Math.hypot(dx, dy);
@@ -437,7 +437,8 @@ function drawPerson(p){
     cx.drawImage(im, p.x - w / 2, p.y - h + bob, w, h); cx.restore(); }
   else { cx.fillStyle = p.me ? "#E3A21A" : "#2F7FD8"; cx.beginPath(); cx.arc(p.x, p.y - 60, 16, 0, Math.PI * 2); cx.fill(); cx.fillRect(p.x - 12, p.y - 44, 24, 40); }
   cx.font = "800 13px 'Nunito', sans-serif"; cx.textAlign = "center";
-  const label = p.name || ""; const tw = cx.measureText(label).width + 12;
+  const tags = EXT.nameTag.map(f => { try { return f(p.sid) || ""; } catch(e){ return ""; } }).join("");
+  const label = (tags ? tags + " " : "") + (p.name || ""); const tw = cx.measureText(label).width + 12;
   cx.fillStyle = p.me ? "#E3A21A" : "rgba(29,27,46,.82)"; rr(cx, p.x - tw / 2, p.y + 4, tw, 19, 9); cx.fill();
   cx.fillStyle = p.me ? "#1d1b2e" : "#fff"; cx.fillText(label, p.x, p.y + 18);
   const said = CHAT.find(c => c.sid === p.sid && Date.now() - c.at < 7000);

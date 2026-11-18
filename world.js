@@ -396,6 +396,13 @@ window.viewAssignments = function(){
 };
 /* ---------- What's new: pinned to the bulletin board ---------- */
 const NEWS = [
+  {id:"2026-11-18f", d:"Nov 18", e:"🗺️", t:["Downtown is open: get a job!","¡El Centro abrió: consigue trabajo!"],
+   b:["14 town jobs (Doctor, Vet, Reporter, Banker, Firefighter, Marshal, Judge, Tutor, Mail Carrier, Chef, Builder, Sanitation, Park Ranger, Photographer). Send a résumé, do your shift every day, and get promoted. Ask for new landmarks on the Community Board, and run for mayor: the mayor gets a salary and the Mansion.",
+      "14 trabajos en el pueblo (médico, veterinario, reportero, banquero, bombero, alguacil, juez, tutor, cartero, chef, constructor, limpieza, guardaparques, fotógrafo). Envía tu currículum, haz tu turno cada día y asciende. Pide obras nuevas en el Tablero comunitario y postúlate a alcalde: el alcalde recibe salario y la Mansión."]},
+  {id:"2026-11-18e", d:"Nov 18", e:"📚", t:["190 new practice questions","190 preguntas nuevas de práctica"],
+   b:["Every unit in all four classes got new questions, in English and Spanish, with explanations.","Cada unidad de las cuatro clases recibió preguntas nuevas, en inglés y español, con explicaciones."]},
+  {id:"2026-11-18d", d:"Nov 18", e:"👚", t:["The first new outfits are in","Llegaron los primeros conjuntos nuevos"],
+   b:["Pink crop hoodie, lavender cardigan, ruffle blouse, tied plaid flannel and a striped boat-neck tee, in the Locker and Money Moves.","Sudadera corta rosa, cárdigan lavanda, blusa con volantes, franela a cuadros anudada y camiseta a rayas, en el Casillero y Money Moves."]},
   {id:"2026-11-18c", d:"Nov 18", e:"👗", t:["30 new outfits are on the way","30 conjuntos nuevos en camino"],
    b:["Twenty new looks for girls and ten for guys are being drawn now, for the Locker and Money Moves. Plus 16 new pieces of furniture and pets for your Town house.",
       "Se están dibujando veinte looks nuevos para chicas y diez para chicos, para el Casillero y Money Moves. Además, 16 muebles y mascotas nuevos para tu casa del Pueblo."]},

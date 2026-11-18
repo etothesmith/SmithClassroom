@@ -76,6 +76,9 @@ window.TOWN_ITEMS = Object.fromEntries([
  ["prod_radio","table","📻","Fixed-up radio","Radio reparado",3],["prod_robot","trophy","🤖","Mini robot","Mini robot",4],
  ["prod_smoothie","table","🥤","Smoothie","Batido",1],["prod_fruit_bowl","table","🍓","Fruit bowl","Frutero",2]
 ].forEach(([id, slot, e, en, es, cost]) => { window.TOWN_ITEMS[id] = {id, slot, r:0, p:0, e, name:{en, es}, biz:true, cost}; });
+/* mayor-only furniture: given when a student takes office, never in crates or the shop */
+[["mayor_desk","table","🗄️","Mayor's desk","Escritorio del alcalde"],["mayor_flag","wall","🚩","Town flag","Bandera del pueblo"],["mayor_portrait","art","🖼️","Official mayor portrait","Retrato oficial del alcalde"]]
+  .forEach(([id, slot, e, en, es]) => { window.TOWN_ITEMS[id] = {id, slot, r:3, p:0, e, name:{en, es}, office:true}; });
 window.TOWN_RARITY = [{en:"Common",es:"Común",c:"#8A94A6"},{en:"Rare",es:"Raro",c:"#2F7FD8"},{en:"Epic",es:"Épico",c:"#8A5CD8"},{en:"Legendary",es:"Legendario",c:"#E3A21A"}];
 window.TOWN_HOUSES = [
   ["cottage", 0,  "Cottage", "Casita"],
