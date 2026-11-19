@@ -655,7 +655,7 @@ window.showTitle = function(){
       <span class="v2ribbon">2.0 · ${WL("Brand-new campus","Campus totalmente nuevo")}</span></div></div>
     <div class="bottom"><div class="startmenu">
       <button class="go" id="startBtn" onclick="hideTitle()">▶ ${T_.pressStart}</button>
-      <button class="towngo" id="townStartBtn" onclick="hideTitle();go('town')">🏙️ ${WL("Enter Grenadier Town","Entrar al Pueblo Grenadier")}</button>
+      <button class="towngo" id="townStartBtn" onclick="hideTitle();go('town')">🏙️ ${WL("Enter Smithtopia","Entrar a Smithtopia")}</button>
       <button onclick="showInstructions()">${WL("How it works","Cómo funciona")}</button>
       <button onclick="openTheme()">♪ ${T_.theme}</button>
       <button onclick="showLangPick()">🌐 Language · Idioma</button>

@@ -1,4 +1,4 @@
-/* Grenadier Town — uses the 2.0 tokens from world.css */
+/* Smithtopia — uses the 2.0 tokens from world.css */
 .tbanner{background:#FFF1C9;border:2.5px dashed var(--goldfill);border-radius:14px;padding:8px 12px;margin:0 0 12px;font-weight:700;font-size:14px}
 .thead{background:#3a9ad9 center/cover;min-height:150px;display:flex;align-items:flex-end}
 .theadin{background:rgba(255,255,255,.93);border:2.5px solid var(--char);border-radius:14px;padding:8px 14px;display:inline-block;max-width:100%}

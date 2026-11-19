@@ -1,5 +1,5 @@
 /* =============================================================================
-   GRENADIER TOWN — the bigger world (town/world2.js)
+   SMITHTOPIA — the bigger world (town/world2.js)
    1. Neighborhoods that open as the class learns: Lake Eola Waterfront
       (fishing with class questions), the Theme Park (speed-round rides) and
       the Space Coast (unit launch missions). They unlock when the class
@@ -219,7 +219,7 @@ const STORIES = {
     ["Hurricane Hattie is forming in the Atlantic. The town has five days to get ready.","El huracán Hattie se forma en el Atlántico. El pueblo tiene cinco días para prepararse."],
     ["Stores are running low on water and batteries. Prices are climbing. Stock up the shelters.","Las tiendas se quedan sin agua y baterías. Los precios suben. Abastezcan los refugios."],
     ["Board up the windows and check on neighbors. Every right answer is another plank.","Tapen las ventanas y revisen a los vecinos. Cada respuesta correcta es otra tabla."],
-    ["Hattie makes landfall tonight. Is Grenadier Town ready?","Hattie toca tierra esta noche. ¿Está listo el pueblo?"],
+    ["Hattie makes landfall tonight. Is Smithtopia ready?","Hattie toca tierra esta noche. ¿Está listo el pueblo?"],
     ["The storm has passed. Time to see how the town held up.","La tormenta pasó. Veamos cómo resistió el pueblo."]]},
   fair:{e:"🎡", item:"e_fair", t:["The Grenadier Fair","La Feria Grenadier"], ch:[
     ["The Grenadier Fair comes to town on Friday, and every booth still has to be built.","La Feria Grenadier llega el viernes y hay que construir todos los puestos."],
@@ -234,7 +234,7 @@ const STORIES = {
     ["Debate night. Know the issues!","Noche de debate. ¡Conozcan los temas!"],
     ["Polls are closed. Was the town ready to count every vote?","Cerraron las casillas. ¿Estuvo listo el pueblo para contar cada voto?"]]},
   founders:{e:"📜", item:"e_founders", t:["Founders' Week","Semana Fundadora"], ch:[
-    ["Grenadier Town is writing its charter, and the founders need help.","El pueblo escribe su carta fundacional y los fundadores necesitan ayuda."],
+    ["Smithtopia is writing its charter, and the founders need help.","El pueblo escribe su carta fundacional y los fundadores necesitan ayuda."],
     ["What powers should the town have? What rights do townspeople keep?","¿Qué poderes debe tener el pueblo? ¿Qué derechos conservan los vecinos?"],
     ["Checks and balances: nobody should hold all the power.","Pesos y contrapesos: nadie debe tener todo el poder."],
     ["The town meeting votes tomorrow. Make your case.","La asamblea vota mañana. Presenta tu argumento."],
@@ -514,7 +514,7 @@ function paintMap(el){
   if (SUBV === "album") return paintAlbum(el, back);
   if (SUBV && MORE.views[SUBV]) return MORE.views[SUBV](el, back);
   SUBV = null; const avg = classAvgCerts();
-  el.innerHTML = `<section class="panel raised"><div class="eyebrow">🧭 ${W2("Map of Grenadier Town","Mapa del Pueblo")}</div><h2>${W2("Where to?","¿A dónde?")}</h2>
+  el.innerHTML = `<section class="panel raised"><div class="eyebrow">🧭 ${W2("Map of Smithtopia","Mapa de Smithtopia")}</div><h2>${W2("Where to?","¿A dónde?")}</h2>
       <div style="margin-top:6px">${needsHtml(false)}</div></section>
     ${storyPanel(false)}
     <div class="kmap wmap">${PLACES().map(p => { const lock = p.district && !isOpen(p.k), need = p.district ? DISTRICTS[p.k].need : 0;

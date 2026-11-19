@@ -273,6 +273,6 @@ table th{color:var(--dim)}
 .tile{width:100%}
 .tiles>div{min-width:0}
 
-/* title screen: straight into Grenadier Town */
+/* title screen: straight into Smithtopia */
 #title .startmenu button.towngo{background:linear-gradient(180deg,#E0394B,#B81F31);color:#fff;border:3px solid #FFD24A;font-size:20px;
   box-shadow:0 5px 0 #7A1220,0 0 24px rgba(224,57,75,.45);text-shadow:0 2px 0 rgba(0,0,0,.25)}

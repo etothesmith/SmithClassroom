@@ -323,3 +323,55 @@ Captain Rosa, a friendly middle-aged Latina woman boat captain with dark hair in
 | world_places | plaza, homes, downtown, waterfront, park, space, towns, album, ride_coaster, ride_drop, ride_flume, (spare) → `v2/assets/town/world/` |
 | world_story | story_hurricane, story_fair, story_election, story_founders, story_lakes, story_market → `v2/assets/town/world/` |
 Items go to `v2/assets/town/items/<id>.webp`. Cut with `tools/town/process_civic.py`-style slicing (magenta key), and clothes with `tools/extract_clothes.py`.
+
+---
+
+# CHAT D: Smithtopia shop items (3 images)
+No attachments. Start a new chat. Each sheet is 5 columns by 4 rows.
+
+### Paste this first
+```
+You are drawing game art for "Smith's Classroom 2.0", a bright, friendly school game for high-school students in Orlando, Florida. For every image in this chat:
+- A sheet of separate objects in a grid on a flat pure magenta #FF00FF background, each object centered in its own cell, all at the same scale, with plenty of space between them.
+- Clean cartoon style: thick dark charcoal outlines (#2B2B2B), flat bright colors with one soft shade tone, seen from a slight three-quarter view.
+- Nothing may use magenta or hot pink (use soft pastel pink instead).
+- Absolutely no text, letters, numbers or logos. No people.
+Reply "ready" and wait.
+```
+
+### Step 24 → `hangout_items_1.png`  (Gamer room, Sports fan, Civics)
+- [x] done
+```
+Sheet, 5 columns by 4 rows, on a flat #FF00FF magenta background. Twenty home items, one per cell, same scale, no text:
+Row 1: a DJ booth table with two turntables and a small mixer with glowing blue buttons; a flat-screen TV on a wall mount showing colorful abstract shapes; a black game controller; a gaming headset with glowing teal ear cups; a coiled strip of rainbow LED lights glowing.
+Row 2: a mirrored disco ball hanging from a short chain, with sparkles; a giant purple beanbag chair; a rainbow-striped rectangular rug seen at an angle; a small snack vending machine with rows of colorful snacks behind glass; a mini basketball hoop with an orange rim and a small backboard.
+Row 3: a rectangular rug that looks like a wooden basketball court with white lines; a brown football on a small wooden stand with a black marker squiggle on it; a white bowling pin with two red stripes; a red-and-gold sports jersey in a wooden frame (no numbers or letters); a wall shelf holding three pairs of colorful sneakers.
+Row 4: a short section of red stadium bleachers with three steps; a green ping-pong table with a net and two paddles; a square green turf rug with one white stripe; a rolled-open parchment scroll in a gold frame with a feather quill (only wavy lines, no letters); a framed vintage green banknote with ornate borders (no numbers, no faces).
+```
+
+### Step 25 → `hangout_items_2.png`  (Space, Florida beach)
+- [x] done
+```
+Same style. Sheet, 5 columns by 4 rows, on a flat #FF00FF magenta background. Twenty home items, one per cell, same scale, no text:
+Row 1: a kid's bed shaped like a red-and-white rocket ship; a round rug shaped like a blue planet with a ring; a small dome star projector casting little yellow stars; a desk lamp shaped like a silver rocket; a brass telescope on a wooden tripod.
+Row 2: a framed poster of a purple galaxy with stars; a small toy astronaut figure in a white suit with a gold mirrored visor (no face showing); a potted alien plant with curly teal leaves and glowing tips; a striped hammock hanging between two short wooden posts; a striped folding beach chair with a small umbrella.
+Row 3: a small orange tree with oranges in a terracotta pot; a sandy-colored rug with a starfish and a seashell on it; a glowing pastel-blue jellyfish lamp; a small wooden box full of seashells; a turquoise surfboard with a white hibiscus flower design, standing up.
+Row 4: a small bamboo tiki bar with a thatched straw roof; a small white mini fridge with a cold blue glow inside; a big golden throne with red velvet cushions; a low wooden futon with a gray mattress and two pillows; a green sleeping bag rolled out with a pillow and a small lantern.
+```
+
+### Step 26 → `hangout_items_3.png`  (Cozy, Creator studio)
+- [x] done
+```
+Same style. Sheet, 5 columns by 4 rows, on a flat #FF00FF magenta background. Seventeen home items, one per cell, same scale, no text. The last row has only two objects; leave the last three cells empty magenta.
+Row 1: a white hanging nest chair shaped like a woven basket with a cushion, on a stand; a fluffy cream shag rug; three small succulents in matching white pots; lucky bamboo stalks in a glass vase with pebbles; a cute red-and-white mushroom-shaped lamp glowing softly.
+Row 2: a round mirror with a gold frame; a pastel-pink neon heart sign glowing; a teapot and two teacups on a small tray; a red electric guitar; a black keyboard piano on a stand.
+Row 3: a podcast microphone on a desk arm with a foam cover; a wall of colorful vinyl records in square frames; a skateboard deck with a bright flame pattern hanging on the wall; a wooden painting easel holding a canvas with a sunset; a vintage brown film camera with a strap.
+Row 4: a small wooden chess table with black and white pieces; a colorful puzzle cube.
+```
+
+## For Claude: where Chat D goes
+| File | Cells → ids (left to right, row by row) |
+|---|---|
+| hangout_items_1 | table_dj, wall_tv, trophy_controller, trophy_headphones, lamp_led, lamp_disco, sofa_bean_giant, rug_rainbow, table_vending, wall_hoop, rug_court, trophy_football, trophy_bowling, art_jersey, wall_sneakers, sofa_bleachers, table_pingpong, rug_turf, art_constitution, art_dollar |
+| hangout_items_2 | bed_rocket, rug_planet, lamp_star, lamp_rocket, table_telescope, art_space, trophy_astronaut, plant_alien, bed_hammock, sofa_beachchair, plant_orange, rug_sand, lamp_jellyfish, trophy_shell, wall_surfboard, table_tiki, table_minifridge, sofa_throne, bed_futon, bed_campout |
+| hangout_items_3 | sofa_hangchair, rug_shag, plant_succulents, plant_bamboo, plant_mushroom, wall_mirror, wall_neon_heart, table_tea, wall_guitar, table_piano, trophy_mic, art_records, art_skate, table_easel, trophy_camera, table_chess, trophy_cube |

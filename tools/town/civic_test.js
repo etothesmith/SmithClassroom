@@ -1,4 +1,4 @@
-/* Grenadier Town civic features, end to end in practice mode (no Firebase):
+/* Smithtopia civic features, end to end in practice mode (no Firebase):
      python3 -m http.server 8765 &   NODE_PATH=$(npm root -g) node tools/town/civic_test.js
    One teacher tab and two student tabs share the practice-mode database. */
 const { chromium } = require('playwright');
