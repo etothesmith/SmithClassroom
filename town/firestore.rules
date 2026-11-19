@@ -235,6 +235,67 @@ service cloud.firestore {
               && !(request.resource.data.sid in cls(cid).get('muted', {}))));
         allow delete: if owns(cid);
       }
+      // Live (town/live.js): period raid hits, one doc per student per day
+      match /raid/{id} {
+        allow read: if member(cid) || owns(cid);
+        allow create, update: if isSid(cid, request.resource.data.sid) && live(cid)
+          && id == request.resource.data.day + '_' + request.resource.data.sid
+          && request.resource.data.n is int && request.resource.data.n >= 0 && request.resource.data.n <= 200;
+        allow delete: if owns(cid);
+      }
+      // Quiz duels: the challenger creates; the opponent can only add their score
+      match /duels/{id} {
+        allow read: if member(cid) || owns(cid);
+        allow create: if isSid(cid, request.resource.data.a) && live(cid) && request.resource.data.a != request.resource.data.b
+          && request.resource.data.status == 'open' && request.resource.data.bS == -1
+          && request.resource.data.aS is int && request.resource.data.aS >= 0 && request.resource.data.aS <= 5
+          && request.resource.data.qs is list && request.resource.data.qs.size() <= 5;
+        allow update: if resource.data.status == 'open' && isSid(cid, resource.data.b)
+          && onlyChanges(['bS','bT','status']) && request.resource.data.status == 'done'
+          && request.resource.data.bS is int && request.resource.data.bS >= 0 && request.resource.data.bS <= 5;
+        allow delete: if owns(cid);
+      }
+      // Town Feud: one entry per student per week; the side can't change once picked
+      match /feud/{id} {
+        allow read: if member(cid) || owns(cid);
+        allow create: if isSid(cid, request.resource.data.sid) && live(cid)
+          && id == request.resource.data.week + '_' + request.resource.data.sid && request.resource.data.side in [0, 1]
+          && request.resource.data.pts == 0;
+        allow update: if owns(cid) || (isSid(cid, resource.data.sid) && live(cid)
+          && request.resource.data.side == resource.data.side && request.resource.data.sid == resource.data.sid
+          && request.resource.data.pts is int && request.resource.data.pts >= 0 && request.resource.data.pts <= 60
+          && request.resource.data.arg is string && request.resource.data.arg.size() <= 140);
+        allow delete: if owns(cid);
+      }
+      match /feudvotes/{id} {
+        allow read: if member(cid) || owns(cid);
+        allow create: if isSid(cid, request.resource.data.voter) && live(cid) && request.resource.data.voter != request.resource.data.target
+          && id == request.resource.data.week + '_' + request.resource.data.voter + '_' + request.resource.data.target;
+        allow delete: if owns(cid);
+      }
+      // High-fives: preset messages only (no free text)
+      match /kudos/{id} {
+        allow read: if member(cid) || owns(cid);
+        allow create: if isSid(cid, request.resource.data.from) && live(cid) && request.resource.data.from != request.resource.data.to
+          && request.resource.data.k in ['great','streak','house','study','work','kind'];
+        allow delete: if owns(cid);
+      }
+      // Reviews of town workers: one per reviewer per worker per week
+      match /reviews/{id} {
+        allow read: if member(cid) || owns(cid);
+        allow create, update: if owns(cid) || (isSid(cid, request.resource.data.by) && live(cid) && request.resource.data.by != request.resource.data.worker
+          && id == request.resource.data.week + '_' + request.resource.data.by + '_' + request.resource.data.worker
+          && request.resource.data.stars is int && request.resource.data.stars >= 1 && request.resource.data.stars <= 5
+          && request.resource.data.note is string && request.resource.data.note.size() <= 100);
+        allow delete: if owns(cid);
+      }
+      // Weekly mystery: one accusation per student per week
+      match /heist/{id} {
+        allow read: if member(cid) || owns(cid);
+        allow create: if isSid(cid, request.resource.data.sid) && live(cid)
+          && id == request.resource.data.week + '_' + request.resource.data.sid && request.resource.data.ok is bool;
+        allow delete: if owns(cid);
+      }
       // Mayor's executive actions
       match /mayoracts/{id} {
         allow read: if member(cid) || owns(cid);

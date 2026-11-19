@@ -217,7 +217,8 @@ window.carApply = function(j){
     ${mine ? `<p class="tnote">📨 ${W2("You already applied. Coach Smith will decide. You can update your résumé below.","Ya enviaste tu solicitud. Coach Smith decidirá. Puedes actualizar tu currículum.")}</p>` : ""}
     <div class="kres"><b>📄 ${W2("Your résumé","Tu currículum")}</b>
       <span>⭐ XP ${S.xp | 0}</span><span>🎓 ${(S.certs || []).length} ${W2("certificates","certificados")}</span><span>🔥 ${civ().streak.n} ${W2("day streak","días seguidos")}</span>
-      <span>💳 ${W2("Credit","Crédito")} ${b.credit}</span>${civ().biz ? `<span>🏪 ${W2("Business owner","Dueño de negocio")}</span>` : ""}${past.length ? `<span>💼 ${E(past.join(", "))}</span>` : ""}</div>
+      <span>💳 ${W2("Credit","Crédito")} ${b.credit}</span>${civ().biz ? `<span>🏪 ${W2("Business owner","Dueño de negocio")}</span>` : ""}${past.length ? `<span>💼 ${E(past.join(", "))}</span>` : ""}
+      ${(EXT.resumeExtra || []).map(f => { try { return f.html(j); } catch(e){ return ""; } }).join("")}</div>
     <label class="cform">${W2("Why do you want this job? (2–3 sentences)","¿Por qué quieres este trabajo? (2–3 oraciones)")}<textarea id="kWhy1" maxlength="240" rows="3">${E(mine ? mine.why : "")}</textarea></label>
     <label class="cform">${W2("What skills or experience make you good at it?","¿Qué habilidades o experiencia tienes para hacerlo bien?")}<textarea id="kWhy2" maxlength="240" rows="3">${E(mine ? mine.skills : "")}</textarea></label>
     <label class="cform">${W2("Reference (a classmate or teacher who'd vouch for you)","Referencia (un compañero o maestro que te recomiende)")}<input id="kRef" maxlength="40" value="${E(mine ? mine.ref : "")}"></label>
@@ -231,7 +232,8 @@ window.carSend = async function(j){
   const k = car(), b = civ().bank;
   try {
     await store().set(`${C()}/apps/${j}_${me()}`, {job:j, sid:me(), uid:store().uid(), name:SESS().name, why, skills, ref, status:"pending", at:Date.now(),
-      stats:{xp:S.xp | 0, certs:(S.certs || []).length, streak:civ().streak.n, credit:b.credit, biz:!!civ().biz, past:(k.hist || []).map(h => h.job).slice(-4)}});
+      stats:Object.assign({xp:S.xp | 0, certs:(S.certs || []).length, streak:civ().streak.n, credit:b.credit, biz:!!civ().biz, past:(k.hist || []).map(h => h.job).slice(-4)},
+        ...(EXT.resumeExtra || []).map(f => { try { return f.stats(j); } catch(e){ return {}; } }))});
     closeSheet(); T.toast(W2("📨 Application sent! Coach Smith reviews applications and does the hiring.","📨 ¡Solicitud enviada! Coach Smith revisa y contrata."));
   } catch(e){ err.textContent = W2("Couldn't send it right now.","No se pudo enviar."); }
 };
@@ -703,7 +705,8 @@ EXT.adminPanels.push({
     T.viewSub(store().watch(`classes/${cid}/apps`, {where:[["status","==","pending"]]}, rows => { const box = document.getElementById("aApps"); if (!box || !rows) return;
       box.innerHTML = rows.sort((a, b) => a.at - b.at).map(a => { const j = CAREERS[a.job] || {e:"?", title:[a.job]}, st = a.stats || {}, full = (s[a.job] || []).length >= (j.seats || 1);
         return `<div class="kapp"><b>${j.e} ${E(a.name)} → ${j.title[0]}</b>
-          <small>⭐ ${st.xp | 0} XP · 🎓 ${st.certs | 0} · 🔥 ${st.streak | 0} · 💳 ${st.credit || "?"}${st.biz ? " · 🏪" : ""}${(st.past || []).length ? " · 💼 " + st.past.map(p => CAREERS[p] ? CAREERS[p].title[0] : p).join(", ") : ""}</small>
+          <small>⭐ ${st.xp | 0} XP · 🎓 ${st.certs | 0} · 🔥 ${st.streak | 0} · 💳 ${st.credit || "?"}${st.biz ? " · 🏪" : ""}${(st.past || []).length ? " · 💼 " + st.past.map(p => CAREERS[p] ? CAREERS[p].title[0] : p).join(", ") : ""}
+            ${st.match != null ? `<br>🎯 ${st.match}% ${W2("match","compatible")} · ✅ ${st.todoDays | 0} ${W2("days of daily jobs","días de trabajos")} · 🎓 ${st.mastered | 0} ${W2("standards","estándares")}${st.reviews ? ` · ⭐ ${st.stars} (${st.reviews})` : ""}${(st.letters || []).length ? ` · 📜 ${st.letters.length} ${W2("letters","cartas")} (${st.letters.map(x => window.LIVE && LIVE.LETTERS[x] ? LIVE.LETTERS[x].e : "").join("")})` : ""}` : ""}</small>
           <p><i>${W2("Why","Por qué")}:</i> ${E(a.why)}</p><p><i>${W2("Skills","Habilidades")}:</i> ${E(a.skills)}</p>${a.ref ? `<p><i>${W2("Reference","Referencia")}:</i> ${E(a.ref)}</p>` : ""}
           <div class="cyn"><button class="btn primary" onclick="carHire('${a.id}')">✅ ${W2("Hire","Contratar")}${full ? " " + W2("(replaces someone)","(reemplaza)") : ""}</button><button class="btn ghost" onclick="carDeny('${a.id}')">✖ ${W2("Not this time","Esta vez no")}</button></div></div>`; }).join("")
         || `<p class="muted" style="font-size:13px">${W2("No applications waiting.","No hay solicitudes pendientes.")}</p>`; }));

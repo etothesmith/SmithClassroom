@@ -392,3 +392,81 @@
 .wcatch>span img{width:200px;height:130px;object-fit:contain}
 .wnpc>span img{width:84px;height:120px;object-fit:contain;object-position:bottom}
 .wnpcc>span:first-child img{width:44px;height:60px;object-fit:contain}
+/* ===== Live tab (town/live.js) */
+.lvnav{display:flex;gap:6px;overflow-x:auto;padding:2px 2px 10px;scrollbar-width:none;position:sticky;top:0;z-index:5}
+.lvnav::-webkit-scrollbar{display:none}
+.lvnav button{flex:0 0 auto;display:flex;flex-direction:column;align-items:center;gap:1px;min-width:64px;padding:8px 10px;border-radius:16px;border:2.5px solid var(--char,#1d1b2e);background:#fff;font:800 18px/1 'Nunito',sans-serif;position:relative;cursor:pointer;box-shadow:0 3px 0 var(--char,#1d1b2e)}
+.lvnav button span{font-size:11px;letter-spacing:.02em}
+.lvnav button.on{background:#F2B33D;transform:translateY(2px);box-shadow:0 1px 0 var(--char,#1d1b2e)}
+.lvnav button i{position:absolute;top:-6px;right:-4px;background:#E5484D;color:#fff;font:800 11px/18px 'Nunito',sans-serif;min-width:18px;border-radius:9px;font-style:normal}
+.lvhero{text-align:center;background:linear-gradient(180deg,#2a2550,#3d2f6b);color:#fff}
+.lvhero.on{background:linear-gradient(180deg,#5b1f2a,#2a2550);animation:lvglow 2.4s ease-in-out infinite}
+.lvhero .muted{color:#d9d4ff}
+@keyframes lvglow{50%{box-shadow:0 0 0 3px #E5484D55,0 8px 30px #E5484D55}}
+.lvlive{display:inline-block;background:#E5484D;color:#fff;font:900 11px/1 'Nunito',sans-serif;padding:5px 9px;border-radius:99px;letter-spacing:.06em;animation:lvblink 1.2s steps(2) infinite}
+.lvoff{display:inline-block;background:#ffffff22;font:800 11px/1 'Nunito',sans-serif;padding:5px 9px;border-radius:99px}
+@keyframes lvblink{50%{opacity:.55}}
+.lvboss{display:flex;flex-direction:column;align-items:center;cursor:pointer;margin:6px 0}
+.lvboss span{font-size:84px;line-height:1.05;animation:lvbob 1.6s ease-in-out infinite;filter:drop-shadow(0 6px 0 #0004)}
+.lvboss.sleep span{animation:none;filter:grayscale(.6) drop-shadow(0 6px 0 #0004);opacity:.75}
+.lvboss.down span{animation:wpop .6s ease-out}
+.lvboss b{font:900 20px 'Nunito',sans-serif}
+.lvboss small{opacity:.85;font-weight:700;max-width:340px}
+@keyframes lvbob{50%{transform:translateY(-6px) rotate(-3deg)}}
+.lvfocus{background:#fff3;border-radius:12px;padding:8px 10px;font-size:13px;margin:8px 0 0}
+.panel .lvfocus{background:#FFF4C9;color:#1d1b2e}
+.lvgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:12px 0}
+@media (max-width:560px){.lvgrid{grid-template-columns:repeat(2,1fr)}}
+.lvcard{position:relative;text-align:left;display:flex;flex-direction:column;gap:2px;padding:14px;border-radius:18px;border:2.5px solid var(--char,#1d1b2e);background:#fff;cursor:pointer;box-shadow:0 4px 0 var(--char,#1d1b2e);font-family:'Nunito',sans-serif;transition:transform .08s}
+.lvcard:active{transform:translateY(3px);box-shadow:0 1px 0 var(--char,#1d1b2e)}
+.lvcard span{font-size:30px}.lvcard b{font-size:15px}.lvcard small{font-size:12px;color:#666;font-weight:700}
+.lvcard i{position:absolute;top:10px;right:10px;width:11px;height:11px;border-radius:50%;background:#E5484D;box-shadow:0 0 0 3px #E5484D44;animation:lvblink 1.2s steps(2) infinite}
+.lvtop{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin:10px 0}
+.lvtop span{background:#fff2;border:1.5px solid #fff5;border-radius:99px;padding:3px 9px;font-size:12px;font-weight:800}
+.panel:not(.lvhero) .lvtop span{background:#FFF4C9;border-color:#F2B33D}
+.lvppl{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0}
+.lvppl .btn small{opacity:.7}
+.lvrec{display:flex;gap:8px;margin:6px 0 10px}
+.lvrec div{flex:1;text-align:center;background:#F5F3FF;border-radius:14px;padding:8px 4px}
+.lvrec b{display:block;font:900 26px 'Nunito',sans-serif}.lvrec small{font-weight:800;color:#666;font-size:11px}
+.lvrival{background:#FFE9E9;border-radius:12px;padding:8px 10px;display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.lvrival .btn{margin-left:auto}
+.lvscore{font-size:22px;text-align:center}
+.lvwrong{background:#FFE1E1 !important;border-color:#E5484D !important}
+.lvwhy{margin-top:10px}
+.lvboth{background:#EEF6FF;border-radius:12px;padding:8px 10px;font-size:13px}
+.lvtug{position:relative;height:34px;border:2.5px solid var(--char,#1d1b2e);border-radius:99px;background:#5B8DEF;overflow:hidden;margin:10px 0;display:flex;justify-content:space-between;align-items:center}
+.lvtug i{position:absolute;left:0;top:0;bottom:0;background:#E5484D;transition:width .6s}
+.lvtug span{position:relative;color:#fff;font:900 12px 'Nunito',sans-serif;padding:0 10px;text-shadow:0 1px 0 #0006}
+.lvsides{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.lvsides>section:first-child .eyebrow{color:#E5484D}.lvsides>section:last-child .eyebrow{color:#5B8DEF}
+@media (max-width:560px){.lvsides{grid-template-columns:1fr}}
+.lvarg{border-bottom:1.5px dashed #ddd;padding:6px 0;display:flex;flex-wrap:wrap;align-items:center;gap:4px}
+.lvarg p{margin:0;flex:1 1 100%;font-weight:700}.lvarg small{color:#666;flex:1}
+.lvclues{display:grid;gap:8px}
+.lvclues .on{background:#FFF4C9;border:2px solid #F2B33D;border-radius:12px;padding:10px;font-weight:800}
+.lvsus{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+@media (max-width:560px){.lvsus{grid-template-columns:repeat(2,1fr)}}
+.lvsus div{text-align:center;border:2px solid #ddd;border-radius:14px;padding:8px 4px;display:flex;flex-direction:column;align-items:center;gap:4px}
+.lvsus span{font-size:42px}.lvsus b{font-size:12px}
+.lvsus .guilty{border-color:#E5484D;background:#FFE9E9}.lvsus i{color:#E5484D;font-weight:900;font-style:normal}
+.lvkg{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0}
+.lvstars{display:flex;justify-content:center;gap:4px;margin:6px 0}
+.lvstars button{font-size:34px;background:none;border:0;cursor:pointer;color:#bbb;line-height:1}
+.lvstars button.on{color:#F2B33D;transform:scale(1.1)}
+.lvletter{display:flex;gap:10px;align-items:flex-start;background:#FFFBF0;border:1.5px solid #F2E3B8;border-radius:12px;padding:10px;margin:6px 0}
+.lvletter span{font-size:26px}.lvletter p{margin:0;font-family:Georgia,serif;font-style:italic}.lvletter small{display:block;font-style:normal;font-family:'Nunito',sans-serif;font-weight:800;color:#666;margin-top:4px}
+.lvlet{flex-basis:100%;display:flex;flex-direction:column;gap:3px;margin-top:4px}.lvlet small{font-size:11px}
+.lvmatch{background:#E7F8EE;color:#1E7A46;border-radius:99px;padding:1px 8px;font-style:normal;font-weight:900;font-size:12px}
+.lvjob{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1.5px dashed #eee}
+.lvjob>span{font-size:28px}.lvjob>div{flex:1}.lvjob small{display:block;color:#666;font-weight:700;font-size:12px}
+.lvstd{display:flex;align-items:center;gap:8px;padding:7px 0;border-bottom:1.5px dashed #eee}
+.lvstd>div{flex:1;font-size:13px}.lvstd small{color:#666;font-weight:700}
+.lvstd.done b{color:#1E7A46}
+.lvban{display:flex;align-items:center;gap:10px;flex-wrap:wrap;cursor:pointer}
+.lvban.on{background:linear-gradient(90deg,#FFE9E9,#fff)}
+.lvban .btn{margin-left:auto}
+.lvtab{width:100%;border-collapse:collapse;font-size:13px}.lvtab td,.lvtab th{padding:5px 6px;border-bottom:1px solid #eee;text-align:left;vertical-align:top}
+.lvbad{color:#C62828;font-weight:900}.lvgood{color:#1E7A46;font-weight:900}
+.lvproj{display:flex;gap:14px;align-items:center;justify-content:center;background:#2a2550;color:#fff;border-radius:18px;padding:10px 18px;margin:10px auto;max-width:720px}
+.lvproj>span{font-size:64px}.lvproj>div{flex:1}.lvproj b{font-size:22px}

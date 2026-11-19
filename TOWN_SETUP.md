@@ -48,3 +48,19 @@ Teacher controls live in **Town → Teacher: manage the Town**:
 - **Economy events and the Fed**: set the weekly interest rate for the Town Bank, and start a one-day event (inflation, tariff, recession, boom or supply shock).
 - **Elections and laws**: open sign-ups, open voting, then close the polls to count. When the mayor proposes a law, count the votes, or strike it down as the Supreme Court.
 - **Plaza quiz**: pick a course, start a question, and reveal it. Use "Show on the board" to run it from the projector.
+
+## Live, standards and the app (v2.1)
+
+**Live tab (town/live.js).** Period Raids (Mon–Fri 7:00–1:30; right answers in class or in town hit the class boss), Quiz Duels, the weekly Town Feud debate, the weekly Mystery, high-fives, worker reviews, recommendation letters, "Jobs that fit you" and the Standards Passport.
+
+- Teacher panel → **🔥 Live**: turn raids on/off, open raids all day (after school or for testing), and pick a **focus standard** (double raid damage, and it shows on every student's to-do).
+- Teacher panel → **🛂 Standards**: class mastery for every standard, weakest first, with the names of students below 60%. 🎯 makes one the focus.
+- Teacher panel → **⚖️ Feud arguments** and **⭐ Worker reviews**: read everything and delete anything.
+- Job applications now show the student's match %, days of daily jobs finished, standards mastered, star reviews and letters.
+- The projector board shows the raid boss and the top hitters above the chat.
+
+**Standards.** `bank_plus.js` ties every question to a standard (Florida B.E.S.T. SS.912.E / FL / CG, or AP Macro / AP Gov course units) and adds 160 new questions (842 total).
+
+**Firestore rules.** Publish `town/firestore.rules` again: it adds `raid`, `duels`, `feud`, `feudvotes`, `kudos`, `reviews` and `heist`.
+
+**The app.** `manifest.webmanifest`, `sw.js` and `app.js` make the site installable (📲 in the top bar shows the steps for each device). Pages and scripts always load fresh from the network; the saved copy is only for offline use. Bump `VERSION` in `sw.js` and `APP_VERSION` + `NOTES` in `app.js` when you ship a new update, so students see "What's New" once.
