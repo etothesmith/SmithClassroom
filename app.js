@@ -10,7 +10,7 @@
    ========================================================================== */
 (function(){
 "use strict";
-const APP_VERSION = "3.1";
+const APP_VERSION = "3.2";
 const es = () => typeof S !== "undefined" && S.lang === "es";
 const t = (en, sp) => es() ? sp : en;
 const esc = s => String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
@@ -65,10 +65,10 @@ window.appClose = close;
 
 /* ---------------------------------------------------------------- what's new */
 const NOTES = [
-  ["🌾", ["Orange Grove Farms","Granjas Orange Grove"], ["Only 12 plots per class! Buy one on the map, plant crops that grow in real time, and water them by answering questions.","¡Solo 12 terrenos por clase! Compra uno en el mapa, siembra y riega respondiendo preguntas."]],
-  ["🐄", ["Farm animals","Animales de granja"], ["Chickens, cows, goats, sheep, pigs, bees and horses. Feed them daily for eggs, milk, wool and honey.","Gallinas, vacas, cabras, ovejas, cerdos, abejas y caballos. Aliméntalos para obtener huevos, leche, lana y miel."]],
-  ["⚖️", ["Supply and demand","Oferta y demanda"], ["Seeds and animals are limited each week, and market prices drop when everyone sells the same crop.","Las semillas y animales son limitados cada semana, y los precios bajan si todos venden lo mismo."]],
-  ["👩‍🌾", ["Farmhands","Peones"], ["Farm owners hire classmates to water, harvest and feed for a wage.","Los dueños contratan compañeros para regar, cosechar y alimentar por un salario."]]
+  ["⚖️", ["Justice Center","Centro de Justicia"], ["A Town Code of fun laws with fines. Find it on the map.","Un Código del pueblo con leyes divertidas y multas. Búscalo en el mapa."]],
+  ["🚓", ["Marshals and jail","Alguaciles y cárcel"], ["Marshals write citations and can arrest. In jail? Answer questions to get out sooner.","Los alguaciles multan y arrestan. ¿En la cárcel? Responde preguntas para salir antes."]],
+  ["🏛️", ["Sue a classmate","Demanda a un compañero"], ["Settle or go to trial: hire a lawyer, make your case and let a jury of three decide.","Llega a un acuerdo o ve a juicio: contrata abogado y deja que decida un jurado."]],
+  ["🔐", ["Locks and break-ins","Cerraduras y allanamientos"], ["When Coach Smith turns them on: buy a lock to protect your cash.","Cuando Coach Smith los active: compra una cerradura para proteger tu dinero."]]
 ];
 function whatsNew(){
   open(`<div class="ey">✨ ${t("What's new","Novedades")} · v${APP_VERSION}</div><h2>${t("Big update!","¡Gran actualización!")}</h2>

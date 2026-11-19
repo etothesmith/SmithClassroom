@@ -227,6 +227,47 @@ service cloud.firestore {
           && request.resource.data.n >= 1 && request.resource.data.n <= 99 && request.resource.data.good is string;
         allow delete: if owns(cid);
       }
+      // Justice Center (town/justice.js): citations by marshals, jail, lawsuits, break-ins
+      match /citations/{id} {
+        allow read: if member(cid) || owns(cid);
+        allow create: if live(cid) && (owns(cid) || (isSid(cid, request.resource.data.by)
+          && request.resource.data.by in cls(cid).get('staff', {}).get('marshal', [])))
+          && request.resource.data.status == 'open' && request.resource.data.fine is int && request.resource.data.fine <= 10;
+        allow update: if owns(cid) || (live(cid) && (
+          (isSid(cid, resource.data.to) && request.resource.data.status in ['paid','contested'] && onlyChanges(['status','upd']))
+          || (isSid(cid, resource.data.by) && request.resource.data.status == 'dismissed' && onlyChanges(['status','upd']))
+          || (resource.data.status == 'contested' && cls(cid).get('staff', {}).get('judge', []).size() > 0
+              && isSid(cid, cls(cid).staff.judge[0]) && onlyChanges(['status','ruled','ruledBy','upd']))));
+        allow delete: if owns(cid);
+      }
+      match /jail/{sid} {
+        allow read: if member(cid) || owns(cid);
+        allow create, update: if owns(cid) || (live(cid) && cls(cid).get('justice', {}).get('jail', true) != false && (
+          (request.resource.data.self == true && isSid(cid, sid) && request.resource.data.sid == sid
+            && request.resource.data.until <= request.time.toMillis() + 900000)
+          || (request.resource.data.self != true && isSid(cid, request.resource.data.by)
+            && request.resource.data.by in cls(cid).get('staff', {}).get('marshal', [])
+            && request.resource.data.until <= request.time.toMillis() + 900000)
+          || (resource != null && isSid(cid, sid) && onlyChanges(['until','served']) && request.resource.data.until <= resource.data.until)
+          || (resource != null && isSid(cid, resource.data.by) && onlyChanges(['until']) && request.resource.data.until <= resource.data.until)));
+        allow delete: if owns(cid);
+      }
+      match /suits/{id} {
+        allow read: if member(cid) || owns(cid);
+        allow create: if isSid(cid, request.resource.data.a) && live(cid) && request.resource.data.status == 'filed'
+          && request.resource.data.amt is int && request.resource.data.amt >= 1 && request.resource.data.amt <= 20
+          && request.resource.data.b != request.resource.data.a;
+        allow update: if owns(cid) || (member(cid) && live(cid) && resource.data.status in ['filed','trial']
+          && onlyChanges(['status','winner','la','laName','lb','lbName','sa','sb','ta','tb','jury','upd','voided']));
+        allow delete: if owns(cid);
+      }
+      match /breakins/{id} {
+        allow read: if member(cid) || owns(cid);
+        allow create: if live(cid) && cls(cid).get('justice', {}).get('breakins', false) == true
+          && isSid(cid, request.resource.data.by) && id == request.resource.data.day + '_' + request.resource.data.by
+          && request.resource.data.take is int && request.resource.data.take <= 10 && request.resource.data.to != request.resource.data.by;
+        allow delete: if owns(cid);
+      }
       // Weekly lottery tickets (town/economy.js): id = <week>_<sid>_<1..5>, 3 numbers "a-b-c"
       match /lottery/{id} {
         allow read: if member(cid) || owns(cid);
