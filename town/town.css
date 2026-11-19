@@ -587,3 +587,16 @@
 .jonjob{border-color:#8A5CD8}
 .jban{display:flex;gap:10px;align-items:center;flex-wrap:wrap;border-color:#8A5CD8}
 .jban .btn{margin-left:auto}
+/* mayor's office (town/mayor.js) */
+.myraddr{border-color:#C8283A}.myraddr p{margin:4px 0 0;font-size:15px}
+.myrrow{display:flex;justify-content:space-between;gap:8px;align-items:center;padding:5px 0;border-bottom:1px solid var(--line,#eee);font-size:14px}
+.myrjob{padding:8px 0;border-bottom:2px solid var(--line,#eee)}
+.myrapp{border:2px solid var(--char,#1D1B2E);border-radius:12px;padding:10px 12px;margin:8px 0;background:#fff}
+.myrapp p{margin:4px 0;font-size:14px}
+.myrduty{list-style:none;padding:0;margin:4px 0;display:grid;gap:6px}
+.myrduty li{display:flex;gap:8px;align-items:center;flex-wrap:wrap}.myrduty li.ok{opacity:.65}
+/* blocked words */
+mark.badw{background:#FFD3D8;color:#B0102A;font-weight:800;border-radius:4px;padding:0 3px;outline:2px solid #E0394B}
+.terr .badctx{margin:6px 0;padding:8px 10px;background:#fff;border:2px dashed #E0394B;border-radius:10px;color:var(--char,#1D1B2E);font-weight:500;white-space:pre-wrap}
+.terr .badask{margin-top:8px;width:100%;white-space:normal}
+.terr small{display:block;color:var(--muted,#666);font-weight:500}

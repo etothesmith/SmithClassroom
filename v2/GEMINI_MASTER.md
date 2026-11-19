@@ -375,3 +375,30 @@ Row 4: a small wooden chess table with black and white pieces; a colorful puzzle
 | hangout_items_1 | table_dj, wall_tv, trophy_controller, trophy_headphones, lamp_led, lamp_disco, sofa_bean_giant, rug_rainbow, table_vending, wall_hoop, rug_court, trophy_football, trophy_bowling, art_jersey, wall_sneakers, sofa_bleachers, table_pingpong, rug_turf, art_constitution, art_dollar |
 | hangout_items_2 | bed_rocket, rug_planet, lamp_star, lamp_rocket, table_telescope, art_space, trophy_astronaut, plant_alien, bed_hammock, sofa_beachchair, plant_orange, rug_sand, lamp_jellyfish, trophy_shell, wall_surfboard, table_tiki, table_minifridge, sofa_throne, bed_futon, bed_campout |
 | hangout_items_3 | sofa_hangchair, rug_shag, plant_succulents, plant_bamboo, plant_mushroom, wall_mirror, wall_neon_heart, table_tea, wall_guitar, table_piano, trophy_mic, art_records, art_skate, table_easel, trophy_camera, table_chess, trophy_cube |
+
+---
+
+# CHAT E: 20 curly hairstyles (1 image)
+Start a new chat. **Attach `v2/gemini/hair_template.png`** (20 blank gray heads on magenta).
+
+### Step 27 → `curly_hair.png`
+- [ ] done
+```
+I attached a sheet of 20 blank gray mannequin heads on a flat magenta (#FF00FF) background, 5 across and 4 down. Draw one hairstyle on each head for a bright, friendly cartoon avatar game for high-school students.
+
+Rules (very important):
+- Keep the sheet exactly the same: same size, same 20 heads in the same places, same gray, same flat magenta background. Do not move, resize, redraw or outline the heads.
+- Only add hair. No faces, no eyes, no ears drawn, no clothes, no hats, no accessories, no text.
+- The face area must stay open and gray: hair frames the face and may cover the forehead and ears, but never the eyes or the middle of the face.
+- Style: soft painted cartoon with a thin dark-brown outline and gentle shading, like a mobile game avatar. Every curl clearly drawn.
+- Never use gray, magenta or pink for hair.
+
+Row 1: 1. short dark-brown curls on top with very short faded sides (curly undercut). 2. a tall black curly high-top with a sharp low fade. 3. a huge round black 4C afro, much wider than the head. 4. a medium dark-brown afro with a short tapered neckline. 5. a black curly frohawk (curls down the middle, short sides).
+Row 2: 6. shoulder-length dark-brown 3B ringlets with a middle part. 7. long dark-brown 3A spiral curls past the shoulders. 8. a chin-length curly bob in medium brown. 9. shoulder-length curls with curly curtain bangs, auburn. 10. half-up curly top knot with curls falling to the shoulders, dark brown.
+Row 3: 11. a curly "pineapple" high ponytail with curls spilling forward, black. 12. two big curly pigtail puffs low behind the ears, dark brown. 13. side-swept curls on one side with the other side shaved short, black. 14. a defined twist-out, medium length, black with a soft sheen. 15. a short teeny afro with tight defined coils, very dark brown.
+Row 4: 16. curls pulled into a low curly ponytail at the neck, dark brown. 17. a big round curly bun on top of the head with a few loose curls, medium brown. 18. a curly shag (wolf cut) with layered curls, chestnut brown. 19. loose medium-length curls with a deep side part, honey-blonde. 20. long voluminous curls with caramel highlights, dark brown.
+```
+
+## For Claude: Chat E
+`python3 tools/extract_hair.py curly_hair.png 32` cuts av-hair-32 … av-hair-51 and prints their AV3.i anchors for avatar.js;
+then add the 20 names to AV_HAIR_NAMES and make the ic3-hair icons.

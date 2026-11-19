@@ -113,7 +113,7 @@ function guideHTML(j, hired){
   return `<div class="eyebrow">${C.e} ${hired ? W2("Welcome to your new job!","¡Bienvenido a tu nuevo trabajo!") : W2("How this job works","Cómo funciona este trabajo")}</div>
     <h2>${E(L(C.title))}</h2><p class="muted" style="margin-top:0">${E(L(C.place))}</p>
     <div class="jguide">
-      <div><b>💼 ${W2("Your job","Tu trabajo")}</b><p>${E(L(C.what))}</p></div>
+      <div><b>💼 ${W2("Your job","Tu trabajo")}</b><p>${E(L(C.what))}</p>${(R.PUBLIC || []).includes(j) ? `<p class="muted">🏛️ ${W2("City job: the Mayor is your boss and can hire and fire you, and so can Coach Smith.","Empleo municipal: el Alcalde es tu jefe y puede contratarte y despedirte, igual que Coach Smith.")}</p>` : ""}</div>
       <div><b>🗓️ ${W2("Every day","Cada día")}</b><p>${E(L(g.day))}</p><p class="muted">✅ ${W2("Daily shift:","Turno diario:")} ${E(L(C.duty.l))}</p></div>
       ${services.length ? `<div><b>🛎️ ${W2("Who needs you","Quién te necesita")}</b><p>${services.map(K => `${K.e} ${E(L(K.l))}`).join(" · ")}</p>
         <p class="muted">${W2("Classmates request these in your building. Turn on 🔔 notifications so you know right away.","Tus compañeros los piden en tu edificio. Activa las 🔔 notificaciones para enterarte al instante.")}</p></div>` : ""}

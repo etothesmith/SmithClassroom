@@ -107,6 +107,8 @@ const PROJECTS = {
   field:   {e:"🏈", need:25, cost:50, l:["Football field","Campo de fútbol americano"]},
   mural:   {e:"🖌️", need:10, cost:15, l:["Street mural","Mural callejero"]}
 };
+/* city jobs: the mayor hires and fires these (Firestore rules: publicJobs()) */
+const PUBLIC = ["firefighter","marshal","sanitation","ranger","builder","mail"];
 const LEVELS = [[0,"Trainee","Aprendiz",1],[6,"Associate","Asociado",1.25],[15,"Senior","Sénior",1.5],[30,"Chief","Jefe",2]];
 const MAYOR_PAY = 8, RIBBON = 10, PRIDE_MAX = 5;
 const PROCLAIM = {study:["📚 Study Week: every unit counts!","📚 Semana de estudio: ¡cada unidad cuenta!"], kind:["🤝 Kindness Day: say something nice to a classmate","🤝 Día de la amabilidad: dile algo bonito a un compañero"],
@@ -215,7 +217,8 @@ window.carApply = function(j){
   const past = (k.hist || []).map(h => CAREERS[h.job] ? L(CAREERS[h.job].title) : "").filter(Boolean);
   sheet(`<div class="eyebrow">${c.e} ${W2("Job application","Solicitud de empleo")}</div><h2>${L(c.title)}</h2>
     <p class="muted" style="margin:0">${L(c.what)} · ${W2(`Starts at ${c.pay} Smithbucks a shift`, `Empieza en ${c.pay} Smithbucks por turno`)}${c.per ? W2(` + ${c.per} per case`, ` + ${c.per} por caso`) : ""}</p>
-    ${mine ? `<p class="tnote">📨 ${W2("You already applied. Coach Smith will decide. You can update your résumé below.","Ya enviaste tu solicitud. Coach Smith decidirá. Puedes actualizar tu currículum.")}</p>` : ""}
+    ${PUBLIC.includes(j) ? `<p class="tnote">🏛️ ${W2("City job: the Mayor reads applications and can hire and fire. Coach Smith can too.","Trabajo municipal: el Alcalde lee las solicitudes y puede contratar y despedir. Coach Smith también.")}</p>` : ""}
+    ${mine ? `<p class="tnote">📨 ${W2("You already applied. You can update your résumé below.","Ya enviaste tu solicitud. Puedes actualizar tu currículum.")}</p>` : ""}
     <div class="kres"><b>📄 ${W2("Your résumé","Tu currículum")}</b>
       <span>⭐ XP ${S.xp | 0}</span><span>🎓 ${(S.certs || []).length} ${W2("certificates","certificados")}</span><span>🔥 ${civ().streak.n} ${W2("day streak","días seguidos")}</span>
       <span>💳 ${W2("Credit","Crédito")} ${b.credit}</span>${civ().biz ? `<span>🏪 ${W2("Business owner","Dueño de negocio")}</span>` : ""}${past.length ? `<span>💼 ${E(past.join(", "))}</span>` : ""}
@@ -229,7 +232,7 @@ window.carApply = function(j){
 window.carSend = async function(j){
   const why = document.getElementById("kWhy1").value.trim(), skills = document.getElementById("kWhy2").value.trim(), ref = document.getElementById("kRef").value.trim(), err = document.getElementById("kErr");
   if (why.length < 15 || skills.length < 10) { err.textContent = W2("Write a little more so Coach Smith can get to know you.","Escribe un poco más para que Coach Smith te conozca."); return; }
-  if (!cleanText(why) || !cleanText(skills) || !cleanText(ref)) { err.textContent = W2("That has a word that isn't allowed. Use school-appropriate words.","Eso tiene una palabra que no se permite."); return; }
+  if (badShow(err, [why, skills, ref], "job application")) return;
   const k = car(), b = civ().bank;
   try {
     await store().set(`${C()}/apps/${j}_${me()}`, {job:j, sid:me(), uid:store().uid(), name:SESS().name, why, skills, ref, status:"pending", at:Date.now(),
@@ -359,7 +362,7 @@ function carStory(){
 window.carSendStory = async function(){
   const h = document.getElementById("kHead").value.trim(), b = document.getElementById("kBody").value.trim(), err = document.getElementById("kErr");
   if (h.length < 6 || b.length < 40) { err.textContent = W2("Write a headline and at least two sentences.","Escribe un titular y al menos dos oraciones."); return; }
-  if (!cleanText(h) || !cleanText(b)) { err.textContent = W2("That has a word that isn't allowed.","Eso tiene una palabra que no se permite."); return; }
+  if (badShow(err, [h, b], "Gazette story")) return;
   try { await store().add(`${C()}/news`, {sid:me(), uid:store().uid(), name:SESS().name, headline:h, body:b, status:"review", at:Date.now()});
     closeSheet(); payShift(); paint(); } catch(e){ err.textContent = W2("Couldn't send it right now.","No se pudo enviar."); }
 };
@@ -469,7 +472,7 @@ function applyActs(){
   if (ch) T.persist();
 }
 setInterval(applyActs, 20000);
-EXT.banner.push(() => { const a = todayActs(); if (!a.length || !SESS()) return "";
+EXT.banner.push(() => { const a = todayActs().filter(x => x.kind === "proclaim" || x.kind === "challenge"); if (!a.length || !SESS()) return "";
   const pr = a.find(x => x.kind === "proclaim"), ch = a.find(x => x.kind === "challenge");
   return `<section class="panel kban">${pr && PROCLAIM[pr.arg] ? `<b>${E(L(PROCLAIM[pr.arg]))}</b> <small>· ${W2("Mayor","Alcalde")} ${E(pr.name)}</small>` : ""}
     ${ch ? `<span>🏆 ${W2("Mayor's Challenge: earn 30 XP today for +4 Smithbucks","Reto del alcalde: gana 30 XP hoy y recibe 4 Smithbucks")} (${Math.min(30, V.xpSince("mc:" + ch.id))}/30)</span>` : ""}</section>`; });
@@ -501,7 +504,7 @@ window.carPropose2 = function(k){
 };
 window.carPropose3 = async function(k){
   const note = document.getElementById("kNote").value.trim(), P = PROJECTS[k];
-  if (note && !cleanText(note)) { document.getElementById("kErr").textContent = W2("That has a word that isn't allowed.","Eso tiene una palabra que no se permite."); return; }
+  if (badShow(document.getElementById("kErr"), [note], "town request")) return;
   try { await store().add(`${C()}/requests`, {sid:me(), uid:store().uid(), name:SESS().name, proj:k, note, status:"review", n:0, need:P.need, coins:0, cost:P.cost, donors:[], builders:[], at:Date.now()});
     closeSheet(); T.toast(W2("📌 Posted! The mayor will review it.","📌 ¡Publicado! El alcalde lo revisará.")); } catch(e){ T.toast(W2("Couldn't post it right now.","No se pudo publicar.")); }
 };
@@ -620,12 +623,14 @@ function paintMansion(el, back){
         <button class="btn" onclick="carAct('proclaim')">📜 ${W2("Proclamation","Proclamación")}</button>
         <button class="btn" onclick="carGo('board')">📌 ${W2("Review town requests","Revisar solicitudes")} (${REQS.filter(r => r.status === "review").length})</button>
         <button class="btn" onclick="townTab('hall')">🖋️ ${W2("Propose a law","Proponer una ley")}</button></div></section>` : ""}
+    ${(EXT.mansion || []).map(f => { try { return f(may) || ""; } catch(e){ console.warn(e); return ""; } }).join("")}
     <section class="panel"><div class="eyebrow">⭐ ${W2("What the mayor gets","Lo que recibe el alcalde")}</div><ul class="kperks">
       <li>💰 ${W2(`A salary: ${MAYOR_PAY} Smithbucks every day in office, plus a 20-Smithbuck signing bonus`, `Un salario: ${MAYOR_PAY} Smithbucks cada día, más 20 de bienvenida`)}</li>
       <li>🏛️ ${W2("The Mansion (yours to keep) and mayor-only furniture: desk, flag and portrait","La Mansión (para siempre) y muebles exclusivos: escritorio, bandera y retrato")}</li>
       <li>🏷️ ${W2("20% off everything in the Shop while in office","20% de descuento en la Tienda durante el cargo")}</li>
       <li>✂️ ${W2(`Ribbon cuttings: +${RIBBON} Smithbucks every time a landmark is finished`, `Cortes de listón: +${RIBBON} Smithbucks por cada obra terminada`)}</li>
       <li>🎉 ${W2("Powers: Town Holidays, the Mayor's Challenge, proclamations, approving town projects and proposing laws","Poderes: feriados, el reto del alcalde, proclamaciones, aprobar obras y proponer leyes")}</li>
+      <li>🏛️ ${W2("Runs city hall: hires and fires the 6 city jobs, gives a weekly State of the Town, and can ask Coach Smith to fire anyone","Dirige el ayuntamiento: contrata y despide los 6 empleos municipales, da un discurso semanal y puede pedir a Coach Smith que despida a alguien")}</li>
       <li>🎖️ ${W2("A 🎖️ over your name on the plaza, and a place in the Hall of Mayors forever","Una 🎖️ sobre tu nombre en la plaza y un lugar en el Salón de Alcaldes")}</li></ul>
       ${e && e.phase === "filing" && !may ? `<button class="btn primary" onclick="townTab('hall')">🗳️ ${W2("Sign-ups are open: run for mayor!","¡Inscripciones abiertas: postúlate!")}</button>` : ""}</section>
     <section class="panel"><div class="eyebrow">🏛️ ${W2("Hall of Mayors","Salón de Alcaldes")}</div><div class="cmini">${past.map(x => `<span>🎖️ ${E(x.name)} <small>${new Date(x.since).toLocaleDateString()}</small></span>`).join("") || `<span>${W2("History starts with the first election.","La historia empieza con la primera elección.")}</span>`}</div></section>`;
@@ -694,7 +699,7 @@ EXT.onClass.push((was, c) => {
   if (!SESS()) return; syncCareer(); mayorDaily();
   if (T.isTown() && T.tt === "downtown" && (!was || JSON.stringify([was.staff, was.mayor]) !== JSON.stringify([c.staff, c.mayor])) && window._carDraw) window._carDraw();
 });
-T.CAR = {CAREERS, KINDS, LEVELS, myJob, car, duty, levelOf, nextLevel, jobTitle, openCases, holders, payCase, promoCheck, L, me};
+T.CAR = {CAREERS, KINDS, LEVELS, PUBLIC, isMayor, staff, staffNames, myApps:() => MYAPPS, myJob, car, duty, levelOf, nextLevel, jobTitle, openCases, holders, payCase, promoCheck, L, me};
 EXT.pubExtra.push(() => { const k = car(); return {career:k.job ? {job:k.job, lvl:levelOf(k)[1], shifts:k.shifts | 0, cases:k.cases | 0, last:k.last || ""} : null, sick:!!(civ().sick)}; });
 
 /* ================================================================ teacher: careers, applications, stories, requests */

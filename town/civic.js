@@ -408,18 +408,59 @@ window.civVote = async function(sid){
    A word list blocks inappropriate words before it is even sent. */
 const BAD = ("fuck fuk fck shit sht bitch biatch bastard asshole ass arse dick dik cock cok pussy puss cunt cum jizz porn porno sex sexy " +
   "nude nudes naked boob boobs tit tits titty penis vagina dildo horny hoe hoes whore slut thot twat wank wanker prick douche damn goddamn hell crap piss " +
-  "nigger nigga niga negro chink gook spic wetback beaner kike faggot fag fagot dyke tranny retard retarded rape rapist molest pedo pedophile nazi hitler " +
-  "kkk kill murder suicide gun guns shoot bomb terrorist weed cocaine meth drunk vape " +
+  "nigger nigga niga chink gook spic wetback beaner kike faggot fag fagot dyke tranny retard retarded rape rapist molest pedo pedophile nazi hitler " +
+  "kkk kill murder suicide gun guns bomb terrorist weed cocaine meth drunk vape " +
   "puta puto pendejo pendeja chinga chingar chingada verga pinche culo mierda cabron cabrona marica maricon joder coño cono culero zorra perra malparido gonorrea").split(" ");
-const BAD_STEMS = ["fuck","shit","bitch","nigg","fagg","cunt","whore","slut","rapist","porn","penis","vagin","dildo","pedoph","retard","molest","chinga","pendej","maric","mierd","cabron","culer","asshol","motherf"];
-function cleanText(t){
-  const n = String(t || "").toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "")
-    .replace(/[0@4]/g, m => ({"0":"o","@":"a","4":"a"})[m]).replace(/[1!|]/g, "i").replace(/3/g, "e").replace(/[5$]/g, "s").replace(/7/g, "t").replace(/8/g, "b");
-  const words = n.replace(/[^a-zñ\s]/g, " ").split(/\s+/).filter(Boolean).map(w => w.replace(/(.)\1{2,}/g, "$1$1"));
-  const squished = n.replace(/[^a-zñ]/g, "").replace(/(.)\1+/g, "$1");
-  return !words.some(w => BAD.includes(w) || BAD.includes(w.replace(/(.)\1+/g, "$1")) || BAD.includes(w.replace(/e?s$/, ""))) && !BAD_STEMS.some(b => squished.includes(b.replace(/(.)\1+/g, "$1")));
+/* fragments caught inside a single word (never across two words: "wish it" is not a bad word) */
+const BAD_STEMS = ["fuck","shit","bitch","nigg","fagg","cunt","whore","slut","rapist","porn","penis","vagin","dildo","pedoph","retard","molest","chinga","pendej","mierd","cabron","culer","asshol","motherf"];
+/* real words that contain a fragment */
+const ALLOW_WORDS = ["therapist","therapists","retardant","retardants","scunthorpe","shitake","shiitake","cocktail","cockpit","peacock","hancock","dickens","assess","assessment","class","glass","grass","pass","bass","mass","negro","negra"];
+const normWord = w => String(w || "").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+  .replace(/[0@4]/g, m => ({"0":"o","@":"a","4":"a"})[m]).replace(/[1!|]/g, "i").replace(/3/g, "e").replace(/[5$]/g, "s").replace(/7/g, "t").replace(/8/g, "b")
+  .replace(/[^a-zñ]/g, "").replace(/(.)\1{2,}/g, "$1$1");
+function isBad(w, allow){
+  if (!w || allow.has(w)) return false; const c = w.replace(/(.)\1+/g, "$1"); if (allow.has(c)) return false;
+  return BAD.includes(w) || BAD.includes(c) || BAD.includes(w.replace(/e?s$/, "")) || BAD_STEMS.some(b => c.includes(b.replace(/(.)\1+/g, "$1")));
 }
-window.civCleanText = cleanText;
+/* the words in t that aren't allowed, as the student typed them */
+function badWords(t){
+  const allow = new Set([...ALLOW_WORDS, ...(((T.cls || {}).allowWords) || [])]);
+  const toks = String(t || "").split(/\s+/).filter(Boolean), hit = [];
+  toks.forEach(tok => { if (isBad(normWord(tok), allow)) hit.push(tok); });
+  /* spelled out with spaces or dots: "f u c k", "s.h.i.t" */
+  let run = [];
+  const flush = () => { if (run.length >= 3) { const w = run.map(normWord).join(""); if (isBad(w, allow)) hit.push(run.join(" ")); } run = []; };
+  toks.forEach(tok => { const parts = tok.split(/[.\-_*]+/).filter(Boolean);
+    if (parts.length > 1 && parts.every(p => normWord(p).length === 1)) { run.push(...parts); return; }
+    if (normWord(tok).length === 1) run.push(tok); else flush(); });
+  flush();
+  return [...new Set(hit)];
+}
+function cleanText(t){ return !badWords(t).length; }
+/* Show which words were blocked, in red, with a way to ask the teacher.
+   Returns true when something was blocked. */
+const escH = s => String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+function badShow(el, texts, where){
+  texts = (texts || []).filter(x => x); const words = [...new Set(texts.flatMap(badWords))];
+  if (!words.length) { if (el && el.dataset.bad) { el.innerHTML = ""; delete el.dataset.bad; } return false; }
+  window._badCtx = {words, text:texts.join(" / ").slice(0, 240), where:where || ""};
+  const mark = t => escH(t).split(/(\s+)/).map(p => words.some(w => w.split(" ").includes(p) || w === p) ? `<mark class="badw">${p}</mark>` : p).join("");
+  if (el) { el.dataset.bad = 1;
+    el.innerHTML = `${W2("This word isn't allowed:","Esta palabra no se permite:")} ${words.map(w => `<mark class="badw">${escH(w)}</mark>`).join(" ")}
+      <div class="badctx">${texts.filter(t => badWords(t).length).map(mark).join("<br>")}</div>
+      <small>${W2("Change it and send again. If it's a normal word, ask Coach Smith to allow it.","Cámbiala y envía otra vez. Si es una palabra normal, pide a Coach Smith que la permita.")}</small>
+      <button type="button" class="btn ghost badask" onclick="badAsk(this)">🙋 ${W2("It's not a bad word: ask Coach Smith","No es una mala palabra: preguntar a Coach Smith")}</button>`; }
+  return true;
+}
+window.badAsk = async function(btn){
+  const c = window._badCtx; if (!c || !SESS()) return;
+  try { for (const w of c.words.slice(0, 3)) {
+      const key = normWord(w.replace(/\s+/g, "")).slice(0, 40); if (!key) continue;
+      await store().set(`${C()}/wordreqs/${key}_${SESS().sid}`, {sid:SESS().sid, uid:store().uid(), name:SESS().name, word:key, typed:w.slice(0, 40), text:c.text, where:c.where.slice(0, 40), status:"open", at:Date.now()}); }
+    if (btn) { btn.disabled = true; btn.textContent = "📨 " + W2("Sent! You'll get a notification when Coach Smith decides.","¡Enviado! Te avisaremos cuando Coach Smith decida."); }
+  } catch(e){ T.toast(W2("Couldn't send it right now.","No se pudo enviar.")); }
+};
+window.civCleanText = cleanText; window.badWords = badWords; window.badShow = badShow;
 const customs = () => (CLS().customLaws || []).filter(l => l && l.id);
 function lawInfo(p){ if (p.key === "custom") return {e:"✍️", title:p.title || "", what:p.desc || ""};
   const l = LAWS[p.key] || {e:"📜", en:p.key, what:{en:""}}; return {e:l.e, title:L2(l), what:L2(l.what)}; }
@@ -454,7 +495,7 @@ window.civWriteLaw = function(){
 window.civWriteLawGo = async function(){
   const t = document.getElementById("lwT").value.trim().replace(/\s+/g, " "), d = document.getElementById("lwD").value.trim().replace(/\s+/g, " "), err = document.getElementById("lwErr");
   if (t.length < 3 || d.length < 8) { err.textContent = W2("Give your law a name and say what it does.","Dale un nombre a tu ley y di qué hace."); return; }
-  if (!cleanText(t) || !cleanText(d)) { err.textContent = W2("That has a word that isn't allowed. Try again with school-appropriate words.","Eso tiene una palabra que no se permite. Inténtalo con palabras apropiadas."); return; }
+  if (badShow(err, [t, d], "law")) return;
   try { await store().add(`${C()}/proposals`, {key:"custom", title:t.slice(0, 40), desc:d.slice(0, 140), sid:SESS().sid, uid:store().uid(), name:SESS().name, status:"review", at:Date.now()});
     closeSheet(); T.toast(W2("Sent! Coach Smith will review it.","¡Enviada! Coach Smith la revisará.")); }
   catch(e){ err.textContent = W2("Only the mayor can propose laws.","Solo la alcaldía puede proponer leyes."); }
@@ -962,7 +1003,7 @@ EXT.projector.push(cid => {
 });
 
 /* every visit to the hub counts for the weekly league, even outside the Town */
-T.CIV = {answeredToday, certPay, unitPaychecks, civ, qCard, sheet, closeSheet, cleanText, flag, jobPay, day, week, dayN, hashN, img, bar, CLS, E, W2, C, store, SESS, NET, paint, cur, hasLaw, sub, xpSince, myXp,
+T.CIV = {badWords, badShow, answeredToday, certPay, unitPaychecks, civ, qCard, sheet, closeSheet, cleanText, flag, jobPay, day, week, dayN, hashN, img, bar, CLS, E, W2, C, store, SESS, NET, paint, cur, hasLaw, sub, xpSince, myXp,
   elec, get proj(){ return PROJ; }};
 window.CIVIC = {civ, week, goalProgress, unlocked, loanOwed, accrue, rollJobs, jobDone, EVENTS, LAWS, BIZ, UPGRADES, JOBS, get LEAGUE(){ return LEAGUE; }};
 })();

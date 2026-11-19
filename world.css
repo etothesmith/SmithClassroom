@@ -276,3 +276,9 @@ table th{color:var(--dim)}
 /* title screen: straight into Smithtopia */
 #title .startmenu button.towngo{background:linear-gradient(180deg,#E0394B,#B81F31);color:#fff;border:3px solid #FFD24A;font-size:20px;
   box-shadow:0 5px 0 #7A1220,0 0 24px rgba(224,57,75,.45);text-shadow:0 2px 0 rgba(0,0,0,.25)}
+
+/* Pop-ups taller than the screen (job applications on a Chromebook) scroll inside
+   the overlay instead of being cut off top and bottom. Short ones stay centered. */
+#certAsk, #whatsnew, #langpick{overflow-y:auto;overscroll-behavior:contain;place-items:start center;-webkit-overflow-scrolling:touch}
+#certAsk > *, #whatsnew > *, #langpick > *{margin-block:auto}
+#certAsk{padding-bottom:max(20px, env(safe-area-inset-bottom))}

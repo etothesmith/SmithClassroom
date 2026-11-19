@@ -14,6 +14,11 @@ service cloud.firestore {
     function isSid(cid, sid) { return signedIn() && get(/databases/$(database)/documents/classes/$(cid)/students/$(sid)).data.uid == request.auth.uid; }
     function live(cid) { return cls(cid).frozen != true; }
     function onlyChanges(keys) { return request.resource.data.diff(resource.data).affectedKeys().hasOnly(keys); }
+    // the elected mayor (the student record in classes/{cid}.mayor.sid belongs to whoever is signed in)
+    function isMayor(cid) { return signedIn() && cls(cid).get('mayor', null) != null && cls(cid).mayor.get('sid', '') != ''
+      && isSid(cid, cls(cid).mayor.sid); }
+    // city jobs the mayor hires and fires; every other job stays with the teacher
+    function publicJobs() { return ['firefighter','marshal','sanitation','ranger','builder','mail']; }
 
     match /codes/{code} {
       allow get: if signedIn();
@@ -26,6 +31,10 @@ service cloud.firestore {
       allow list: if isTeacher() && resource.data.ownerUid == request.auth.uid;
       allow create: if isTeacher() && request.resource.data.ownerUid == request.auth.uid;
       allow update, delete: if isTeacher() && resource.data.ownerUid == request.auth.uid;
+      // the mayor staffs public jobs: only staff/staffNames change, and only public-job seats
+      allow update: if isMayor(cid) && resource.data.get('frozen', false) != true
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['staff','staffNames'])
+        && request.resource.data.get('staff', {}).diff(resource.data.get('staff', {})).affectedKeys().hasOnly(publicJobs());
 
       match /members/{uid} {
         allow get: if owns(cid) || (signedIn() && request.auth.uid == uid);
@@ -168,7 +177,27 @@ service cloud.firestore {
           && request.resource.data.why is string && request.resource.data.why.size() <= 240
           && request.resource.data.skills is string && request.resource.data.skills.size() <= 240
           && request.resource.data.ref is string && request.resource.data.ref.size() <= 40);
+        // the mayor hires or turns down applicants for public jobs
+        allow update: if isMayor(cid) && live(cid) && resource.data.job in publicJobs()
+          && onlyChanges(['status','decidedAt','decidedBy']) && request.resource.data.status in ['hired','denied'];
         allow delete: if owns(cid) || isSid(cid, resource.data.sid);
+      }
+      // A student asks the teacher to allow a word the filter blocked; approved words go in classes/{cid}.allowWords
+      match /wordreqs/{id} {
+        allow read: if owns(cid) || (signedIn() && isSid(cid, resource.data.sid));
+        allow create, update: if owns(cid) || (isSid(cid, request.resource.data.sid) && request.resource.data.status == 'open'
+          && id == request.resource.data.word + '_' + request.resource.data.sid
+          && request.resource.data.word is string && request.resource.data.word.size() <= 40
+          && request.resource.data.text is string && request.resource.data.text.size() <= 240);
+        allow delete: if owns(cid);
+      }
+      // The mayor asks the teacher to fire someone; only the teacher decides
+      match /firereqs/{id} {
+        allow read: if owns(cid) || isSid(cid, resource.data.sid);
+        allow create: if isMayor(cid) && live(cid) && request.resource.data.sid == cls(cid).mayor.sid
+          && request.resource.data.status == 'open' && request.resource.data.why is string
+          && request.resource.data.why.size() >= 10 && request.resource.data.why.size() <= 240;
+        allow update, delete: if owns(cid);
       }
       // Cases: service requests and town events; only someone hired for that job can work or close one
       match /cases/{id} {
@@ -300,7 +329,8 @@ service cloud.firestore {
       match /mayoracts/{id} {
         allow read: if member(cid) || owns(cid);
         allow create: if isSid(cid, request.resource.data.sid) && live(cid) && cls(cid).mayor.sid == request.resource.data.sid
-          && request.resource.data.kind in ['holiday','challenge','proclaim'];
+          && request.resource.data.kind in ['holiday','challenge','proclaim','address','staffing']
+          && request.resource.data.get('text', '').size() <= 280;
         allow delete: if owns(cid);
       }
       // Live plaza quiz answers: one per student per question; the teacher reads them

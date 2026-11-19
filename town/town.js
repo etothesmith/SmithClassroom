@@ -25,7 +25,7 @@ let MARKET = [], CHAT = [], PLAZA = {}, MY_SALES = [], MY_BUYS = [], T_FROM = []
 let toastEl = null;
 /* extension points used by town/civic.js (Town Hall, Bank, Jobs, businesses, events, plaza quiz) */
 const EXT = {tabs:[], onClass:[], onSession:[], priceMult:[], listCheck:[], onSold:[], plazaBack:[], plazaFront:[], plazaTap:[],
-             adminPanels:[], streetBadge:[], houseExtra:[], plazaSub:[], banner:[], pubExtra:[], projector:[], onLeave:[], onBuy:[], onHire:[], jobPanel:[], marketTop:[], nameTag:[], personDraw:[]};
+             adminPanels:[], streetBadge:[], houseExtra:[], plazaSub:[], banner:[], pubExtra:[], projector:[], onLeave:[], onBuy:[], onHire:[], jobPanel:[], mansion:[], marketTop:[], nameTag:[], personDraw:[]};
 const run = (list, ...a) => list.forEach(f => { try { f(...a); } catch(e){ console.warn("town ext", e); } });
 
 /* ---------------------------------------------------------------- state */

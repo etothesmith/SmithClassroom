@@ -10,7 +10,7 @@
    ========================================================================== */
 (function(){
 "use strict";
-const APP_VERSION = "2.4";
+const APP_VERSION = "2.5";
 const es = () => typeof S !== "undefined" && S.lang === "es";
 const t = (en, sp) => es() ? sp : en;
 const esc = s => String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
@@ -65,11 +65,8 @@ window.appClose = close;
 
 /* ---------------------------------------------------------------- what's new */
 const NOTES = [
-  ["🏙️", ["Grenadier Town is now Smithtopia","Grenadier Town ahora es Smithtopia"], ["Same town, same house, same Smithbucks, new name. Tap Enter Smithtopia on the first screen to go straight there.","El mismo pueblo, tu misma casa y tus Smithbucks, con nombre nuevo. Toca Entrar a Smithtopia en la primera pantalla para ir directo."]],
-  ["🔔", ["Notifications","Notificaciones"], ["Tap the 🔔 to see everything that happened: hired, patients waiting, trade offers, duels, fires. Turn on notifications to get them even in another tab.","Toca la 🔔 para ver todo lo que pasó: contrataciones, pacientes, intercambios, duelos, incendios. Activa las notificaciones para verlas aunque estés en otra pestaña."]],
-  ["🛍️", ["57 new things to buy","57 cosas nuevas para comprar"], ["Gamer room, sports, space, Florida beach, cozy and creator sets, plus 4 daily deals at 30% off. Filter the shop by set or by room spot.","Sets gamer, deportes, espacio, playa de Florida, acogedor y creativo, más 4 ofertas diarias con 30% menos. Filtra la tienda por set o lugar."]],
-  ["📖", ["Job guides","Guías de trabajo"], ["Get hired and you get a briefing: what you do, your daily shift, who needs you, pay, promotions and the real-world econ or civics behind it.","Si te contratan recibes una guía: qué haces, tu turno, quién te necesita, pago, ascensos y la economía o civismo real detrás."]],
-  ["🧠", ["On the job","En el trabajo"], ["Every job gets one real-life decision a day. Make the call a pro would make: +2 and it counts toward your promotion.","Cada trabajo tiene una decisión real al día. Decide como un profesional: +2 y cuenta para tu ascenso."]]
+  ["🎖️", ["The mayor runs city hall","El alcalde dirige el ayuntamiento"], ["The mayor now hires and fires the 6 city jobs (firefighter, marshal, sanitation, ranger, builder, mail), gives a weekly State of the Town, and can ask Coach Smith to fire anyone.","El alcalde ahora contrata y despide los 6 empleos municipales, da un discurso semanal y puede pedir a Coach Smith que despida a alguien."]],
+  ["💻", ["Chromebook fix","Arreglo para Chromebook"], ["Long forms like job applications now scroll, so you can reach every box and the Send button.","Los formularios largos como las solicitudes ahora se desplazan, para llegar a cada casilla y al botón Enviar."]]
 ];
 function whatsNew(){
   open(`<div class="ey">✨ ${t("What's new","Novedades")} · v${APP_VERSION}</div><h2>${t("Big update!","¡Gran actualización!")}</h2>
