@@ -440,7 +440,7 @@ Row 4: a white "skip" symbol (circle with a diagonal slash) on a round black bad
 No attachments. New chat. Paste the CHAT B style prompt first, then:
 
 ### Step 30 → `places_3.png`
-- [ ] done
+- [x] done
 ```
 Sheet, 4 columns by 3 rows, on a flat #FF00FF magenta background. Twelve small cartoon town buildings for a bright, friendly school game, each centered in its own cell, all at the same scale, seen from a slight three-quarter view, thick charcoal outlines, flat colors with one soft shade, a little patch of sidewalk under each. No people, no text, no letters, no numbers, no logos. Use simple icons on the signs instead of words.
 Row 1: a stock exchange with white columns and a big green up-arrow chart sign; a small lottery kiosk with a gold star and colorful number balls on the roof; a bank mortgage office with a house-and-key sign; a small airport terminal with a control tower and a plane on the sign.

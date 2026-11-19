@@ -319,7 +319,8 @@ EXT.tabs.push({key:"money", icon:"💹", label:() => W2("Money","Dinero"), paint
   const nav = [["stocks","💹",W2("Exchange","Bolsa")],["lotto","🎟️",W2("Lottery","Lotería")],["bills","📬",W2("Bills & budget","Facturas y presupuesto")],["mort","🏦",W2("Mortgage","Hipoteca")]];
   const due = (ec().bills || {items:[]}).items.filter(b => !b.paid).length;
   const wrap = document.createElement("div"); wrap.className = "eview";
-  el.innerHTML = `<nav class="tchips">${nav.map(([k, ic, l]) => `<button class="${SUBT === k ? "on" : ""}" onclick="ecSub('${k}')">${ic} ${l}${k === "bills" && due ? ` <b class="ebadge">${due}</b>` : ""}</button>`).join("")}</nav>`;
+  const pic = {stocks:["exchange",W2("The Smithtopia Exchange","La Bolsa de Smithtopia")], lotto:["lottery",W2("Lottery kiosk","Kiosco de lotería")], bills:["mortgage",W2("Town Bank: bills and budget","Banco: facturas y presupuesto")], mort:["mortgage",W2("Mortgage office","Oficina de hipotecas")]}[SUBT] || ["exchange",""];
+  el.innerHTML = `<section class="panel raised ehead">${T.artImg(`${T.TA}places3/${pic[0]}.webp`, "🏛️")}<div><div class="eyebrow">💹 ${W2("Money","Dinero")}</div><h2>${pic[1]}</h2></div></section><nav class="tchips">${nav.map(([k, ic, l]) => `<button class="${SUBT === k ? "on" : ""}" onclick="ecSub('${k}')">${ic} ${l}${k === "bills" && due ? ` <b class="ebadge">${due}</b>` : ""}</button>`).join("")}</nav>`;
   el.appendChild(wrap);
   ({stocks:paintExchange, lotto:paintLottery, bills:paintBills, mort:paintMortgage}[SUBT] || paintExchange)(wrap);
 }});
