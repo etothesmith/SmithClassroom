@@ -10,6 +10,7 @@ from scipy import ndimage as ndi
 
 T = "v2/assets/town/"
 ITEMS, DOWN, WORLD, GAMES, PL3 = T + "items/", T + "downtown/", T + "world/", T + "games/", T + "places3/"
+FARM = T + "farm/"
 FISH = ["bluegill","bass","catfish","crappie","sunfish","tilapia","boot","mullet","gar","peacock","snook","feather","redfish","tarpon","sturgeon","koi"]
 ALIAS = {"tw_champ": ["tw_champ_apecon", "tw_champ_apgov", "tw_champ_econ", "tw_champ_gov"]}
 SHEETS = {   # file: (cols, rows, folder, ids, max side)
@@ -35,6 +36,8 @@ SHEETS = {   # file: (cols, rows, folder, ids, max side)
   "games_1.png": (5, 4, GAMES, "rps_rock rps_paper rps_scissors vs trophy ic_rps ic_colors ic_four ic_blackjack ic_checkers ic_chess card_back chips chip hall felt medal shelf hourglass crown", 240),
   "games_2.png": (6, 4, GAMES, "ch_wk ch_wq ch_wr ch_wb ch_wn ch_wp ch_bk ch_bq ch_br ch_bb ch_bn ch_bp ck_r ck_b ck_rk ck_bk disc_r disc_y cc_skip cc_rev cc_draw2 cc_wild deck spark", 200),
   "places_3.png": (4, 3, PL3, "exchange lottery mortgage airport barn jail dealer mall beach theater museum port", 280),
+  "farm_1.png": (6, 4, FARM, "strawberry_1 strawberry_2 strawberry_3 tomato_1 tomato_2 tomato_3 corn_1 corn_2 corn_3 sugarcane_1 sugarcane_2 sugarcane_3 orange_1 orange_2 orange_3 pumpkin_1 pumpkin_2 pumpkin_3 soil soil_wet wilt can basket barn_box", 200),
+  "farm_2.png": (5, 4, FARM, "chicken duck goat sheep pig cow bee horse egg milk cheese wool truffle honey plot plot_taken feed market_stall farmhand fence", 220),
   "npc_rosa_fix.png": (1, 1, WORLD, "npc_rosa", 360),
 }
 
