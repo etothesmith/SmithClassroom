@@ -1,0 +1,22 @@
+{
+  "name": "Smith's Classroom",
+  "short_name": "Smith's",
+  "description": "Study, earn and play: Coach Smith's classes, Grenadier Town, the arcade and more.",
+  "id": "./",
+  "start_url": "./index.html?app=1",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#FFF4DE",
+  "theme_color": "#C8283A",
+  "categories": ["education", "games"],
+  "icons": [
+    {"src": "assets/app/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any"},
+    {"src": "assets/app/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any"},
+    {"src": "assets/app/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable"}
+  ],
+  "shortcuts": [
+    {"name": "Grenadier Town", "short_name": "Town", "url": "./index.html?app=1#town", "icons": [{"src": "assets/app/icon-192.png", "sizes": "192x192"}]},
+    {"name": "Live raid", "short_name": "Live", "url": "./index.html?app=1#live", "icons": [{"src": "assets/app/icon-192.png", "sizes": "192x192"}]}
+  ]
+}

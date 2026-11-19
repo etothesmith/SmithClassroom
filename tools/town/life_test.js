@@ -12,7 +12,7 @@ const check = (n, ok, info) => { results.push((ok ? 'PASS ' : 'FAIL ') + n + (in
   await ctx.route(/firebaseio|googleapis|gstatic/, r => r.abort());
   const errs = [];
   async function page(name){
-    const p = await ctx.newPage(); p.on('pageerror', e => errs.push(name + ': ' + e.message));
+    const p = await ctx.newPage(); p.on('pageerror', e => errs.push(name + ': ' + e.message + ' @ ' + (e.stack || '').split('\n').slice(1, 4).join(' | ')));
     await p.goto(BASE + 'index.html'); await p.waitForFunction(() => window.TOWN && window.TODAY && TOWN.net, null, { timeout: 20000 });
     await p.evaluate(() => { document.querySelectorAll('body *').forEach(e => { if (/CHOOSE YOUR/i.test(e.textContent) && getComputedStyle(e).position === 'fixed') e.remove(); }); });
     return p;

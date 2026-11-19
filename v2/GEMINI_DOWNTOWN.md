@@ -1,3 +1,5 @@
+> **Replaced by `GEMINI_MASTER.md`.** Use that file instead. This one is kept only for its cell-to-id mapping table.
+
 # Downtown buildings and landmarks: Gemini art script (2 images)
 
 Downtown already works with emoji. These two sheets replace the emoji with real buildings.

@@ -128,6 +128,7 @@ function classAvgCerts(){ const ps = pubs(); if (!ps.length) return (S.certs || 
 const isOpen = k => (CLS().districts || []).includes(k) || classAvgCerts() >= DISTRICTS[k].need;
 
 /* --- Lake Eola: fishing --- */
+const fishArt = f => img(`${WA}fish_${f[0]}.webp`, f[1]);
 const FISH = [["bluegill","🐟",0,["Bluegill","Mojarra azul"]],["bass","🐟",0,["Largemouth bass","Lobina negra"]],["catfish","🐱",0,["Channel catfish","Bagre de canal"]],["crappie","🐟",0,["Crappie","Crappie"]],
   ["sunfish","🌞",0,["Redear sunfish","Pez sol"]],["tilapia","🐠",0,["Tilapia","Tilapia"]],["boot","🥾",0,["Old boot","Bota vieja"]],["mullet","🐟",1,["Striped mullet","Lisa rayada"]],
   ["gar","🐊",1,["Florida gar","Pejelagarto"]],["peacock","🦚",1,["Peacock bass","Tucunaré"]],["snook","🐟",1,["Snook","Robalo"]],["feather","🪶",1,["Swan feather","Pluma de cisne"]],
@@ -144,7 +145,7 @@ window.w2Cast = function(){
     const tier = r > 110 ? 3 : r > 92 ? 2 : r > 62 ? 1 : 0, opts = FISH.filter(f => f[2] === tier), f = opts[Math.floor(Math.random() * opts.length)];
     const fresh = !w.fish[f[0]]; w.fish[f[0]] = (w.fish[f[0]] | 0) + 1; w.cnt.fish++; if (tier >= 2) w.cnt.rare++;
     const pay = [1, 2, 4, 10][tier]; T.coins(pay); T.persist(); albumCheck();
-    sheet(`<div class="eyebrow">🎣 ${W2("You caught…","Pescaste…")}</div><div class="wcatch"><span>${f[1]}</span><h2>${L(f[3])}</h2>
+    sheet(`<div class="eyebrow">🎣 ${W2("You caught…","Pescaste…")}</div><div class="wcatch"><span>${fishArt(f)}</span><h2>${L(f[3])}</h2>
       <i class="wr r${tier}">${L(RAR[tier])}</i><p>${fresh ? "📔 " + W2("New in your Album!","¡Nuevo en tu Álbum!") : W2(`You have ${w.fish[f[0]]} of these.`, `Tienes ${w.fish[f[0]]}.`)} · +${pay} Smithbucks</p></div>
       <button class="btn primary wide" onclick="townCloseCard();T_w2Paint()">${W2("Nice!","¡Bien!")}</button>`);
   });
@@ -157,7 +158,7 @@ function paintWaterfront(el, back){
       <button class="btn primary" onclick="w2Cast()">🎣 ${W2("Cast","Lanzar")} (${CASTS - w.daily.casts} ${W2("left today","quedan hoy")})</button>
       <p class="muted" style="font-size:12px">${W2(`Fish collected: ${got}/16 · Streak: ${w.fishStreak | 0}`, `Peces: ${got}/16 · Racha: ${w.fishStreak | 0}`)}</p></div></section>
     ${npcCard("rosa")}
-    <section class="panel"><div class="eyebrow">📔 ${W2("Your catch","Tu pesca")}</div><div class="walb">${FISH.map(f => `<div class="${w.fish[f[0]] ? "on" : ""} r${f[2]}"><span>${w.fish[f[0]] ? f[1] : "❔"}</span><small>${w.fish[f[0]] ? L(f[3]) : "???"}</small></div>`).join("")}</div></section>`;
+    <section class="panel"><div class="eyebrow">📔 ${W2("Your catch","Tu pesca")}</div><div class="walb">${FISH.map(f => `<div class="${w.fish[f[0]] ? "on" : ""} r${f[2]}"><span class="${w.fish[f[0]] ? "" : "wsil"}">${fishArt(f)}</span><small>${w.fish[f[0]] ? L(f[3]) : "???"}</small></div>`).join("")}</div></section>`;
 }
 /* --- Theme Park: rides --- */
 const RIDES = {coaster:["🎢",["The Grenadier Screamer","El Grito Grenadier"],6], drop:["🗼",["Drop Tower","Torre de caída"],5], flume:["🛶",["Log Flume","Troncos acuáticos"],8]};
@@ -194,7 +195,7 @@ window.w2Mission = function(uid){
     const ok = right >= 6, first = ok && !w.patches[uid];
     if (ok) { w.patches[uid] = Math.max(w.patches[uid] | 0, right); w.cnt.missions++; }
     const pay = ok ? (first ? 10 : 4) : 1; T.coins(pay); bumpNeed("know", 10); T.persist(); albumCheck();
-    sheet(`<div class="eyebrow">🚀 ${W2("Mission report","Reporte de misión")}</div><div class="wcatch"><span>${ok ? "🛰️" : "💥"}</span>
+    sheet(`<div class="eyebrow">🚀 ${W2("Mission report","Reporte de misión")}</div><div class="wcatch"><span class="${ok ? "wlaunch" : "wboom"}">${ok ? "🚀" : "💥"}</span>
       <h2>${ok ? W2("Orbit reached!","¡Llegaste a órbita!") : W2("Scrubbed launch","Lanzamiento abortado")}</h2>
       <div class="wstages">${[2, 4, 6].map((n, i) => `<i class="${right >= n ? "on" : ""}">${W2("Stage","Etapa")} ${i + 1}</i>`).join("")}</div>
       <p>✔ ${right}/8 · +${pay} Smithbucks${first ? " · 📔 " + W2("Mission patch earned!","¡Parche de misión!") : ""}</p>
@@ -336,7 +337,7 @@ window.w2Npc = function(id){
     <p>${W2("You finished my quest. Come back next week for the town's new story.","Terminaste mi misión. Vuelve la próxima semana para la nueva historia.")}</p><button class="btn primary wide" onclick="townCloseCard()">👋</button>`);
   const s = N.steps[st.step], t = s.t; if (t.k !== "quiz" && t.k !== "savings" && t.k !== "decor" && t.k !== "visit" && st.base == null) { st.base = counter(t); T.persist(); }
   const ready = stepDone(id);
-  sheet(`<div class="wnpc"><span>${N.e}</span><div><div class="eyebrow">${N.n} · ${L(N.l)} · ${st.step + 1}/${N.steps.length}</div><p class="wsay">“${E(L(s.say))}”</p></div></div>
+  sheet(`<div class="wnpc"><span>${img(`${WA}npc_${id}.webp`, N.e)}</span><div><div class="eyebrow">${N.n} · ${L(N.l)} · ${st.step + 1}/${N.steps.length}</div><p class="wsay">“${E(L(s.say))}”</p></div></div>
     <div class="kti ${ready ? "done" : ""}"><span>${ready ? "✅" : "🎯"}</span><div><b>${stepText(t)}</b>${t.k !== "quiz" && t.k !== "visit" ? `<small>${Math.min(t.n, t.k === "savings" || t.k === "decor" ? counter(t) : counter(t) - (st.base | 0))}/${t.n}</small>` : ""}</div></div>
     ${t.k === "quiz" ? `<button class="btn primary wide" onclick="w2NpcQuiz('${id}')">▶ ${W2("Start","Empezar")}</button>` : ready ? `<button class="btn primary wide" onclick="w2NpcNext('${id}')">✅ ${W2("Done! Next","¡Listo! Siguiente")}</button>` : ""}
     <button class="btn ghost wide" onclick="townCloseCard()">${W2("Later","Después")}</button>`);
@@ -354,15 +355,19 @@ window.w2NpcNext = function(id){
   T.persist(); closeSheet(); setTimeout(() => w2Npc(id), 250);
 };
 function npcCard(id){ const N = NPCS[id], st = qState(id), done = st.step >= N.steps.length;
-  return `<section class="panel wnpcc" onclick="w2Npc('${id}')" role="button"><span>${N.e}</span><div><b>${N.n}</b><small>${done ? "✅ " + W2("Quest complete","Misión completa") : `❗ ${L(N.l)} · ${st.step + 1}/${N.steps.length}`}</small></div><span class="btn">${W2("Talk","Hablar")}</span></section>`; }
-/* townspeople stand on the plaza */
+  return `<section class="panel wnpcc" onclick="w2Npc('${id}')" role="button"><span>${img(`${WA}npc_${id}.webp`, N.e)}</span><div><b>${N.n}</b><small>${done ? "✅ " + W2("Quest complete","Misión completa") : `❗ ${L(N.l)} · ${st.step + 1}/${N.steps.length}`}</small></div><span class="btn">${W2("Talk","Hablar")}</span></section>`; }
+/* townspeople stand on the plaza (Gemini art, emoji until it loads) */
+const NPCIM = {};
+function npcIm(id){ let o = NPCIM[id]; if (!o) { o = NPCIM[id] = new Image(); o.src = `${WA}npc_${id}.webp`; } return o.complete && o.naturalWidth ? o : null; }
 EXT.plazaFront.push(cx => { if (!SESS()) return; cx.textAlign = "center";
   Object.entries(NPCS).forEach(([id, N]) => { if (!N.at) return; const [x, y] = N.at, st = qState(id), t = performance.now() / 600;
-    cx.font = "44px sans-serif"; cx.fillText(N.e, x, y);
+    const im = npcIm(id), H = 92, top = im ? y + 4 - H : y - 40;
+    if (im) { const w = H * im.naturalWidth / im.naturalHeight; cx.fillStyle = "rgba(0,0,0,.18)"; cx.beginPath(); cx.ellipse(x, y + 4, w * .42, 6, 0, 0, 7); cx.fill(); cx.drawImage(im, x - w / 2, top, w, H); }
+    else { cx.font = "44px sans-serif"; cx.fillText(N.e, x, y); }
     cx.font = "800 13px 'Nunito', sans-serif"; const tw = cx.measureText(N.n).width + 14; cx.fillStyle = "rgba(255,255,255,.92)"; T.rr(cx, x - tw / 2, y + 6, tw, 20, 10); cx.fill();
     cx.fillStyle = "#1d1b2e"; cx.fillText(N.n, x, y + 21);
-    if (st.step < N.steps.length) { cx.font = "26px sans-serif"; cx.fillText("❗", x, y - 44 + Math.sin(t) * 4); } }); });
-EXT.plazaTap.push((x, y) => { if (!SESS()) return false; const hit = Object.entries(NPCS).find(([id, N]) => N.at && Math.abs(N.at[0] - x) < 30 && Math.abs(N.at[1] - 14 - y) < 34);
+    if (st.step < N.steps.length) { cx.font = "26px sans-serif"; cx.fillText("❗", x, top - 4 + Math.sin(t) * 4); } }); });
+EXT.plazaTap.push((x, y) => { if (!SESS()) return false; const hit = Object.entries(NPCS).find(([id, N]) => N.at && Math.abs(N.at[0] - x) < 30 && y < N.at[1] + 10 && y > N.at[1] - (npcIm(id) ? 92 : 44));
   if (!hit) return false; w2Npc(hit[0]); return true; });
 const _tab = window.townTab; if (typeof _tab === "function") window.townTab = function(k){ const w = w2(); w.visits = w.visits || {}; w.visits[k] = 1; return _tab.apply(this, arguments); };
 
@@ -386,9 +391,9 @@ function paintAlbum(el, back){
   el.innerHTML = `${back}<section class="panel raised"><div class="eyebrow">📔 ${W2("My album","Mi álbum")}</div><h2>${W2("Collections","Colecciones")}</h2>
       <p class="muted">${W2("Finish a whole set for 2 crates and 15 Smithbucks.","Completa una colección y gana 2 cajas y 15 Smithbucks.")}</p>
       <div class="wsets">${sets.map(s => `<div class="${s.have >= s.of && s.of ? "on" : ""}"><span>${s.e}</span><b>${L(s.l)}</b>${bar(s.of ? s.have / s.of : 0, s.have >= s.of ? "#3BB273" : null)}<small>${s.have}/${s.of}</small></div>`).join("")}</div></section>
-    <section class="panel"><div class="eyebrow">🐟 ${W2("Fish","Peces")}</div><div class="walb">${FISH.map(f => `<div class="${w.fish[f[0]] ? "on" : ""} r${f[2]}"><span>${w.fish[f[0]] ? f[1] : "❔"}</span><small>${w.fish[f[0]] ? L(f[3]) : "???"}</small></div>`).join("")}</div></section>
+    <section class="panel"><div class="eyebrow">🐟 ${W2("Fish","Peces")}</div><div class="walb">${FISH.map(f => `<div class="${w.fish[f[0]] ? "on" : ""} r${f[2]}"><span class="${w.fish[f[0]] ? "" : "wsil"}">${fishArt(f)}</span><small>${w.fish[f[0]] ? L(f[3]) : "???"}</small></div>`).join("")}</div></section>
     <section class="panel"><div class="eyebrow">🎖️ ${W2("Mission patches","Parches de misión")}</div><div class="walb">${us.map(u => `<div class="${w.patches[u.id] ? "on" : ""}"><span>${w.patches[u.id] ? "🎖️" : "❔"}</span><small>${E(u.t)}</small></div>`).join("")}</div></section>
-    <section class="panel"><div class="eyebrow">📸 ${W2("Ride photos","Fotos de juegos")}</div><div class="walb">${Object.entries(RIDES).map(([k, R]) => `<div class="${w.photos[k] ? "on" : ""}"><span>${R[0]}</span><small>${L(R[1])} ${["","🥉","🥈","🥇"][w.photos[k] | 0]}</small></div>`).join("")}</div></section>
+    <section class="panel"><div class="eyebrow">📸 ${W2("Ride photos","Fotos de juegos")}</div><div class="walb">${Object.entries(RIDES).map(([k, R]) => `<div class="${w.photos[k] ? "on" : ""}"><span class="${w.photos[k] ? "" : "wsil"}">${img(`${WA}ride_${k}.webp`, R[0])}</span><small>${L(R[1])} ${["","🥉","🥈","🥇"][w.photos[k] | 0]}</small></div>`).join("")}</div></section>
     <section class="panel"><div class="eyebrow">🏆 ${W2("Trophies","Trofeos")}</div><div class="walb">${SKEYS.map(k => `<div class="${w.trophies[k] ? "on" : ""}"><span>${w.trophies[k] ? STORIES[k].e : "❔"}</span><small>${L(STORIES[k].t)}</small></div>`).join("")}
       ${Object.entries(NPCS).map(([id, N]) => `<div class="${w.trophies["q_" + id] ? "on" : ""}"><span>${w.trophies["q_" + id] ? T.ITEMS[N.reward].e : "❔"}</span><small>${N.n}</small></div>`).join("")}</div></section>
     <section class="panel"><div class="eyebrow">🗓️ ${W2("Seasonal furniture (in the Shop only during its month)","Muebles de temporada (en la Tienda solo en su mes)")}</div>
@@ -413,8 +418,7 @@ function petsHtml(){
     return `<div><span style="font-size:${Math.round(38 * s[2])}px">${I.e}</span><b>${E(T.L2(I.name))}</b><small>${L(s[1])}${nx ? ` · ${n}/${nx[0]}` : " · ❤️"}</small>
       <button class="btn ${w.daily.fed[id] ? "ghost" : "primary"}" ${w.daily.fed[id] ? "disabled" : ""} onclick="w2Feed('${id}')">🍖 ${w.daily.fed[id] ? W2("Fed","Comió") : W2("Feed","Alimentar")}</button></div>`; }).join("")}</div>`;
 }
-EXT.houseExtra.push({html: sid => sid === me() ? `<section class="panel"><div class="eyebrow">💚 ${W2("Your needs","Tus necesidades")}</div>${needsHtml(true)}</section>
-  <section class="panel"><div class="eyebrow">🐾 ${W2("Your pets","Tus mascotas")}</div><p class="muted" style="font-size:12px;margin:0 0 6px">${W2("Feed each pet once a day. Answer the question right for the good food. Pets grow from Baby to Young to Grown.","Alimenta a cada mascota una vez al día. Responde bien para la buena comida. Crecen de Bebé a Joven a Adulto.")}</p>${petsHtml()}</section>` : ""});
+EXT.houseExtra.push({html: sid => sid === me() ? `<section class="panel"><div class="eyebrow">💚 ${W2("Your needs","Tus necesidades")}</div>${needsHtml(true)}</section>` : ""});
 
 /* ================================================================ 6. town vs. town */
 let LG = [], MKT = [];
@@ -499,7 +503,8 @@ const PLACES = () => [
   {k:"downtown", e:"🏢", l:["Downtown","Centro"], go:"downtown", d:["Jobs, services and the Community Board","Trabajos, servicios y el Tablero"]},
   ...Object.entries(DISTRICTS).map(([k, D]) => ({k, e:D.e, l:D.l, d:D.d, district:true})),
   {k:"towns", e:"🏙️", l:["Other towns","Otros pueblos"], d:["Best Town of the Month and the Trade Post","Mejor Pueblo del Mes y el Puesto de comercio"]},
-  {k:"album", e:"📔", l:["My album","Mi álbum"], d:["Your collections","Tus colecciones"]}];
+  {k:"album", e:"📔", l:["My album","Mi álbum"], d:["Your collections","Tus colecciones"]}, ...MORE.places];
+const MORE = {places:[], views:{}};
 function paintMap(el){
   const back = `<div class="eprow"><button class="btn ghost" onclick="w2Go(null)">← ${W2("Map","Mapa")}</button></div>`;
   if (SUBV === "waterfront" && isOpen("waterfront")) return paintWaterfront(el, back);
@@ -507,6 +512,7 @@ function paintMap(el){
   if (SUBV === "space" && isOpen("space")) return paintSpace(el, back);
   if (SUBV === "towns") return paintTowns(el, back);
   if (SUBV === "album") return paintAlbum(el, back);
+  if (SUBV && MORE.views[SUBV]) return MORE.views[SUBV](el, back);
   SUBV = null; const avg = classAvgCerts();
   el.innerHTML = `<section class="panel raised"><div class="eyebrow">🧭 ${W2("Map of Grenadier Town","Mapa del Pueblo")}</div><h2>${W2("Where to?","¿A dónde?")}</h2>
       <div style="margin-top:6px">${needsHtml(false)}</div></section>
@@ -557,5 +563,5 @@ EXT.adminPanels.push({
 });
 window.w2TDist = async function(k){ const c = (await T.net.myClasses()).find(x => x.id === T.adminCid); if (!c) return; const d = new Set(c.districts || []); d.has(k) ? d.delete(k) : d.add(k); townSet("districts", [...d]); };
 
-window.WORLD2 = {w2, needs, mood, isOpen, classAvgCerts, storyOf, storyTotal, storyTarget, NPCS, FISH, albumSets, petStage, scoreFor, DISTRICTS, STORIES, bumpNeed};
+window.WORLD2 = {MORE, ask, series, pickQ, myUnits, w2, needs, mood, isOpen, classAvgCerts, storyOf, storyTotal, storyTarget, NPCS, FISH, albumSets, petStage, scoreFor, DISTRICTS, STORIES, bumpNeed};
 })();

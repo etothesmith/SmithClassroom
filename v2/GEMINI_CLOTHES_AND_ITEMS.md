@@ -1,3 +1,5 @@
+> **Replaced by `GEMINI_MASTER.md`.** Use that file instead. This one is kept only for its cell-to-id mapping table.
+
 # New clothes and Town items: Gemini art script (9 images)
 
 This pack adds **34 clothing items**: 20 for girls, 10 for guys and 4 extras anyone can wear (sweater vest, fleece, checkered shirt and puffer vest). Students wear them on their avatar in the Locker, Money Moves, the Town and the arcade games. It also adds **16 new furniture pieces and pets** for Town houses.

@@ -1,6 +1,6 @@
 """Cut Gemini-dressed mannequins into avatar clothing layers.
 
-usage: python3 tools/extract_clothes.py SHEET.png N top|bottom START_COL
+usage: python3 tools/extract_clothes.py SHEET.png N top|bottom START_COL [TOP_MAX] [FULL_IDX,..]
   SHEET  Gemini output dressed on mannequins_N.png (N = 4 or 5)
   Writes assets/av3/av-{top|bot}-{shape}-{col}.webp for all 4 shapes and
   ic3-{top|bot}-{col}.webp icons, starting at START_COL.
@@ -15,6 +15,10 @@ from scipy import ndimage as ndi
 AV = "assets/av3/"
 SC = 1.9
 sheet, N, kind, col0 = sys.argv[1], int(sys.argv[2]), sys.argv[3], int(sys.argv[4])
+TOP_MAX = int(sys.argv[5]) if len(sys.argv) > 5 else 400        # raise for dresses
+# figures (0-based) wearing full-length pants: keep everything below the waist,
+# because skin-colored fabric (khaki, cream) can't be told from bare legs by color
+FULL = {int(v) for v in sys.argv[6].split(",") if v} if len(sys.argv) > 6 else set()
 g = Image.open(sheet).convert("RGB")
 TW = 400 * N
 k = g.width / TW                       # Gemini rescale of the template
@@ -22,10 +26,29 @@ body = Image.open(AV + "av-body-athletic-2.webp").convert("RGBA")
 bA = np.array(body)
 bodymask = bA[:, :, 3] > 128
 
+def figures(img):
+    """per figure: head top, feet bottom and head center x, found from the non-magenta mask"""
+    a = np.array(img.convert("RGB")).astype(int)
+    m = ~((a[:, :, 0] > 150) & (a[:, :, 1] < 120) & (a[:, :, 2] > 150))
+    cols = np.where(m.sum(0) > 3)[0]; runs = []; s0 = p0 = cols[0]
+    for c in cols[1:]:
+        if c > p0 + 6: runs.append((s0, p0)); s0 = c
+        p0 = c
+    runs.append((s0, p0)); runs = [r for r in runs if r[1] - r[0] > 20]
+    out = []
+    for x0, x1 in runs:
+        rows = np.where(m[:, x0:x1 + 1].sum(1) > 0)[0]; y0, y1 = rows.min(), rows.max()
+        head = m[y0:y0 + max(4, (y1 - y0) // 14), x0:x1 + 1]; hx = np.where(head.sum(0) > 0)[0]
+        out.append((y0, y1, x0 + (hx.min() + hx.max()) / 2))
+    return out
+TF = figures(Image.open(f"v2/gemini/mannequins_{N}.png")); GF = figures(g)
+assert len(TF) == N and len(GF) == N, (len(TF), len(GF))
 def crop_layer(i, dx=0, dy=0):
     ox = i * 400 + 65 - 48 * SC
     oy = 73 - 70 * SC
-    box = (ox * k + dx, oy * k + dy, (ox + 240 * SC) * k + dx, (oy + 600 * SC) * k + dy)
+    ty0, ty1, tx = TF[i]; gy0, gy1, gx = GF[i]; s = (gy1 - gy0) / (ty1 - ty0)
+    X = lambda x: gx + (x - tx) * s + dx; Y = lambda y: gy0 + (y - ty0) * s + dy
+    box = (X(ox), Y(oy), X(ox + 240 * SC), Y(oy + 600 * SC))
     return g.transform((240 * 2, 600 * 2), Image.EXTENT, box, Image.BICUBIC, fillcolor=(255, 0, 255)).resize((240, 600), Image.LANCZOS)
 
 def magenta(a):
@@ -34,8 +57,8 @@ def magenta(a):
 def register(i):
     # align on the legs (below the shorts), which Gemini should not change
     best = None
-    for dy in range(-24, 25, 3):
-        for dx in range(-24, 25, 3):
+    for dy in range(-9, 10, 3):
+        for dx in range(-9, 10, 3):
             a = np.array(crop_layer(i, dx, dy)).astype(int)
             m = ~magenta(a)
             sc = (m[400:560] == bodymask[400:560]).mean()
@@ -43,6 +66,7 @@ def register(i):
     return best
 
 def extract(i):
+    full = kind == "bottom" and i in FULL
     sc, dx, dy = register(i)
     a = np.array(crop_layer(i, dx, dy)).astype(int)
     fg = ~magenta(a)
@@ -50,16 +74,19 @@ def extract(i):
     diff = np.abs(a - ref).sum(2)
     r, gg, b = a[:, :, 0], a[:, :, 1], a[:, :, 2]
     lum = a.sum(2) / 3
-    skin = (r > gg + 12) & (gg > b + 18) & (r > 120) & (r < 235) & (abs(r - 200) < 45)
+    skin = (r > gg + 12) & (gg > b + 18) & (r > 120) & (r < 235) & (abs(r - 200) < 45) & (diff < 90)   # skin-colored AND unchanged from the mannequin
     gray = (abs(r - gg) < 14) & (abs(gg - b) < 14) & (lum > 110) & (lum < 185)
     dark = lum < 70
     y = np.arange(600)[:, None] * np.ones((1, 240))
     if kind == "top":
         # shorts begin around y=300 on athletic; gray there is the shorts
         cand = fg & ~skin & ~(gray & (y > 292) & (diff < 60))
-        cand &= (y > 135) & (y < 400)
+        cand &= (y > 135) & (y < TOP_MAX)
     else:
-        cand = fg & ~skin & ~(gray & (y < 300) & (diff < 60))
+        if full:
+            cand = fg & ~(gray & (y < 300) & (diff < 60)) & ~(skin & (y < 300))
+        else:
+            cand = fg & ~skin & ~(gray & (y < 300) & (diff < 60))
         cand &= (y > 270)
     cand = ndi.binary_opening(cand, iterations=2)
     lab, n = ndi.label(cand)
@@ -68,14 +95,19 @@ def extract(i):
         keep = np.isin(lab, 1 + np.where(sizes > 150)[0])
     else:
         keep = cand
-    keep = ndi.binary_closing(keep, iterations=3)
+    keep = ndi.binary_closing(keep, iterations=6 if full else 3)
     keep = ndi.binary_fill_holes(keep)
     # pull in the dark outline around the clothing
     ring = ndi.binary_dilation(keep, iterations=3) & dark & fg
     keep = keep | ring
     keep = ndi.binary_fill_holes(keep)
     # drop skin that got enclosed (e.g. neck opening is already open; this is the midriff)
-    keep &= ~(skin & ~ndi.binary_erosion(keep, iterations=2)) | dark
+    if not full:
+        keep &= ~(skin & ~ndi.binary_erosion(keep, iterations=2)) | dark
+    else:
+        # the mannequin's own hands rest at the hips: drop untouched skin there
+        hand = skin & (diff < 15) & (y < 395)
+        keep &= ~ndi.binary_dilation(hand, iterations=1)
     keep &= fg
     keep = ndi.binary_opening(keep, iterations=1) | (keep & dark)
     # JPEG bleeds magenta into the outline: shave one pixel and despill

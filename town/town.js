@@ -25,7 +25,7 @@ let MARKET = [], CHAT = [], PLAZA = {}, MY_SALES = [], MY_BUYS = [], T_FROM = []
 let toastEl = null;
 /* extension points used by town/civic.js (Town Hall, Bank, Jobs, businesses, events, plaza quiz) */
 const EXT = {tabs:[], onClass:[], onSession:[], priceMult:[], listCheck:[], onSold:[], plazaBack:[], plazaFront:[], plazaTap:[],
-             adminPanels:[], streetBadge:[], houseExtra:[], plazaSub:[], banner:[], pubExtra:[], projector:[], onLeave:[], onBuy:[], marketTop:[], nameTag:[]};
+             adminPanels:[], streetBadge:[], houseExtra:[], plazaSub:[], banner:[], pubExtra:[], projector:[], onLeave:[], onBuy:[], marketTop:[], nameTag:[], personDraw:[]};
 const run = (list, ...a) => list.forEach(f => { try { f(...a); } catch(e){ console.warn("town ext", e); } });
 
 /* ---------------------------------------------------------------- state */
@@ -74,7 +74,7 @@ function crateTick(){
 }
 function rollCrate(){
   const r = Math.random(); const tier = r < 0.01 ? 3 : r < 0.10 ? 2 : r < 0.40 ? 1 : 0;
-  const pool = Object.values(ITEMS).filter(i => i.r === tier && !i.biz && !i.office); return pool[Math.floor(Math.random() * pool.length)].id;
+  const pool = Object.values(ITEMS).filter(i => i.r === tier && !i.biz && !i.office && !i.tower); return pool[Math.floor(Math.random() * pool.length)].id;
 }
 
 /* ---------------------------------------------------------------- cloud save */
@@ -165,7 +165,7 @@ function startBg(){
 let KNOCK_OUT = {}, KNOCK_SEEN = {};
 const dayStr = () => new Date().toISOString().slice(0, 10);
 const doorOf = p => (p && p.door) || "knock";
-function canEnter(sid){ if (!SESS || sid === SESS.sid) return true; const p = PUB[sid]; if (doorOf(p) === "open") return true;
+function canEnter(sid){ if (!SESS || sid === SESS.sid) return true; const p = PUB[sid]; if (doorOf(p) === "open" || (p && p.party > Date.now())) return true;
   const k = KNOCK_OUT[sid]; return !!(k && k.status === "in" && k.day === dayStr()); }
 function knocksIn(rows){
   if (doorOf({door:town().house.door}) === "closed") return;
@@ -496,6 +496,7 @@ function drawPerson(p){
   if (im && im.complete) { cx.save(); if (p.face === -1) { cx.translate(p.x, 0); cx.scale(-1, 1); cx.translate(-p.x, 0); }
     cx.drawImage(im, p.x - w / 2, p.y - h + bob, w, h); cx.restore(); }
   else { cx.fillStyle = p.me ? "#E3A21A" : "#2F7FD8"; cx.beginPath(); cx.arc(p.x, p.y - 60, 16, 0, Math.PI * 2); cx.fill(); cx.fillRect(p.x - 12, p.y - 44, 24, 40); }
+  EXT.personDraw.forEach(f => { try { f(cx, p, p.sid || (p.me && SESS ? SESS.sid : null)); } catch(e){} });
   cx.font = "800 13px 'Nunito', sans-serif"; cx.textAlign = "center";
   const tags = EXT.nameTag.map(f => { try { return f(p.sid) || ""; } catch(e){ return ""; } }).join("");
   const label = (tags ? tags + " " : "") + (p.name || ""); const tw = cx.measureText(label).width + 12;
@@ -889,7 +890,7 @@ function drawPlazaOthers(){
 window.TOWN = {boot, get net(){ return NET; }, get session(){ return SESS; }, town, crateTick, pushNow,
   EXT, get cls(){ return CLS; }, get pub(){ return PUB; }, get tt(){ return TT; }, get plaza(){ return PL; }, get adminCid(){ return ADMIN_CID; },
   viewSub: u => VIEW_SUBS.push(u), publishNow, paintSub, paintTown, paintAdmin, toast, coins, persist, once, addItem, has, freeInv, itemArt, itemName, artImg, rarityChip,
-  ITEMS, L2, TA, isTown, shopMult, priceOf, rr, publishSoon, lots, adminSet: patch => adminSet(patch)};
+  ITEMS, L2, TA, isTown, canEnter, shopMult, priceOf, rr, publishSoon, lots, adminSet: patch => adminSet(patch)};
 boot();
 })();
 

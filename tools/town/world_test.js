@@ -36,7 +36,7 @@ const check = (n, ok, info) => { results.push((ok ? 'PASS ' : 'FAIL ') + n + (in
   /* map + districts */
   await A.evaluate(() => townTab('map')); await A.waitForTimeout(500);
   const map = await A.evaluate(() => ({ n: document.querySelectorAll('.wmap .kb').length, locked: document.querySelectorAll('.wmap .kb.locked').length, avg: WORLD2.classAvgCerts() }));
-  check('map shows 8 places; Waterfront open at 2 certs avg, Theme Park and Space locked', map.n === 8 && map.locked === 2 && map.avg >= 2, map);
+  check('map shows 10 places (incl. Exam Tower); Waterfront open at 2 certs avg, Theme Park and Space locked', map.n === 10 && map.locked === 2 && map.avg >= 2, map);
   await A.screenshot({ path: SHOTS + '/w_map.png', fullPage: true });
   await T.evaluate(async () => { const c = (await TOWN.net.myClasses()).find(x => x.name === 'Period 1'); await TOWN.net.setClass(c.id, { districts: ['park', 'space'] }); });
   await A.waitForTimeout(600);
@@ -110,7 +110,7 @@ const check = (n, ok, info) => { results.push((ok ? 'PASS ' : 'FAIL ') + n + (in
   const seas = await A.evaluate(() => [...document.querySelectorAll('.tseason')].length);
   check('the Shop shows only this month\'s 3 seasonal items', seas === 3, seas);
   const pet = await A.evaluate(() => { TOWN.addItem('pet_cat', 1); townVisit(TOWN.session.sid); return true; }); await A.waitForTimeout(400);
-  await A.evaluate(() => { const b = [...document.querySelectorAll('.wpets button')][0]; b && b.click(); }); await solveOne(A); await A.waitForTimeout(300);
+  await A.evaluate(() => { const b = [...document.querySelectorAll('.pbtns button')][0]; b && b.click(); }); await solveOne(A); await A.waitForTimeout(300);
   const pg = await A.evaluate(() => WORLD2.w2().pets.pet_cat);
   check('feeding a pet with a right answer = +2 growth', pg === 2, pg);
   await A.screenshot({ path: SHOTS + '/w_house.png', fullPage: true });
