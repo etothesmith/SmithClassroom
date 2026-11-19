@@ -382,7 +382,7 @@ Row 4: a small wooden chess table with black and white pieces; a colorful puzzle
 Start a new chat. **Attach `v2/gemini/hair_template.png`** (20 blank gray heads on magenta).
 
 ### Step 27 → `curly_hair.png`
-- [ ] done
+- [x] done
 ```
 I attached a sheet of 20 blank gray mannequin heads on a flat magenta (#FF00FF) background, 5 across and 4 down. Draw one hairstyle on each head for a bright, friendly cartoon avatar game for high-school students.
 

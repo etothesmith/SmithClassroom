@@ -66,6 +66,7 @@ window.appClose = close;
 /* ---------------------------------------------------------------- what's new */
 const NOTES = [
   ["🎖️", ["The mayor runs city hall","El alcalde dirige el ayuntamiento"], ["The mayor now hires and fires the 6 city jobs (firefighter, marshal, sanitation, ranger, builder, mail), gives a weekly State of the Town, and can ask Coach Smith to fire anyone.","El alcalde ahora contrata y despide los 6 empleos municipales, da un discurso semanal y puede pedir a Coach Smith que despida a alguien."]],
+  ["💇", ["20 new curly hairstyles","20 peinados rizados nuevos"], ["Afros, ringlets, a high-top, a frohawk, puffs, a twist-out and more in the Locker.","Afros, rizos, high-top, frohawk, coletas afro, twist-out y más en el Casillero."]],
   ["💻", ["Chromebook fix","Arreglo para Chromebook"], ["Long forms like job applications now scroll, so you can reach every box and the Send button.","Los formularios largos como las solicitudes ahora se desplazan, para llegar a cada casilla y al botón Enviar."]]
 ];
 function whatsNew(){

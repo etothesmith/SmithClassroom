@@ -740,15 +740,21 @@ EXT.adminPanels.push({
 });
 const getCls = async () => (await T.net.myClasses()).find(x => x.id === tc());
 window.carHire = async function(aid){
-  const c = await getCls(); if (!c) return; const a = await store().get(`classes/${c.id}/apps/${aid}`); if (!a) return;
-  const j = CAREERS[a.job]; const s = {...(c.staff || {})}; Object.keys(s).forEach(k => { s[k] = (s[k] || []).filter(x => x !== a.sid); });
-  let list = s[a.job] || [];
-  if (list.length >= j.seats) { const out = list[0]; if (!confirm(W2(`${j.title[0]} is full. Replace ${(c.staffNames || {})[out] || "the first hire"}?`, `El puesto está lleno. ¿Reemplazar a ${(c.staffNames || {})[out] || "la primera persona"}?`))) return; list = list.slice(1); }
-  s[a.job] = [...list, a.sid];
-  await store().update(`classes/${c.id}/apps/${aid}`, {status:"hired", decidedAt:Date.now()});
-  T.adminSet({staff:s, staffNames:{...(c.staffNames || {}), [a.sid]:a.name}});
+  T.toast(W2("Hiring…","Contratando…"));
+  try {
+    const c = await getCls(); if (!c) throw new Error(W2("Pick the class at the top of the teacher panel first.","Primero elige la clase arriba del panel."));
+    const a = await store().get(`classes/${c.id}/apps/${aid}`); if (!a) throw new Error(W2("That application was withdrawn or already decided.","Esa solicitud ya no está."));
+    const j = CAREERS[a.job]; if (!j) throw new Error("Unknown job: " + a.job);
+    const s = {...(c.staff || {})}; Object.keys(s).forEach(k => { s[k] = (s[k] || []).filter(x => x !== a.sid); });
+    let list = s[a.job] || [];
+    if (list.length >= j.seats) { const out = list[0]; if (!confirm(W2(`${j.title[0]} is full. Replace ${(c.staffNames || {})[out] || "the first hire"}?`, `El puesto está lleno. ¿Reemplazar a ${(c.staffNames || {})[out] || "la primera persona"}?`))) return; list = list.slice(1); }
+    s[a.job] = [...list, a.sid];
+    await store().update(`classes/${c.id}/apps/${aid}`, {status:"hired", decidedAt:Date.now()});
+    await T.net.setClass(c.id, {staff:s, staffNames:{...(c.staffNames || {}), [a.sid]:a.name}});
+    T.toast(W2(`✅ Hired ${a.name} as ${j.title[0]}.`, `✅ Contrataste a ${a.name}.`)); T.paintAdmin();
+  } catch(e){ console.error("carHire", e); alert(W2("Couldn't hire: ","No se pudo contratar: ") + (e.code || e.message || e)); }
 };
-window.carDeny = async function(aid){ const c = await getCls(); if (c) await store().update(`classes/${c.id}/apps/${aid}`, {status:"denied", decidedAt:Date.now()}); T.paintAdmin(); };
+window.carDeny = async function(aid){ try { const c = await getCls(); if (c) await store().update(`classes/${c.id}/apps/${aid}`, {status:"denied", decidedAt:Date.now()}); T.toast(W2("Application turned down.","Solicitud rechazada.")); T.paintAdmin(); } catch(e){ console.error("carDeny", e); alert("Couldn't update: " + (e.code || e.message || e)); } };
 window.carFire = async function(job, sid){
   const c = await getCls(); if (!c) return; const nm = (c.staffNames || {})[sid] || "";
   if (!confirm(W2(`Fire ${nm} as ${CAREERS[job].title[0]}? The job opens up for applications.`, `¿Despedir a ${nm}? El puesto se abre.`))) return;
