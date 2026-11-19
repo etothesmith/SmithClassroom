@@ -643,10 +643,10 @@ function paintShop(el){
   const chips = [["new","✨",WL("New","Nuevo")],["all","🛍️",WL("All","Todo")]].concat(Object.entries(sets).filter(([k]) => all.some(i => i.set === k)).map(([k, v]) => [k, v[0], L2({en:v[1], es:v[2]})]))
     .concat(slots.map(s => ["slot:" + s[0], "", L2(s[1])]));
   const f = SHOPF;
-  const forSale = all.filter(i => f === "all" ? true : f === "new" ? i.fresh || i.season : f.startsWith("slot:") ? i.slot === f.slice(5) : i.set === f)
+  const forSale = all.filter(i => f === "all" ? true : f === "new" ? i.fresh >= 34 || i.season : f.startsWith("slot:") ? i.slot === f.slice(5) : i.set === f)
     .sort((a, b) => (b.season ? 1 : 0) - (a.season ? 1 : 0) || priceOf(a) - priceOf(b));
   const card = (i, deal) => { const was = priceOf(i), now = shopPrice(i), own = t.inv[i.id] | 0;
-    return `<div class="tcardi ${i.season ? "tseason" : ""} ${deal ? "tdealc" : ""}">${i.season ? `<i class="tlimit">⏳ ${WL("This month only","Solo este mes")}</i>` : deal ? `<i class="tlimit">🔥 −30%</i>` : i.fresh ? `<i class="tnew">${WL("NEW","NUEVO")}</i>` : ""}${itemArt(i.id, 64)}<b>${L2(i.name)}</b>
+    return `<div class="tcardi ${i.season ? "tseason" : ""} ${deal ? "tdealc" : ""}">${i.season ? `<i class="tlimit">⏳ ${WL("This month only","Solo este mes")}</i>` : deal ? `<i class="tlimit">🔥 −30%</i>` : i.fresh >= 34 ? `<i class="tnew">${WL("NEW","NUEVO")}</i>` : ""}${itemArt(i.id, 64)}<b>${L2(i.name)}</b>
       ${own ? `<small class="muted">${WL("You have","Tienes")} ${own}</small>` : ""}<button class="btn" onclick="townBuyShop('${i.id}')">💵 ${now !== was ? `<s>${was}</s> ` : ""}${now}</button></div>`; };
   el.innerHTML = `<section class="panel tcrates">${artImg(`${TA}ui/crate.webp`, "🎁", true)}
       <div><div class="eyebrow">${WL("Crates","Cajas")}</div><h2>${WL(`You have ${t.crates}`, `Tienes ${t.crates}`)}</h2>

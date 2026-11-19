@@ -180,8 +180,23 @@ window.TOWN_ITEMS = Object.fromEntries([
  ["civics",[["art_constitution","art",0,6,"📜","Constitution poster","Póster de la Constitución"],["art_dollar","art",1,8,"💵","Framed first dollar","Primer dólar enmarcado"],
    ["sofa_throne","sofa",2,22,"👑","Golden throne","Trono dorado"]]]
 ].forEach(([set, list]) => list.forEach(([id, slot, r, p, e, en, es]) => { window.TOWN_ITEMS[id] = {id, slot, r, p, e, name:{en, es}, set, fresh:23}; }));
+/* 3.4 furniture: four new sets (art: Gemini Script 9, sheet furniture_5.png; emoji until then) */
+[["farmhouse",[["bed_quilt","bed",0,9,"🛏️","Patchwork quilt bed","Cama de colcha"],["sofa_porch","sofa",0,8,"🪑","Porch rocker","Mecedora de porche"],
+   ["table_crate","table",0,4,"📦","Crate side table","Mesa de cajón"],["rug_braided","rug",0,5,"🧺","Braided rug","Alfombra trenzada"],
+   ["lamp_lantern","lamp",1,7,"🏮","Barn lantern","Farol de granero"],["art_rooster","art",1,8,"🐓","Rooster painting","Cuadro de gallo"]]],
+ ["courthouse",[["table_bench","table",1,12,"⚖️","Judge's bench","Estrado del juez"],["sofa_jury","sofa",0,9,"🪑","Jury box seats","Banca del jurado"],
+   ["wall_seal","wall",1,10,"🦅","Town seal","Sello del pueblo"],["trophy_gavel","trophy",0,6,"🔨","Golden gavel","Mazo dorado"],
+   ["art_scales","art",0,6,"⚖️","Scales of justice print","Lámina de la justicia"],["plant_fern","plant",0,4,"🪴","Office fern","Helecho de oficina"]]],
+ ["voyager",[["wall_map","wall",0,6,"🗺️","World map","Mapa mundial"],["table_globe","table",1,10,"🌍","Spinning globe desk","Escritorio con globo"],
+   ["trophy_plane","trophy",1,9,"✈️","Model airplane","Avión a escala"],["rug_compass","rug",1,8,"🧭","Compass rose rug","Alfombra rosa de los vientos"],
+   ["art_postcards","art",0,5,"💌","Postcard collage","Collage de postales"],["sofa_suitcase","sofa",2,20,"🧳","Vintage suitcase chair","Sillón de maletas"]]],
+ ["ocean",[["bed_boat","bed",2,24,"⛵","Sailboat bed","Cama velero"],["table_tank","table",1,14,"🐠","Reef tank","Pecera de arrecife"],
+   ["lamp_jelly","lamp",1,9,"🪼","Jellyfish lamp","Lámpara de medusa"],["rug_wave","rug",0,5,"🌊","Wave rug","Alfombra de olas"],
+   ["wall_anchor","wall",0,5,"⚓","Anchor wall hook","Ancla de pared"],["trophy_shell","trophy",3,30,"🐚","Golden conch","Caracola dorada"]]]
+].forEach(([set, list]) => list.forEach(([id, slot, r, p, e, en, es]) => { window.TOWN_ITEMS[id] = {id, slot, r, p, e, name:{en, es}, set, fresh:34}; }));
 window.TOWN_SETS = {school:["📚","School supplies","Útiles escolares"], gamer:["🎮","Gamer room","Cuarto gamer"], sports:["🏀","Sports fan","Fan de deportes"],
-  space:["🚀","Space","Espacio"], beach:["🏖️","Florida beach","Playa de Florida"], cozy:["🧸","Cozy","Acogedor"], creator:["🎸","Creator studio","Estudio creativo"], civics:["📜","Civics & money","Civismo y dinero"]};
+  space:["🚀","Space","Espacio"], beach:["🏖️","Florida beach","Playa de Florida"], cozy:["🧸","Cozy","Acogedor"], creator:["🎸","Creator studio","Estudio creativo"], civics:["📜","Civics & money","Civismo y dinero"],
+  farmhouse:["🐓","Farmhouse","Casa de campo"], courthouse:["⚖️","Courthouse","Juzgado"], voyager:["🧭","Voyager","Viajero"], ocean:["🌊","Ocean","Océano"]};
 window.TOWN_RARITY = [{en:"Common",es:"Común",c:"#8A94A6"},{en:"Rare",es:"Raro",c:"#2F7FD8"},{en:"Epic",es:"Épico",c:"#8A5CD8"},{en:"Legendary",es:"Legendario",c:"#E3A21A"}];
 window.TOWN_HOUSES = [
   ["cottage", 0,  "Cottage", "Casita"],

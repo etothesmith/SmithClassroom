@@ -11,6 +11,7 @@ from scipy import ndimage as ndi
 T = "v2/assets/town/"
 ITEMS, DOWN, WORLD, GAMES, PL3 = T + "items/", T + "downtown/", T + "world/", T + "games/", T + "places3/"
 FARM = T + "farm/"
+PL4 = T + "places4/"
 FISH = ["bluegill","bass","catfish","crappie","sunfish","tilapia","boot","mullet","gar","peacock","snook","feather","redfish","tarpon","sturgeon","koi"]
 ALIAS = {"tw_champ": ["tw_champ_apecon", "tw_champ_apgov", "tw_champ_econ", "tw_champ_gov"]}
 SHEETS = {   # file: (cols, rows, folder, ids, max side)
@@ -38,6 +39,8 @@ SHEETS = {   # file: (cols, rows, folder, ids, max side)
   "places_3.png": (4, 3, PL3, "exchange lottery mortgage airport barn jail dealer mall beach theater museum port", 280),
   "farm_1.png": (6, 4, FARM, "strawberry_1 strawberry_2 strawberry_3 tomato_1 tomato_2 tomato_3 corn_1 corn_2 corn_3 sugarcane_1 sugarcane_2 sugarcane_3 orange_1 orange_2 orange_3 pumpkin_1 pumpkin_2 pumpkin_3 soil soil_wet wilt can basket barn_box", 200),
   "farm_2.png": (5, 4, FARM, "chicken duck goat sheep pig cow bee horse egg milk cheese wool truffle honey plot plot_taken feed market_stall farmhand fence", 220),
+  "furniture_5.png": (6, 4, ITEMS, "bed_quilt sofa_porch table_crate rug_braided lamp_lantern art_rooster table_bench sofa_jury wall_seal trophy_gavel art_scales plant_fern wall_map table_globe trophy_plane rug_compass art_postcards sofa_suitcase bed_boat table_tank lamp_jelly rug_wave wall_anchor trophy_shell", 240),
+  "places_4.png": (2, 1, PL4, "gigs records", 300),
   "npc_rosa_fix.png": (1, 1, WORLD, "npc_rosa", 360),
 }
 
