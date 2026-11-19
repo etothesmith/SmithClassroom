@@ -546,7 +546,7 @@ function lockerAcc(id){
 function lockerRandom(){
   const r = n => Math.floor(Math.random() * n);
   const open = l => l.filter(itemOpen);
-  DRAFT = {v:3, shape:AV_SHAPES[r(4)][0], skin:r(8), face:r(16), hair:r(32),
+  DRAFT = {v:3, shape:AV_SHAPES[r(4)][0], skin:r(8), face:r(16), hair:r(AV_HAIR_NAMES.length),
     top:open(AV_TOPS)[r(open(AV_TOPS).length)].id, bottom:open(AV_BOTTOMS)[r(open(AV_BOTTOMS).length)].id, acc:[]};
   viewLocker();
 }
@@ -688,7 +688,7 @@ function showWhatsNew(){
       ${mm ? `<div class="mmfound" style="margin-top:12px"><img id="wnMM" alt=""><div><b>${WL("We found your Money Moves character!","¡Encontramos tu personaje de Money Moves!")}</b><br>
         <span style="font-weight:600">${WL("It's your avatar here now, in every class. Change it any time in your Locker.","Ahora es tu avatar aquí, en todas las clases. Cámbialo cuando quieras en tu casillero.")}</span></div></div>` : ""}
       <ul>
-        <li><img src="${icon("locker")}" alt=""><span><b>${WL("Every class can build an avatar","Todas las clases pueden crear un avatar")}</b>${WL("AP Macro, Econ Honors, Gov Honors and AP Gov: 4 body shapes, 8 skin tones, 16 faces, 32 hairstyles and head coverings.","Macro AP, Econ Honores, Gob Honores y Gob AP: 4 tipos de cuerpo, 8 tonos de piel, 16 caras, 32 peinados y cubiertas.")}</span></li>
+        <li><img src="${icon("locker")}" alt=""><span><b>${WL("Every class can build an avatar","Todas las clases pueden crear un avatar")}</b>${WL("AP Macro, Econ Honors, Gov Honors and AP Gov: 4 body shapes, 8 skin tones, 16 faces, 52 hairstyles and head coverings.","Macro AP, Econ Honores, Gob Honores y Gob AP: 4 tipos de cuerpo, 8 tonos de piel, 16 caras, 52 peinados y cubiertas.")}</span></li>
         <li><img src="${icon("game")}" alt=""><span><b>${WL("Play the arcade as YOU","Juega el arcade como TÚ")}</b>${WL("Your avatar runs, jumps and fights in the arcade games.","Tu avatar corre, salta y pelea en los juegos.")}</span></li>
         <li><img src="${icon("trophies")}" alt=""><span><b>${WL("Unlock gear and badges","Desbloquea ropa e insignias")}</b>${WL("Study to level up. New clothes, glasses and chains open as you go.","Estudia para subir de nivel. Se abren ropa, lentes y cadenas.")}</span></li>
         <li><img src="${icon("world")}" alt=""><span><b>${WL("One campus, every class","Un campus, todas las clases")}</b>${WL("Classes, assignments, the arcade and your trophies are one tap away.","Clases, tareas, el arcade y tus trofeos a un toque.")}</span></li>

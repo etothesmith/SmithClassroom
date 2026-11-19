@@ -2,7 +2,7 @@
    avatar.js — the student avatar for Smith's Classroom 2.0
 
    This is the Money Moves 3.x layered character (4 body shapes x 8 skin
-   tones, 16 faces, 32 hairstyles and head coverings, 9 tops and 9 bottoms per
+   tones, 16 faces, 52 hairstyles and head coverings, 9 tops and 9 bottoms per
    shape, 24 accessories), moved out of money_moves.html so the whole site
    shares one character. The layer art lives in assets/av3/*.webp; the
    anchor table AV3 and the compositing rules are copied from Money Moves so a
@@ -36,6 +36,9 @@ const AV_HAIR_NAMES = [["Low fade with 360 waves","Desvanecido bajo con ondas 36
   ["Shoulder-length locs","Locs a los hombros"],["Locs in a high bun","Locs en moño alto"],["Silk press","Alisado"],
   ["Curly 3C","Rizado 3C"],["Long waves","Ondas largas"],["Long straight","Largo y liso"],["Man bun","Moño"],
   ["Curly mullet","Mullet rizado"],["Hijab","Hiyab"],["African-print headwrap","Turbante de estampado africano"]].map(([en,es])=>({en,es}));
+/* 20 curly styles (Gemini Chat E, cut with tools/extract_hair.py): hair-32 … hair-51 */
+AV_HAIR_NAMES.push(...[["Curly undercut", "Rizos con laterales rapados"], ["Curly high-top", "High-top rizado"], ["Big 4C afro", "Afro 4C grande"], ["Tapered afro", "Afro con degradado"], ["Curly frohawk", "Frohawk rizado"], ["3B ringlets, middle part", "Rizos 3B con raya al medio"], ["Long 3A spirals", "Espirales 3A largas"], ["Curly bob", "Bob rizado"], ["Curls with curtain bangs", "Rizos con flequillo cortina"], ["Half-up curly top knot", "Medio moño rizado"], ["Curly pineapple ponytail", "Coleta alta rizada"], ["Curly pigtail puffs", "Coletas afro"], ["Side-swept curls, shaved side", "Rizos de lado con lateral rapado"], ["Twist-out", "Twist-out"], ["Teeny afro (TWA)", "Afro muy corto"], ["Low curly ponytail", "Coleta baja rizada"], ["Big curly bun", "Moño rizado grande"], ["Curly shag", "Shag rizado"], ["Honey-blonde side-part curls", "Rizos rubio miel con raya al lado"], ["Long curls, caramel highlights", "Rizos largos con mechas caramelo"]].map(([en,es])=>({en,es})));
+Object.assign(AV3.i, {"hair-32": [63.9, 261.2, 137.9, 100.4], "hair-33": [110.9, 308.2, 137.9, 154.2], "hair-34": [120.9, 318.2, 137.9, 220.0], "hair-35": [100.9, 298.2, 137.9, 149.8], "hair-36": [88.9, 286.2, 137.9, 106.6], "hair-37": [50.9, 248.2, 137.9, 184.4], "hair-38": [60.9, 258.2, 137.9, 173.2], "hair-39": [61.9, 259.2, 137.9, 173.0], "hair-40": [62.9, 260.2, 137.9, 181.8], "hair-41": [108.9, 306.2, 137.9, 156.6], "hair-42": [137.9, 335.2, 137.9, 156.4], "hair-43": [34.9, 232.2, 137.9, 204.2], "hair-44": [78.9, 276.2, 137.9, 150.0], "hair-45": [57.9, 255.2, 137.9, 146.8], "hair-46": [54.9, 252.2, 137.9, 144.6], "hair-47": [40.9, 238.2, 137.9, 155.4], "hair-48": [139.9, 337.2, 137.9, 152.2], "hair-49": [90.9, 288.2, 137.9, 169.0], "hair-50": [67.9, 265.2, 137.9, 175.8], "hair-51": [64.9, 262.2, 137.9, 178.6]});
 
 /* col = which art layer; null means the plain base layer drawn on the body */
 const AV_TOPS = [

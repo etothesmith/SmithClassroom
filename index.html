@@ -8526,13 +8526,13 @@ function mmNewsCheck(){
   if (!s || !s.player || S.mmNews === MM_VERSION || (s.seen === MM_VERSION)) return;
   const es = S.lang === "es", name = esc((s.player && s.player.name) || S.name || "");
   const items = es ? [
-    ["🧍", "Crea tu personaje", "4 tipos de cuerpo, 8 tonos de piel, 16 caras y 32 peinados y cubiertas para la cabeza, todos gratis."],
+    ["🧍", "Crea tu personaje", "4 tipos de cuerpo, 8 tonos de piel, 16 caras y 52 peinados y cubiertas para la cabeza, todos gratis."],
     ["🏠", "Mi Vida", "Tu personaje tiene necesidades, un hogar, cuentas y ahorros. Cada lección es un mes nuevo."],
     ["📰", "Fed Watch", "Noticias de la Reserva Federal con una pregunta de la Unidad 4 que cambia tus tasas de interés."],
     ["🛍️", "Tienda nueva", "Ropa nueva, 24 accesorios, autos y casas."],
     ["🎮", "Arcade y lista de exploración", "Juega Street Dash y Budget Blitz, y gana $300 por probar todo."],
   ] : [
-    ["🧍", "Build your own character", "4 body shapes, 8 skin tones, 16 faces, and 32 hairstyles and head coverings, all free."],
+    ["🧍", "Build your own character", "4 body shapes, 8 skin tones, 16 faces, and 52 hairstyles and head coverings, all free."],
     ["🏠", "My Life", "Your character has needs, a home, bills, and savings. Every lesson you finish is a new month."],
     ["📰", "Fed Watch", "Federal Reserve news with a Unit 4 question that moves your interest rates."],
     ["🛍️", "New Marketplace items", "New clothes, 24 accessories, cars, and homes."],
@@ -12171,6 +12171,7 @@ fxBackdrop(); paintMute();
 <script src="town/civic.js"></script>
 <script src="town/careers.js"></script>
 <script src="town/jobs2.js"></script>
+<script src="town/mayor.js"></script>
 <script src="town/today.js"></script>
 <script src="town/world2.js"></script>
 <script src="town/pets.js"></script>

@@ -287,7 +287,7 @@ window.lvFeudFight = function(){
 window.lvFeudArg = async function(){
   const m = myFeud(); if (!m) return; const box = document.getElementById("lvArg"), err = document.getElementById("lvArgErr"), t = (box.value || "").trim().slice(0, 140), f = feud();
   if (t.length < 20) { err.textContent = W2("Write one full sentence with a reason.","Escribe una oración completa con una razón."); return; }
-  if (!cleanText(t)) { err.textContent = W2("Keep it school-appropriate.","Mantenlo apropiado."); return; }
+  if (badShow(err, [t], "feud argument")) return;
   try { await store().set(`${C()}/feud/${week()}_${me()}`, {...m, arg:t, argAt:Date.now()}, true); } catch(e){ err.textContent = W2("Couldn't save it.","No se pudo guardar."); return; }
   T.toast(kwHit(f, m.side, t) ? W2("💡 Strong argument! You used the unit's vocabulary: +5 for your side.","💡 ¡Buen argumento! Usaste el vocabulario: +5 para tu lado.") : W2("Argument posted. Tip: use a key term from the unit for +5.","Argumento publicado. Consejo: usa un término clave para +5."));
 };
@@ -379,7 +379,7 @@ window.lvTag = k => { const r = window._lvr, i = r.tags.indexOf(k); if (i >= 0) 
 window.lvRateSend = async function(sid, job){
   const r = window._lvr, note = (document.getElementById("lvRN").value || "").trim(), err = document.getElementById("lvRErr");
   if (!r.stars) { err.textContent = W2("Pick 1 to 5 stars.","Elige de 1 a 5 estrellas."); return; }
-  if (note && !cleanText(note)) { err.textContent = W2("Keep it kind and school-appropriate.","Que sea amable y apropiado."); return; }
+  if (badShow(err, [note], "worker review")) return;
   try { await store().set(`${C()}/reviews/${week()}_${me()}_${sid}`, {week:week(), by:me(), worker:sid, job, stars:r.stars, tags:r.tags.slice(0, 5), note:note.slice(0, 100), at:Date.now()}); }
   catch(e){ err.textContent = W2("Couldn't send it.","No se pudo enviar."); return; }
   lv().rev[week() + sid] = 1; T.persist(); W() && W().bumpNeed("social", 3); closeSheet(); T.toast(W2("⭐ Thanks! Reviews help Coach Smith and help workers improve.","⭐ ¡Gracias! Las reseñas ayudan a Coach Smith y a los trabajadores."));

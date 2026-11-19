@@ -38,7 +38,7 @@ window.hcSend = async function(){
   const t = box.value.trim().slice(0, MAX_LEN); if (!t) return;
   if (!chatOk()) { err.textContent = W2("Chat is turned off right now.","El chat está apagado ahora."); return; }
   if (Date.now() - lastSend < 2500) { err.textContent = W2("Slow down a little.","Más despacio."); return; }
-  if (!cleanText(t)) { err.textContent = W2("That has a word that isn't allowed. Keep it school-appropriate.","Eso tiene una palabra que no se permite."); return; }
+  if (badShow(err, [t], "house chat")) return;
   lastSend = Date.now(); box.value = ""; err.textContent = "";
   try { await post(ROOM, t, "msg"); bump("social", 3); } catch(e){ err.textContent = W2("Couldn't send it right now.","No se pudo enviar."); }
 };

@@ -76,7 +76,7 @@ function sheetHTML(){
       <div><b>🔊 ${WLx("Sound","Sonido")}</b><small>${WLx("A little ding when something happens.","Un pequeño sonido cuando pasa algo.")}</small></div>
       <button class="btn" onclick="tnSound()">${ST.sound ? WLx("On","Sí") : WLx("Off","No")}</button>
     </div>
-    ${teacher ? `<p class="tnote">🧑‍🏫 ${WLx(`Teacher alerts are on for ${TCLS.length === 1 ? "your class" : (TCLS.length || "your") + " classes"}: applications, low reviews, stories to approve, laws, candidates, petitions, reports and new students.`, `Alertas de docente activas en ${TCLS.length === 1 ? "tu clase" : (TCLS.length || "tus") + " clases"}: solicitudes, malas reseñas, noticias, leyes, candidatos, peticiones, reportes y alumnos nuevos.`)}</p>` : ""}
+    ${teacher ? `<p class="tnote">🧑‍🏫 ${WLx(`Teacher alerts are on for ${TCLS.length === 1 ? "your class" : (TCLS.length || "your") + " classes"}: applications, low reviews, stories to approve, laws, candidates, petitions, the mayor's firings, word-filter requests, reports and new students.`, `Alertas de docente activas en ${TCLS.length === 1 ? "tu clase" : (TCLS.length || "tus") + " clases"}: solicitudes, malas reseñas, noticias, leyes, candidatos, peticiones, reportes y alumnos nuevos.`)}</p>` : ""}
     <div class="tnfeed">${ST.feed.map(x => `<div class="${x.at > ST.seen ? "new" : ""}"><span>${esc(x.m)}</span><small>${ago(x.at)}</small></div>`).join("")
       || `<p class="muted">${WLx("Nothing yet. When you get hired, a patient needs you, someone sends a trade or a duel, it shows up here.","Nada aún. Cuando te contraten, alguien te necesite o te manden un intercambio o un duelo, aparecerá aquí.")}</p>`}</div>
     <div class="eprow">${ST.feed.length ? `<button class="btn ghost" onclick="tnClear()">${WLx("Clear","Borrar")}</button>` : ""}<button class="btn primary" onclick="townCloseCard()">${WLx("Done","Listo")}</button></div>`;
@@ -102,6 +102,12 @@ EXT.onLeave.push(() => { stop(); setTimeout(paintBell, 50); });
 EXT.onSession.push(() => {
   stop(); paintBell();
   const N = T.net; if (!N || !N.watchTradesTo) return;
+  let wseen = null;
+  SUBS.push(N.store.watch(`classes/${T.session.cid}/wordreqs`, {where:[["sid","==",T.session.sid]]}, rows => { if (!rows) return;
+    if (wseen) rows.filter(r => r.status !== "open" && wseen[r.id] === "open").forEach(r => T.toast(r.status === "ok"
+      ? WLx(`✅ Coach Smith allowed “${r.typed || r.word}”. You can send it now.`, `✅ Coach Smith permitió “${r.typed || r.word}”. Ya puedes enviarlo.`)
+      : WLx(`✖ Coach Smith says “${r.typed || r.word}” isn't allowed. Try a different word.`, `✖ Coach Smith dice que “${r.typed || r.word}” no se permite. Usa otra palabra.`)));
+    wseen = Object.fromEntries(rows.map(r => [r.id, r.status])); }));
   let seen = null;
   SUBS.push(N.watchTradesTo(rows => { if (!rows) return; const ids = new Set(rows.map(r => r.id));
     if (seen) rows.filter(t => t.status === "offered" && !seen.has(t.id)).slice(0, 2)
@@ -150,11 +156,33 @@ async function teacherStart(){
     watchNew(cid, "cases", {where:[["status","==","open"]]}, k => ["report","claim"].includes(k.kind),
       k => alert(k.kind === "report" ? WLx(`📢 ${tag} ${k.forName || "A student"} filed a report with the Marshal.`, `📢 ${tag} ${k.forName || "Un alumno"} presentó un reporte al alguacil.`)
         : WLx(`📜 ${tag} ${k.forName || "A student"} filed a small-claims case.`, `📜 ${tag} ${k.forName || "Un alumno"} presentó un reclamo.`)));
+    watchNew(cid, "firereqs", {}, () => true, f => alert(f.done
+      ? WLx(`🏛️ ${tag} Mayor ${f.name} fired ${f.workerName} (${job(f.job)}): “${f.why}”`, `🏛️ ${tag} El alcalde ${f.name} despidió a ${f.workerName} (${job(f.job)}): “${f.why}”`)
+      : WLx(`🗂️ ${tag} Mayor ${f.name} asks you to fire ${f.workerName} (${job(f.job)}): “${f.why}” Teacher panel → Mayor.`, `🗂️ ${tag} El alcalde ${f.name} pide despedir a ${f.workerName} (${job(f.job)}): “${f.why}”`)));
+    watchNew(cid, "wordreqs", {where:[["status","==","open"]]}, () => true,
+      w => alert(WLx(`🔤 ${tag} ${w.name} says “${w.typed || w.word}” isn't a bad word (${w.where}). Teacher panel → Word filter.`, `🔤 ${tag} ${w.name} dice que “${w.typed || w.word}” no es mala palabra (${w.where}).`)));
     watchNew(cid, "students", {}, () => true, s => alert(WLx(`👋 ${tag} ${s.name || "A new student"} joined the town.`, `👋 ${tag} ${s.name || "Un alumno nuevo"} se unió al pueblo.`)));
   });
 }
 /* sign-in can change at any time: check every few seconds */
 setInterval(() => { try { paintBell(); if (T.net) teacherStart(); } catch(e){ console.warn("notify", e); } }, 4000);
 setTimeout(() => { try { paintBell(); if (T.net) teacherStart(); } catch(e){} }, 1500);
+/* ---------------------------------------------------------------- teacher: word-filter requests */
+window.tnWord = async function(id, ok){
+  const cid = T.adminCid, st = T.net.store, r = await st.get(`classes/${cid}/wordreqs/${id}`); if (!r) return;
+  if (ok) { const c = (await T.net.myClasses()).find(x => x.id === cid); const list = [...new Set([...((c && c.allowWords) || []), r.word])].slice(-300); T.adminSet({allowWords:list}); }
+  await st.update(`classes/${cid}/wordreqs/${id}`, {status:ok ? "ok" : "no", decidedAt:Date.now()}); T.paintAdmin();
+};
+window.tnUnallow = function(w){ T.net.myClasses().then(list => { const k = list.find(x => x.id === T.adminCid); if (!k) return;
+  T.adminSet({allowWords:(k.allowWords || []).filter(x => x !== w)}); setTimeout(T.paintAdmin, 300); }); };
+EXT.adminPanels.push({
+  html: c => `<section class="panel tadm"><div class="eyebrow">🔤 ${WLx("Word filter","Filtro de palabras")}</div>
+    <p class="muted" style="font-size:13px">${WLx("When the filter blocks a word, students see it in red and can ask you to allow it. Allowed words work for the whole class.","Cuando el filtro bloquea una palabra, el alumno la ve en rojo y puede pedirte que la permitas. Las palabras permitidas valen para toda la clase.")}</p>
+    <div id="aWords"></div>${(c.allowWords || []).length ? `<p style="margin:8px 0 0"><b>${WLx("Allowed","Permitidas")}:</b> ${(c.allowWords || []).map(w => `<span class="kst">${esc(w)} <button class="btn ghost" title="${WLx("Block again","Bloquear otra vez")}" onclick="tnUnallow('${esc(w)}')">✖</button></span>`).join(" ")}</p>` : ""}</section>`,
+  after: c => { T.net.store.list(`classes/${c.id}/wordreqs`, {where:[["status","==","open"]]}).then(rows => { const b = document.getElementById("aWords"); if (!b) return;
+    b.innerHTML = rows.sort((x, y) => y.at - x.at).map(r => `<div class="myrapp"><b>${esc(r.name)}</b> ${WLx("asks to allow","pide permitir")} <mark class="badw">${esc(r.typed || r.word)}</mark> <small class="muted">${esc(r.where || "")}</small>
+      <p class="muted">“${esc(r.text || "")}”</p><div class="eprow"><button class="btn primary" onclick="tnWord('${r.id}',true)">✅ ${WLx("Allow it","Permitir")}</button><button class="btn ghost" onclick="tnWord('${r.id}',false)">✖ ${WLx("Keep it blocked","Mantener bloqueada")}</button></div></div>`).join("")
+      || `<p class="muted">${WLx("No requests.","No hay solicitudes.")}</p>`; }).catch(() => {}); }
+});
 window.TNOTIFY = {state:ST, open:window.tnOpen};
 })();

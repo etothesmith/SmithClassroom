@@ -54,7 +54,7 @@ window.petName = function(id){
 window.petNameGo = function(id){
   const v = document.getElementById("pName").value.trim().replace(/\s+/g, " ");
   if (v.length < 2) { document.getElementById("pErr").textContent = W2("At least 2 letters.","Al menos 2 letras."); return; }
-  if (!cleanText(v)) { document.getElementById("pErr").textContent = W2("That name has a word that isn't allowed.","Ese nombre tiene una palabra que no se permite."); return; }
+  if (badShow(document.getElementById("pErr"), [v], "pet name")) return;
   px(id).name = v; T.persist(); T.publishSoon(); closeSheet(); T.toast(W2(`🐾 Say hi to ${v}!`, `🐾 ¡Saluda a ${v}!`)); T.paintSub();
 };
 
