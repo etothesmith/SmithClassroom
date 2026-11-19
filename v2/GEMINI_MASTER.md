@@ -409,7 +409,7 @@ then add the 20 names to AV_HAIR_NAMES and make the ic3-hair icons.
 No attachments. Start a new chat. Paste the CHAT B style prompt first ("You are drawing game art…", magenta #FF00FF background, no text), then:
 
 ### Step 28 → `games_1.png`  (game icons, rock-paper-scissors, cards and chips)
-- [ ] done
+- [x] done
 ```
 Sheet, 5 columns by 4 rows, on a flat #FF00FF magenta background. Twenty objects, one per cell, same scale, no text, no letters, no numbers:
 Row 1: a cartoon fist (rock) seen from the side; a flat open hand (paper) palm facing us; a hand making a scissors V sign; a round glowing "versus" lightning burst badge with no letters; a small gold trophy cup with a star.
@@ -419,7 +419,7 @@ Row 4: a green felt card table seen from above with a gold rim; a round gold med
 ```
 
 ### Step 29 → `games_2.png`  (chess, checkers, discs and color-card symbols)
-- [ ] done
+- [x] done
 ```
 Same style. Sheet, 6 columns by 4 rows, on a flat #FF00FF magenta background. Twenty-four game pieces seen from the front, one per cell, same scale, simple and very readable at small size, no text:
 Row 1 (light set: ivory with gold trim): king, queen, rook, bishop, knight, pawn.
