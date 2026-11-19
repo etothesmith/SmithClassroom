@@ -194,7 +194,7 @@ window.w2Mission = function(uid){
     const ok = right >= 6, first = ok && !w.patches[uid];
     if (ok) { w.patches[uid] = Math.max(w.patches[uid] | 0, right); w.cnt.missions++; }
     const pay = ok ? (first ? 10 : 4) : 1; T.coins(pay); bumpNeed("know", 10); T.persist(); albumCheck();
-    sheet(`<div class="eyebrow">🚀 ${W2("Mission report","Reporte de misión")}</div><div class="wcatch"><span>${ok ? "🛰️" : "💥"}</span>
+    sheet(`<div class="eyebrow">🚀 ${W2("Mission report","Reporte de misión")}</div><div class="wcatch"><span class="${ok ? "wlaunch" : "wboom"}">${ok ? "🚀" : "💥"}</span>
       <h2>${ok ? W2("Orbit reached!","¡Llegaste a órbita!") : W2("Scrubbed launch","Lanzamiento abortado")}</h2>
       <div class="wstages">${[2, 4, 6].map((n, i) => `<i class="${right >= n ? "on" : ""}">${W2("Stage","Etapa")} ${i + 1}</i>`).join("")}</div>
       <p>✔ ${right}/8 · +${pay} Smithbucks${first ? " · 📔 " + W2("Mission patch earned!","¡Parche de misión!") : ""}</p>

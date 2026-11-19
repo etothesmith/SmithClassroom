@@ -397,6 +397,9 @@ window.viewAssignments = function(){
 };
 /* ---------- What's new: pinned to the bulletin board ---------- */
 const NEWS = [
+  {id:"2026-11-18j", d:"Nov 18", e:"⛲", t:["The plaza came alive","La plaza cobró vida"],
+   b:["Townsfolk walk by and share facts from your classes. Tap one for a pop quiz. Make a wish at the Fountain of Knowledge, solve the Daily Brain Teaser chalkboard, and catch the golden Grenadier bird for a bonus question. Coach Smith, Ms. Pinkerton and Newsy Ned now stroll around, pets wander in your house, and you can turn on town sounds.",
+      "Los vecinos pasan y comparten datos de tus clases. Toca a uno para un examen sorpresa. Pide un deseo en la Fuente del Saber, resuelve el Reto del día en el pizarrón y atrapa al pájaro dorado para una pregunta extra. Coach Smith, la Sra. Pinkerton y Newsy Ned ahora pasean, tus mascotas caminan por tu casa y puedes activar los sonidos del pueblo."]},
   {id:"2026-11-18i", d:"Nov 18", e:"🐾", t:["Pets 2.0 and house chats","Mascotas 2.0 y chats en casa"],
    b:["Name your pets, teach them 8 tricks, dress them up, and walk your buddy around the plaza. 22 new pets, including a hedgehog, an owl, a baby gator and a dragon; adopt at the Pet Rescue on the Map. Inside a friend's house you can chat with everyone there, and once a day you can throw a house party.",
       "Ponle nombre a tus mascotas, enséñales 8 trucos, vístelas y pasea a tu compañero por la plaza. 22 mascotas nuevas, como un erizo, un búho, un caimancito y un dragón; adopta en el Rescate de mascotas del Mapa. Dentro de la casa de un amigo puedes chatear con todos los que están ahí, y una vez al día puedes hacer una fiesta."]},

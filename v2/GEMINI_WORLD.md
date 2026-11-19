@@ -1,3 +1,5 @@
+> **Replaced by `GEMINI_MASTER.md`.** Use that file instead. This one is kept only for its cell-to-id mapping table.
+
 # The bigger world: Gemini art script (4 images, optional)
 
 Everything already works with emoji. These four images replace the emoji with real art. Run them in the same Gemini chat as the Town art if you can, so the style matches.
