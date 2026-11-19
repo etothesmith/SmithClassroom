@@ -182,9 +182,42 @@ function firstRun(){
     if (++quiet >= 2) { AUTO = true; whatsNew(); }
     if (n > 400) clearInterval(iv); }, 1200);
 }
-function boot(){ head(); topButton(); sw(); deepLink(); firstRun();
+
+/* ---------------------------------------------------------------- stay put on refresh
+   A refresh brings you back to the screen you were on (and the Town tab, Live or
+   Exam section) instead of the title screen. Kept per browser tab (sessionStorage),
+   so a brand-new visit still opens on the title. Teacher screens are never restored. */
+const RKEY = "sc.resume";
+let RESUME = null; try { RESUME = JSON.parse(sessionStorage.getItem(RKEY) || "null"); } catch(e){}
+const rget = () => { try { return JSON.parse(sessionStorage.getItem(RKEY) || "{}") || {}; } catch(e){ return {}; } };
+const rset = patch => { try { sessionStorage.setItem(RKEY, JSON.stringify(Object.assign(rget(), patch))); } catch(e){} };
+const SAFE = {home:"home", classes:"classes", assignments:"assignments", town:"town", locker:"locker", arcade:"arcade", trophies:"trophies", art:"art",
+  study:"classes", showstudy:"classes", showprep:"classes", gameshow:"classes"};
+function wrap(name, fn){ const base = window[name]; if (typeof base !== "function" || base.__rs) return; const w = function(){ try { fn.apply(this, arguments); } catch(e){} return base.apply(this, arguments); }; w.__rs = true; window[name] = w; }
+function track(){
+  wrap("go", tab => { if (SAFE[tab]) rset({tab:SAFE[tab]}); });
+  wrap("townTab", tt => { if (tt && tt !== "admin") rset({tt}); });
+  wrap("lvSub", k => rset({lv:k}));
+  wrap("twSub", k => rset({tw:k}));
+  wrap("showTitle", () => rset({tab:null}));
+  wrap("hideTitle", () => { const r = rget(); if (!r.tab) rset({tab:"home"}); });
+}
+function resume(){
+  const r = RESUME; RESUME = null;
+  if (!r || !r.tab || !SAFE[r.tab] || typeof go !== "function" || typeof hideTitle !== "function") return;
+  if (typeof S !== "undefined" && !S.langChosen) return;
+  try { hideTitle(); go(SAFE[r.tab]); } catch(e){ return; }
+  if (r.tab !== "town" || !r.tt) return;
+  let n = 0; const iv = setInterval(() => { n++;
+    if (window.TOWN && TOWN.session && document.querySelector("nav.tsub")) { clearInterval(iv);
+      try { if (r.tt !== "plaza") townTab(r.tt); if (r.tt === "live" && r.lv && window.lvSub) lvSub(r.lv); if (r.tt === "exam" && r.tw && window.twSub) twSub(r.tw); window.scrollTo(0, 0); } catch(e){} }
+    else if (n > 40) clearInterval(iv); }, 150);
+}
+
+function boot(){ head(); topButton(); sw(); deepLink(); firstRun(); track();
   /* the language switch re-renders text; keep the button title current */
   ["btnEN","btnES"].forEach(id => { const el = document.getElementById(id); if (el) el.addEventListener("click", () => { const b = document.getElementById("appBtn"); if (b) b.title = t("Get the app / What's new","Obtener la app / Novedades"); }); }); }
 if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", boot); else boot();
+window.addEventListener("load", () => setTimeout(() => { if (!/^#(town|live)$/.test(location.hash)) resume(); }, 60));
 window.APP = {version:APP_VERSION, whatsNew, getApp, standalone};
 })();
