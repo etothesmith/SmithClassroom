@@ -200,6 +200,7 @@ function billsFor(){
   items.push({k:"food", e:"🛒", l:["Groceries","Comida"], amt:2});
   const pets = window.PETS ? window.PETS.myPets().length : 0; if (pets) items.push({k:"pets", e:"🐾", l:[`Pet care (${pets})`, `Mascotas (${pets})`], amt:pets});
   const m = ec().mort; if (m && m.left > 0) items.push({k:"mort", e:"🏠", l:["Mortgage payment","Pago de hipoteca"], amt:Math.min(m.pay, m.left)});
+  (window.ECON_BILLS || []).forEach(f => { try { items.push(...f()); } catch(e){} });
   return items;
 }
 function rollBills(){

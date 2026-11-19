@@ -10,7 +10,7 @@
    ========================================================================== */
 (function(){
 "use strict";
-const APP_VERSION = "3.2";
+const APP_VERSION = "3.3";
 const es = () => typeof S !== "undefined" && S.lang === "es";
 const t = (en, sp) => es() ? sp : en;
 const esc = s => String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
@@ -65,10 +65,10 @@ window.appClose = close;
 
 /* ---------------------------------------------------------------- what's new */
 const NOTES = [
-  ["⚖️", ["Justice Center","Centro de Justicia"], ["A Town Code of fun laws with fines. Find it on the map.","Un Código del pueblo con leyes divertidas y multas. Búscalo en el mapa."]],
-  ["🚓", ["Marshals and jail","Alguaciles y cárcel"], ["Marshals write citations and can arrest. In jail? Answer questions to get out sooner.","Los alguaciles multan y arrestan. ¿En la cárcel? Responde preguntas para salir antes."]],
-  ["🏛️", ["Sue a classmate","Demanda a un compañero"], ["Settle or go to trial: hire a lawyer, make your case and let a jury of three decide.","Llega a un acuerdo o ve a juicio: contrata abogado y deja que decida un jurado."]],
-  ["🔐", ["Locks and break-ins","Cerraduras y allanamientos"], ["When Coach Smith turns them on: buy a lock to protect your cash.","Cuando Coach Smith los active: compra una cerradura para proteger tu dinero."]]
+  ["🚗", ["Cars","Autos"], ["Buy a car at the Auto Dealer: free trips around town, but weekly gas and insurance, and it loses value.","Compra un auto: viajes gratis, pero gasolina y seguro cada semana, y pierde valor."]],
+  ["✈️", ["Airport","Aeropuerto"], ["Get a passport and fly to Coach Smith's other periods. Greet people, sign guestbooks, collect stamps.","Saca pasaporte y vuela a otros periodos. Saluda, firma y junta sellos."]],
+  ["🏖️", ["New places","Lugares nuevos"], ["Mall, Beach, Theater, Museum and Port: limited boutique, shell hunts, Trivia Night, donations and ship investments.","Centro comercial, playa, teatro, museo y puerto."]],
+  ["⚓", ["Risk and return","Riesgo y rendimiento"], ["Invest in a safe, medium or risky ship each week. It comes home Monday.","Invierte cada semana en un barco seguro, medio o arriesgado."]]
 ];
 function whatsNew(){
   open(`<div class="ey">✨ ${t("What's new","Novedades")} · v${APP_VERSION}</div><h2>${t("Big update!","¡Gran actualización!")}</h2>
