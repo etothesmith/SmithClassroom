@@ -295,6 +295,13 @@ Row 3: a friendly cartoon bald eagle (pet), a gold medal on a red ribbon, a blue
 Row 4: a white marble bust of a thinking head with a glowing brain symbol, a tall gold trophy shaped like a castle tower with a flag on top.
 ```
 
+### Step 23 → `npc_rosa_fix.png`  (Chat C: fixes Captain Rosa, who came out as a man)
+- [ ] done
+```
+Same style as the townspeople sheet. One character only, centered, full body, standing, facing forward, on flat #FF00FF magenta, no text:
+Captain Rosa, a friendly middle-aged Latina woman boat captain with dark hair in a low ponytail, a white captain's hat with a navy brim, a yellow raincoat over a navy shirt, navy pants and boots, holding a fishing rod in one hand and waving with the other. Same height and line weight as the coach, the landlady and the news anchor.
+```
+
 ## For Claude: where each sheet goes
 | File | Cells → ids (left to right, row by row) |
 |---|---|
@@ -310,6 +317,7 @@ Row 4: a white marble bust of a thinking head with a glowing brain symbol, a tal
 | downtown_buildings | doctor, vet, reporter, banker, firefighter, marshal, judge, tutor, mail, chef, builder, sanitation, ranger, photographer, board, hall → `v2/assets/town/downtown/` |
 | downtown_landmarks | land_court … land_mural → `v2/assets/town/downtown/` |
 | world_npcs | npc_coach, npc_pinkerton, npc_ned, npc_rosa → `v2/assets/town/world/` |
+| npc_rosa_fix | npc_rosa (replaces the first version) → `v2/assets/town/world/` |
 | tower_loot_1 | rl_hand, rl_gavel, rl_quill, rl_compass, rl_lantern, rl_shield, tw_sdlamp, tw_phillips, tw_goldbar, tw_bell, tw_fedpapers, tw_column, tw_magna, tw_ballot, tw_globe, tw_bullbear |
 | tower_loot_2 | tw_scales, tw_ticker, tw_vase, tw_rug_map, tw_rug_cash, tw_inkwell, pet_bull, pet_bear, pet_eagle, tw_mock, tw_graph, tw_cases, tw_review, tw_champ (copied to all 4 champion trophies) |
 | world_places | plaza, homes, downtown, waterfront, park, space, towns, album, ride_coaster, ride_drop, ride_flume, (spare) → `v2/assets/town/world/` |

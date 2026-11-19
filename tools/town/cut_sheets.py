@@ -28,6 +28,7 @@ SHEETS = {   # file: (cols, rows, folder, ids, max side)
   "world_places.png": (4, 3, WORLD, "plaza homes downtown waterfront park space towns album ride_coaster ride_drop ride_flume storm", 300),
   "world_story.png": (3, 2, WORLD, "story_hurricane story_fair story_election story_founders story_lakes story_market", 300),
   "world_npcs.png": (4, 1, WORLD, "npc_coach npc_pinkerton npc_ned npc_rosa", 360),
+  "npc_rosa_fix.png": (1, 1, WORLD, "npc_rosa", 360),
 }
 
 def key(img):
