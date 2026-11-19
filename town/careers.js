@@ -563,7 +563,7 @@ function watchDowntown(draw){
   sub(store().watch(`${C()}/reqvotes`, {}, rows => { if (rows) { VOTES = {}; rows.forEach(v => { VOTES[v.rid] = (VOTES[v.rid] || 0) + 1; }); draw(); } }));
   sub(NET().watchPub(rows => { if (rows) rows.forEach(p => T.pub[p.id] = p); }));
 }
-window.carGo = function(k){ BLD = k; if (T.tt !== "downtown") { townTab("downtown"); } else T.paintSub(); window.scrollTo(0, 0); };
+window.carGo = function(k){ window._tfresh = Date.now(); BLD = k; if (T.tt !== "downtown") { townTab("downtown"); } else T.paintSub(); window.scrollTo(0, 0); };
 window.carBack = function(){ BLD = null; T.paintSub(); };
 function paintBuilding(el, k){
   const back = `<div class="eprow"><button class="btn ghost" onclick="carBack()">← ${W2("Downtown","Centro")}</button></div>`;

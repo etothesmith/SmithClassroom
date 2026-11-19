@@ -10,7 +10,7 @@
    ========================================================================== */
 (function(){
 "use strict";
-const APP_VERSION = "2.6";
+const APP_VERSION = "3.0";
 const es = () => typeof S !== "undefined" && S.lang === "es";
 const t = (en, sp) => es() ? sp : en;
 const esc = s => String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
@@ -65,7 +65,10 @@ window.appClose = close;
 
 /* ---------------------------------------------------------------- what's new */
 const NOTES = [
-  ["🎲", ["The Game Hall is open","Abrió la Sala de juegos"], ["Challenge classmates to Rock Paper Scissors, Color Clash, Four in a Row, Blackjack 21, Checkers and Chess. Wager Smithbucks; each of you answers 5 class questions first, and whoever gets more right moves first. Town → Games.","Reta a tus compañeros a Piedra, papel o tijera, Choque de colores, Cuatro en línea, Blackjack 21, Damas y Ajedrez. Apuesta Smithbucks; cada uno responde 5 preguntas primero y quien acierte más empieza. Pueblo → Juegos."]]
+  ["💹", ["The Smithtopia Exchange","La Bolsa de Smithtopia"], ["Buy and sell shares in 8 town companies. Prices move every hour with the news, booms and recessions. Steady stocks pay Friday dividends. Town → Money.","Compra y vende acciones de 8 empresas. Los precios cambian cada hora. Las estables pagan dividendos los viernes. Pueblo → Dinero."]],
+  ["🎟️", ["Weekly lottery","Lotería semanal"], ["Pick 3 numbers for 2 Smithbucks. Friday 1:00 PM drawing, rolling jackpot, and the real odds.","Elige 3 números por 2 Smithbucks. Sorteo el viernes a la 1:00 PM, premio acumulado y las probabilidades reales."]],
+  ["📬", ["Bills and budget","Facturas y presupuesto"], ["Weekly bills arrive on Monday. Pay on time to raise your credit score. Track the 50/30/20 rule, set a savings goal and auto-save.","Cada lunes llegan facturas. Paga a tiempo para subir tu crédito. Usa la regla 50/30/20, una meta y ahorro automático."]],
+  ["🏦", ["Mortgages","Hipotecas"], ["Buy any house with 20% down. Your rate depends on your credit score and the Fed.","Compra cualquier casa con 20% de enganche. Tu tasa depende de tu crédito y de la Fed."]]
 ];
 function whatsNew(){
   open(`<div class="ey">✨ ${t("What's new","Novedades")} · v${APP_VERSION}</div><h2>${t("Big update!","¡Gran actualización!")}</h2>

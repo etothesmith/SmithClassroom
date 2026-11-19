@@ -39,7 +39,7 @@ function town(){
 const has = id => (town().inv[id] || 0) > 0;
 const addItem = (id, n = 1) => { const inv = town().inv; inv[id] = Math.max(0, (inv[id] || 0) + n); if (!inv[id]) delete inv[id]; };
 const once = (key, fn) => { const a = town().applied; if (a[key]) return false; a[key] = Date.now(); fn(); return true; };
-const coins = n => { S.tokens = Math.max(0, (S.tokens | 0) + n); };
+const coins = n => { S.tokens = Math.max(0, (S.tokens | 0) + n); if (typeof window.TOWN_MONEY === "function") { try { window.TOWN_MONEY(n); } catch(e){} } };
 const shopMult = () => (CLS && CLS.econ && +CLS.econ.shopMult) || 1;
 const priceOf = it => Math.max(1, Math.round(it.p * shopMult() * EXT.priceMult.reduce((m, f) => m * (f(it) || 1), 1)));
 const itemName = id => ITEMS[id] ? L2(ITEMS[id].name) : id;
@@ -305,9 +305,10 @@ function paintTown(){
   badge(); paintSub();
 }
 function teacherLink(){ return TEACHER_OK ? `<p class="muted" style="text-align:center;margin-top:14px"><button class="btn ghost" onclick="townTab('admin')">🧑‍🏫 ${WL("Teacher: manage the Town","Docente: administrar el Pueblo")}</button></p>` : ""; }
-window.townTab = function(k){ if (TT === "plaza" && k !== "plaza" && NET && SESS) NET.leavePlaza(); TT = k; VISIT = null; paintTown(); window.scrollTo(0, 0); };
+window.townTab = function(k){ window._tfresh = Date.now(); if (TT === "plaza" && k !== "plaza" && NET && SESS) NET.leavePlaza(); TT = k; VISIT = null; paintTown(); window.scrollTo(0, 0); };
 function paintSub(){
   const el = document.getElementById("tbody"); if (!el) return;
+  if (Date.now() - (window._tfresh || 0) < 600) { el.classList.add("tfresh"); clearTimeout(el._tf); el._tf = setTimeout(() => el.classList.remove("tfresh"), 400); }
   VIEW_SUBS.forEach(u => { try { u(); } catch(e){} }); VIEW_SUBS = []; stopPlaza();
   const ext = EXT.tabs.find(t => t.key === TT);
   (ext ? ext.paint : {plaza:paintPlaza, homes:paintHomes, market:paintMarket, trades:paintTrades, shop:paintShop}[TT] || paintPlaza)(el);
@@ -459,7 +460,7 @@ function paintPlaza(el){
   const loop = (t0 => function tick(t){
     if (!PL || !cv.isConnected) { stopPlaza(); return; }
     const dt = Math.min(0.05, (t - (PL.t || t)) / 1000); PL.t = t;
-    stepTo(me, dt, 230); Object.values(PL.others).forEach(o => stepTo(o, dt, 230));
+    stepTo(me, dt, 230); Object.values(PL.others).forEach(o => stepTo(o, dt, o.tx == null ? 230 : Math.max(230, Math.hypot(o.tx - o.x, o.ty - o.y) * 3.5)));
     drawPlaza(); PL.raf = requestAnimationFrame(tick);
   })();
   PL.raf = requestAnimationFrame(loop);

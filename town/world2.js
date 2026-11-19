@@ -526,7 +526,7 @@ function paintMap(el){
       <p class="muted" style="font-size:12px">${W2("Captain Rosa is down at Lake Eola.","La capitana Rosa está en el lago Eola.")}</p></section>`;
 }
 window.w2Locked = k => T.toast(W2(`${L(DISTRICTS[k].l)} opens when your class averages ${DISTRICTS[k].need} certificates per student. Every certificate counts!`, `${L(DISTRICTS[k].l)} abre cuando la clase promedie ${DISTRICTS[k].need} certificados por estudiante. ¡Cada certificado cuenta!`));
-window.w2Go = function(k){ SUBV = k; if (T.tt !== "map") townTab("map"); else T.paintSub(); window.scrollTo(0, 0); };
+window.w2Go = function(k){ window._tfresh = Date.now(); SUBV = k; if (T.tt !== "map") townTab("map"); else T.paintSub(); window.scrollTo(0, 0); };
 EXT.tabs.push({key:"map", icon:"🧭", label:() => W2("Map","Mapa"), paint:el => { paintMap(el); }});
 EXT.onLeave.push(() => { SUBV = null; });
 

@@ -433,3 +433,20 @@ Row 4: a white "skip" symbol (circle with a diagonal slash) on a round black bad
 |---|---|
 | games_1 | rps_rock, rps_paper, rps_scissors, vs, trophy, ic_rps, ic_colors, ic_four, ic_blackjack, ic_checkers, ic_chess, card_back, chips, chip, hall, felt, medal, shelf, hourglass, crown |
 | games_2 | ch_wk, ch_wq, ch_wr, ch_wb, ch_wn, ch_wp, ch_bk, ch_bq, ch_br, ch_bb, ch_bn, ch_bp, ck_r, ck_b, ck_rk, ck_bk, disc_r, disc_y, cc_skip, cc_rev, cc_draw2, cc_wild, deck, spark |
+
+---
+
+# CHAT G: Smithtopia 3.0 buildings (1 image)
+No attachments. New chat. Paste the CHAT B style prompt first, then:
+
+### Step 30 → `places_3.png`
+- [x] done
+```
+Sheet, 4 columns by 3 rows, on a flat #FF00FF magenta background. Twelve small cartoon town buildings for a bright, friendly school game, each centered in its own cell, all at the same scale, seen from a slight three-quarter view, thick charcoal outlines, flat colors with one soft shade, a little patch of sidewalk under each. No people, no text, no letters, no numbers, no logos. Use simple icons on the signs instead of words.
+Row 1: a stock exchange with white columns and a big green up-arrow chart sign; a small lottery kiosk with a gold star and colorful number balls on the roof; a bank mortgage office with a house-and-key sign; a small airport terminal with a control tower and a plane on the sign.
+Row 2: a red barn with a silo and a little fence; a small jail and sheriff building with bars on one window and a star badge sign; a car dealership with a glass showroom and a car on the sign; a shopping mall with a glass entrance and a shopping-bag sign.
+Row 3: a beach snack hut with a surfboard and a palm tree; a movie theater with a marquee of light bulbs and a film-reel sign; a museum with a dome and an old vase sign; a harbor port building with stacked shipping containers and an anchor sign.
+```
+
+## For Claude: Chat G → `v2/assets/town/places3/`
+| places_3 | exchange, lottery, mortgage, airport, barn, jail, dealer, mall, beach, theater, museum, port |
