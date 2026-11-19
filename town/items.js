@@ -133,6 +133,20 @@ window.TOWN_ITEMS = Object.fromEntries([
   .forEach(([id, slot, e, r, en, es]) => { window.TOWN_ITEMS[id] = {id, slot, r, p:0, e, name:{en, es}, tower:true}; });
 [["pet_bull","🐂",2,"Bull (market)","Toro (del mercado)"],["pet_bear","🐻",2,"Bear (market)","Oso (del mercado)"],["pet_eagle","🦅",3,"Bald eagle","Águila calva"]]
   .forEach(([id, e, r, en, es]) => { window.TOWN_ITEMS[id] = {id, slot:"pet", r, p:0, e, name:{en, es}, tower:true}; });
+/* School Supply set: sold in the shop for house decor */
+[["sup_books","table",0,4,"📚","Stack of textbooks","Pila de libros de texto"],["sup_spiral","table",0,3,"📒","Spiral notebook","Cuaderno de espiral"],
+ ["sup_composition","table",0,3,"📓","Composition notebook","Cuaderno de composición"],["sup_eraser","trophy",0,2,"🩷","Giant pink eraser","Borrador rosa gigante"],
+ ["sup_mechpencil","trophy",0,3,"✏️","Mechanical pencil","Portaminas"],["sup_pen","trophy",0,3,"🖊️","Click pen","Bolígrafo de clic"],
+ ["sup_pencil","trophy",0,2,"✏️","No. 2 pencil","Lápiz número 2"],["sup_highlighter","trophy",0,3,"🖍️","Highlighter","Resaltador"],
+ ["sup_marker","trophy",0,3,"🖍️","Dry-erase marker","Marcador de pizarra"],["sup_colorpencils","art",0,4,"🖍️","Colored pencils","Lápices de colores"],
+ ["sup_compass","trophy",1,6,"📐","Drawing compass","Compás de dibujo"],["sup_protractor","wall",0,4,"📐","Protractor","Transportador"],
+ ["sup_ruler","wall",0,3,"📏","Wooden ruler","Regla de madera"],["sup_scissors","trophy",0,3,"✂️","Scissors","Tijeras"],
+ ["sup_gluestick","trophy",0,2,"🧴","Glue stick","Barra de pegamento"],["sup_glue","trophy",0,2,"🧴","School glue","Pegamento escolar"],
+ ["sup_tape","trophy",0,2,"🩹","Roll of tape","Rollo de cinta"],["sup_stapler","table",0,4,"📎","Stapler","Engrapadora"],
+ ["sup_organizer","table",1,6,"🗃️","Desk organizer","Organizador de escritorio"],["sup_desklamp","lamp",1,8,"💡","Pink desk lamp","Lámpara de escritorio rosa"],
+ ["sup_padlock","wall",0,4,"🔒","Locker padlock","Candado de casillero"],["sup_backpack","plant",1,10,"🎒","Teal backpack","Mochila turquesa"],
+ ["sup_lunchbox","table",0,5,"🧰","Green lunchbox","Lonchera verde"],["sup_lanyard","wall",0,3,"🪪","Student ID lanyard","Credencial con cordón"]]
+  .forEach(([id, slot, r, p, e, en, es]) => { window.TOWN_ITEMS[id] = {id, slot, r, p, e, name:{en, es}, set:"school"}; });
 window.TOWN_RARITY = [{en:"Common",es:"Común",c:"#8A94A6"},{en:"Rare",es:"Raro",c:"#2F7FD8"},{en:"Epic",es:"Épico",c:"#8A5CD8"},{en:"Legendary",es:"Legendario",c:"#E3A21A"}];
 window.TOWN_HOUSES = [
   ["cottage", 0,  "Cottage", "Casita"],

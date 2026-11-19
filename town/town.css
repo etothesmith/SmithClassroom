@@ -554,3 +554,5 @@
 .twweak{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px;align-items:center;font-weight:800;font-size:12px}
 .twweak .btn small{opacity:.7}
 @media (max-width:560px){.twmon span{font-size:80px}.twmon.boss span{font-size:96px}.twunit{grid-template-columns:1fr 70px 34px}}
+/* live repaints from classmates' activity: no entry animation */
+.lvquiet .panel,.lvquiet .lvcard{animation:none}
