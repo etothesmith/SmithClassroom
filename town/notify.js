@@ -161,6 +161,9 @@ async function teacherStart(){
       : WLx(`🗂️ ${tag} Mayor ${f.name} asks you to fire ${f.workerName} (${job(f.job)}): “${f.why}” Teacher panel → Mayor.`, `🗂️ ${tag} El alcalde ${f.name} pide despedir a ${f.workerName} (${job(f.job)}): “${f.why}”`)));
     watchNew(cid, "wordreqs", {where:[["status","==","open"]]}, () => true,
       w => alert(WLx(`🔤 ${tag} ${w.name} says “${w.typed || w.word}” isn't a bad word (${w.where}). Teacher panel → Word filter.`, `🔤 ${tag} ${w.name} dice que “${w.typed || w.word}” no es mala palabra (${w.where}).`)));
+    watchNew(cid, "suits", {where:[["status","==","filed"]]}, () => true, s => alert(WLx(`⚖️ ${tag} ${s.aName} is suing ${s.bName} for 💵${s.amt}: “${s.why}”`, `⚖️ ${tag} ${s.aName} demanda a ${s.bName} por 💵${s.amt}: “${s.why}”`)));
+    watchNew(cid, "jail", {}, j => j.until > Date.now(), j => alert(WLx(`🚓 ${tag} ${j.name} is in jail: ${j.why}${j.byName ? ` (by ${j.byName})` : ""}.`, `🚓 ${tag} ${j.name} está en la cárcel: ${j.why}.`)));
+    watchNew(cid, "breakins", {}, () => true, b => alert(WLx(`🔓 ${tag} ${b.byName} ${b.ok ? `broke into ${b.toName}'s house (💵${b.take})` : `was caught breaking into ${b.toName}'s house`}.`, `🔓 ${tag} ${b.byName} ${b.ok ? `entró a la casa de ${b.toName}` : `fue atrapado allanando`}.`)));
     watchNew(cid, "students", {}, () => true, s => alert(WLx(`👋 ${tag} ${s.name || "A new student"} joined the town.`, `👋 ${tag} ${s.name || "Un alumno nuevo"} se unió al pueblo.`)));
   });
 }

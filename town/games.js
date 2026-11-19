@@ -251,6 +251,7 @@ let MINE_A = [], MINE_B = [];
 
 /* ---------------------------------------------------------------- challenge */
 window.gmNew = function(kind){
+  if (window.TOWN_JAILED && window.TOWN_JAILED()) return T.toast(W2("🔒 No games from jail. Serve your time first.","🔒 No hay juegos en la cárcel."));
   const pubs = Object.entries(T.pub || {}).map(([sid, p]) => ({sid, ...p})).filter(p => p.sid !== me() && p.name).sort((a, b) => a.name.localeCompare(b.name));
   if (!pubs.length) return T.toast(W2("Nobody else is in town yet.","Aún no hay nadie más en el pueblo."));
   window._gmNew = {kind:kind || "rps", wager:0};
