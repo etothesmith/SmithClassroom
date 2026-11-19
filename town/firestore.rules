@@ -203,6 +203,14 @@ service cloud.firestore {
           && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['status','qa','qb','turn','winner','st','pa','pb','upd','resigned']);
         allow delete: if owns(cid);
       }
+      // Weekly lottery tickets (town/economy.js): id = <week>_<sid>_<1..5>, 3 numbers "a-b-c"
+      match /lottery/{id} {
+        allow read: if member(cid) || owns(cid);
+        allow create: if isSid(cid, request.resource.data.sid) && live(cid)
+          && id.matches(request.resource.data.week + '_' + request.resource.data.sid + '_[1-5]')
+          && request.resource.data.nums is string && request.resource.data.nums.matches('[0-9]{1,2}-[0-9]{1,2}-[0-9]{1,2}');
+        allow delete: if owns(cid);
+      }
       // The mayor asks the teacher to fire someone; only the teacher decides
       match /firereqs/{id} {
         allow read: if owns(cid) || isSid(cid, resource.data.sid);

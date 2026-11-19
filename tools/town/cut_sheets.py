@@ -9,7 +9,7 @@ from PIL import Image
 from scipy import ndimage as ndi
 
 T = "v2/assets/town/"
-ITEMS, DOWN, WORLD, GAMES = T + "items/", T + "downtown/", T + "world/", T + "games/"
+ITEMS, DOWN, WORLD, GAMES, PL3 = T + "items/", T + "downtown/", T + "world/", T + "games/", T + "places3/"
 FISH = ["bluegill","bass","catfish","crappie","sunfish","tilapia","boot","mullet","gar","peacock","snook","feather","redfish","tarpon","sturgeon","koi"]
 ALIAS = {"tw_champ": ["tw_champ_apecon", "tw_champ_apgov", "tw_champ_econ", "tw_champ_gov"]}
 SHEETS = {   # file: (cols, rows, folder, ids, max side)
@@ -34,6 +34,7 @@ SHEETS = {   # file: (cols, rows, folder, ids, max side)
   "hangout_items_3.png": (5, 4, ITEMS, "sofa_hangchair rug_shag plant_succulents plant_bamboo plant_mushroom wall_mirror wall_neon_heart table_tea wall_guitar table_piano trophy_mic art_records art_skate table_easel trophy_camera table_chess trophy_cube", 220),
   "games_1.png": (5, 4, GAMES, "rps_rock rps_paper rps_scissors vs trophy ic_rps ic_colors ic_four ic_blackjack ic_checkers ic_chess card_back chips chip hall felt medal shelf hourglass crown", 240),
   "games_2.png": (6, 4, GAMES, "ch_wk ch_wq ch_wr ch_wb ch_wn ch_wp ch_bk ch_bq ch_br ch_bb ch_bn ch_bp ck_r ck_b ck_rk ck_bk disc_r disc_y cc_skip cc_rev cc_draw2 cc_wild deck spark", 200),
+  "places_3.png": (4, 3, PL3, "exchange lottery mortgage airport barn jail dealer mall beach theater museum port", 280),
   "npc_rosa_fix.png": (1, 1, WORLD, "npc_rosa", 360),
 }
 

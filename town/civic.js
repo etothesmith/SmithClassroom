@@ -277,8 +277,10 @@ function gameMoneyPanel(){
 window.civBank = function(dir){
   accrue(); const b = civ().bank, n = parseInt(document.getElementById("bAmt").value, 10);
   if (!(n > 0)) return T.toast(W2("Type how many Smithbucks.","Escribe cuántas Smithbucks."));
-  if (dir === "in") { if (n > S.tokens) return T.toast(W2("You don't have that much cash.","No tienes tanto efectivo.")); T.coins(-n); b.bal += n; log("in", n); flag("bank"); }
-  else { if (n > Math.floor(b.bal)) return T.toast(W2("Not enough in savings.","No hay suficiente en ahorros.")); b.bal -= n; T.coins(n); log("out", -n); }
+  window.TOWN_MONEY_TAG = "bank";
+  if (dir === "in") { if (n > S.tokens) { window.TOWN_MONEY_TAG = null; return T.toast(W2("You don't have that much cash.","No tienes tanto efectivo.")); } T.coins(-n); b.bal += n; log("in", n); flag("bank"); }
+  else { if (n > Math.floor(b.bal)) { window.TOWN_MONEY_TAG = null; return T.toast(W2("Not enough in savings.","No hay suficiente en ahorros.")); } b.bal -= n; T.coins(n); log("out", -n); }
+  window.TOWN_MONEY_TAG = null;
   T.persist(); paint();
 };
 window.civBorrow = function(){
