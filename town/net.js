@@ -143,6 +143,21 @@ function API(store){
       if (store.rt && store.rt.usable()) await store.rt.set(`owner/${cid}`, t.uid).catch(e => console.warn("rtdb owner", e));
       return {cid, code};
     },
+    /* rename: the class doc and the code lookup students join with */
+    async renameClass(cid, name){
+      const t = store.teacherUser(); if (!t) throw new Error("teacher-only");
+      const c = await store.get("classes/" + cid); if (!c) throw new Error("not-found");
+      await store.update("classes/" + cid, {name});
+      if (c.code) { await store.del("codes/" + c.code).catch(() => {}); await store.set("codes/" + c.code, {cid, ownerUid:t.uid, name}); }
+    },
+    /* delete: the code stops working and the class disappears from the list;
+       students in it are signed out of the town the next time it loads */
+    async deleteClass(cid){
+      const t = store.teacherUser(); if (!t) throw new Error("teacher-only");
+      const c = await store.get("classes/" + cid); if (!c) return;
+      if (c.code) await store.del("codes/" + c.code).catch(() => {});
+      await store.del("classes/" + cid);
+    },
     async myClasses(){ const t = store.teacherUser(); if (!t) return [];
       const r = await store.list("classes", {where:[["ownerUid","==",t.uid]]}); return r.sort((a, b) => (a.created || 0) - (b.created || 0)); },
     async setClass(cid, patch){ await store.update("classes/" + cid, patch);
