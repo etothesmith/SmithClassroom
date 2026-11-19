@@ -340,7 +340,7 @@ Reply "ready" and wait.
 ```
 
 ### Step 24 → `hangout_items_1.png`  (Gamer room, Sports fan, Civics)
-- [ ] done
+- [x] done
 ```
 Sheet, 5 columns by 4 rows, on a flat #FF00FF magenta background. Twenty home items, one per cell, same scale, no text:
 Row 1: a DJ booth table with two turntables and a small mixer with glowing blue buttons; a flat-screen TV on a wall mount showing colorful abstract shapes; a black game controller; a gaming headset with glowing teal ear cups; a coiled strip of rainbow LED lights glowing.
@@ -350,7 +350,7 @@ Row 4: a short section of red stadium bleachers with three steps; a green ping-p
 ```
 
 ### Step 25 → `hangout_items_2.png`  (Space, Florida beach)
-- [ ] done
+- [x] done
 ```
 Same style. Sheet, 5 columns by 4 rows, on a flat #FF00FF magenta background. Twenty home items, one per cell, same scale, no text:
 Row 1: a kid's bed shaped like a red-and-white rocket ship; a round rug shaped like a blue planet with a ring; a small dome star projector casting little yellow stars; a desk lamp shaped like a silver rocket; a brass telescope on a wooden tripod.
@@ -360,7 +360,7 @@ Row 4: a small bamboo tiki bar with a thatched straw roof; a small white mini fr
 ```
 
 ### Step 26 → `hangout_items_3.png`  (Cozy, Creator studio)
-- [ ] done
+- [x] done
 ```
 Same style. Sheet, 5 columns by 4 rows, on a flat #FF00FF magenta background. Seventeen home items, one per cell, same scale, no text. The last row has only two objects; leave the last three cells empty magenta.
 Row 1: a white hanging nest chair shaped like a woven basket with a cushion, on a stand; a fluffy cream shag rug; three small succulents in matching white pots; lucky bamboo stalks in a glass vase with pebbles; a cute red-and-white mushroom-shaped lamp glowing softly.
