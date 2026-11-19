@@ -10,7 +10,7 @@
    ========================================================================== */
 (function(){
 "use strict";
-const APP_VERSION = "3.3";
+const APP_VERSION = "3.4";
 const es = () => typeof S !== "undefined" && S.lang === "es";
 const t = (en, sp) => es() ? sp : en;
 const esc = s => String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
@@ -65,10 +65,10 @@ window.appClose = close;
 
 /* ---------------------------------------------------------------- what's new */
 const NOTES = [
-  ["🚗", ["Cars","Autos"], ["Buy a car at the Auto Dealer: free trips around town, but weekly gas and insurance, and it loses value.","Compra un auto: viajes gratis, pero gasolina y seguro cada semana, y pierde valor."]],
-  ["✈️", ["Airport","Aeropuerto"], ["Get a passport and fly to Coach Smith's other periods. Greet people, sign guestbooks, collect stamps.","Saca pasaporte y vuela a otros periodos. Saluda, firma y junta sellos."]],
-  ["🏖️", ["New places","Lugares nuevos"], ["Mall, Beach, Theater, Museum and Port: limited boutique, shell hunts, Trivia Night, donations and ship investments.","Centro comercial, playa, teatro, museo y puerto."]],
-  ["⚓", ["Risk and return","Riesgo y rendimiento"], ["Invest in a safe, medium or risky ship each week. It comes home Monday.","Invierte cada semana en un barco seguro, medio o arriesgado."]]
+  ["💼", ["Gig Board","Bolsa de trabajo"], ["Hire classmates (paint my house, tutor me, run my shop…) or get hired. Pay is held until the work is approved and rated.","Contrata compañeros o consigue trabajo. El pago se retiene hasta aprobar."]],
+  ["📌", ["Wanted board","Se busca"], ["Post an item you want with a bounty. Whoever brings it gets paid.","Publica lo que buscas con recompensa."]],
+  ["🏅", ["Collection combos","Combos de colección"], ["Complete sets, shells, a barnyard, passport stamps and more for rewards. Every furniture set you finish takes 2% off the shop.","Completa juegos y colecciones para premios y descuentos."]],
+  ["📜", ["Weekly certificate","Certificado semanal"], ["See what you accomplished this week, print it, and claim +💵3 with 10 right answers. Plus 24 new pieces of furniture!","Mira tus logros de la semana, imprímelo y cobra +💵3. ¡Y 24 muebles nuevos!"]]
 ];
 function whatsNew(){
   open(`<div class="ey">✨ ${t("What's new","Novedades")} · v${APP_VERSION}</div><h2>${t("Big update!","¡Gran actualización!")}</h2>

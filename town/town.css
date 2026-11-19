@@ -697,3 +697,11 @@ mark.badw{background:#FFD3D8;color:#B0102A;font-weight:800;border-radius:4px;pad
 .trexh>div{border:2px solid var(--char,#1D1B2E);border-radius:12px;background:#FFFDF5;padding:8px;display:grid;justify-items:center;text-align:center;gap:2px}.trexh small{font-size:11px}
 .fsup .ti{margin:auto}
 #trGb{border:2px solid var(--char,#1D1B2E);border-radius:12px;padding:8px 10px;font:inherit}
+/* Phase 5 (records.js) */
+.rcgig{display:grid;grid-template-columns:auto 1fr auto;gap:10px;align-items:start;padding:10px 0;border-bottom:1px dashed #0002}.rcge{font-size:30px}.rcpay{font-size:18px}
+.rcstats{display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:8px;margin:10px 0}.rcstats>div{border:2px solid var(--char,#1D1B2E);border-radius:12px;padding:8px;display:grid;justify-items:center;background:#fff;text-align:center}
+.rcstats span{font-size:22px}.rcstats b{font-size:20px}.rcstats small{font-size:11px}
+.rccombos{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px}.rccombos>div{border:2px solid var(--char,#1D1B2E);border-radius:14px;padding:8px;display:grid;gap:3px;background:#fff;opacity:.85}
+.rccombos>div.on{background:#FFF4C9;opacity:1;outline:3px solid #F2B33D}.rccombos span{font-size:26px}.rccombos small{font-size:11px}.rccombos i{height:6px;background:#0001;border-radius:4px;overflow:hidden}.rccombos em{display:block;height:100%;background:#3BAA5C}
+.rccert{border:8px double #C8102E;border-radius:18px;padding:20px;text-align:center;background:#FFFDF5}.rccert h1{font-size:32px;margin:2px 0}.rccert h2{color:#C8102E;margin:4px 0}.rcseal{font-size:44px}
+.rcsig{margin-top:12px;display:grid;justify-items:center}.rcsig span{font-family:cursive;font-size:24px;border-bottom:2px solid var(--char,#1D1B2E);padding:0 30px}

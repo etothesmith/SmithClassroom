@@ -295,6 +295,23 @@ service cloud.firestore {
       match /greets/{id} { allow read: if member(cid) || owns(cid) || visa(cid);
         allow create: if visa(cid) && request.resource.data.uid == request.auth.uid && request.resource.data.e in ['👋','🤝','🎉'];
         allow delete: if owns(cid); }
+      // Phase 5 (town/records.js): gigs between classmates and the wanted board
+      match /gigs/{id} { allow read: if member(cid) || owns(cid);
+        allow create: if isSid(cid, request.resource.data.by) && live(cid) && request.resource.data.status == 'open'
+          && request.resource.data.pay is int && request.resource.data.pay >= 2 && request.resource.data.pay <= 15;
+        allow update: if owns(cid) || (live(cid) && (isSid(cid, resource.data.by)
+            || (resource.data.status == 'open' && isSid(cid, request.resource.data.worker))
+            || (resource.data.worker != '' && isSid(cid, resource.data.worker)))
+          && request.resource.data.by == resource.data.by && request.resource.data.pay == resource.data.pay
+          && onlyChanges(['status','worker','workerName','takenAt','right','doneAt','stars','auto','upd']));
+        allow delete: if owns(cid); }
+      match /wanted/{id} { allow read: if member(cid) || owns(cid);
+        allow create: if isSid(cid, request.resource.data.by) && live(cid) && request.resource.data.status == 'open'
+          && request.resource.data.bounty is int && request.resource.data.bounty >= 1 && request.resource.data.bounty <= 30;
+        allow update: if owns(cid) || (live(cid) && resource.data.status == 'open' && (
+            (isSid(cid, resource.data.by) && request.resource.data.status == 'canceled' && onlyChanges(['status']))
+            || (isSid(cid, request.resource.data.filler) && request.resource.data.status == 'filled' && onlyChanges(['status','filler','fillerName','filledAt']))));
+        allow delete: if owns(cid); }
       // Weekly lottery tickets (town/economy.js): id = <week>_<sid>_<1..5>, 3 numbers "a-b-c"
       match /lottery/{id} {
         allow read: if member(cid) || owns(cid);
