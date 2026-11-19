@@ -445,15 +445,29 @@ EXT.resumeExtra.push({
 /* ---------------------------------------------------------------- the Live tab */
 let LSUB = "live";
 const SUBS = [["live","🔴",["Live","En vivo"]],["duels","⚔️",["Duels","Duelos"]],["feud","⚖️",["Feud","Disputa"]],["mystery","🕵️",["Mystery","Misterio"]],["crew","🙌",["Crew","Equipo"]],["passport","🛂",["Standards","Estándares"]]];
-window.lvSub = k => { LSUB = k; T.paintSub(); const n = document.querySelector(".lvnav"); if (n && n.getBoundingClientRect().top < 0) n.scrollIntoView({block:"start"}); };
+window.lvSub = k => { LSUB = k; LV_SIG = ""; T.paintSub(); const n = document.querySelector(".lvnav"); if (n && n.getBoundingClientRect().top < 0) n.scrollIntoView({block:"start"}); };
 window.lvOpen = (k) => { if (k) LSUB = k; townTab("live"); setTimeout(() => { const n = document.querySelector(".lvnav"); if (n) n.scrollIntoView({behavior:"smooth", block:"start"}); }, 60); };
-window.T_lvPaint = () => { if (T.isTown() && T.tt === "live") T.paintSub(); };
+/* Watches fire whenever a classmate acts. Repaint only when what's on screen changed,
+   never while someone is typing (a repaint would erase a half-written argument), and
+   without replaying the entry animation. */
+let LV_SIG = "", LV_DEFER = false;
+window.T_lvPaint = (force) => {
+  if (!(T.isTown() && T.tt === "live")) return;
+  const a = document.activeElement, body = document.getElementById("lvBody");
+  if (!force && body && a && body.contains(a) && /^(TEXTAREA|INPUT|SELECT)$/.test(a.tagName)) {
+    if (!LV_DEFER) { LV_DEFER = true; a.addEventListener("blur", () => { LV_DEFER = false; setTimeout(() => T_lvPaint(), 150); }, {once:true}); } return; }
+  const h = (VIEWS[LSUB] || VIEWS.live)(), sig = LSUB + "|" + h.length + "|" + h.replace(/\s+/g, " ").slice(0, 4000);
+  if (!force && sig === LV_SIG) return;
+  T.paintSub(); const el = document.getElementById("lvBody"); if (el && el.parentNode) el.parentNode.classList.add("lvquiet");
+};
 function paintLive(el){
   if (!SESS()) { el.innerHTML = ""; return; }
   T.viewSub(V.NET().watchPub(rows => { if (rows) rows.forEach(p => T.pub[p.id] = p); }));
   const pend = DUEL_IN.filter(d => d.status === "open").length;
   const nav = `<div class="lvnav">${SUBS.map(([k, e, l]) => `<button class="${LSUB === k ? "on" : ""}" onclick="lvSub('${k}')">${e}<span>${L(l)}</span>${k === "duels" && pend ? `<i>${pend}</i>` : ""}</button>`).join("")}</div>`;
-  el.innerHTML = nav + `<div id="lvBody">${(VIEWS[LSUB] || VIEWS.live)()}</div>`;
+  const html = (VIEWS[LSUB] || VIEWS.live)(); LV_SIG = LSUB + "|" + html.length + "|" + html.replace(/\s+/g, " ").slice(0, 4000);
+  el.classList.toggle("lvquiet", el.dataset.lvsub === LSUB); el.dataset.lvsub = LSUB;
+  el.innerHTML = nav + `<div id="lvBody">${html}</div>`;
 }
 const pill = () => inPeriod() ? `<span class="lvlive">● ${W2("LIVE · class is in session","EN VIVO · hay clase")}</span>` : `<span class="lvoff">⏰ ${W2("Raids open Mon–Fri, 7:00–1:30","Incursiones: lun–vie, 7:00–1:30")}</span>`;
 const VIEWS = {
