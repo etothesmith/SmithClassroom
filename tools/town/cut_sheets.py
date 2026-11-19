@@ -29,6 +29,9 @@ SHEETS = {   # file: (cols, rows, folder, ids, max side)
   "world_story.png": (3, 2, WORLD, "story_hurricane story_fair story_election story_founders story_lakes story_market", 300),
   "world_npcs.png": (4, 1, WORLD, "npc_coach npc_pinkerton npc_ned npc_rosa", 360),
   "school_supplies.png": (6, 4, ITEMS, "sup_books sup_spiral sup_composition sup_eraser sup_mechpencil sup_pen sup_pencil sup_highlighter sup_marker sup_colorpencils sup_compass sup_protractor sup_ruler sup_scissors sup_gluestick sup_glue sup_tape sup_stapler sup_organizer sup_desklamp sup_padlock sup_backpack sup_lunchbox sup_lanyard", 200),
+  "hangout_items_1.png": (5, 4, ITEMS, "table_dj wall_tv trophy_controller trophy_headphones lamp_led lamp_disco sofa_bean_giant rug_rainbow table_vending wall_hoop rug_court trophy_football trophy_bowling art_jersey wall_sneakers sofa_bleachers table_pingpong rug_turf art_constitution art_dollar", 220),
+  "hangout_items_2.png": (5, 4, ITEMS, "bed_rocket rug_planet lamp_star lamp_rocket table_telescope art_space trophy_astronaut plant_alien bed_hammock sofa_beachchair plant_orange rug_sand lamp_jellyfish trophy_shell wall_surfboard table_tiki table_minifridge sofa_throne bed_futon bed_campout", 220),
+  "hangout_items_3.png": (5, 4, ITEMS, "sofa_hangchair rug_shag plant_succulents plant_bamboo plant_mushroom wall_mirror wall_neon_heart table_tea wall_guitar table_piano trophy_mic art_records art_skate table_easel trophy_camera table_chess trophy_cube", 220),
   "npc_rosa_fix.png": (1, 1, WORLD, "npc_rosa", 360),
 }
 

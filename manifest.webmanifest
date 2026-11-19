@@ -1,7 +1,7 @@
 {
   "name": "Smith's Classroom",
   "short_name": "Smith's",
-  "description": "Study, earn and play: Coach Smith's classes, Grenadier Town, the arcade and more.",
+  "description": "Study, earn and play: Coach Smith's classes, Zooptopia, the arcade and more.",
   "id": "./",
   "start_url": "./index.html?app=1",
   "scope": "./",
@@ -16,7 +16,7 @@
     {"src": "assets/app/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable"}
   ],
   "shortcuts": [
-    {"name": "Grenadier Town", "short_name": "Town", "url": "./index.html?app=1#town", "icons": [{"src": "assets/app/icon-192.png", "sizes": "192x192"}]},
+    {"name": "Zooptopia", "short_name": "Town", "url": "./index.html?app=1#town", "icons": [{"src": "assets/app/icon-192.png", "sizes": "192x192"}]},
     {"name": "Live raid", "short_name": "Live", "url": "./index.html?app=1#live", "icons": [{"src": "assets/app/icon-192.png", "sizes": "192x192"}]}
   ]
 }

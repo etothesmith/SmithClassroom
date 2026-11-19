@@ -1,5 +1,5 @@
 /* =============================================================================
-   GRENADIER TOWN — Live (town/live.js): reasons to show up, in class and out.
+   ZOOPTOPIA — Live (town/live.js): reasons to show up, in class and out.
    Loads after town/ambient.js. A new 🔥 Live tab holds everything:
 
    1. Period Raid: during class (Mon–Fri, 7:00–1:30) the whole class fights a
@@ -241,7 +241,7 @@ function rival(){ const vs = lv().duel.vs; let best = null; Object.entries(vs).f
 
 /* ---------------------------------------------------------------- 3. town feud */
 const FEUDS = [
-  {std:"eh-u1.markets", e:"💵", q:["Should Grenadier Town raise its minimum wage to $20 an hour?","¿Debe Grenadier Town subir su salario mínimo a $20 la hora?"],
+  {std:"eh-u1.markets", e:"💵", q:["Should Zooptopia raise its minimum wage to $20 an hour?","¿Debe Zooptopia subir su salario mínimo a $20 la hora?"],
    s:[["Yes, raise it","Sí, subirlo"],["No, keep it","No, mantenerlo"]], kw:[["living wage","poverty","spending","demand","ingreso"],["surplus","unemployment","price floor","costs","excedente","desempleo"]],
    both:["Supporters say higher pay lifts families and boosts spending. Opponents say a price floor above equilibrium can cause a surplus of workers (unemployment) and higher prices.","Quienes apoyan dicen que sube el ingreso y el gasto. Quienes se oponen dicen que un precio mínimo sobre el equilibrio puede causar excedente de trabajadores (desempleo) y precios más altos."]},
   {std:"ap-m4.monpol", e:"🏦", q:["Prices are up 6%. Should the Town Bank raise interest rates?","Los precios subieron 6%. ¿Debe el Banco del Pueblo subir las tasas?"],

@@ -1,4 +1,4 @@
-/* Grenadier Town — catalog: furniture, pets, decor, house styles, quick-chat phrases, emotes, stickers.
+/* Zooptopia — catalog: furniture, pets, decor, house styles, quick-chat phrases, emotes, stickers.
    Art lives in v2/assets/town/ (see v2/GEMINI_TOWN_ASSETS.md); every entry has an emoji fallback. */
 /* [slot, name, [x%, y%], width % of the room, anchor] — floor items stand on y (bottom), wall items are centred */
 window.TOWN_SLOTS = [

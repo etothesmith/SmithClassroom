@@ -1,4 +1,4 @@
-/* Smith's Classroom · Grenadier Town — Firebase connection.
+/* Smith's Classroom · Zooptopia — Firebase connection.
 
    Until this is filled in, the Town runs in PRACTICE MODE: everything works,
    but only on one device (other tabs on the same computer can see each other).

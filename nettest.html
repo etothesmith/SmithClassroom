@@ -23,7 +23,7 @@
 <body>
 <main>
   <h1>Network test</h1>
-  <p>Open this page on a <b>school computer, on the school Wi-Fi</b>. It checks whether Grenadier Town can reach the servers it needs. Take a screenshot of the result and send it to Claude.</p>
+  <p>Open this page on a <b>school computer, on the school Wi-Fi</b>. It checks whether Zooptopia can reach the servers it needs. Take a screenshot of the result and send it to Claude.</p>
   <button id="run">Run the test again</button>
   <ul id="out"></ul>
   <div id="verdict" class="verdict wait">Testing…</div>
@@ -80,7 +80,7 @@ async function run(){
   } else if (!cfg) row("Live round trip", "")(null, "skipped: the Firebase project isn't connected yet (town/config.js)");
   const need = results.site && results.fs && results.auth && results.token;
   if (need && results.live !== false) { verdict.className = "verdict ok";
-    verdict.textContent = cfg && results.live ? "✅ Grenadier Town will work on this network." : "✅ The school network allows Firebase. Grenadier Town should work here once the project is connected."; }
+    verdict.textContent = cfg && results.live ? "✅ Zooptopia will work on this network." : "✅ The school network allows Firebase. Zooptopia should work here once the project is connected."; }
   else { verdict.className = "verdict bad";
     verdict.textContent = "❌ Something the Town needs is blocked on this network. Send this screenshot to Claude; the Town will stay in practice mode until it's unblocked."; }
   document.getElementById("meta").textContent = `${new Date().toLocaleString()} · ${navigator.userAgent}`;
