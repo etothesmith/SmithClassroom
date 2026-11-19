@@ -73,3 +73,12 @@ Teacher controls live in **Town → Teacher: manage the Town**:
 - Teacher panel → **🎓 Exam prep**: set the honors courses' final exam (CFE) date and see every student's tower floors, mock best/last, review backlog, graphs and cases.
 - No new Firestore collections.
 - Art for the new items: Steps 21–22 in `v2/GEMINI_MASTER.md`; until then they show as emoji.
+
+## Automatic rules publishing
+
+`.github/workflows/firestore-rules.yml` publishes `town/firestore.rules` every time it changes on `main`. One-time setup (on a computer):
+
+1. Firebase console → ⚙️ Project settings → **Service accounts** → **Generate new private key** → **Generate key**. A `.json` file downloads.
+2. GitHub repo → **Settings** → **Secrets and variables** → **Actions** → **New repository secret**. Name: `FIREBASE_SERVICE_ACCOUNT`. Value: open the `.json` file, copy all of it, paste. **Add secret**.
+3. Delete the downloaded `.json` file from your computer.
+4. Actions tab → **Publish Firestore rules** → **Run workflow** once to publish today's rules. A green check means they're live.
