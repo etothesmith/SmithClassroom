@@ -54,7 +54,24 @@ const AV_TOPS = [
   ["top_12_lavender_cardigan",{en:"Lavender cardigan",es:"Cárdigan lavanda"},260,11],
   ["top_13_ruffle_blouse",{en:"Ruffle blouse",es:"Blusa con volantes"},320,12],
   ["top_14_tied_flannel",{en:"Tied plaid flannel",es:"Franela a cuadros anudada"},300,13],
-  ["top_15_striped_tee",{en:"Striped boat-neck tee",es:"Camiseta a rayas"},220,14]
+  ["top_15_striped_tee",{en:"Striped boat-neck tee",es:"Camiseta a rayas"},220,14],
+  ["top_16_flower_blouse",{en:"Pink flower blouse",es:"Blusa rosa de flores"},260,15],
+  ["top_17_red_crewneck",{en:"Grenadier red sweatshirt",es:"Sudadera roja Grenadier"},240,16],
+  ["top_18_satin_bomber",{en:"Purple satin bomber",es:"Chaqueta bomber morada"},420,17],
+  ["top_19_cheer",{en:"Cheer uniform",es:"Uniforme de porrista"},380,18],
+  ["top_20_wrap_dress",{en:"Teal wrap dress",es:"Vestido cruzado verde azulado"},450,19],
+  ["top_21_homecoming",{en:"Homecoming dress",es:"Vestido de homecoming"},600,20],
+  ["top_22_pinafore",{en:"Denim pinafore dress",es:"Vestido pichi de mezclilla"},380,21],
+  ["top_23_sweater_vest",{en:"Sweater vest & collar",es:"Chaleco tejido y camisa"},340,22],
+  ["top_24_fleece",{en:"Sage fleece jacket",es:"Chaqueta polar verde"},300,23],
+  ["top_25_jersey",{en:"Grenadier jersey",es:"Jersey Grenadier"},350,24],
+  ["top_26_open_flannel",{en:"Green flannel",es:"Franela verde"},300,25],
+  ["top_27_track_jacket",{en:"Black track jacket",es:"Chaqueta deportiva negra"},320,26],
+  ["top_28_polo",{en:"Navy polo",es:"Polo azul marino"},260,27],
+  ["top_29_camo_hoodie",{en:"Camo hoodie",es:"Sudadera de camuflaje"},340,28],
+  ["top_30_palm_shirt",{en:"Palm-leaf button-up",es:"Camisa de hojas de palma"},280,29],
+  ["top_31_checker_shirt",{en:"Checkered overshirt",es:"Camisa a cuadros abierta"},300,30],
+  ["top_32_puffer_vest",{en:"Gold puffer vest",es:"Chaleco acolchado dorado"},500,31]
 ].map(([id,name,price,col])=>({id,slot:"top",name,price,col}));
 const AV_BOTTOMS = [
   ["bot_01_athletic_shorts",{en:"Gray shorts",es:"Shorts grises"},0,null],
@@ -65,7 +82,19 @@ const AV_BOTTOMS = [
   ["bot_05_track_pants",{en:"Track pants & slides",es:"Pantalón de pista y sandalias"},250,2],
   ["bot_10_maxi_skirt",{en:"Maxi skirt",es:"Falda larga"},300,6],
   ["bot_08_plaid_skirt",{en:"Plaid skirt & loafers",es:"Falda a cuadros y mocasines"},400,4],
-  ["bot_07_dress_trousers",{en:"Dress trousers",es:"Pantalón de vestir"},600,3]
+  ["bot_07_dress_trousers",{en:"Dress trousers",es:"Pantalón de vestir"},600,3],
+  ["bot_12_flare_jeans",{en:"Flare jeans",es:"Jeans acampanados"},280,8],
+  ["bot_13_tennis_skirt",{en:"Tennis skirt",es:"Falda de tenis"},260,9],
+  ["bot_14_leggings",{en:"Black leggings",es:"Leggings negros"},220,10],
+  ["bot_15_cargo_boots",{en:"Cargo pants & boots",es:"Pantalón cargo y botas"},380,11],
+  ["bot_16_wide_trousers",{en:"Cream wide trousers",es:"Pantalón ancho crema"},340,12],
+  ["bot_17_denim_midi",{en:"Denim midi skirt",es:"Falda midi de mezclilla"},320,13],
+  ["bot_18_pink_joggers",{en:"Pink joggers",es:"Joggers rosados"},240,14],
+  ["bot_19_mom_jeans",{en:"Mom jeans & high-tops",es:"Mom jeans y botines"},320,15],
+  ["bot_20_baggy_jeans",{en:"Baggy jeans & kicks",es:"Jeans holgados y tenis"},400,16],
+  ["bot_21_ball_shorts",{en:"Basketball shorts",es:"Shorts de básquet"},200,17],
+  ["bot_22_chinos",{en:"Khaki chinos",es:"Chinos caqui"},300,18],
+  ["bot_23_camo_shorts",{en:"Camo cargo shorts",es:"Shorts cargo de camuflaje"},260,19]
 ].map(([id,name,price,col])=>({id,slot:"bottom",name,price,col}));
 const AV_ACCS = [
   ["acc_10_round_glasses",{en:"Round glasses",es:"Lentes redondos"},120,"eyes","h",0],

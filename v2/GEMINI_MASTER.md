@@ -45,7 +45,7 @@ Reply "ready" and wait.
 ```
 
 ### ⭐ Step 1 → `clothes_tops_2.png`  (attach `mannequins_5.png`)  · girls' tops
-- [ ] done
+- [x] done
 ```
 Dress the 5 mannequins, left to right, each in ONE top:
 1. A blush-pink blouse with puffed short sleeves and a small white flower print.
@@ -56,7 +56,7 @@ Dress the 5 mannequins, left to right, each in ONE top:
 ```
 
 ### Step 2 → `clothes_tops_3.png`  (attach `mannequins_4.png`)  · dresses and layers
-- [ ] done
+- [x] done
 ```
 Dress the 4 mannequins, left to right, each in ONE outfit piece:
 1. A red knee-length homecoming dress with short sleeves, a fitted waist with a thin gold belt, and a flared skirt (covers the shorts).
@@ -67,7 +67,7 @@ Keep the gray shorts visible except where a dress covers them.
 ```
 
 ### ⭐ Step 3 → `clothes_tops_4.png`  (attach `mannequins_4.png`)  · guys' tops
-- [ ] done
+- [x] done
 ```
 Dress the 4 mannequins, left to right, each in ONE top:
 1. A sleeveless basketball jersey in Grenadier red with gold trim around the neck and arms (plain, NO numbers or letters), worn over a white tee.
@@ -78,7 +78,7 @@ Keep the gray shorts visible.
 ```
 
 ### Step 4 → `clothes_tops_5.png`  (attach `mannequins_4.png`)  · guys' and unisex tops
-- [ ] done
+- [x] done
 ```
 Dress the 4 mannequins, left to right, each in ONE top:
 1. A green-and-tan camouflage pullover hoodie with the hood down.
@@ -89,7 +89,7 @@ Keep the gray shorts visible.
 ```
 
 ### ⭐ Step 5 → `clothes_bottoms_1.png`  (attach `mannequins_4.png`)  · bottoms
-- [ ] done
+- [x] done
 ```
 Dress the 4 mannequins, left to right, each in ONE pair of bottoms WITH shoes:
 1. Medium-blue flare jeans with white platform sneakers.
@@ -100,7 +100,7 @@ Keep the gray tank tops visible.
 ```
 
 ### Step 6 → `clothes_bottoms_2.png`  (attach `mannequins_4.png`)  · bottoms
-- [ ] done
+- [x] done
 ```
 Dress the 4 mannequins, left to right, each in ONE pair of bottoms WITH shoes:
 1. Cream wide-leg trousers with tan ballet flats.
@@ -111,7 +111,7 @@ Keep the gray tank tops visible.
 ```
 
 ### ⭐ Step 7 → `clothes_bottoms_3.png`  (attach `mannequins_4.png`)  · guys' bottoms
-- [ ] done
+- [x] done
 ```
 Dress the 4 mannequins, left to right, each in ONE pair of bottoms WITH shoes:
 1. Baggy dark-wash jeans with red-and-white high-top basketball sneakers (no logos).
@@ -137,7 +137,7 @@ Reply "ready" and wait.
 ```
 
 ### ⭐ Step 8 → `town_items_2.png`
-- [ ] done
+- [x] done
 ```
 Sheet, 4 columns by 4 rows, on a flat #FF00FF magenta background. Sixteen home items for a cozy cartoon house, each centered in its own cell, all at the same scale, drawn from a slight three-quarter view, thick charcoal outlines, flat colors, no text:
 
@@ -148,7 +148,7 @@ Row 4: 13. a wall collage of instant photos and string with clothespins (photos 
 ```
 
 ### ⭐ Step 9 → `pets_1.png`  (16 new pets)
-- [ ] done
+- [x] done
 ```
 Sheet, 4 columns by 4 rows. Sixteen cute cartoon pets, each sitting or standing, facing slightly left, same scale (small animals drawn a bit bigger so all read clearly):
 Row 1: a golden hamster, a little gray mouse, a fluffy yellow chick, a green tree frog.
@@ -158,7 +158,7 @@ Row 4: a brown owl, a baby alligator, a smiling sloth, a river otter.
 ```
 
 ### ⭐ Step 10 → `pets_2.png`  (rare pets + mayor and quest rewards)
-- [ ] done
+- [x] done
 ```
 Sheet, 4 columns by 3 rows:
 Row 1: a peacock with its tail fanned, a white swan, a dolphin jumping, a Florida panther (tan big cat) sitting.
@@ -167,7 +167,7 @@ Row 3: a framed official portrait with a gold frame showing a simple sun-and-pal
 ```
 
 ### Step 11 → `trophies.png`  (story-event and quest trophies)
-- [ ] done
+- [x] done
 ```
 Sheet, 4 columns by 2 rows. Eight shiny award objects:
 Row 1: a ship in a glass bottle, a trophy topped with a blue hurricane swirl, a blue fair ribbon rosette with a tiny Ferris wheel, a gold badge shaped like a ballot box.
@@ -175,7 +175,7 @@ Row 2: an old rolled parchment charter with a wax seal, a small white swan statu
 ```
 
 ### Step 12 → `fish.png`  (Lake Eola fishing)
-- [ ] done
+- [x] done
 ```
 Sheet, 4 columns by 4 rows. Sixteen catches from Florida lakes and the coast, side view:
 Row 1: bluegill, largemouth bass, channel catfish, crappie.
@@ -185,7 +185,7 @@ Row 4: redfish, tarpon, Gulf sturgeon, a glowing golden koi.
 ```
 
 ### Step 13 → `seasonal_C.png`  (September–December: these are in the shop NOW, so do this one first)
-- [ ] done
+- [x] done
 ```
 Sheet, 4 columns by 3 rows. Twelve seasonal home decorations:
 Row 1: a football with a red bow, a red-and-gold school pennant (no letters), a pot of sunflowers, a carved smiling pumpkin.
@@ -194,7 +194,7 @@ Row 3: a cozy patchwork quilt folded on a bed, warm white string lights, a ginge
 ```
 
 ### Step 14 → `seasonal_A.png`  (January–April)
-- [ ] done
+- [x] done
 ```
 Sheet, 4 columns by 3 rows:
 Row 1: a confetti cannon bursting, a snow globe with a tiny town inside, a round wall clock showing midnight, a heart-shaped lamp.
@@ -203,7 +203,7 @@ Row 3: a basketball bracket poster with blank lines (no words), yellow rain boot
 ```
 
 ### Step 15 → `seasonal_B.png`  (May–August)
-- [ ] done
+- [x] done
 ```
 Sheet, 4 columns by 3 rows:
 Row 1: a graduation cap with a tassel, a rolled certificate with a red ribbon, a red hibiscus flower in a pot, a striped beach towel laid flat.
@@ -226,7 +226,7 @@ Reply "ready" and wait.
 ```
 
 ### ⭐ Step 16 → `downtown_buildings.png`
-- [ ] done
+- [x] done
 ```
 Sheet, 4 columns by 4 rows, on a flat #FF00FF magenta background. Sixteen small cartoon town buildings for a bright, friendly school game, each centered in its own cell, all at the same scale, seen from a slight three-quarter view, thick charcoal outlines, flat colors with one soft shade, a little patch of sidewalk under each. No people, no text, no letters, no numbers, no logos. Use simple icons on the signs instead of words.
 
@@ -237,14 +237,14 @@ Row 4: 13. a park ranger station: a small wooden cabin with trees. 14. a photo s
 ```
 
 ### ⭐ Step 17 → `world_npcs.png`
-- [ ] done
+- [x] done
 ```
 Same style, new sheet, 4 columns by 1 row on flat #FF00FF magenta. Four friendly cartoon townspeople, full body, standing, facing forward, same height, one per cell, no text:
 1. a high school coach in a red cap and red polo with a whistle and a clipboard. 2. a stern but kind elderly landlady with glasses, a cardigan and a big ring of keys. 3. a cheerful TV news anchor in a blue suit holding a microphone. 4. a boat captain in a captain's hat and a yellow raincoat holding a fishing rod.
 ```
 
 ### Step 18 → `world_places.png`
-- [ ] done
+- [x] done
 ```
 Sheet, 4 columns by 3 rows, on a flat #FF00FF magenta background. Twelve small cartoon scenes for a bright, friendly school game, each centered in its own cell at the same scale, slight three-quarter view, thick charcoal outlines, flat colors with one soft shade. No people, no text, no letters, no logos.
 
@@ -254,7 +254,7 @@ Row 3: 9. a red-and-yellow roller coaster car on a track. 10. a tall drop tower 
 ```
 
 ### Step 19 → `downtown_landmarks.png`
-- [ ] done
+- [x] done
 ```
 Same style, new sheet, 4 columns by 4 rows on flat #FF00FF magenta. Sixteen town landmarks, each centered in its own cell, same scale, slight three-quarter view, no people, no text:
 
@@ -265,7 +265,7 @@ Row 4: 13. a history museum with columns and a vase icon. 14. a petting zoo with
 ```
 
 ### Step 20 → `world_story.png`
-- [ ] done
+- [x] done
 ```
 Same style, new sheet, 3 columns by 2 rows on flat #FF00FF magenta, one scene per cell, no people, no text:
 1. a hurricane swirl symbol over a palm tree. 2. a county fair with a Ferris wheel and booths. 3. a ballot box with a TV news camera. 4. an old parchment charter with a quill pen. 5. a white swan on a clean blue lake with a recycling sign. 6. a stock market chart arrow going up next to a sneaker.

@@ -386,3 +386,9 @@
 .kmap .kb:nth-child(2n) img,.kmap .kb:nth-child(2n) .tie{animation-delay:-1.6s}
 @keyframes kbob{from{transform:translateY(0)}to{transform:translateY(-4px)}}
 @media (prefers-reduced-motion:reduce){.rpet,.rpet span,.wlake::after,.wlake::before,.wpark::after,.wspace::after,.kmap .kb img,.kmap .kb .tie,.wlaunch{animation:none}}
+/* Gemini art drop: fish + townspeople */
+.walb span img{width:64px;height:48px;object-fit:contain;display:block;margin:0 auto}
+.walb span.wsil img{filter:brightness(0);opacity:.18}
+.wcatch>span img{width:200px;height:130px;object-fit:contain}
+.wnpc>span img{width:84px;height:120px;object-fit:contain;object-position:bottom}
+.wnpcc>span:first-child img{width:44px;height:60px;object-fit:contain}
