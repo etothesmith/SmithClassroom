@@ -28,6 +28,7 @@ SHEETS = {   # file: (cols, rows, folder, ids, max side)
   "world_places.png": (4, 3, WORLD, "plaza homes downtown waterfront park space towns album ride_coaster ride_drop ride_flume storm", 300),
   "world_story.png": (3, 2, WORLD, "story_hurricane story_fair story_election story_founders story_lakes story_market", 300),
   "world_npcs.png": (4, 1, WORLD, "npc_coach npc_pinkerton npc_ned npc_rosa", 360),
+  "school_supplies.png": (6, 4, ITEMS, "sup_books sup_spiral sup_composition sup_eraser sup_mechpencil sup_pen sup_pencil sup_highlighter sup_marker sup_colorpencils sup_compass sup_protractor sup_ruler sup_scissors sup_gluestick sup_glue sup_tape sup_stapler sup_organizer sup_desklamp sup_padlock sup_backpack sup_lunchbox sup_lanyard", 200),
   "npc_rosa_fix.png": (1, 1, WORLD, "npc_rosa", 360),
 }
 
