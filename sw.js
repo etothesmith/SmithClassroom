@@ -4,7 +4,7 @@
    - Images, sounds and fonts: cache first, refreshed in the background.
    - Only this site's own files; Firebase and other sites are never touched.
    Bump VERSION when the app shell changes. */
-const VERSION = "sc-3.0.0";
+const VERSION = "sc-3.0.1";
 const SHELL = ["./", "index.html", "content.js", "bank_plus.js", "art.js", "avatar.js", "world.js", "world.css", "app.js",
   "town/town.css", "town/items.js", "town/config.js", "town/net.js", "town/town.js", "town/civic.js", "town/careers.js", "town/jobs2.js", "town/mayor.js", "town/today.js",
   "town/world2.js", "town/pets.js", "town/houselife.js", "town/ambient.js", "town/live.js", "town/tower.js", "town/games.js", "town/economy.js", "town/notify.js", "manifest.webmanifest",
