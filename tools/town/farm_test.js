@@ -39,7 +39,7 @@ const answer = p => p.evaluate(() => { const st = window._w2q; w2Ans(st.order.in
   const st = await A.evaluate(() => { const b = {...FARM.farms.p3.beds[0], at:Date.now() - 13 * 36e5}; return FARM.stageOf(b); });
   check('watered corn ripens sooner than 12h', st.ready === true, st);
   await A.evaluate(async () => { const f = FARM.farms.p3, beds = f.beds.slice(); beds[0] = {...beds[0], at:Date.now() - 20 * 36e5}; await TOWN.CIV.store().update(TOWN.CIV.C() + '/farms/p3', {beds}); });
-  await A.waitForTimeout(700); await A.evaluate(() => { fmView('farm'); }); await A.waitForTimeout(300);
+  await A.waitForTimeout(700); await A.evaluate(() => { fmView('farm'); }); await A.waitForTimeout(1200);
   await A.screenshot({ path: SHOTS + '/farm_ready.png', fullPage: true });
   await A.evaluate(() => fmHarvest('p3', 0)); await A.waitForTimeout(700);
   const hv = await A.evaluate(() => ({stash:FARM.farms.p3.stash, bed:FARM.farms.p3.beds[0]}));

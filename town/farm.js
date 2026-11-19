@@ -184,8 +184,8 @@ function farmCard(p){ const f = FARMS[p], own = f.sid === me(), cost = feedCost(
         : `<span class="fcrop">${FA("soil", "🟫")}</span><small>${W2("empty","vacía")}</small>${own ? `<button class="btn" onclick="fmPlant('${p}',${i})">🌱 ${W2("Plant","Sembrar")}</button>` : ""}`}</div>`; }).join("")}</div>
     <div class="fani">${Object.entries(f.ani || {}).map(([k, n]) => `<span>${FA(k, ANIMALS[k].e)}×${n}</span>`).join("") || `<span class="muted">${W2("No animals yet.","Sin animales aún.")}</span>`}
       ${Object.keys(f.ani || {}).length ? (fedToday ? `<small>✅ ${W2("fed today","alimentados hoy")}</small>` : `<button class="btn primary" onclick="fmFeed('${p}')">🌾 ${W2(`Feed (💵${cost})`, `Alimentar (💵${cost})`)}</button>`) : ""}</div>
-    <div class="fstash"><b>🏚️ ${W2("Barn","Granero")}:</b> ${stash.map(([k, n]) => `<span>${FA(k, ALL[k].e)}×${n}</span>`).join("") || `<span class="muted">${W2("empty","vacío")}</span>`}</div>
-    ${own ? `<div class="fhands"><b>👩‍🌾 ${W2("Farmhands","Peones")}:</b> ${(f.hands || []).map(sid => `<span class="kst">${E((f.handNames || {})[sid] || "?")}${(f.owed || {})[sid] ? ` <small>${W2("owed","debes")} 💵${f.owed[sid]}</small>` : ""} <button class="btn ghost" onclick="fmFire('${sid}')">✖</button></span>`).join("") || `<span class="muted">${W2("none","ninguno")}</span>`}
+    <div class="fstash"><b>${FA("barn_box", "🏚️")} ${W2("Barn","Granero")}:</b> ${stash.map(([k, n]) => `<span>${FA(k, ALL[k].e)}×${n}</span>`).join("") || `<span class="muted">${W2("empty","vacío")}</span>`}</div>
+    ${own ? `<div class="fhands"><b>${FA("farmhand", "👩‍🌾")} ${W2("Farmhands","Peones")}:</b> ${(f.hands || []).map(sid => `<span class="kst">${E((f.handNames || {})[sid] || "?")}${(f.owed || {})[sid] ? ` <small>${W2("owed","debes")} 💵${f.owed[sid]}</small>` : ""} <button class="btn ghost" onclick="fmFire('${sid}')">✖</button></span>`).join("") || `<span class="muted">${W2("none","ninguno")}</span>`}
       ${(f.hands || []).length < 4 ? `<button class="btn" onclick="fmHire()">+ ${W2("Hire","Contratar")}</button>` : ""}</div>` : ""}</section>`; }
 function paintFarm(el, back){
   window._farmOpen = true; const p = myPlot(), hands = handOf();
@@ -204,7 +204,7 @@ function paintFarm(el, back){
       <p class="muted" style="font-size:13px">${W2("Supply and demand: the more of one crop the class sells this week, the lower its price goes. Sell what's scarce, or hold until Monday.","Oferta y demanda: entre más se vende de un cultivo, más baja su precio. Vende lo escaso o espera al lunes.")}</p></section>`; }
   else { const taken = Object.keys(FARMS).length;
     body = (p ? farmCard(p) : `<section class="panel"><div class="eyebrow">🗺️ ${W2(`Farm plots: ${PLOTS - taken} of ${PLOTS} left`, `Terrenos: quedan ${PLOTS - taken} de ${PLOTS}`)}</div>
-      <div class="fplots">${Array.from({length:PLOTS}, (_, i) => "p" + (i + 1)).map(k => FARMS[k] ? `<div class="taken">🌾<small>${E(FARMS[k].name)}</small></div>` : `<button onclick="fmBuyPlot('${k}')">🟩<small>${W2("Buy","Comprar")} 💵${PLOT_PRICE}</small></button>`).join("")}</div>
+      <div class="fplots">${Array.from({length:PLOTS}, (_, i) => "p" + (i + 1)).map(k => FARMS[k] ? `<div class="taken">${FA("plot_taken", "🌾")}<small>${E(FARMS[k].name)}</small></div>` : `<button onclick="fmBuyPlot('${k}')">${FA("plot", "🟩")}<small>${W2("Buy","Comprar")} 💵${PLOT_PRICE}</small></button>`).join("")}</div>
       <p class="muted" style="font-size:13px">${W2("Land is limited: once all 12 plots are bought, the only way to farm is to work for someone who has one.","La tierra es limitada: cuando se venden los 12 terrenos, la única forma de cultivar es trabajar para alguien que tenga uno.")}</p></section>`)
       + hands.map(farmCard).join(""); }
   el.innerHTML = `${back}<section class="panel raised ehead">${T.artImg(`${T.TA}places3/barn.webp`, "🌾")}<div><div class="eyebrow">🍊 ${W2("Orange Grove","Orange Grove")}</div><h2>${W2("Farm country","El campo")}</h2>
