@@ -274,7 +274,7 @@ Same style, new sheet, 3 columns by 2 rows on flat #FF00FF magenta, one scene pe
 ---
 
 ### Step 21 → `tower_loot_1.png`  (Exam Tower relics and decor)
-- [ ] done
+- [x] done
 ```
 Same style as the other item sheets: one object per cell, centered, chunky outlines, soft shading, solid magenta (#FF00FF) background, no text, no shadows on the background.
 Sheet, 4 columns by 4 rows. Sixteen objects:
@@ -285,7 +285,7 @@ Row 4: a rolled parchment scroll with a red wax seal, a small blue ballot box wi
 ```
 
 ### Step 22 → `tower_loot_2.png`  (Exam Tower decor, pets and trophies)
-- [ ] done
+- [x] done
 ```
 Same style as Step 21: one object per cell, magenta (#FF00FF) background, no text.
 Sheet, 4 columns by 4 rows. The last row has only two objects; leave the last two cells empty magenta.
@@ -296,7 +296,7 @@ Row 4: a white marble bust of a thinking head with a glowing brain symbol, a tal
 ```
 
 ### Step 23 → `npc_rosa_fix.png`  (Chat C: fixes Captain Rosa, who came out as a man)
-- [ ] done
+- [x] done
 ```
 Same style as the townspeople sheet. One character only, centered, full body, standing, facing forward, on flat #FF00FF magenta, no text:
 Captain Rosa, a friendly middle-aged Latina woman boat captain with dark hair in a low ponytail, a white captain's hat with a navy brim, a yellow raincoat over a navy shirt, navy pants and boots, holding a fishing rod in one hand and waving with the other. Same height and line weight as the coach, the landlady and the news anchor.
