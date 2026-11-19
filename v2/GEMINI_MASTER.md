@@ -402,3 +402,34 @@ Row 4: 16. curls pulled into a low curly ponytail at the neck, dark brown. 17. a
 ## For Claude: Chat E
 `python3 tools/extract_hair.py curly_hair.png 32` cuts av-hair-32 … av-hair-51 and prints their AV3.i anchors for avatar.js;
 then add the 20 names to AV_HAIR_NAMES and make the ic3-hair icons.
+
+---
+
+# CHAT F: Game Hall art (2 images)
+No attachments. Start a new chat. Paste the CHAT B style prompt first ("You are drawing game art…", magenta #FF00FF background, no text), then:
+
+### Step 28 → `games_1.png`  (game icons, rock-paper-scissors, cards and chips)
+- [ ] done
+```
+Sheet, 5 columns by 4 rows, on a flat #FF00FF magenta background. Twenty objects, one per cell, same scale, no text, no letters, no numbers:
+Row 1: a cartoon fist (rock) seen from the side; a flat open hand (paper) palm facing us; a hand making a scissors V sign; a round glowing "versus" lightning burst badge with no letters; a small gold trophy cup with a star.
+Row 2: an icon of three hands (fist, open hand, V sign) in a circle; an icon of a fan of colorful game cards in red, blue, green and yellow with only shapes on them; an icon of a blue upright four-in-a-row game board with red and yellow discs; an icon of two playing cards (an ace of spades shape and a king shape, no letters) with a poker chip; an icon of a red and black checkerboard with a few checker pieces.
+Row 3: an icon of a chess knight and king standing on a checkered tile; a playing-card back with a red and gold diamond pattern and a small shield emblem; a stack of three poker chips in red, gold and blue; a single gold poker chip seen from the front; a small game hall building with a red awning, a big dice sign and string lights (no words).
+Row 4: a green felt card table seen from above with a gold rim; a round gold medal with a ribbon; a wooden game shelf with board game boxes (no words); an hourglass with gold sand; a shiny gold crown.
+```
+
+### Step 29 → `games_2.png`  (chess, checkers, discs and color-card symbols)
+- [ ] done
+```
+Same style. Sheet, 6 columns by 4 rows, on a flat #FF00FF magenta background. Twenty-four game pieces seen from the front, one per cell, same scale, simple and very readable at small size, no text:
+Row 1 (light set: ivory with gold trim): king, queen, rook, bishop, knight, pawn.
+Row 2 (dark set: deep red with dark charcoal trim): king, queen, rook, bishop, knight, pawn.
+Row 3: a red checker piece seen from a slight angle; a black checker piece; a red checker king (two stacked with a small gold crown); a black checker king (two stacked with a small gold crown); a shiny red game disc seen flat from the front; a shiny gold game disc seen flat from the front.
+Row 4: a white "skip" symbol (circle with a diagonal slash) on a round black badge; a white "reverse" symbol (two curved arrows) on a round black badge; a white "draw two" symbol (two overlapping blank cards) on a round black badge; a four-color swirl "wild" symbol (red, blue, green, yellow quarters) on a round black badge; a face-down deck of cards stack; a small sparkle burst.
+```
+
+## For Claude: Chat F → `v2/assets/town/games/`
+| File | Cells → ids |
+|---|---|
+| games_1 | rps_rock, rps_paper, rps_scissors, vs, trophy, ic_rps, ic_colors, ic_four, ic_blackjack, ic_checkers, ic_chess, card_back, chips, chip, hall, felt, medal, shelf, hourglass, crown |
+| games_2 | ch_wk, ch_wq, ch_wr, ch_wb, ch_wn, ch_wp, ch_bk, ch_bq, ch_br, ch_bb, ch_bn, ch_bp, ck_r, ck_b, ck_rk, ck_bk, disc_r, disc_y, cc_skip, cc_rev, cc_draw2, cc_wild, deck, spark |

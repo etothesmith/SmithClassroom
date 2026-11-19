@@ -191,6 +191,18 @@ service cloud.firestore {
           && request.resource.data.text is string && request.resource.data.text.size() <= 240);
         allow delete: if owns(cid);
       }
+      // Game Hall: a match between two students (town/games.js). Either player can move; the
+      // players, the game and the wager can't change after the challenge is sent.
+      match /games/{id} {
+        allow read: if member(cid) || owns(cid);
+        allow create: if isSid(cid, request.resource.data.a) && live(cid) && request.resource.data.status == 'invited'
+          && request.resource.data.kind in ['rps','colors','four','bj','checkers','chess']
+          && request.resource.data.wager is int && request.resource.data.wager >= 0 && request.resource.data.wager <= 25
+          && request.resource.data.b is string && request.resource.data.b != request.resource.data.a;
+        allow update: if live(cid) && (isSid(cid, resource.data.a) || isSid(cid, resource.data.b))
+          && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['status','qa','qb','turn','winner','st','pa','pb','upd','resigned']);
+        allow delete: if owns(cid);
+      }
       // The mayor asks the teacher to fire someone; only the teacher decides
       match /firereqs/{id} {
         allow read: if owns(cid) || isSid(cid, resource.data.sid);

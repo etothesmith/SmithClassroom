@@ -10,7 +10,7 @@
    ========================================================================== */
 (function(){
 "use strict";
-const APP_VERSION = "2.5";
+const APP_VERSION = "2.6";
 const es = () => typeof S !== "undefined" && S.lang === "es";
 const t = (en, sp) => es() ? sp : en;
 const esc = s => String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
@@ -65,9 +65,7 @@ window.appClose = close;
 
 /* ---------------------------------------------------------------- what's new */
 const NOTES = [
-  ["🎖️", ["The mayor runs city hall","El alcalde dirige el ayuntamiento"], ["The mayor now hires and fires the 6 city jobs (firefighter, marshal, sanitation, ranger, builder, mail), gives a weekly State of the Town, and can ask Coach Smith to fire anyone.","El alcalde ahora contrata y despide los 6 empleos municipales, da un discurso semanal y puede pedir a Coach Smith que despida a alguien."]],
-  ["💇", ["20 new curly hairstyles","20 peinados rizados nuevos"], ["Afros, ringlets, a high-top, a frohawk, puffs, a twist-out and more in the Locker.","Afros, rizos, high-top, frohawk, coletas afro, twist-out y más en el Casillero."]],
-  ["💻", ["Chromebook fix","Arreglo para Chromebook"], ["Long forms like job applications now scroll, so you can reach every box and the Send button.","Los formularios largos como las solicitudes ahora se desplazan, para llegar a cada casilla y al botón Enviar."]]
+  ["🎲", ["The Game Hall is open","Abrió la Sala de juegos"], ["Challenge classmates to Rock Paper Scissors, Color Clash, Four in a Row, Blackjack 21, Checkers and Chess. Wager Smithbucks; each of you answers 5 class questions first, and whoever gets more right moves first. Town → Games.","Reta a tus compañeros a Piedra, papel o tijera, Choque de colores, Cuatro en línea, Blackjack 21, Damas y Ajedrez. Apuesta Smithbucks; cada uno responde 5 preguntas primero y quien acierte más empieza. Pueblo → Juegos."]]
 ];
 function whatsNew(){
   open(`<div class="ey">✨ ${t("What's new","Novedades")} · v${APP_VERSION}</div><h2>${t("Big update!","¡Gran actualización!")}</h2>
