@@ -25,7 +25,7 @@ let MARKET = [], CHAT = [], PLAZA = {}, MY_SALES = [], MY_BUYS = [], T_FROM = []
 let toastEl = null;
 /* extension points used by town/civic.js (Town Hall, Bank, Jobs, businesses, events, plaza quiz) */
 const EXT = {tabs:[], onClass:[], onSession:[], priceMult:[], listCheck:[], onSold:[], plazaBack:[], plazaFront:[], plazaTap:[],
-             adminPanels:[], streetBadge:[], houseExtra:[], plazaSub:[], banner:[], pubExtra:[], projector:[], onLeave:[], onBuy:[], marketTop:[], nameTag:[], personDraw:[]};
+             adminPanels:[], streetBadge:[], houseExtra:[], plazaSub:[], banner:[], pubExtra:[], projector:[], onLeave:[], onBuy:[], onHire:[], jobPanel:[], marketTop:[], nameTag:[], personDraw:[]};
 const run = (list, ...a) => list.forEach(f => { try { f(...a); } catch(e){ console.warn("town ext", e); } });
 
 /* ---------------------------------------------------------------- state */
@@ -59,7 +59,7 @@ const freeInv = () => { /* items not placed in the house */
 };
 function toast(msg){
   if (!toastEl) { toastEl = document.createElement("div"); toastEl.className = "ttoast"; document.body.appendChild(toastEl); }
-  toastEl.textContent = msg; toastEl.classList.add("on"); clearTimeout(toastEl._t); toastEl._t = setTimeout(() => toastEl.classList.remove("on"), 3200);
+  toastEl.textContent = msg; toastEl.classList.add("on"); if (typeof window.TOWN_NOTE === "function") { try { window.TOWN_NOTE(msg); } catch(e){} } clearTimeout(toastEl._t); toastEl._t = setTimeout(() => toastEl.classList.remove("on"), 3200);
 }
 function persist(){ save(); publishSoon(); if (typeof paintBar === "function") paintBar(); }
 
@@ -625,17 +625,38 @@ window.townPlace = function(slot){
 window.townPut = function(slot, id){ town().house.slots[slot] = id || null; if (!id) delete town().house.slots[slot]; townCloseCard(); persist(); paintSub(); };
 
 /* ---------------------------------------------------------------- shop & crates */
+/* Daily deals: 4 shop items at 30% off, the same for everyone, new every day */
+function dealIds(){
+  const pool = Object.values(ITEMS).filter(i => i.p > 0 && !i.season).map(i => i.id).sort(), d = new Date(), out = [];
+  let h = d.getFullYear() * 400 + d.getMonth() * 32 + d.getDate();
+  while (out.length < 4 && out.length < pool.length) { h = (h * 9301 + 49297) % 233280; const id = pool[h % pool.length]; if (!out.includes(id)) out.push(id); }
+  return out;
+}
+const shopPrice = it => dealIds().includes(it.id) ? Math.max(1, Math.round(priceOf(it) * 0.7)) : priceOf(it);
+let SHOPF = "new";
+window.townShopF = k => { SHOPF = k; paintSub(); };
 function paintShop(el){
-  const t = town(), mo = new Date().getMonth() + 1, forSale = Object.values(ITEMS).filter(i => i.p > 0 && (!i.season || i.season === mo))
-    .sort((a, b) => (b.season ? 1 : 0) - (a.season ? 1 : 0));
+  const t = town(), mo = new Date().getMonth() + 1, sets = window.TOWN_SETS || {}, deals = dealIds();
+  const all = Object.values(ITEMS).filter(i => i.p > 0 && (!i.season || i.season === mo));
+  const slots = (window.TOWN_SLOTS || []).filter(s => all.some(i => i.slot === s[0]));
+  const chips = [["new","✨",WL("New","Nuevo")],["all","🛍️",WL("All","Todo")]].concat(Object.entries(sets).filter(([k]) => all.some(i => i.set === k)).map(([k, v]) => [k, v[0], L2({en:v[1], es:v[2]})]))
+    .concat(slots.map(s => ["slot:" + s[0], "", L2(s[1])]));
+  const f = SHOPF;
+  const forSale = all.filter(i => f === "all" ? true : f === "new" ? i.fresh || i.season : f.startsWith("slot:") ? i.slot === f.slice(5) : i.set === f)
+    .sort((a, b) => (b.season ? 1 : 0) - (a.season ? 1 : 0) || priceOf(a) - priceOf(b));
+  const card = (i, deal) => { const was = priceOf(i), now = shopPrice(i), own = t.inv[i.id] | 0;
+    return `<div class="tcardi ${i.season ? "tseason" : ""} ${deal ? "tdealc" : ""}">${i.season ? `<i class="tlimit">⏳ ${WL("This month only","Solo este mes")}</i>` : deal ? `<i class="tlimit">🔥 −30%</i>` : i.fresh ? `<i class="tnew">${WL("NEW","NUEVO")}</i>` : ""}${itemArt(i.id, 64)}<b>${L2(i.name)}</b>
+      ${own ? `<small class="muted">${WL("You have","Tienes")} ${own}</small>` : ""}<button class="btn" onclick="townBuyShop('${i.id}')">💵 ${now !== was ? `<s>${was}</s> ` : ""}${now}</button></div>`; };
   el.innerHTML = `<section class="panel tcrates">${artImg(`${TA}ui/crate.webp`, "🎁", true)}
       <div><div class="eyebrow">${WL("Crates","Cajas")}</div><h2>${WL(`You have ${t.crates}`, `Tienes ${t.crates}`)}</h2>
       <p class="muted">${WL("Earn a crate for every certificate and every level up. Rare pets and trophies only come from crates, so trade for the ones you want!",
         "Gana una caja por cada certificado y cada nivel. Las mascotas y trofeos raros solo salen de cajas: ¡intercambia por los que quieras!")}</p>
       <button class="btn primary" ${t.crates ? "" : "disabled"} onclick="townOpenCrate()">${WL("Open a crate","Abrir una caja")}</button></div></section>
-    <section class="panel"><div class="eyebrow">${WL("Furniture shop","Tienda de muebles")}${shopMult() !== 1 ? ` · ${WL("prices ×","precios ×")}${shopMult()}` : ""}</div>
-      <div class="tgridi">${forSale.map(i => `<div class="tcardi ${i.season ? "tseason" : ""}">${i.season ? `<i class="tlimit">⏳ ${WL("This month only","Solo este mes")}</i>` : ""}${itemArt(i.id, 64)}<b>${L2(i.name)}</b>
-        <button class="btn" onclick="townBuyShop('${i.id}')">💵 ${priceOf(i)}</button></div>`).join("")}</div></section>
+    <section class="panel tdeals"><div class="eyebrow">🔥 ${WL("Today's deals · 30% off · new deals tomorrow","Ofertas de hoy · 30% menos · nuevas mañana")}</div>
+      <div class="tgridi">${deals.map(id => card(ITEMS[id], true)).join("")}</div></section>
+    <section class="panel"><div class="eyebrow">${WL("Furniture shop","Tienda de muebles")} · ${all.length} ${WL("items","artículos")}${shopMult() !== 1 ? ` · ${WL("prices ×","precios ×")}${shopMult()}` : ""}</div>
+      <div class="tchips">${chips.map(([k, ic, l]) => `<button class="${f === k ? "on" : ""}" onclick="townShopF('${k}')">${ic ? ic + " " : ""}${l}</button>`).join("")}</div>
+      <div class="tgridi">${forSale.map(i => card(i, false)).join("") || `<p class="muted">${WL("Nothing here this month.","Nada aquí este mes.")}</p>`}</div></section>
     <section class="panel"><div class="eyebrow">${WL("My inventory","Mi inventario")}</div><div class="tgridi">${invCards()}</div></section>`;
 }
 function invCards(){
@@ -644,7 +665,7 @@ function invCards(){
     <small class="muted">${n}× · ${WL("free","libre")} ${free[id] || 0}</small></div>`).join("") || `<p class="muted">${WL("Empty. Open a crate!","Vacío. ¡Abre una caja!")}</p>`;
 }
 window.townBuyShop = function(id){
-  const it = ITEMS[id], cost = priceOf(it);
+  const it = ITEMS[id], cost = shopPrice(it);
   if (S.tokens < cost) return toast(WL(`You need ${cost} Smithbucks. Study and play to earn more!`, `Necesitas ${cost} Smithbucks. ¡Estudia y juega para ganar más!`));
   coins(-cost); addItem(id, 1); persist(); paintSub(); toast(WL(`Bought: ${L2(it.name)}`, `Compraste: ${L2(it.name)}`));
 };

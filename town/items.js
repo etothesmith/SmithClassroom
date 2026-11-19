@@ -147,6 +147,41 @@ window.TOWN_ITEMS = Object.fromEntries([
  ["sup_padlock","wall",0,4,"🔒","Locker padlock","Candado de casillero"],["sup_backpack","plant",1,10,"🎒","Teal backpack","Mochila turquesa"],
  ["sup_lunchbox","table",0,5,"🧰","Green lunchbox","Lonchera verde"],["sup_lanyard","wall",0,3,"🪪","Student ID lanyard","Credencial con cordón"]]
   .forEach(([id, slot, r, p, e, en, es]) => { window.TOWN_ITEMS[id] = {id, slot, r, p, e, name:{en, es}, set:"school"}; });
+/* Hangout update (v2.3): 52 new shop items in 6 themed sets. set = shop filter; emoji until art arrives */
+[["gamer",[["table_dj","table",1,16,"🎧","DJ booth","Cabina de DJ"],["wall_tv","wall",1,14,"📺","Flat-screen TV","Televisión de pantalla plana"],
+   ["trophy_controller","trophy",0,6,"🎮","Game controller","Control de videojuegos"],["trophy_headphones","trophy",0,6,"🎧","Gaming headset","Audífonos gamer"],
+   ["lamp_led","lamp",0,6,"🌈","LED strip lights","Tira de luces LED"],["lamp_disco","lamp",1,10,"🪩","Disco ball","Bola disco"],
+   ["sofa_bean_giant","sofa",0,9,"🫘","Giant beanbag","Puf gigante"],["rug_rainbow","rug",0,5,"🌈","Rainbow rug","Alfombra arcoíris"],
+   ["table_vending","table",1,15,"🥤","Snack vending machine","Máquina de botanas"]]],
+ ["sports",[["wall_hoop","wall",0,7,"🏀","Mini hoop","Mini canasta"],["rug_court","rug",0,6,"🏀","Basketball court rug","Alfombra de cancha"],
+   ["trophy_football","trophy",0,5,"🏈","Signed football","Balón firmado"],["trophy_bowling","trophy",0,6,"🎳","Bowling pin","Pino de boliche"],
+   ["art_jersey","art",1,8,"👕","Framed jersey","Jersey enmarcado"],["wall_sneakers","wall",1,9,"👟","Sneaker wall","Muro de tenis"],
+   ["sofa_bleachers","sofa",0,8,"🏟️","Stadium bleachers","Gradas del estadio"],["table_pingpong","table",1,14,"🏓","Ping-pong table","Mesa de ping-pong"],
+   ["rug_turf","rug",0,3,"🟩","Turf rug","Alfombra de pasto"]]],
+ ["space",[["bed_rocket","bed",1,15,"🚀","Rocket bed","Cama cohete"],["rug_planet","rug",0,6,"🪐","Planet rug","Alfombra de planeta"],
+   ["lamp_star","lamp",0,5,"⭐","Star projector","Proyector de estrellas"],["lamp_rocket","lamp",0,8,"🚀","Rocket lamp","Lámpara cohete"],
+   ["table_telescope","table",1,12,"🔭","Telescope","Telescopio"],["art_space","art",0,5,"🌌","Galaxy poster","Póster de galaxia"],
+   ["trophy_astronaut","trophy",1,9,"👩‍🚀","Astronaut figure","Figura de astronauta"],["plant_alien","plant",1,8,"👽","Alien plant","Planta alienígena"]]],
+ ["beach",[["bed_hammock","bed",0,12,"🏝️","Hammock","Hamaca"],["sofa_beachchair","sofa",0,6,"⛱️","Beach chair","Silla de playa"],
+   ["plant_orange","plant",0,6,"🍊","Florida orange tree","Naranjo de Florida"],["rug_sand","rug",0,4,"🏖️","Sandy beach rug","Alfombra de arena"],
+   ["lamp_jellyfish","lamp",1,9,"🪼","Jellyfish lamp","Lámpara de medusa"],["trophy_shell","trophy",0,4,"🐚","Seashell collection","Colección de conchas"],
+   ["wall_surfboard","wall",1,10,"🏄","Surfboard","Tabla de surf"],["table_tiki","table",0,7,"🍹","Tiki bar","Barra tiki"],
+   ["table_minifridge","table",0,8,"🧊","Mini fridge","Minirefrigerador"]]],
+ ["cozy",[["bed_futon","bed",0,8,"🛏️","Futon","Futón"],["bed_campout","bed",0,5,"🏕️","Sleeping-bag campout","Campamento con bolsa de dormir"],
+   ["sofa_hangchair","sofa",1,10,"🪺","Hanging nest chair","Silla nido colgante"],["rug_shag","rug",0,4,"🧶","Fluffy shag rug","Alfombra peluda"],
+   ["plant_succulents","plant",0,3,"🪴","Succulent trio","Trío de suculentas"],["plant_bamboo","plant",0,4,"🎋","Lucky bamboo","Bambú de la suerte"],
+   ["plant_mushroom","plant",0,5,"🍄","Mushroom lamp-plant","Planta hongo"],["wall_mirror","wall",0,5,"🪞","Round mirror","Espejo redondo"],
+   ["wall_neon_heart","wall",1,8,"💖","Neon heart","Neón de corazón"],["table_tea","table",0,5,"🫖","Tea set","Juego de té"]]],
+ ["creator",[["wall_guitar","wall",1,10,"🎸","Electric guitar","Guitarra eléctrica"],["table_piano","table",1,18,"🎹","Keyboard piano","Teclado"],
+   ["trophy_mic","trophy",0,7,"🎤","Podcast mic","Micrófono de pódcast"],["art_records","art",0,6,"💿","Vinyl record wall","Muro de discos"],
+   ["art_skate","art",0,5,"🛹","Skate deck art","Arte de patineta"],["table_easel","table",0,6,"🎨","Painting easel","Caballete"],
+   ["trophy_camera","trophy",1,9,"📷","Vintage camera","Cámara antigua"],["table_chess","table",0,9,"♟️","Chess table","Mesa de ajedrez"],
+   ["trophy_cube","trophy",0,4,"🧩","Puzzle cube","Cubo de rompecabezas"]]],
+ ["civics",[["art_constitution","art",0,6,"📜","Constitution poster","Póster de la Constitución"],["art_dollar","art",1,8,"💵","Framed first dollar","Primer dólar enmarcado"],
+   ["sofa_throne","sofa",2,22,"👑","Golden throne","Trono dorado"]]]
+].forEach(([set, list]) => list.forEach(([id, slot, r, p, e, en, es]) => { window.TOWN_ITEMS[id] = {id, slot, r, p, e, name:{en, es}, set, fresh:23}; }));
+window.TOWN_SETS = {school:["📚","School supplies","Útiles escolares"], gamer:["🎮","Gamer room","Cuarto gamer"], sports:["🏀","Sports fan","Fan de deportes"],
+  space:["🚀","Space","Espacio"], beach:["🏖️","Florida beach","Playa de Florida"], cozy:["🧸","Cozy","Acogedor"], creator:["🎸","Creator studio","Estudio creativo"], civics:["📜","Civics & money","Civismo y dinero"]};
 window.TOWN_RARITY = [{en:"Common",es:"Común",c:"#8A94A6"},{en:"Rare",es:"Raro",c:"#2F7FD8"},{en:"Epic",es:"Épico",c:"#8A5CD8"},{en:"Legendary",es:"Legendario",c:"#E3A21A"}];
 window.TOWN_HOUSES = [
   ["cottage", 0,  "Cottage", "Casita"],

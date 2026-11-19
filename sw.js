@@ -4,10 +4,10 @@
    - Images, sounds and fonts: cache first, refreshed in the background.
    - Only this site's own files; Firebase and other sites are never touched.
    Bump VERSION when the app shell changes. */
-const VERSION = "sc-2.2.0";
+const VERSION = "sc-2.3.0";
 const SHELL = ["./", "index.html", "content.js", "bank_plus.js", "art.js", "avatar.js", "world.js", "world.css", "app.js",
-  "town/town.css", "town/items.js", "town/config.js", "town/net.js", "town/town.js", "town/civic.js", "town/careers.js", "town/today.js",
-  "town/world2.js", "town/pets.js", "town/houselife.js", "town/ambient.js", "town/live.js", "town/tower.js", "manifest.webmanifest",
+  "town/town.css", "town/items.js", "town/config.js", "town/net.js", "town/town.js", "town/civic.js", "town/careers.js", "town/jobs2.js", "town/today.js",
+  "town/world2.js", "town/pets.js", "town/houselife.js", "town/ambient.js", "town/live.js", "town/tower.js", "town/notify.js", "manifest.webmanifest",
   "assets/app/icon-192.png", "assets/app/icon-512.png"];
 self.addEventListener("install", e => {
   e.waitUntil(caches.open(VERSION).then(c => Promise.all(SHELL.map(u => c.add(u).catch(() => null)))));
@@ -28,4 +28,12 @@ self.addEventListener("fetch", e => {
   }
   e.respondWith(fetch(r).then(res => { if (res && res.ok) { const copy = res.clone(); caches.open(VERSION).then(c => c.put(r, copy)); } return res; })
     .catch(() => caches.match(r, {ignoreSearch:true}).then(hit => hit || caches.match("index.html"))));
+});
+
+/* tapping a Town notification brings the open tab forward (or opens the site) */
+self.addEventListener("notificationclick", e => {
+  e.notification.close();
+  e.waitUntil(self.clients.matchAll({type:"window", includeUncontrolled:true}).then(list => {
+    const c = list.find(w => w.url.startsWith(self.registration.scope)); return c ? c.focus() : self.clients.openWindow(self.registration.scope);
+  }));
 });

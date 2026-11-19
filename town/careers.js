@@ -200,6 +200,7 @@ function syncCareer(){
     Object.assign(k, {job:j, since:Date.now(), shifts:0, cases:0, last:"", duty:{}});
     T.persist(); T.toast(W2(`🎉 You're hired! You're the new ${L(CAREERS[j].title)}. Check Downtown for your first shift.`, `🎉 ¡Te contrataron! Eres ${L(CAREERS[j].title)}. Ve al Centro para tu primer turno.`));
     if (typeof fireConfetti === "function") fireConfetti();
+    (EXT.onHire || []).forEach(f => { try { f(j); } catch(e){} });
   } else if (!j && k.job) {
     const old = k.job; k.hist.push({job:old, shifts:k.shifts, cases:k.cases, until:Date.now()}); k.job = null; T.persist();
     T.toast(W2(`You're no longer the ${L(CAREERS[old].title)}. You can apply for another job Downtown.`, `Ya no eres ${L(CAREERS[old].title)}. Puedes pedir otro trabajo en el Centro.`));
@@ -584,6 +585,7 @@ function paintBuilding(el, k){
           ${mine ? `<button class="btn primary" onclick="carCase('${c.id}')">${c.kind === "photo" ? "📸" : W2("Help","Ayudar")}</button>` : `<i class="muted">${W2("waiting","esperando")}</i>`}</div>`; }).join("") || `<p class="muted">${W2("Nobody needs help right now.","Nadie necesita ayuda ahora.")}</p>`}</section>` : ""}
     ${services.length ? `<section class="panel"><div class="eyebrow">🛎️ ${W2("Services","Servicios")}</div><div class="cmake">${services.map(([kind, K]) => `<button class="btn" onclick="carRequest('${kind}')">${K.e} ${E(L(K.l))}</button>`).join("")}</div>
       ${!hs.length ? `<p class="muted" style="font-size:12px">${W2("Nobody has this job yet, so services are closed.","Nadie tiene este trabajo, así que los servicios están cerrados.")}</p>` : ""}</section>` : ""}
+    ${(EXT.jobPanel || []).map(f => { try { return f(k, mine) || ""; } catch(e){ return ""; } }).join("")}
     ${titleNews.length ? `<section class="panel kpaper"><div class="eyebrow">📰 ${W2("The Grenadier Gazette","La Gaceta Grenadier")}</div>${titleNews.map(n => `<article><b>${E(n.headline)}</b><p>${E(n.body)}</p><small class="muted">${W2("by","por")} ${E(n.name)} · ${new Date(n.at).toLocaleDateString()}</small></article>`).join("")}</section>` : ""}
     <section class="panel"><div class="eyebrow">👥 ${W2("Staff","Personal")}</div><div class="cmini">${hs.map(s => `<span>${C2.e} ${E(staffNames()[s] || "")}</span>`).join("") || `<span>${W2("Nobody yet","Nadie aún")}</span>`}</div>
       ${mine ? "" : openSeats(k) ? `<button class="btn primary" onclick="carApply('${k}')">📝 ${applied ? W2("Update my application","Actualizar mi solicitud") : W2("Apply for this job","Pedir este trabajo")}</button>`
@@ -676,14 +678,23 @@ EXT.onSession.push(() => {
     if (ch) T.persist(); }));
   BGS.push(store().watch(`${C()}/mayoracts`, {where:[["day","==",day()]]}, rows => { if (rows) { ACTS = rows.concat(ACTS.filter(a => a.day !== day())); applyActs(); } }));
   store().list(`${C()}/mayoracts`, {where:[["week","==",week()]]}).then(rows => { const ids = new Set(ACTS.map(a => a.id)); rows.forEach(r => { if (!ids.has(r.id)) ACTS.push(r); }); }).catch(() => {});
-  BGS.push(store().watch(`${C()}/requests`, {}, rows => { if (rows) { REQS = rows.sort((a, b) => b.at - a.at); projectRewards(); } }));
-  BGS.push(store().watch(`${C()}/cases`, {where:[["status","==","open"]]}, rows => { if (rows) CASES = rows; }));
+  let seenR = null, seenC = null;
+  BGS.push(store().watch(`${C()}/requests`, {}, rows => { if (!rows) return; REQS = rows.sort((a, b) => b.at - a.at); projectRewards();
+    const ids = new Set(rows.map(r => r.id));
+    if (seenR && isMayor()) rows.filter(r => r.status === "review" && !seenR.has(r.id) && r.sid !== me()).slice(0, 2).forEach(r => T.toast(W2(`📌 New town request on your desk, Mayor: ${PROJECTS[r.proj] ? L(PROJECTS[r.proj].l) : r.proj} (from ${r.name}).`, `📌 Nueva solicitud en tu escritorio, Alcalde: ${PROJECTS[r.proj] ? L(PROJECTS[r.proj].l) : r.proj} (de ${r.name}).`)));
+    seenR = ids; }));
+  BGS.push(store().watch(`${C()}/cases`, {where:[["status","==","open"]]}, rows => { if (!rows) return; CASES = rows;
+    const j = myJob(), ids = new Set(rows.map(c => c.id));
+    if (seenC && j) rows.filter(c => c.job === j && !seenC.has(c.id) && c.for !== me() && KINDS[c.kind] && !["litter","park"].includes(c.kind)).slice(0, 2)
+      .forEach(c => T.toast(W2(`${KINDS[c.kind].e} ${c.forName || "Someone"} needs the ${L(CAREERS[j].title)}: ${L(KINDS[c.kind].l)}. Go to work!`, `${KINDS[c.kind].e} ${c.forName || "Alguien"} necesita al ${L(CAREERS[j].title)}: ${L(KINDS[c.kind].l)}. ¡A trabajar!`)));
+    seenC = ids; }));
   setTimeout(() => { syncCareer(); lifeEvents(); mayorDaily(); }, 600);
 });
 EXT.onClass.push((was, c) => {
   if (!SESS()) return; syncCareer(); mayorDaily();
   if (T.isTown() && T.tt === "downtown" && (!was || JSON.stringify([was.staff, was.mayor]) !== JSON.stringify([c.staff, c.mayor])) && window._carDraw) window._carDraw();
 });
+T.CAR = {CAREERS, KINDS, LEVELS, myJob, car, duty, levelOf, nextLevel, jobTitle, openCases, holders, payCase, promoCheck, L, me};
 EXT.pubExtra.push(() => { const k = car(); return {career:k.job ? {job:k.job, lvl:levelOf(k)[1], shifts:k.shifts | 0, cases:k.cases | 0, last:k.last || ""} : null, sick:!!(civ().sick)}; });
 
 /* ================================================================ teacher: careers, applications, stories, requests */

@@ -556,3 +556,34 @@
 @media (max-width:560px){.twmon span{font-size:80px}.twmon.boss span{font-size:96px}.twunit{grid-template-columns:1fr 70px 34px}}
 /* live repaints from classmates' activity: no entry animation */
 .lvquiet .panel,.lvquiet .lvcard{animation:none}
+/* v2.3 shop: filters, deals, NEW tags */
+.tchips{display:flex;gap:6px;overflow-x:auto;padding:2px 2px 10px;margin-bottom:6px;scrollbar-width:thin}
+.tchips button{flex:none;border:2px solid var(--char);background:#fff;border-radius:999px;padding:5px 12px;font:800 13px var(--disp);cursor:pointer;white-space:nowrap}
+.tchips button.on{background:var(--char);color:#fff}
+.tcardi{position:relative}
+.tdealc{background:#FFF4E5}
+.tdeals{border-color:#E86A2C}
+.tnew{position:absolute;top:-9px;left:50%;transform:translateX(-50%);font-style:normal;font-size:10px;font-weight:900;background:#3BB273;color:#fff;border:2px solid var(--char);border-radius:8px;padding:0 6px}
+.tcardi s{opacity:.55;font-weight:600}
+/* v2.3 notifications bell + inbox */
+#tnBell{position:fixed;right:14px;bottom:84px;z-index:60;width:52px;height:52px;border-radius:50%;border:3px solid var(--char,#1D1B2E);background:#FFD24A;font-size:24px;line-height:1;cursor:pointer;box-shadow:0 5px 0 var(--char,#1D1B2E)}
+#tnBell:active{transform:translateY(3px);box-shadow:0 2px 0 var(--char,#1D1B2E)}
+#tnBell b{position:absolute;top:-6px;right:-6px;min-width:22px;height:22px;padding:0 5px;border-radius:11px;background:#C8283A;color:#fff;font:800 12px/22px system-ui,sans-serif;border:2px solid var(--char,#1D1B2E)}
+.tnset{display:grid;grid-template-columns:1fr auto;gap:10px 12px;align-items:center;margin:8px 0 12px}
+.tnset small{display:block;color:var(--muted,#666);font-size:12px;line-height:1.3}
+.tnfeed{max-height:46vh;overflow:auto;border:2px solid var(--char,#1D1B2E);border-radius:12px;background:#fff}
+.tnfeed>div{display:flex;gap:10px;justify-content:space-between;padding:9px 12px;border-bottom:1px solid #eee;font-size:14px}
+.tnfeed>div.new{background:#FFF7D6;font-weight:700}
+.tnfeed small{flex:none;color:var(--muted,#888)}
+.tnfeed p{padding:12px;margin:0}
+/* v2.3 job guide + on the job */
+.jguide{display:grid;gap:10px;margin:10px 0}
+.jguide>div{border:2px solid var(--char,#1D1B2E);border-radius:12px;padding:10px 12px;background:#fff}
+.jguide p{margin:4px 0;font-size:14px}.jguide ul{margin:4px 0;padding-left:20px;font-size:14px}
+.jlevels{display:flex;flex-wrap:wrap;align-items:center;gap:4px;margin:6px 0}
+.jlevels span{border:2px solid var(--char,#1D1B2E);border-radius:10px;padding:3px 8px;font-weight:800;font-size:13px;background:#FFF4C9;text-align:center}
+.jlevels small{display:block;font-weight:600;font-size:11px}
+.jlevels i{font-style:normal;font-weight:900}
+.jonjob{border-color:#8A5CD8}
+.jban{display:flex;gap:10px;align-items:center;flex-wrap:wrap;border-color:#8A5CD8}
+.jban .btn{margin-left:auto}

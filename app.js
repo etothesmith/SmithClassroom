@@ -10,7 +10,7 @@
    ========================================================================== */
 (function(){
 "use strict";
-const APP_VERSION = "2.2";
+const APP_VERSION = "2.3";
 const es = () => typeof S !== "undefined" && S.lang === "es";
 const t = (en, sp) => es() ? sp : en;
 const esc = s => String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
@@ -65,23 +65,10 @@ window.appClose = close;
 
 /* ---------------------------------------------------------------- what's new */
 const NOTES = [
-  ["🎓", ["New Exam tab","Nueva pestaña Examen"], ["Everything for the AP exams (May 4 and May 7, 2027) and your final exams in one place.","Todo para los exámenes AP (4 y 7 de mayo de 2027) y tus exámenes finales en un solo lugar."]],
-  ["🏰", ["The Exam Tower","La Torre del Examen"], ["Climb a floor per unit, fight misconception monsters and bosses, crit with streaks, and open chests for 33 new items, relics and 3 new pets.","Sube un piso por unidad, pelea contra monstruos y jefes, haz críticos con rachas y abre cofres con 33 objetos, reliquias y 3 mascotas nuevas."]],
-  ["📊", ["Graph Lab","Laboratorio de gráficas"], ["34 AP-style scenarios: pick the curve, the direction and the effect, then watch the graph shift.","34 escenarios estilo AP: elige la curva, la dirección y el efecto, y mira cómo se mueve la gráfica."]],
-  ["🗂️", ["Case Files","Expedientes"], ["The required Supreme Court cases and founding documents. Read the facts, name the case.","Los casos de la Corte Suprema y documentos obligatorios. Lee los hechos y nombra el caso."]],
-  ["🧠", ["Spaced review","Repaso espaciado"], ["Questions you miss come back until you know them.","Las preguntas que fallas vuelven hasta que las sepas."]],
-  ["📝", ["Mock exams","Simulacros"], ["Timed, weighted like the real exam, with a unit breakdown and a rough AP score estimate.","Con tiempo, ponderados como el real, con resultados por unidad y una estimación AP."]],
-  ["🔥", ["Live tab in Grenadier Town","Pestaña En vivo en Grenadier Town"], ["Everything social in one place: raids, duels, the weekly feud, the mystery, high-fives and your standards.","Todo lo social en un lugar: incursiones, duelos, la disputa, el misterio, choca cinco y tus estándares."]],
-  ["👾", ["Period Raids during class","Incursiones durante la clase"], ["Mon–Fri, 7:00–1:30, the class fights a daily boss. Every right answer in class or in town is a hit. Beat it together for +5.","Lun–vie, 7:00–1:30, la clase pelea contra un jefe. Cada respuesta correcta es un golpe. Véncelo en equipo: +5."]],
-  ["⚔️", ["Quiz Duels","Duelos de preguntas"], ["Challenge a classmate to the same 5 questions. Keep a rivalry record and ask for rematches.","Reta a un compañero con las mismas 5 preguntas. Lleva tu récord de rivalidad y pide revancha."]],
-  ["⚖️", ["Town Feud","La disputa del pueblo"], ["A new two-sided debate every week. Pick a side, fight with questions, post an argument using unit vocabulary, vote for the best ones.","Un debate nuevo cada semana. Elige un lado, lucha con preguntas, publica un argumento con vocabulario de la unidad y vota."]],
-  ["🕵️", ["Weekly Mystery","Misterio semanal"], ["Someone stole something in town. Earn clues with questions, use logic, and accuse the thief. One try!","Alguien robó algo. Gana pistas con preguntas, usa la lógica y acusa al ladrón. ¡Un intento!"]],
-  ["⭐", ["Rate town workers","Califica a los trabajadores"], ["Give the doctor, banker, reporter and others star reviews. Great reviews make an Employee of the Week.","Da estrellas al médico, banquero, reportero y más. Las mejores reseñas eligen al Empleado de la semana."]],
-  ["📜", ["Recommendation letters","Cartas de recomendación"], ["Finishing your daily jobs, shifts, raids and more earns letters that go on every job application, plus a % match for each job.","Terminar trabajos diarios, turnos, incursiones y más te da cartas para tus solicitudes, y un % de compatibilidad por trabajo."]],
-  ["🛂", ["Standards Passport","Pasaporte de estándares"], ["Every question is tied to a Florida or AP standard. Get each one stamped at 80%.","Cada pregunta está ligada a un estándar de Florida o AP. Séllalos al 80%."]],
-  ["📚", ["160 new questions","160 preguntas nuevas"], ["New bilingual questions in every unit of AP Macro, AP Gov, Economics and U.S. Government.","Preguntas bilingües nuevas en cada unidad de Macro AP, Gobierno AP, Economía y Gobierno de EE. UU."]],
-  ["👕", ["29 new outfits and new art","29 atuendos nuevos y arte nuevo"], ["Dresses, jerseys, jeans and more in the closet, plus real art for fish, pets, townspeople and Downtown.","Vestidos, jerseys, jeans y más, y arte nuevo para peces, mascotas, vecinos y el Centro."]],
-  ["📲", ["Smith's Classroom is an app now","Smith's Classroom ahora es una app"], ["Add it to your home screen for full-screen play, faster loading and a real app icon.","Agrégala a tu pantalla de inicio para jugar en pantalla completa, cargar más rápido y tener ícono."]]
+  ["🔔", ["Notifications","Notificaciones"], ["Tap the 🔔 to see everything that happened: hired, patients waiting, trade offers, duels, fires. Turn on notifications to get them even in another tab.","Toca la 🔔 para ver todo lo que pasó: contrataciones, pacientes, intercambios, duelos, incendios. Activa las notificaciones para verlas aunque estés en otra pestaña."]],
+  ["🛍️", ["57 new things to buy","57 cosas nuevas para comprar"], ["Gamer room, sports, space, Florida beach, cozy and creator sets, plus 4 daily deals at 30% off. Filter the shop by set or by room spot.","Sets gamer, deportes, espacio, playa de Florida, acogedor y creativo, más 4 ofertas diarias con 30% menos. Filtra la tienda por set o lugar."]],
+  ["📖", ["Job guides","Guías de trabajo"], ["Get hired and you get a briefing: what you do, your daily shift, who needs you, pay, promotions and the real-world econ or civics behind it.","Si te contratan recibes una guía: qué haces, tu turno, quién te necesita, pago, ascensos y la economía o civismo real detrás."]],
+  ["🧠", ["On the job","En el trabajo"], ["Every job gets one real-life decision a day. Make the call a pro would make: +2 and it counts toward your promotion.","Cada trabajo tiene una decisión real al día. Decide como un profesional: +2 y cuenta para tu ascenso."]]
 ];
 function whatsNew(){
   open(`<div class="ey">✨ ${t("What's new","Novedades")} · v${APP_VERSION}</div><h2>${t("Big update!","¡Gran actualización!")}</h2>
