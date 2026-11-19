@@ -59,6 +59,7 @@ const Input = {
   usingTouch: false,
   init(canvas) {
     addEventListener('keydown', e => {
+      const tg = e.target; if (tg && (tg.tagName === 'INPUT' || tg.tagName === 'TEXTAREA' || tg.isContentEditable)) return;
       if (['Space', 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'Backspace'].includes(e.code)) e.preventDefault();
       this.keys[e.code] = true; this.usingTouch = false; Audio2.unlock();
     });

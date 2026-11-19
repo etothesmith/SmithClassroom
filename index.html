@@ -1826,6 +1826,8 @@ let TEACHER_OK=false;
    kept as long as the longest phrase and every phrase is checked against its
    own tail, so a shorter code still matches while a longer one is in progress.
    This is how you get in on a borrowed laptop with no sign-in. */
+/* game keys must never swallow letters typed into an answer box */
+function typingIn(e){ const t=e&&e.target; return !!t&&(t.tagName==="INPUT"||t.tagName==="TEXTAREA"||t.tagName==="SELECT"||t.isContentEditable); }
 const TEACHER_CODES=["coachsmiththegoat","coachneedaccess"];
 const TEACHER_BUFMAX=Math.max.apply(null,TEACHER_CODES.map(c=>c.length));
 let teacherBuf="";
@@ -3951,7 +3953,7 @@ function runLaser(cv, unitId, voc){
     if (over) return;
     shots.push({x:shipX, y:H-58, vy:-7});
   }
-  const kd = e => {
+  const kd = e => { if(typingIn(e)) return;
     if (e.code==="ArrowLeft"||e.code==="KeyA"){ shipX-=26; e.preventDefault(); }
     if (e.code==="ArrowRight"||e.code==="KeyD"){ shipX+=26; e.preventDefault(); }
     if (e.code==="Space"){ fire(); e.preventDefault(); }
@@ -5520,7 +5522,7 @@ function jeoStatusHTML(){
 function jeoSpecialTeam(i){ viewGameShow(); }
 function jeoBind(){
   jeoUnbind();
-  JEO.keyHandler = e => {
+  JEO.keyHandler = e => { if(typingIn(e)) return;
     const C = JEO.cur;
     if (!C || C.revealed || C.buzzed !== null || C.counting) return;
     if (C.phase === "read") return;
@@ -9311,7 +9313,7 @@ function gameSprint(cv,id,lvl,zone){
      chalk shot clears a hazard at range so a bad approach is recoverable
      instead of just costing a life. */
   const keys={jump:false, down:false, left:false, right:false, fire:false};
-  const kd=e=>{
+  const kd=e=>{ if(typingIn(e)) return;
     if(e.code==="ArrowUp"||e.code==="KeyW"){
       if(!keys.jump) p.buffer=BUFFER;               /* buffered jump          */
       keys.jump=true; e.preventDefault();
@@ -9321,7 +9323,7 @@ function gameSprint(cv,id,lvl,zone){
     if(e.code==="ArrowRight"||e.code==="KeyD"){ keys.right=true; e.preventDefault(); }
     if(e.code==="Space"||e.code==="KeyJ"){ if(!keys.fire) fire(); keys.fire=true; e.preventDefault(); }
   };
-  const ku=e=>{
+  const ku=e=>{ if(typingIn(e)) return;
     if(e.code==="ArrowUp"||e.code==="KeyW"){
       keys.jump=false;
       if(p.vy<-4) p.vy=-4;                          /* variable jump height   */
@@ -9800,8 +9802,8 @@ function gameShuttle(cv,id,lvl,zone){
 
   const keys={ArrowUp:false,ArrowDown:false,ArrowLeft:false,ArrowRight:false};
   let prevUp=false,prevDown=false;
-  const kd=e=>{ if(keys[e.code]!==undefined){ keys[e.code]=true; e.preventDefault(); } };
-  const ku=e=>{ if(keys[e.code]!==undefined){ keys[e.code]=false; e.preventDefault(); } };
+  const kd=e=>{ if(typingIn(e)) return; if(keys[e.code]!==undefined){ keys[e.code]=true; e.preventDefault(); } };
+  const ku=e=>{ if(typingIn(e)) return; if(keys[e.code]!==undefined){ keys[e.code]=false; e.preventDefault(); } };
   window.addEventListener("keydown",kd); window.addEventListener("keyup",ku);
   let ty=0;
   const ts=e=>{ const t=e.touches[0]; ty=t.clientY;
@@ -10196,12 +10198,12 @@ function gameKart(cv,id,lvl,zone){
 
   /* ---- input ---- */
   const keys={left:false,right:false,brake:false,horn:false};
-  const kd=e=>{
+  const kd=e=>{ if(typingIn(e)) return;
     if(e.code==="ArrowLeft"||e.code==="KeyA"){keys.left=true;e.preventDefault();}
     if(e.code==="ArrowRight"||e.code==="KeyD"){keys.right=true;e.preventDefault();}
     if(e.code==="ArrowDown"||e.code==="KeyS"||e.code==="Space"){keys.brake=true;e.preventDefault();}
   };
-  const ku=e=>{
+  const ku=e=>{ if(typingIn(e)) return;
     if(e.code==="ArrowLeft"||e.code==="KeyA")keys.left=false;
     if(e.code==="ArrowRight"||e.code==="KeyD")keys.right=false;
     if(e.code==="ArrowDown"||e.code==="KeyS"||e.code==="Space")keys.brake=false;
@@ -10762,8 +10764,8 @@ function gameGunner(cv,id,lvl,zone){
              ArrowUp:"up",KeyW:"up",ArrowDown:"down",KeyS:"down",
              Space:"jump",KeyK:"jump",
              KeyJ:"fire",KeyF:"fire",KeyX:"fire",ShiftLeft:"fire",ShiftRight:"fire"};
-  const kd=e=>{ const k=MAP[e.code]; if(k){ keys[k]=true; e.preventDefault(); } };
-  const ku=e=>{ const k=MAP[e.code]; if(k){ keys[k]=false; e.preventDefault(); } };
+  const kd=e=>{ if(typingIn(e)) return; const k=MAP[e.code]; if(k){ keys[k]=true; e.preventDefault(); } };
+  const ku=e=>{ if(typingIn(e)) return; const k=MAP[e.code]; if(k){ keys[k]=false; e.preventDefault(); } };
   window.addEventListener("keydown",kd); window.addEventListener("keyup",ku);
   let padX=null;
   /* Touch zones: left half is a relative run pad, the right half splits into
@@ -11194,8 +11196,8 @@ function gameQuest(cv,id,lvl,zone){
   const hero=spriteOf("idle"), foes=FOES.map(spriteOf);
 
   const keys={ArrowUp:false,ArrowDown:false,ArrowLeft:false,ArrowRight:false,Space:false};
-  const kd=e=>{ if(keys[e.code]!==undefined){ keys[e.code]=true; e.preventDefault(); } };
-  const ku=e=>{ if(keys[e.code]!==undefined){ keys[e.code]=false; e.preventDefault(); } };
+  const kd=e=>{ if(typingIn(e)) return; if(keys[e.code]!==undefined){ keys[e.code]=true; e.preventDefault(); } };
+  const ku=e=>{ if(typingIn(e)) return; if(keys[e.code]!==undefined){ keys[e.code]=false; e.preventDefault(); } };
   window.addEventListener("keydown",kd); window.addEventListener("keyup",ku);
   let joyX=0,joyY=0,joyDx=0,joyDy=0,touchActive=false;
   const ts=e=>{
