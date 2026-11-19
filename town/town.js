@@ -200,7 +200,7 @@ function paintDoorstep(el, sid, p){
     ${EXT.houseExtra.filter(f => f.doorstep).map(f => f.html(sid) || "").join("")}`;
 }
 function onClassDoc(was){
-  if (!CLS) return;
+  if (!CLS) { if (was && SESS) { toast(WL("Coach Smith closed this class. Join with your new class code.", "Coach Smith cerró esta clase. Entra con tu nuevo código.")); townLeaveGo(); } return; }
   const t = town();
   if (CLS.stimulus && CLS.stimulus.id) once("stim:" + CLS.stimulus.id, () => { coins(CLS.stimulus.coins | 0); persist();
     toast(WL(`Stimulus! Coach Smith gave everyone ${CLS.stimulus.coins} Smithbucks.`, `¡Estímulo! Coach Smith dio ${CLS.stimulus.coins} Smithbucks a todos.`)); });
@@ -294,7 +294,7 @@ function paintTown(){
                 .concat(EXT.tabs.map(t => [t.key, t.icon, t.label()]));
   V().innerHTML = `${modeBanner()}
   <section class="panel raised thead" style="background-image:url(${TA}banner_town.jpg)">
-    <div class="theadin"><div class="eyebrow">${esc(SESS.className || WL("Grenadier Town","Pueblo Grenadier"))}</div>
+    <div class="theadin"><div class="eyebrow">${esc((CLS && CLS.name) || SESS.className || WL("Grenadier Town","Pueblo Grenadier"))}</div>
       <h1>${WL("Grenadier Town","Pueblo Grenadier")}</h1>
       <div class="tme">${esc(SESS.name)} · <img src="${icon("smithbuck")}" alt="">${S.tokens} · 🎁 ${town().crates}
         <button class="tlink" onclick="townLeave()">${WL("Sign out","Cerrar sesión")}</button></div></div>
@@ -808,11 +808,26 @@ window.townNewClass = async function(){
   const name = prompt(WL("Name this class (for example: Period 2 · AP Macro)", "Nombre de la clase (por ejemplo: Periodo 2 · Macro AP)")); if (!name) return;
   const r = await NET.createClass(name.slice(0, 40)); ADMIN_CID = r.cid; paintAdmin();
 };
+window.townRenameClass = async function(cid){
+  const list = await NET.myClasses(), c = list.find(x => x.id === cid); if (!c) return;
+  const name = prompt(WL("New name for this class", "Nuevo nombre para esta clase"), c.name || ""); if (!name || !name.trim() || name.trim() === c.name) return;
+  try { await NET.renameClass(cid, name.trim().slice(0, 40)); toast(WL("Class renamed. The code stays the same.", "Clase renombrada. El código no cambia.")); paintAdmin(); }
+  catch(e){ console.warn(e); toast(WL("Couldn't rename it. Try again.", "No se pudo renombrar.")); }
+};
+window.townDeleteClass = async function(cid){
+  const list = await NET.myClasses(), c = list.find(x => x.id === cid); if (!c) return;
+  const typed = prompt(WL(`Delete "${c.name}"? Its code ${c.code} will stop working, and its students lose this town. This can't be undone.\n\nType the class code ${c.code} to confirm.`, `¿Eliminar "${c.name}"? El código ${c.code} dejará de funcionar y sus estudiantes perderán este pueblo. No se puede deshacer.\n\nEscribe el código ${c.code} para confirmar.`));
+  if (!typed) return; if (typed.trim().toUpperCase() !== String(c.code).toUpperCase()) return toast(WL("The code didn't match. Nothing was deleted.", "El código no coincide. No se eliminó nada."));
+  try { await NET.deleteClass(cid); if (ADMIN_CID === cid) ADMIN_CID = null; toast(WL(`"${c.name}" was deleted.`, `"${c.name}" fue eliminada.`)); paintAdmin(); }
+  catch(e){ console.warn(e); toast(WL("Couldn't delete it. Try again.", "No se pudo eliminar.")); }
+};
 function paintAdminClass(c){
   const box = document.getElementById("tAdm"); if (!box || !c) return;
   const e = c.econ || {shopMult:1, ceiling:0};
   box.innerHTML = `<section class="panel tadm">
       <div class="tcode"><span>${WL("Class code","Código")}</span><b>${c.code}</b><small>${WL("Students: Town → Join your class","Estudiantes: Pueblo → Únete a tu clase")}</small></div>
+      <div class="tsw"><button class="btn" onclick="townRenameClass('${c.id}')">✏️ ${WL("Rename this class","Renombrar esta clase")}</button>
+        <button class="btn ghost" onclick="townDeleteClass('${c.id}')">🗑️ ${WL("Delete this class","Eliminar esta clase")}</button></div>
       <div class="tsw">
         <button class="btn ${c.frozen ? "primary" : ""}" onclick="townSet('frozen',${!c.frozen})">${c.frozen ? "▶️ " + WL("Unpause the Town","Reanudar el Pueblo") : "⏸️ " + WL("Pause the Town (eyes up front)","Pausar el Pueblo (atención)")}</button>
         <button class="btn" onclick="townSet('chatOn',${!c.chatOn})">${c.chatOn ? "🔇 " + WL("Turn chat off","Apagar chat") : "💬 " + WL("Turn chat on","Encender chat")}</button>
