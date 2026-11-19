@@ -203,6 +203,30 @@ service cloud.firestore {
           && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['status','qa','qb','turn','winner','st','pa','pb','upd','resigned']);
         allow delete: if owns(cid);
       }
+      // Orange Grove farms (town/farm.js): plots p1..p12, one per student; farmhands may tend
+      match /farms/{p} {
+        allow read: if member(cid) || owns(cid);
+        allow create: if p.matches('p([1-9]|1[0-2])') && isSid(cid, request.resource.data.sid) && live(cid)
+          && request.resource.data.beds is list && request.resource.data.beds.size() == 6;
+        allow update: if live(cid) && request.resource.data.sid == resource.data.sid && (
+          isSid(cid, resource.data.sid)
+          || (request.resource.data.by in resource.data.hands && isSid(cid, request.resource.data.by)
+              && onlyChanges(['beds','stash','owed','feedOwed','fed','hungry','by','upd'])));
+        allow delete: if owns(cid) || isSid(cid, resource.data.sid);
+      }
+      // weekly Farm Supply purchases and Farmers Market sales (drive scarcity prices)
+      match /supply/{id} {
+        allow read: if member(cid) || owns(cid);
+        allow create: if isSid(cid, request.resource.data.sid) && live(cid) && request.resource.data.n is int
+          && request.resource.data.n >= 1 && request.resource.data.n <= 3 && request.resource.data.item is string;
+        allow delete: if owns(cid);
+      }
+      match /sales/{id} {
+        allow read: if member(cid) || owns(cid);
+        allow create: if isSid(cid, request.resource.data.sid) && live(cid) && request.resource.data.n is int
+          && request.resource.data.n >= 1 && request.resource.data.n <= 99 && request.resource.data.good is string;
+        allow delete: if owns(cid);
+      }
       // Weekly lottery tickets (town/economy.js): id = <week>_<sid>_<1..5>, 3 numbers "a-b-c"
       match /lottery/{id} {
         allow read: if member(cid) || owns(cid);

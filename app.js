@@ -10,7 +10,7 @@
    ========================================================================== */
 (function(){
 "use strict";
-const APP_VERSION = "3.0";
+const APP_VERSION = "3.1";
 const es = () => typeof S !== "undefined" && S.lang === "es";
 const t = (en, sp) => es() ? sp : en;
 const esc = s => String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
@@ -65,10 +65,10 @@ window.appClose = close;
 
 /* ---------------------------------------------------------------- what's new */
 const NOTES = [
-  ["💹", ["The Smithtopia Exchange","La Bolsa de Smithtopia"], ["Buy and sell shares in 8 town companies. Prices move every hour with the news, booms and recessions. Steady stocks pay Friday dividends. Town → Money.","Compra y vende acciones de 8 empresas. Los precios cambian cada hora. Las estables pagan dividendos los viernes. Pueblo → Dinero."]],
-  ["🎟️", ["Weekly lottery","Lotería semanal"], ["Pick 3 numbers for 2 Smithbucks. Friday 1:00 PM drawing, rolling jackpot, and the real odds.","Elige 3 números por 2 Smithbucks. Sorteo el viernes a la 1:00 PM, premio acumulado y las probabilidades reales."]],
-  ["📬", ["Bills and budget","Facturas y presupuesto"], ["Weekly bills arrive on Monday. Pay on time to raise your credit score. Track the 50/30/20 rule, set a savings goal and auto-save.","Cada lunes llegan facturas. Paga a tiempo para subir tu crédito. Usa la regla 50/30/20, una meta y ahorro automático."]],
-  ["🏦", ["Mortgages","Hipotecas"], ["Buy any house with 20% down. Your rate depends on your credit score and the Fed.","Compra cualquier casa con 20% de enganche. Tu tasa depende de tu crédito y de la Fed."]]
+  ["🌾", ["Orange Grove Farms","Granjas Orange Grove"], ["Only 12 plots per class! Buy one on the map, plant crops that grow in real time, and water them by answering questions.","¡Solo 12 terrenos por clase! Compra uno en el mapa, siembra y riega respondiendo preguntas."]],
+  ["🐄", ["Farm animals","Animales de granja"], ["Chickens, cows, goats, sheep, pigs, bees and horses. Feed them daily for eggs, milk, wool and honey.","Gallinas, vacas, cabras, ovejas, cerdos, abejas y caballos. Aliméntalos para obtener huevos, leche, lana y miel."]],
+  ["⚖️", ["Supply and demand","Oferta y demanda"], ["Seeds and animals are limited each week, and market prices drop when everyone sells the same crop.","Las semillas y animales son limitados cada semana, y los precios bajan si todos venden lo mismo."]],
+  ["👩‍🌾", ["Farmhands","Peones"], ["Farm owners hire classmates to water, harvest and feed for a wage.","Los dueños contratan compañeros para regar, cosechar y alimentar por un salario."]]
 ];
 function whatsNew(){
   open(`<div class="ey">✨ ${t("What's new","Novedades")} · v${APP_VERSION}</div><h2>${t("Big update!","¡Gran actualización!")}</h2>
