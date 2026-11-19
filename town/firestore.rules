@@ -13,6 +13,8 @@ service cloud.firestore {
     // the student record `sid` belongs to whoever is signed in
     function isSid(cid, sid) { return signedIn() && get(/databases/$(database)/documents/classes/$(cid)/students/$(sid)).data.uid == request.auth.uid; }
     function live(cid) { return cls(cid).frozen != true; }
+    // a student from another class of the same teacher who flew here today (town/travel.js)
+    function visa(cid) { return signedIn() && exists(/databases/$(database)/documents/classes/$(cid)/visas/$(request.auth.uid)); }
     function onlyChanges(keys) { return request.resource.data.diff(resource.data).affectedKeys().hasOnly(keys); }
     // the elected mayor (the student record in classes/{cid}.mayor.sid belongs to whoever is signed in)
     function isMayor(cid) { return signedIn() && cls(cid).get('mayor', null) != null && cls(cid).mayor.get('sid', '') != ''
@@ -27,7 +29,7 @@ service cloud.firestore {
     }
 
     match /classes/{cid} {
-      allow get: if (isTeacher() && resource.data.ownerUid == request.auth.uid) || member(cid);
+      allow get: if (isTeacher() && resource.data.ownerUid == request.auth.uid) || member(cid) || visa(cid);
       allow list: if isTeacher() && resource.data.ownerUid == request.auth.uid;
       allow create: if isTeacher() && request.resource.data.ownerUid == request.auth.uid;
       allow update, delete: if isTeacher() && resource.data.ownerUid == request.auth.uid;
@@ -61,7 +63,7 @@ service cloud.firestore {
 
       // Public profile: name, avatar, house
       match /pub/{sid} {
-        allow read: if member(cid) || owns(cid);
+        allow read: if member(cid) || owns(cid) || visa(cid);
         allow write: if isSid(cid, sid) || owns(cid);
       }
 
@@ -268,6 +270,31 @@ service cloud.firestore {
           && request.resource.data.take is int && request.resource.data.take <= 10 && request.resource.data.to != request.resource.data.by;
         allow delete: if owns(cid);
       }
+      // Phase 4 places (town/travel.js)
+      match /carbuys/{id} { allow read: if member(cid) || owns(cid);
+        allow create: if isSid(cid, request.resource.data.sid) && live(cid) && request.resource.data.model in ['scooter','compact','pickup','ev','sports']; allow delete: if owns(cid); }
+      match /mallbuys/{id} { allow read: if member(cid) || owns(cid);
+        allow create: if isSid(cid, request.resource.data.sid) && live(cid) && request.resource.data.item is string; allow delete: if owns(cid); }
+      match /shows/{id} { allow read: if member(cid) || owns(cid);
+        allow create: if isSid(cid, request.resource.data.sid) && live(cid) && id == request.resource.data.day + '_' + request.resource.data.sid
+          && request.resource.data.score is int && request.resource.data.score <= 600; allow delete: if owns(cid); }
+      match /museum/{id} { allow read: if member(cid) || owns(cid) || visa(cid);
+        allow create: if isSid(cid, request.resource.data.sid) && live(cid) && request.resource.data.item is string; allow delete: if owns(cid); }
+      match /voyages/{id} { allow read: if member(cid) || owns(cid);
+        allow create: if isSid(cid, request.resource.data.sid) && live(cid) && id == request.resource.data.week + '_' + request.resource.data.sid
+          && request.resource.data.stake is int && request.resource.data.stake >= 1 && request.resource.data.stake <= 10
+          && request.resource.data.ship in ['sloop','freight','galleon']; allow delete: if owns(cid); }
+      // visitors: a visa is proof you're a student of a class with the same teacher and the routes are open
+      match /visas/{uid} { allow read: if owns(cid) || (signedIn() && request.auth.uid == uid);
+        allow create, update: if signedIn() && request.auth.uid == uid && isSid(request.resource.data.from, request.resource.data.sid)
+          && cls(request.resource.data.from).ownerUid == cls(cid).ownerUid
+          && cls(request.resource.data.from).get('sisters', []).size() > 0; allow delete: if owns(cid); }
+      match /guestbook/{id} { allow read: if member(cid) || owns(cid) || visa(cid);
+        allow create: if visa(cid) && request.resource.data.uid == request.auth.uid && request.resource.data.msg is string && request.resource.data.msg.size() <= 120;
+        allow delete: if owns(cid); }
+      match /greets/{id} { allow read: if member(cid) || owns(cid) || visa(cid);
+        allow create: if visa(cid) && request.resource.data.uid == request.auth.uid && request.resource.data.e in ['👋','🤝','🎉'];
+        allow delete: if owns(cid); }
       // Weekly lottery tickets (town/economy.js): id = <week>_<sid>_<1..5>, 3 numbers "a-b-c"
       match /lottery/{id} {
         allow read: if member(cid) || owns(cid);
