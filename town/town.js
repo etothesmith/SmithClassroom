@@ -74,7 +74,7 @@ function crateTick(){
 }
 function rollCrate(){
   const r = Math.random(); const tier = r < 0.01 ? 3 : r < 0.10 ? 2 : r < 0.40 ? 1 : 0;
-  const pool = Object.values(ITEMS).filter(i => i.r === tier && !i.biz && !i.office); return pool[Math.floor(Math.random() * pool.length)].id;
+  const pool = Object.values(ITEMS).filter(i => i.r === tier && !i.biz && !i.office && !i.tower); return pool[Math.floor(Math.random() * pool.length)].id;
 }
 
 /* ---------------------------------------------------------------- cloud save */

@@ -36,7 +36,7 @@ const check = (n, ok, info) => { results.push((ok ? 'PASS ' : 'FAIL ') + n + (in
   /* map + districts */
   await A.evaluate(() => townTab('map')); await A.waitForTimeout(500);
   const map = await A.evaluate(() => ({ n: document.querySelectorAll('.wmap .kb').length, locked: document.querySelectorAll('.wmap .kb.locked').length, avg: WORLD2.classAvgCerts() }));
-  check('map shows 9 places; Waterfront open at 2 certs avg, Theme Park and Space locked', map.n === 9 && map.locked === 2 && map.avg >= 2, map);
+  check('map shows 10 places (incl. Exam Tower); Waterfront open at 2 certs avg, Theme Park and Space locked', map.n === 10 && map.locked === 2 && map.avg >= 2, map);
   await A.screenshot({ path: SHOTS + '/w_map.png', fullPage: true });
   await T.evaluate(async () => { const c = (await TOWN.net.myClasses()).find(x => x.name === 'Period 1'); await TOWN.net.setClass(c.id, { districts: ['park', 'space'] }); });
   await A.waitForTimeout(600);

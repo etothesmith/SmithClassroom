@@ -4,15 +4,18 @@ usage: python3 tools/town/cut_sheets.py SHEET_DIR
 Each sheet in SHEETS below is split by connected parts, each part assigned to the grid cell
 its center falls in, keyed off magenta with soft edges and de-spill, trimmed, and saved.
 """
-import sys, os, numpy as np
+import sys, os, shutil, numpy as np
 from PIL import Image
 from scipy import ndimage as ndi
 
 T = "v2/assets/town/"
 ITEMS, DOWN, WORLD = T + "items/", T + "downtown/", T + "world/"
 FISH = ["bluegill","bass","catfish","crappie","sunfish","tilapia","boot","mullet","gar","peacock","snook","feather","redfish","tarpon","sturgeon","koi"]
+ALIAS = {"tw_champ": ["tw_champ_apecon", "tw_champ_apgov", "tw_champ_econ", "tw_champ_gov"]}
 SHEETS = {   # file: (cols, rows, folder, ids, max side)
   "town_items_2.png": (4, 4, ITEMS, "bed_loft bed_cloud sofa_loveseat sofa_egg_chair table_gaming table_aquarium rug_checker rug_galaxy lamp_fairy lamp_moon plant_monstera plant_cherry art_photos wall_neon_bolt trophy_state pet_bunny", 240),
+  "tower_loot_1.png": (4, 4, ITEMS, "rl_hand rl_gavel rl_quill rl_compass rl_lantern rl_shield tw_sdlamp tw_phillips tw_goldbar tw_bell tw_fedpapers tw_column tw_magna tw_ballot tw_globe tw_bullbear", 220),
+  "tower_loot_2.png": (4, 4, ITEMS, "tw_scales tw_ticker tw_vase tw_rug_map tw_rug_cash tw_inkwell pet_bull pet_bear pet_eagle tw_mock tw_graph tw_cases tw_review tw_champ", 220),
   "pets_1.png": (4, 4, ITEMS, "pet_hamster pet_mouse pet_chick pet_frog pet_snail pet_hedgehog pet_poodle pet_blackcat pet_pig pet_goat pet_raccoon pet_fox pet_owl pet_gator pet_sloth pet_otter", 220),
   "pets_2.png": (4, 3, ITEMS, "pet_peacock pet_swan pet_dolphin pet_panther pet_unicorn pet_dragon mayor_desk mayor_flag mayor_portrait q_whistle q_key q_mic", 220),
   "trophies.png": (4, 2, ITEMS, "q_ship e_hurricane e_fair e_election e_founders e_lakes e_market t_besttown", 220),
@@ -66,6 +69,11 @@ def cut(name, cols, rows, folder, ids, side, src):
         pad = Image.new("RGBA", (im.width + 8, im.height + 8)); pad.paste(im, (4, 4))
         pad.save(os.path.join(folder, id_ + ".webp"), quality=90, method=6); done += 1
     print(f"{name}: {done}/{len(ids)}")
+    # one champion cup art serves all four courses
+    for src_id, copies in ALIAS.items():
+        f = os.path.join(folder, src_id + ".webp")
+        if src_id in ids and os.path.exists(f):
+            for c in copies: shutil.copyfile(f, os.path.join(folder, c + ".webp"))
 
 if __name__ == "__main__":
     src = sys.argv[1]; only = sys.argv[2:] or list(SHEETS)

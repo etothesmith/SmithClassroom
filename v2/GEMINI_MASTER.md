@@ -273,6 +273,28 @@ Same style, new sheet, 3 columns by 2 rows on flat #FF00FF magenta, one scene pe
 
 ---
 
+### Step 21 → `tower_loot_1.png`  (Exam Tower relics and decor)
+- [ ] done
+```
+Same style as the other item sheets: one object per cell, centered, chunky outlines, soft shading, solid magenta (#FF00FF) background, no text, no shadows on the background.
+Sheet, 4 columns by 4 rows. Sixteen objects:
+Row 1: a single white glove glowing softly gold, a wooden judge's gavel with a gold band, a feather quill pen with a gold tip, a brass compass with a glowing needle.
+Row 2: a red paper lantern glowing warmly, a round shield split into three colored sections (red, white, blue), a desk lamp whose shade has an X drawn on it like supply and demand lines, a neon sign shaped like a downward-sloping curve.
+Row 3: a shiny gold bar, a small Liberty Bell replica with the crack, a stack of three old leather books tied with string, a white marble Greek column.
+Row 4: a rolled parchment scroll with a red wax seal, a small blue ballot box with a slot and a soft glow, a desk globe on a wooden stand, a pair of bookends: a gold bull and a brown bear.
+```
+
+### Step 22 → `tower_loot_2.png`  (Exam Tower decor, pets and trophies)
+- [ ] done
+```
+Same style as Step 21: one object per cell, magenta (#FF00FF) background, no text.
+Sheet, 4 columns by 4 rows. The last row has only two objects; leave the last two cells empty magenta.
+Row 1: gold scales of justice, a black sign with a green and red stock ticker arrow, an ancient Greek clay vase with black figures, a round rug printed with a map of the United States.
+Row 2: a rectangular rug shaped like a green dollar bill (no numbers or faces), a glass inkwell with a feather, a friendly cartoon bull (pet), a friendly cartoon brown bear (pet).
+Row 3: a friendly cartoon bald eagle (pet), a gold medal on a red ribbon, a blue ribbon rosette with a tiny bar chart, a gray folder badge with a gold star.
+Row 4: a white marble bust of a thinking head with a glowing brain symbol, a tall gold trophy shaped like a castle tower with a flag on top.
+```
+
 ## For Claude: where each sheet goes
 | File | Cells → ids (left to right, row by row) |
 |---|---|
@@ -288,6 +310,8 @@ Same style, new sheet, 3 columns by 2 rows on flat #FF00FF magenta, one scene pe
 | downtown_buildings | doctor, vet, reporter, banker, firefighter, marshal, judge, tutor, mail, chef, builder, sanitation, ranger, photographer, board, hall → `v2/assets/town/downtown/` |
 | downtown_landmarks | land_court … land_mural → `v2/assets/town/downtown/` |
 | world_npcs | npc_coach, npc_pinkerton, npc_ned, npc_rosa → `v2/assets/town/world/` |
+| tower_loot_1 | rl_hand, rl_gavel, rl_quill, rl_compass, rl_lantern, rl_shield, tw_sdlamp, tw_phillips, tw_goldbar, tw_bell, tw_fedpapers, tw_column, tw_magna, tw_ballot, tw_globe, tw_bullbear |
+| tower_loot_2 | tw_scales, tw_ticker, tw_vase, tw_rug_map, tw_rug_cash, tw_inkwell, pet_bull, pet_bear, pet_eagle, tw_mock, tw_graph, tw_cases, tw_review, tw_champ (copied to all 4 champion trophies) |
 | world_places | plaza, homes, downtown, waterfront, park, space, towns, album, ride_coaster, ride_drop, ride_flume, (spare) → `v2/assets/town/world/` |
 | world_story | story_hurricane, story_fair, story_election, story_founders, story_lakes, story_market → `v2/assets/town/world/` |
 Items go to `v2/assets/town/items/<id>.webp`. Cut with `tools/town/process_civic.py`-style slicing (magenta key), and clothes with `tools/extract_clothes.py`.

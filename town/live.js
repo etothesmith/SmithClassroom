@@ -97,6 +97,7 @@ function onAnswer(q, ok, src){
   const r = s.std[k] = s.std[k] || [0, 0]; r[0]++; if (ok) r[1]++;
   buzz(ok ? 25 : [40, 40, 40]);
   if (ok && inPeriod()) raidHit(k === focusStd() ? 2 : 1);
+  (window.LIVE_HOOKS || []).forEach(f => { try { f(q, ok, src); } catch(e){} });
   T.persist();
 }
 /* the world map's questions (WORLD2 ask) count too */
@@ -610,5 +611,5 @@ EXT.projector.push(cid => {
   const iv = setInterval(draw, 4000); setTimeout(draw, 300); T.viewSub(() => clearInterval(iv));
 });
 
-window.LIVE = {inPeriod, mastery, matches, letter, LETTERS, boss, feud, FEUDS, stdKeyOf:q => q && q.std, pickItems};
+window.LIVE = {record:(q, ok, src) => onAnswer(q, ok, src || "x"), qRun, inPeriod, mastery, matches, letter, LETTERS, boss, feud, FEUDS, stdKeyOf:q => q && q.std, pickItems};
 })();

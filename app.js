@@ -10,7 +10,7 @@
    ========================================================================== */
 (function(){
 "use strict";
-const APP_VERSION = "2.1";
+const APP_VERSION = "2.2";
 const es = () => typeof S !== "undefined" && S.lang === "es";
 const t = (en, sp) => es() ? sp : en;
 const esc = s => String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
@@ -65,6 +65,12 @@ window.appClose = close;
 
 /* ---------------------------------------------------------------- what's new */
 const NOTES = [
+  ["🎓", ["New Exam tab","Nueva pestaña Examen"], ["Everything for the AP exams (May 4 and May 7, 2027) and your final exams in one place.","Todo para los exámenes AP (4 y 7 de mayo de 2027) y tus exámenes finales en un solo lugar."]],
+  ["🏰", ["The Exam Tower","La Torre del Examen"], ["Climb a floor per unit, fight misconception monsters and bosses, crit with streaks, and open chests for 33 new items, relics and 3 new pets.","Sube un piso por unidad, pelea contra monstruos y jefes, haz críticos con rachas y abre cofres con 33 objetos, reliquias y 3 mascotas nuevas."]],
+  ["📊", ["Graph Lab","Laboratorio de gráficas"], ["34 AP-style scenarios: pick the curve, the direction and the effect, then watch the graph shift.","34 escenarios estilo AP: elige la curva, la dirección y el efecto, y mira cómo se mueve la gráfica."]],
+  ["🗂️", ["Case Files","Expedientes"], ["The required Supreme Court cases and founding documents. Read the facts, name the case.","Los casos de la Corte Suprema y documentos obligatorios. Lee los hechos y nombra el caso."]],
+  ["🧠", ["Spaced review","Repaso espaciado"], ["Questions you miss come back until you know them.","Las preguntas que fallas vuelven hasta que las sepas."]],
+  ["📝", ["Mock exams","Simulacros"], ["Timed, weighted like the real exam, with a unit breakdown and a rough AP score estimate.","Con tiempo, ponderados como el real, con resultados por unidad y una estimación AP."]],
   ["🔥", ["Live tab in Grenadier Town","Pestaña En vivo en Grenadier Town"], ["Everything social in one place: raids, duels, the weekly feud, the mystery, high-fives and your standards.","Todo lo social en un lugar: incursiones, duelos, la disputa, el misterio, choca cinco y tus estándares."]],
   ["👾", ["Period Raids during class","Incursiones durante la clase"], ["Mon–Fri, 7:00–1:30, the class fights a daily boss. Every right answer in class or in town is a hit. Beat it together for +5.","Lun–vie, 7:00–1:30, la clase pelea contra un jefe. Cada respuesta correcta es un golpe. Véncelo en equipo: +5."]],
   ["⚔️", ["Quiz Duels","Duelos de preguntas"], ["Challenge a classmate to the same 5 questions. Keep a rivalry record and ask for rematches.","Reta a un compañero con las mismas 5 preguntas. Lleva tu récord de rivalidad y pide revancha."]],

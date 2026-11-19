@@ -109,6 +109,30 @@ window.TOWN_ITEMS = Object.fromEntries([
  ["pet_peacock","🦚",2,0,"Peacock","Pavo real"],["pet_swan","🦢",2,0,"Lake Eola swan","Cisne del lago Eola"],["pet_dolphin","🐬",3,0,"Dolphin","Delfín"],
  ["pet_panther","🐆",3,0,"Florida panther","Pantera de Florida"],["pet_unicorn","🦄",3,0,"Unicorn","Unicornio"],["pet_dragon","🐉",3,0,"Dragon","Dragón"]]
   .forEach(([id, e, r, sp, en, es]) => { window.TOWN_ITEMS[id] = {id, slot:"pet", r, p:0, e, name:{en, es}, ...(sp ? {sp} : {})}; });
+/* Exam Tower loot (town/tower.js): earned in the tower, never sold.
+   perk = a relic that changes tower runs while you own it */
+[["rl_hand","trophy","🧤",2,"Invisible Hand glove","Guante de la Mano Invisible","+1 heart in every tower run","+1 corazón en cada torre"],
+ ["rl_gavel","table","🔨",3,"Gavel of Judicial Review","Mazo de la Revisión Judicial","Overturn one wrong answer per run","Anula una respuesta incorrecta por torre"],
+ ["rl_quill","art","🪶",2,"Founders' quill","Pluma de los Fundadores","Critical hits after 2 right in a row (not 3)","Golpe crítico tras 2 aciertos seguidos (no 3)"],
+ ["rl_compass","table","🧭",1,"Comparative Advantage compass","Brújula de la Ventaja Comparativa","+2 Smithbucks from every room","+2 Smithbucks por sala"],
+ ["rl_lantern","lamp","🏮",2,"Lantern of Insight","Linterna de la Perspicacia","Shows each question's standard","Muestra el estándar de cada pregunta"],
+ ["rl_shield","wall","🛡️",3,"Checks & Balances shield","Escudo de Pesos y Contrapesos","Blocks your first hit on every floor","Bloquea el primer golpe en cada piso"]]
+  .forEach(([id, slot, e, r, en, es, pe, ps]) => { window.TOWN_ITEMS[id] = {id, slot, r, p:0, e, name:{en, es}, perk:{en:pe, es:ps}, tower:true}; });
+[["tw_sdlamp","lamp","💡",0,"Supply & demand lamp","Lámpara de oferta y demanda"],["tw_phillips","wall","📉",1,"Phillips curve neon","Neón de la curva de Phillips"],
+ ["tw_goldbar","table","🪙",1,"Gold standard bar","Lingote del patrón oro"],["tw_bell","table","🔔",1,"Liberty Bell replica","Réplica de la Campana de la Libertad"],
+ ["tw_fedpapers","table","📚",0,"Federalist Papers stack","Pila de El Federalista"],["tw_column","plant","🏛️",1,"Supreme Court column","Columna de la Corte Suprema"],
+ ["tw_magna","art","📜",1,"Magna Carta scroll","Pergamino de la Carta Magna"],["tw_ballot","lamp","🗳️",0,"Ballot box lamp","Lámpara de urna"],
+ ["tw_globe","table","🌍",0,"Trade globe","Globo del comercio"],["tw_bullbear","trophy","🐂",2,"Bull & bear bookends","Sujetalibros de toro y oso"],
+ ["tw_scales","table","⚖️",1,"Scales of justice","Balanza de la justicia"],["tw_ticker","wall","📈",1,"Stock ticker sign","Letrero de cotizaciones"],
+ ["tw_vase","plant","🏺",2,"Athenian democracy vase","Vasija de la democracia ateniense"],["tw_rug_map","rug","🗺️",1,"50-states map rug","Alfombra del mapa de los 50 estados"],
+ ["tw_rug_cash","rug","💵",2,"Hundred-dollar rug","Alfombra de billete de cien"],["tw_inkwell","table","✒️",0,"Signing desk inkwell","Tintero de escritorio"],
+ ["tw_champ_apecon","trophy","🏆",3,"Tower Champion: AP Macro","Campeón de la Torre: Macro AP"],["tw_champ_apgov","trophy","🏆",3,"Tower Champion: AP Gov","Campeón de la Torre: Gobierno AP"],
+ ["tw_champ_econ","trophy","🏆",3,"Tower Champion: Economics","Campeón de la Torre: Economía"],["tw_champ_gov","trophy","🏆",3,"Tower Champion: U.S. Government","Campeón de la Torre: Gobierno"],
+ ["tw_mock","trophy","🥇",3,"Mock Exam honor medal","Medalla de honor del simulacro"],["tw_graph","trophy","📊",2,"Graph Master ribbon","Listón de Maestro de Gráficas"],
+ ["tw_cases","trophy","🗂️",2,"Case Files master badge","Insignia de Maestro de Casos"],["tw_review","trophy","🧠",2,"Memory Palace bust","Busto del Palacio de la Memoria"]]
+  .forEach(([id, slot, e, r, en, es]) => { window.TOWN_ITEMS[id] = {id, slot, r, p:0, e, name:{en, es}, tower:true}; });
+[["pet_bull","🐂",2,"Bull (market)","Toro (del mercado)"],["pet_bear","🐻",2,"Bear (market)","Oso (del mercado)"],["pet_eagle","🦅",3,"Bald eagle","Águila calva"]]
+  .forEach(([id, e, r, en, es]) => { window.TOWN_ITEMS[id] = {id, slot:"pet", r, p:0, e, name:{en, es}, tower:true}; });
 window.TOWN_RARITY = [{en:"Common",es:"Común",c:"#8A94A6"},{en:"Rare",es:"Raro",c:"#2F7FD8"},{en:"Epic",es:"Épico",c:"#8A5CD8"},{en:"Legendary",es:"Legendario",c:"#E3A21A"}];
 window.TOWN_HOUSES = [
   ["cottage", 0,  "Cottage", "Casita"],

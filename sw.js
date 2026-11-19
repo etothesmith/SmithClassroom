@@ -4,10 +4,10 @@
    - Images, sounds and fonts: cache first, refreshed in the background.
    - Only this site's own files; Firebase and other sites are never touched.
    Bump VERSION when the app shell changes. */
-const VERSION = "sc-2.1.0";
+const VERSION = "sc-2.2.0";
 const SHELL = ["./", "index.html", "content.js", "bank_plus.js", "art.js", "avatar.js", "world.js", "world.css", "app.js",
   "town/town.css", "town/items.js", "town/config.js", "town/net.js", "town/town.js", "town/civic.js", "town/careers.js", "town/today.js",
-  "town/world2.js", "town/pets.js", "town/houselife.js", "town/ambient.js", "town/live.js", "manifest.webmanifest",
+  "town/world2.js", "town/pets.js", "town/houselife.js", "town/ambient.js", "town/live.js", "town/tower.js", "manifest.webmanifest",
   "assets/app/icon-192.png", "assets/app/icon-512.png"];
 self.addEventListener("install", e => {
   e.waitUntil(caches.open(VERSION).then(c => Promise.all(SHELL.map(u => c.add(u).catch(() => null)))));

@@ -64,3 +64,12 @@ Teacher controls live in **Town → Teacher: manage the Town**:
 **Firestore rules.** Publish `town/firestore.rules` again: it adds `raid`, `duels`, `feud`, `feudvotes`, `kudos`, `reviews` and `heist`.
 
 **The app.** `manifest.webmanifest`, `sw.js` and `app.js` make the site installable (📲 in the top bar shows the steps for each device). Pages and scripts always load fresh from the network; the saved copy is only for offline use. Bump `VERSION` in `sw.js` and `APP_VERSION` + `NOTES` in `app.js` when you ship a new update, so students see "What's New" once.
+
+## Exam prep (v2.2)
+
+**🎓 Exam tab (town/tower.js).** Exam Tower (a roguelike floor per unit, potions bought with Smithbucks, relics with perks, 33 tower-only items), Graph Lab (34 AP-style graph scenarios), Case Files (27 required cases and documents), spaced Review of missed questions, timed Mock Exams weighted by College Board unit weights, and a Plan with exam countdowns and each student's weakest standards.
+
+- AP exam dates built in: AP U.S. Government, Tue May 4, 2027, 8 AM; AP Macroeconomics, Fri May 7, 2027, 12 PM.
+- Teacher panel → **🎓 Exam prep**: set the honors courses' final exam (CFE) date and see every student's tower floors, mock best/last, review backlog, graphs and cases.
+- No new Firestore collections.
+- Art for the new items: Steps 21–22 in `v2/GEMINI_MASTER.md`; until then they show as emoji.
