@@ -1,5 +1,5 @@
 /* =============================================================================
-   ZOOPTOPIA — notifications (town/notify.js, v2.3)
+   SMITHTOPIA — notifications (town/notify.js, v2.3)
 
    Every Town pop-up (hired, a patient waiting, a duel, a trade offer, a fire…)
    also lands in a 🔔 inbox, so nothing is missed. Optional extras, each person's
@@ -40,8 +40,8 @@ function device(msg){
   if (!ST.sys || perm() !== "granted") return;
   if (!document.hidden && document.hasFocus()) return; /* they're looking at it already */
   const opts = {body:msg, icon:"assets/app/icon-192.png", badge:"assets/app/icon-192.png", tag:"town-" + Date.now(), renotify:false};
-  const plain = () => { try { const n = new Notification("Zooptopia", opts); n.onclick = () => { window.focus(); n.close(); }; } catch(e){} };
-  if (navigator.serviceWorker && navigator.serviceWorker.getRegistration) navigator.serviceWorker.getRegistration().then(r => r ? r.showNotification("Zooptopia", opts) : plain()).catch(plain);
+  const plain = () => { try { const n = new Notification("Smithtopia", opts); n.onclick = () => { window.focus(); n.close(); }; } catch(e){} };
+  if (navigator.serviceWorker && navigator.serviceWorker.getRegistration) navigator.serviceWorker.getRegistration().then(r => r ? r.showNotification("Smithtopia", opts) : plain()).catch(plain);
   else plain();
 }
 window.TOWN_NOTE = function(msg){
@@ -91,7 +91,7 @@ window.tnSys = async function(){
   ST.sys = p === "granted"; save(); open();
   if (ST.sys) { const r = navigator.serviceWorker && await navigator.serviceWorker.getRegistration().catch(() => null);
     const m = WLx("🔔 Notifications are on. You'll see them even in another tab.","🔔 Notificaciones activadas. Las verás aunque estés en otra pestaña.");
-    try { if (r) r.showNotification("Zooptopia", {body:m, icon:"assets/app/icon-192.png"}); else new Notification("Zooptopia", {body:m}); } catch(e){} }
+    try { if (r) r.showNotification("Smithtopia", {body:m, icon:"assets/app/icon-192.png"}); else new Notification("Smithtopia", {body:m}); } catch(e){} }
 };
 window.tnClear = function(){ ST.feed = []; ST.seen = Date.now(); save(); paintBell(); open(); };
 

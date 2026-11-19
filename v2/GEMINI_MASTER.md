@@ -326,7 +326,7 @@ Items go to `v2/assets/town/items/<id>.webp`. Cut with `tools/town/process_civic
 
 ---
 
-# CHAT D: Zooptopia shop items (3 images)
+# CHAT D: Smithtopia shop items (3 images)
 No attachments. Start a new chat. Each sheet is 5 columns by 4 rows.
 
 ### Paste this first

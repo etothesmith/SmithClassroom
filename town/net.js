@@ -1,4 +1,4 @@
-/* Zooptopia — data layer.
+/* Smithtopia — data layer.
    One small "store" interface with two back ends:
      • CloudStore  — Firestore + Auth from vendor/firebase-bundle.js (no CDN)
      • LocalStore  — localStorage + BroadcastChannel (practice mode, one device)

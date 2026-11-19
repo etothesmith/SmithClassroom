@@ -1,5 +1,5 @@
 /* =============================================================================
-   ZOOPTOPIA — careers, Downtown, town requests and the mayor's office
+   SMITHTOPIA — careers, Downtown, town requests and the mayor's office
    (town/careers.js). Loads after town/civic.js and uses its helpers (TOWN.CIV).
 
    1. Careers: 14 town jobs (doctor, vet, reporter, banker…). Students apply
@@ -536,7 +536,7 @@ const openCases = j => CASES.filter(c => c.job === j && c.status === "open" && !
 function paintDowntown(el){
   const draw = () => { if (BLD) return paintBuilding(el, BLD);
     const j = myJob(), k = car(), d = duty(), land = REQS.filter(r => r.status === "done"), news = NEWS.filter(n => n.status === "published").sort((a, b) => b.at - a.at)[0];
-    el.innerHTML = `<section class="panel raised kdt"><div><div class="eyebrow">🗺️ ${W2("Downtown","Centro")}</div><h2>${W2("Zooptopia at work","Zooptopia trabajando")}</h2>
+    el.innerHTML = `<section class="panel raised kdt"><div><div class="eyebrow">🗺️ ${W2("Downtown","Centro")}</div><h2>${W2("Smithtopia at work","Smithtopia trabajando")}</h2>
         <p class="muted">${W2("Every building is a job a classmate can hold. Apply for one, request a service, or ask for a new landmark on the Community Board.","Cada edificio es un trabajo. Pide uno, solicita un servicio, o pide una obra nueva en el Tablero comunitario.")}</p></div>
         ${j ? `<div class="kme">${CAREERS[j].e}<div><small>${W2("Your job","Tu trabajo")}</small><b>${E(jobTitle(j, k))}</b>${bar(d.paid ? 1 : (d.n | 0) / CAREERS[j].duty.n, "#3BB273")}
           <small>${d.paid ? "✅ " + W2("Shift done","Turno hecho") : E(L(CAREERS[j].duty.l))}</small></div><button class="btn primary" onclick="carGo('${j}')">${W2("Go to work","Ir a trabajar")}</button></div>` : ""}</section>
@@ -653,7 +653,7 @@ function popup(){
       ${mq ? `<li>🎖️ ${W2(`${mq} town requests on the mayor's desk`, `${mq} solicitudes en el escritorio del alcalde`)}</li>` : ""}</ul>
       <button class="btn primary wide" onclick="townCloseCard();go('town');setTimeout(()=>carGo('${j}'),350)">${W2("Go to work","Ir a trabajar")} →</button>`;
   } else if (open.length) {
-    html = `<div class="eyebrow">📢 ${W2("Now hiring in Zooptopia","Se busca personal en Zooptopia")}</div><h2>${W2("Get a job!","¡Consigue trabajo!")}</h2>
+    html = `<div class="eyebrow">📢 ${W2("Now hiring in Smithtopia","Se busca personal en Smithtopia")}</div><h2>${W2("Get a job!","¡Consigue trabajo!")}</h2>
       <p class="muted">${W2("Town jobs pay every day on top of your daily jobs and business. Send a résumé and Coach Smith picks who gets hired.","Los trabajos del pueblo pagan cada día, además de tus trabajos diarios y tu negocio. Envía tu currículum y Coach Smith elige.")}</p>
       <div class="kopen">${open.slice(0, 8).map(k => `<button onclick="townCloseCard();go('town');setTimeout(()=>carGo('${k}'),350)">${CAREERS[k].e}<b>${E(L(CAREERS[k].title))}</b><small>💰 ${CAREERS[k].pay}/${W2("shift","turno")}</small></button>`).join("")}</div>
       ${mq ? `<p>🎖️ ${W2(`${mq} town requests are on your desk, Mayor.`, `${mq} solicitudes en tu escritorio, Alcalde.`)}</p>` : ""}`;

@@ -1,5 +1,5 @@
 /* =============================================================================
-   ZOOPTOPIA — the shared, live part of Smith's Classroom.
+   SMITHTOPIA — the shared, live part of Smith's Classroom.
    Plaza (walk around, emotes, quick chat), Homes (a house for every student,
    visits and stickers), Market (list and buy), Trades (both sides agree),
    Shop and Crates (earned by learning), and the teacher's controls.
@@ -294,8 +294,8 @@ function paintTown(){
                 .concat(EXT.tabs.map(t => [t.key, t.icon, t.label()]));
   V().innerHTML = `${modeBanner()}
   <section class="panel raised thead" style="background-image:url(${TA}banner_town.jpg)">
-    <div class="theadin"><div class="eyebrow">${esc((CLS && CLS.name) || SESS.className || WL("Zooptopia","Zooptopia"))}</div>
-      <h1>${WL("Zooptopia","Zooptopia")}</h1>
+    <div class="theadin"><div class="eyebrow">${esc((CLS && CLS.name) || SESS.className || WL("Smithtopia","Smithtopia"))}</div>
+      <h1>${WL("Smithtopia","Smithtopia")}</h1>
       <div class="tme">${esc(SESS.name)} · <img src="${icon("smithbuck")}" alt="">${S.tokens} · 🎁 ${town().crates}
         <button class="tlink" onclick="townLeave()">${WL("Sign out","Cerrar sesión")}</button></div></div>
   </section>
@@ -317,7 +317,7 @@ function paintSub(){
 function paintJoin(){
   V().innerHTML = `${modeBanner()}
   <section class="panel raised thead" style="background-image:url(${TA}banner_town.jpg)"><div class="theadin">
-    <div class="eyebrow">${WL("Your account","Tu cuenta")}</div><h1>${WL("Zooptopia","Zooptopia")}</h1>
+    <div class="eyebrow">${WL("Your account","Tu cuenta")}</div><h1>${WL("Smithtopia","Smithtopia")}</h1>
     <p>${WL("Your Town ID is your account: it saves your progress, Smithbucks, avatar and games so they follow you to any computer.","Tu ID del pueblo es tu cuenta: guarda tu progreso, Smithbucks, avatar y juegos para que te sigan a cualquier computadora.")}</p></div></section>
   <section class="panel tjoin">
     <h2>${WL("Sign in or create your account","Inicia sesión o crea tu cuenta")}</h2>
@@ -798,7 +798,7 @@ function paintAdmin(){
   NET.myClasses().then(list => {
     if (!ADMIN_CID && list.length) ADMIN_CID = list[0].id;
     V().innerHTML = `${modeBanner()}<section class="panel raised"><div class="eprow" style="justify-content:space-between;flex-wrap:wrap">
-        <div><div class="eyebrow">${WL("Town controls","Controles del Pueblo")} · ${esc(t.email || "")}</div><h1 style="margin:2px 0">${WL("Zooptopia","Zooptopia")}</h1></div>
+        <div><div class="eyebrow">${WL("Town controls","Controles del Pueblo")} · ${esc(t.email || "")}</div><h1 style="margin:2px 0">${WL("Smithtopia","Smithtopia")}</h1></div>
         <div><button class="btn ghost" onclick="townTab('plaza')">← ${WL("Town","Pueblo")}</button> <button class="btn ghost" onclick="townTOut()">${WL("Sign out","Salir")}</button></div></div>
       <div class="tclasses">${list.map(c => `<button class="${c.id === ADMIN_CID ? "on" : ""}" onclick="townAdminPick('${c.id}')">${esc(c.name)}<b>${c.code}</b></button>`).join("")}
         <button onclick="townNewClass()">＋ ${WL("New class period","Nuevo periodo")}</button></div></section>
