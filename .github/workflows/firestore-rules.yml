@@ -1,0 +1,34 @@
+# Publishes town/firestore.rules to the smiths-classroom Firebase project
+# whenever the rules change on main (or when run by hand from the Actions tab).
+# Needs one repository secret: FIREBASE_SERVICE_ACCOUNT, the JSON key from
+# Firebase console → Project settings → Service accounts → Generate new private key.
+name: Publish Firestore rules
+on:
+  push:
+    branches: [main]
+    paths: ["town/firestore.rules", "firebase.json"]
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency: firestore-rules
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Write the service account key
+        env:
+          KEY: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+        run: |
+          if [ -z "$KEY" ]; then echo "::error::Add the FIREBASE_SERVICE_ACCOUNT secret first (see TOWN_SETUP.md)."; exit 1; fi
+          printf '%s' "$KEY" > "$RUNNER_TEMP/sa.json"
+      - name: Publish rules
+        env:
+          GOOGLE_APPLICATION_CREDENTIALS: ${{ runner.temp }}/sa.json
+        run: npx --yes firebase-tools@13 deploy --only firestore:rules --project smiths-classroom --non-interactive
+      - name: Remove the key
+        if: always()
+        run: rm -f "$RUNNER_TEMP/sa.json"
