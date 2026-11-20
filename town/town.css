@@ -745,3 +745,4 @@ body.wx-storm .ehead::before{content:"";position:absolute;inset:0;pointer-events
 @media (prefers-reduced-motion:reduce){.tkrun,.evcard .eve,.evbadge,body.wx-rain .ehead::after,body.wx-storm .ehead::after,body.wx-storm .ehead::before{animation:none}}
 @media (min-width:900px){.tadmnav{flex-wrap:wrap;overflow:visible}.tadmbar .tclasses{flex-wrap:wrap;overflow:visible}}
 .evcard .eve img{width:72px;height:72px;object-fit:contain}
+.smkcard{display:flex;align-items:center;gap:14px;background:linear-gradient(120deg,#FFE3E3,#E3F1FF)}.smkcard .smke{font-size:44px}.smkcard b{font:800 20px var(--disp)}.smkcard .btn{margin-left:auto;flex:none;text-decoration:none}
