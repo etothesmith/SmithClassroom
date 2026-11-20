@@ -22,6 +22,35 @@
           ".validate": "!newData.exists() || (newData.hasChildren(['sid','x','y','at','uid']) && newData.child('uid').val() == $uid && newData.child('name').isString() && newData.child('name').val().length <= 40 && newData.child('x').isNumber() && newData.child('y').isNumber())"
         }
       }
+    },
+    "smack": {
+      "$room": {
+        ".read": "auth != null",
+        ".write": "auth != null && data.child('meta').child('host').val() == auth.uid && !newData.exists() || auth != null && !data.exists() && newData.child('meta').child('host').val() == auth.uid",
+        ".validate": "$room.length <= 40",
+        "meta": {
+          ".write": "auth != null && (!data.exists() || data.child('host').val() == auth.uid)",
+          ".validate": "!newData.exists() || (newData.child('host').val() == auth.uid && newData.child('status').isString())"
+        },
+        "seats": {
+          "$slot": {
+            ".write": "auth != null && (( !data.exists() && newData.child('uid').val() == auth.uid) || data.child('uid').val() == auth.uid || root.child('smack').child($room).child('meta').child('host').val() == auth.uid)",
+            ".validate": "$slot.matches(/^[0-3]$/) && (!newData.exists() || (newData.child('name').isString() && newData.child('name').val().length <= 40))"
+          }
+        },
+        "in": {
+          "$slot": {
+            ".write": "auth != null && root.child('smack').child($room).child('seats').child($slot).child('uid').val() == auth.uid"
+          },
+          ".write": "auth != null && root.child('smack').child($room).child('meta').child('host').val() == auth.uid && !newData.exists()"
+        },
+        "st": {
+          ".write": "auth != null && root.child('smack').child($room).child('meta').child('host').val() == auth.uid"
+        },
+        "res": {
+          ".write": "auth != null && root.child('smack').child($room).child('meta').child('host').val() == auth.uid"
+        }
+      }
     }
   }
 }

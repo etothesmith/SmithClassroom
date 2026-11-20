@@ -83,7 +83,7 @@
   .slot select,.slot input{font:700 14px Nunito;border:2px solid var(--char);border-radius:10px;padding:6px 8px;width:100%;background:#fff}
   .sw{display:flex;gap:5px;flex-wrap:wrap}.sw button{width:24px;height:24px;border-radius:50%;border:2px solid var(--char);cursor:pointer;padding:0}
   .sw button.on{outline:3px solid var(--red);outline-offset:1px}
-  .mini{font:800 13px Nunito;padding:6px 10px;border-radius:10px;box-shadow:0 3px 0 var(--char)}
+  .mini{font:800 13px Nunito,system-ui,sans-serif;padding:6px 10px;border-radius:10px;box-shadow:0 3px 0 var(--char)}
   .hint{font-size:12px;color:#5B5670;font-weight:700;line-height:1.35}
   .badge{display:inline-block;background:#E8F7EE;border:2px solid var(--char);border-radius:999px;padding:2px 10px;font:800 12px Nunito}
   .podium{display:flex;align-items:flex-end;justify-content:center;gap:14px;margin-top:10px}
@@ -376,15 +376,16 @@ const KEYMAPS = {
 };
 const GAME_KEYS = new Set(); Object.values(KEYMAPS).forEach(m => ["left","right","up","down","jump","light","heavy","item","dash"].forEach(k => GAME_KEYS.add(m[k])));
 const keys = {}, tapped = {};  // tapped: keys pressed since the last frame, so very quick taps still count
-addEventListener("keydown", e => { if (document.activeElement && /INPUT|SELECT|TEXTAREA/.test(document.activeElement.tagName)) return; keys[e.code] = true; tapped[e.code] = true;
-  if (STATE === "ARENA_BATTLE" && GAME_KEYS.has(e.code)) e.preventDefault(); if (e.code === "Escape" && STATE === "ARENA_BATTLE") togglePause(); onUIKey(e); });
+addEventListener("keydown", e => { if (e.code === "Enter" && STATE === "ONLINE_JOIN") { onlineActions.joinCode(); return; } if (document.activeElement && /INPUT|SELECT|TEXTAREA/.test(document.activeElement.tagName)) return; keys[e.code] = true; tapped[e.code] = true;
+  if ((STATE === "ARENA_BATTLE") && GAME_KEYS.has(e.code)) e.preventDefault(); if (e.code === "Escape" && STATE === "ARENA_BATTLE") togglePause(); onUIKey(e); });
 addEventListener("keyup", e => { keys[e.code] = false; });
 addEventListener("blur", () => { for (const k in keys) keys[k] = false; });
 function readPad(i){ const pads = navigator.getGamepads ? navigator.getGamepads() : []; const g = pads && pads[i]; if (!g) return null; const b = n => !!(g.buttons[n] && g.buttons[n].pressed), ax = g.axes[0] || 0, ay = g.axes[1] || 0;
   return {left:ax < -0.45 || b(14), right:ax > 0.45 || b(15), up:ay < -0.55 || b(12), down:ay > 0.55 || b(13), jump:b(0), light:b(2), heavy:b(3), item:b(1), dash:b(4) || b(5) || b(6) || b(7), start:b(9)}; }
-function readRaw(p){ if (p.bot) return p.ai.raw; if (p.ctrl.startsWith("pad")) return readPad(+p.ctrl.slice(3)) || {}; const m = KEYMAPS[p.ctrl]; const r = {}; for (const k of ["left","right","up","down","jump","light","heavy","item","dash"]) r[k] = !!(keys[m[k]] || tapped[m[k]]); return r; }
+function readRaw(p){ if (p.bot) return p.ai.raw; if (p.remote) return bitsToRaw((NET.inp[p.slot] || {}).b || 0); if (p.ctrl === "any") return anyRaw(); if (p.ctrl.startsWith("pad")) return readPad(+p.ctrl.slice(3)) || {}; const m = KEYMAPS[p.ctrl]; const r = {}; for (const k of ["left","right","up","down","jump","light","heavy","item","dash"]) r[k] = !!(keys[m[k]] || tapped[m[k]]); return r; }
 function makeInput(p){ const r = readRaw(p), pv = p.prevRaw || {}; p.prevRaw = r; const I = {};
   for (const k of ["left","right","up","down","jump","light","heavy","item","dash"]) { I[k] = !!r[k]; I[k + "P"] = !!r[k] && !pv[k]; I[k + "R"] = !r[k] && !!pv[k]; }
+  if (p.remote) { const c = (NET.inp[p.slot] || {}).c || [0, 0, 0, 0, 0], lc = p.lastPc || c; PCK.forEach((k, i) => { if ((c[i] | 0) > (lc[i] | 0)) I[k + "P"] = true; }); p.lastPc = c.slice(); }
   if (r.start && !pv.start) togglePause(); return I; }
 
 /* =====================================================================================
@@ -403,7 +404,7 @@ function makePlayer(cfg, i){
     wallDir:0, wallT:0, wallLock:0, ledge:null, ledgeT:0, ledgeCD:0, dashT:0, dashCD:0, airDodged:false, iframes:0, invuln:90,
     damage:0, stocks:CFG.STOCKS, hitstun:0, launched:false, atk:null, charge:-1, combo:0, comboT:0, land:0, item:null, buffs:{ruler:0, speed:0},
     dead:false, respawnT:0, out:false, place:0, lastHitBy:-1, lastHitF:-9999, anim:"idle", animT:0, spin:0, flash:0, shakeHud:0,
-    stats:{kos:0, falls:0, dealt:0, taken:0}, prevRaw:{}, ai:{raw:{}, t:0, plan:null, charge:0, react:0}};
+    stats:{kos:0, falls:0, dealt:0, taken:0}, prevRaw:{}, remote:!!cfg.remote, ai:{raw:{}, t:0, plan:null, charge:0, react:0}};
   if (cfg.spriteKey) { p.spriteKey = cfg.spriteKey; loadSprite(cfg.spriteKey); }
   return p;
 }
@@ -684,8 +685,13 @@ function botThink(p){
    16. Main loop (fixed 60 Hz)
    ===================================================================================== */
 function step(){
+  if (NET.on && !NET.host) { guestStep(); return; }
+  stepInner();
+  if (NET.on && NET.host && STATE === "ARENA_BATTLE") hostSend();
+}
+function stepInner(){
   G.frame++;
-  if (STATE !== "ARENA_BATTLE" || G.paused) { for (const k in tapped) delete tapped[k]; return; }
+  if (STATE !== "ARENA_BATTLE" || (G.paused && !NET.on)) { for (const k in tapped) delete tapped[k]; return; }
   if (G.countdown > 0) { for (const k in tapped) delete tapped[k]; G.countdown--; G.players.forEach(p => { p.anim = "idle"; p.animT++; }); updateFX(); updateCamera(); return; }
   if (G.hitstop > 0) { G.hitstop--; updateFX(); return; }
   for (const p of G.players) if (p.bot) botThink(p);
@@ -699,7 +705,7 @@ function step(){
 function endMatch(){ if (STATE !== "ARENA_BATTLE") return; STATE = "PODIUM_RESULTS";
   const surv = G.players.filter(p => !p.out).sort((a, b) => b.stocks - a.stocks || a.damage - b.damage);
   const elim = G.elimOrder.slice().reverse().map(id => G.players[id]);
-  G.results = [...surv, ...elim]; G.results.forEach((p, i) => p.place = i + 1); renderUI(); sfx("go"); }
+  G.results = [...surv, ...elim]; G.results.forEach((p, i) => p.place = i + 1); hostEnded(); renderUI(); sfx("go"); }
 function togglePause(){ if (STATE !== "ARENA_BATTLE") return; G.paused = !G.paused; renderUI(); }
 
 let last = performance.now(), acc = 0;
@@ -827,7 +833,7 @@ function offscreenBubbles(){ const z = G.cam.z, ox = VW / 2 - G.cam.x * z, oy = 
     ctx.save(); ctx.translate(bx, by); ctx.rotate(Math.atan2(sy - by, sx - bx)); ctx.fillStyle = p.color; ctx.strokeStyle = OUT; ctx.lineWidth = 3; ctx.beginPath(); ctx.moveTo(48, 0); ctx.lineTo(36, -10); ctx.lineTo(36, 10); ctx.closePath(); ctx.fill(); ctx.stroke(); ctx.restore(); } }
 function render(){
   ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
-  if (STATE !== "ARENA_BATTLE") { drawBackground(G.frame); if (STATE === "CHARACTER_SELECT") drawSelectPreviews(); return; }
+  if (STATE !== "ARENA_BATTLE") { drawBackground(G.frame); if (STATE === "CHARACTER_SELECT") drawSelectPreviews(); if (STATE === "ONLINE_LOBBY") drawLobbyPreviews(); return; }
   drawBackground(G.frame);
   const z = G.cam.z, shx = G.shake ? rnd(-G.shake, G.shake) : 0, shy = G.shake ? rnd(-G.shake, G.shake) : 0;
   ctx.save(); ctx.translate(VW / 2 + shx, VH / 2 + shy); ctx.scale(z, z); ctx.translate(-G.cam.x, -G.cam.y);
@@ -856,6 +862,8 @@ function renderUI(){
   if (STATE === "QUIZ_GATE") return renderQuiz();
   if (STATE === "CHARACTER_SELECT") return renderSelect();
   if (STATE === "PODIUM_RESULTS") return renderPodium();
+  if (STATE === "ONLINE_LOBBY") return renderLobby();
+  if (STATE === "ONLINE_JOIN") return renderJoin();
   if (STATE === "ARENA_BATTLE") { ui.innerHTML = G.paused ? `<div class="screen clear" style="pointer-events:auto;justify-content:center;background:transparent"><div class="panel center" style="width:min(560px,100%)">
       <h2>Paused</h2><div class="keys" style="text-align:left">${Object.values(KEYMAPS).map(m => `<div><b>${m.label}</b><br>${m.hint}</div>`).join("")}<div><b>Gamepad</b><br>Stick move · A jump · X light · Y smash · B item · LB/RB dash</div></div>
       <div class="row" style="justify-content:center;margin-top:14px"><button class="btn primary" data-a="resume">Resume</button><button class="btn" data-a="quit">Quit match</button><button class="btn" data-a="mute">${muted ? "🔇 Sound off" : "🔊 Sound on"}</button></div></div></div>` : ""; }
@@ -864,7 +872,7 @@ ui.addEventListener("click", e => { const b = e.target.closest("[data-a]"); if (
   const actions = {
     subject:() => { G.subject = v; save({subject:v}); sfx("select"); renderQuiz(); },
     humans:() => { G.humans = +v; sfx("select"); renderQuiz(); },
-    startQuiz:() => beginQuiz(),
+    startQuiz:() => { NET.err = ""; beginQuiz(); },
     answer:() => answerQuiz(+v),
     next:() => nextQuestion(),
     retry:() => { G.quiz.players[G.quiz.cur] = newQuizFor(); renderQuiz(); },
@@ -881,7 +889,7 @@ ui.addEventListener("click", e => { const b = e.target.closest("[data-a]"); if (
     quit:() => { G.paused = false; endMatch(); },
     mute:() => { muted = !muted; renderUI(); },
     settings:() => { const k = v; if (k === "stocks") CFG.STOCKS = CFG.STOCKS % 5 + 1; if (k === "time") CFG.TIME_SEC = [180, 300, 0, 120][([180, 300, 0, 120].indexOf(CFG.TIME_SEC) + 1) % 4]; if (k === "items") CFG.ITEMS = !CFG.ITEMS; renderSelect(); }
-  }; (actions[a] || (() => {}))(); });
+  }; if (actions[a]) actions[a](); else if (onlineActions[a]) onlineActions[a](v); });
 ui.addEventListener("change", e => { const el = e.target; const [kind, i] = (el.dataset.f || "").split("|"); if (!kind) return; const s = G.slotsCfg[+i];
   if (kind === "type") { s.type = el.value; if (s.type === "bot" && !/^Bot /.test(s.name)) s.name = "Bot " + pick(NAMES); } if (kind === "ctrl") s.ctrl = el.value; if (kind === "diff") s.diff = el.value; if (kind === "name") s.name = el.value.slice(0, 14) || s.name; renderSelect(); });
 function onUIKey(e){ if (STATE === "QUIZ_GATE" && G.quiz) { const q = G.quiz.players[G.quiz.cur]; if (!q) return;
@@ -903,15 +911,20 @@ function goSelect(){ const Qz = G.quiz; if (!Qz) return; const Q = Qz.players[Qz
   for (let i = Qz.players.length; i < 4; i++) { const s = G.slotsCfg[i]; if (s.type === "human") s.type = "off"; s.focus = 0; }
   if (Qz.players.length === 1 && G.slotsCfg[1].type === "off") G.slotsCfg[1].type = "bot";
   G.slotsCfg.forEach(s => { if (s.type === "bot" && !/^Bot /.test(s.name)) s.name = "Bot " + pick(NAMES); });
+  if (NET.mode) { G.slotsCfg[0].type = "human"; if (params.get("name")) G.slotsCfg[0].name = params.get("name"); if (NET.mode === "host" || NET.room) enterOnline(); else { STATE = "ONLINE_JOIN"; renderUI(); } return; }
   STATE = "CHARACTER_SELECT"; renderUI(); }
+function renderJoin(){ ui.innerHTML = `<div class="screen"><div class="logo" style="font-size:44px">Join a <span>room</span></div><div class="panel center" style="width:min(520px,100%)">
+  <div class="tag">Type the 4-letter room code</div><input id="joinCode" maxlength="4" autocomplete="off" style="font:700 48px Fredoka;letter-spacing:.3em;text-align:center;width:100%;border:3px solid var(--char);border-radius:16px;padding:8px;margin:10px 0;text-transform:uppercase">
+  ${NET.err ? `<p style="color:#C8102E;font-weight:800">${esc(NET.err)}</p>` : ""}<button class="btn go" data-a="joinCode">Join →</button></div></div>`; setTimeout(() => { const i = document.getElementById("joinCode"); if (i) i.focus(); }, 30); }
 function renderQuiz(){
   const head = `<div class="logo">Smithtopia <span>Smackdown</span></div><div class="tag" style="margin-bottom:6px">Review first. Then battle.</div>`;
-  if (!G.quiz) { ui.innerHTML = `<div class="screen">${head}
+  if (!G.quiz) { ui.innerHTML = `<div class="screen">${head}${NET.err ? `<div class="panel center" style="background:#FFE3E3"><b>${esc(NET.err)}</b></div>` : ""}
     <div class="panel"><div class="tag">Step 1 · Subject</div><div class="row" style="margin-top:8px">${Object.entries(SUBJECTS).map(([k, l]) => `<button class="btn ${G.subject === k ? "on" : ""}" data-a="subject" data-v="${k}">${l}</button>`).join("")}</div>
       <div class="tag" style="margin-top:16px">Step 2 · How many students are playing on this computer?</div><div class="row" style="margin-top:8px">${[1, 2, 3, 4].map(n => `<button class="btn ${G.humans === n ? "on" : ""}" data-a="humans" data-v="${n}">${n} ${n === 1 ? "student (vs bots)" : "students"}</button>`).join("")}</div>
       <p class="hint" style="margin-top:12px">Each student answers ${CFG.QUIZ_LEN} questions and needs ${CFG.PASS_SCORE} right to unlock the match. Your best answer streak becomes a <b>Focus Buff</b>: +${Math.round(CFG.FOCUS_PER_STREAK * 100)}% knockback resistance per streak answer (max ${Math.round(CFG.FOCUS_CAP * 100)}%).
       ${HUB_BANK ? `Using the full Smith's Classroom question bank (${BANK.length} questions).` : `Using ${BANK.length} built-in questions.`}</p>
-      <div class="row" style="margin-top:10px"><button class="btn go" data-a="startQuiz">Start the review →</button></div></div>
+      <div class="row" style="margin-top:10px"><button class="btn go" data-a="startQuiz">Start the review →</button></div>
+      ${HUB || params.get("net") ? `<div class="tag" style="margin-top:18px">Or play online, each on your own computer</div><div class="row" style="margin-top:8px"><button class="btn primary" data-a="hostOnline">🌐 Host an online room</button><button class="btn" data-a="joinOnline">🔑 Join with a code</button></div>` : ""}</div>
     <div class="panel"><div class="tag">Controls</div><div class="keys">${Object.values(KEYMAPS).map(m => `<div><b>${m.label}</b><br>${m.hint}</div>`).join("")}<div><b>Gamepad</b><br>Stick move · A jump · X light · Y smash · B item · LB/RB dash · Start pause</div></div>
       <p class="hint">Hold smash to charge. Point up or down while charging for an up- or down-smash. Press down on a lunch table or the bleachers to drop through. Push into a wall while falling to wall-slide, then jump to kick off.</p></div></div>`; return; }
   const Qz = G.quiz, Q = Qz.players[Qz.cur], pl = `Player ${Qz.cur + 1}${Qz.players.length > 1 ? ` of ${Qz.players.length}` : ""}`;
@@ -962,20 +975,200 @@ function renderPodium(){
     <div class="podium">${order.map(i => `<div class="pod"><canvas id="pod${i}" width="300" height="300"></canvas><b style="font:700 20px Fredoka">${esc(R[i].name)}</b><div class="blk" style="height:${h[i]}px;background:${cols[i]}">${i + 1}</div></div>`).join("")}</div>
     <div class="panel"><table><tr><th>Place</th><th>Fighter</th><th>KOs</th><th>Falls</th><th>Damage dealt</th><th>Focus</th></tr>
       ${R.map(p => `<tr><td>${p.place}</td><td><span style="color:${p.color}">●</span> ${esc(p.name)}${p.bot ? " · CPU" : ""}</td><td>${p.stats.kos}</td><td>${p.stats.falls}</td><td>${p.stats.dealt}%</td><td>${p.focus ? "🧠 +" + Math.round(p.focus * 100) + "%" : "—"}</td></tr>`).join("")}</table>
-      <div class="row" style="justify-content:center;margin-top:16px"><button class="btn go" data-a="rematch">${G.demo ? "Watch again" : "Rematch (review first) →"}</button><button class="btn" data-a="menu">Main menu</button></div></div></div>`;
+      <div class="row" style="justify-content:center;margin-top:16px">${NET.on ? (NET.host && !NET.hall ? `<button class="btn go" data-a="nlobby">Back to the lobby →</button>` : NET.hall ? `<span class="hint">The Game Hall has your result.</span>` : `<span class="hint">Waiting for the host to start another round…</span>`) + `<button class="btn" data-a="nleave">Leave</button>`
+        : `<button class="btn go" data-a="rematch">${G.demo ? "Watch again" : "Rematch (review first) →"}</button><button class="btn" data-a="menu">Main menu</button>`}</div></div></div>`;
   order.forEach(i => { const c = document.getElementById("pod" + i); if (!c) return; const x = c.getContext("2d"); x.translate(150, 280); x.scale(2.6, 2.6); drawAvatar(x, R[i].av, {pose:i === 0 ? "usmash" : "idle", t:0, facing:1}); });
   if (R[0]) for (let i = 0; i < 80; i++) { const d = document.createElement("i"); d.style.cssText = `position:fixed;left:${rnd(0, 100)}vw;top:-20px;width:10px;height:14px;background:${pick(["#E63946","#FFD23F","#3BAFDA","#2ECC71","#FF6FB5"])};transform:rotate(${rnd(0, 360)}deg);transition:transform 3s linear, top 3s ease-in;pointer-events:none;z-index:9`;
     document.body.appendChild(d); setTimeout(() => { d.style.top = "110vh"; d.style.transform = `rotate(${rnd(360, 1080)}deg)`; }, 30 + i * 20); setTimeout(() => d.remove(), 3600 + i * 20); }
 }
 
 /* =====================================================================================
+   20. ONLINE: host-authoritative rooms over the Realtime Database
+   The host's computer runs the fight. Guests send button presses (~30/s) and draw
+   the host's snapshots (12/s), smoothed between updates. Paths: smack/{room}/
+     meta {host, status, hall, wager, settings}   seats/{slot} {uid, name, av, focus, ready, bot}
+     in/{slot} {b: held bits, c: press counters}  st: snapshot   res: final order
+   Inside Smithtopia it uses the town's Firebase connection; anywhere else (or in
+   practice mode) it falls back to a same-computer channel so it can be tested in two tabs.
+   ===================================================================================== */
+const HUB = (() => { try { return window.parent !== window && window.parent.TOWN && window.parent.TOWN.net ? window.parent.TOWN : null; } catch(e){ return null; } })();
+function localTransport(){
+  const bc = ("BroadcastChannel" in window) ? new BroadcastChannel("smack-local") : null, tree = {}, subs = [], leaves = [];
+  let uid = sessionStorage.getItem("smack.uid"); if (!uid) { uid = "u" + Math.random().toString(36).slice(2, 10); sessionStorage.setItem("smack.uid", uid); }
+  const get = p => p.split("/").reduce((o, k) => o == null ? undefined : o[k], tree);
+  const put = (p, v) => { const ks = p.split("/"); let o = tree; for (let i = 0; i < ks.length - 1; i++) { if (o[ks[i]] == null || typeof o[ks[i]] !== "object") o[ks[i]] = {}; o = o[ks[i]]; }
+    if (v == null) delete o[ks[ks.length - 1]]; else o[ks[ks.length - 1]] = JSON.parse(JSON.stringify(v)); };
+  const notify = p => subs.slice().forEach(s => { if (p === s.p || p.startsWith(s.p + "/") || s.p.startsWith(p + "/")) { const v = get(s.p); s.cb(v == null ? null : JSON.parse(JSON.stringify(v))); } });
+  const apply = m => { if (m.op === "set") put(m.p, m.v); else if (m.op === "update") Object.entries(m.v).forEach(([k, v]) => put(m.p + "/" + k, v)); else if (m.op === "remove") put(m.p, null);
+    else if (m.op === "sync") { Object.keys(m.tree).forEach(k => { if (!(k in tree)) tree[k] = m.tree[k]; }); subs.forEach(s => { const v = get(s.p); s.cb(v == null ? null : v); }); return; } notify(m.p); };
+  if (bc) bc.onmessage = e => { const m = e.data; if (m.op === "hello") { bc.postMessage({op:"sync", tree}); return; } apply(m); };
+  if (bc) bc.postMessage({op:"hello"});
+  addEventListener("pagehide", () => leaves.forEach(p => { apply({op:"remove", p}); if (bc) bc.postMessage({op:"remove", p}); }));
+  const send = m => { apply(m); if (bc) bc.postMessage(m); return Promise.resolve(); };
+  return {kind:"local", uid:() => uid, set:(p, v) => send({op:"set", p, v}), update:(p, v) => send({op:"update", p, v}), remove:p => send({op:"remove", p}),
+    get:p => Promise.resolve(get(p) == null ? null : JSON.parse(JSON.stringify(get(p)))), onLeave:p => { leaves.push(p); return Promise.resolve(); },
+    watch:(p, cb) => { const s = {p, cb}; subs.push(s); setTimeout(() => { const v = get(p); cb(v == null ? null : v); }, 0); return () => { const i = subs.indexOf(s); if (i >= 0) subs.splice(i, 1); }; }};
+}
+function transport(){
+  try { const st = HUB && HUB.net.store; if (st && st.rt && st.rt.usable && st.rt.usable()) { const rt = st.rt, P = p => "smack/" + p;
+    return {kind:"cloud", uid:() => st.uid(), set:(p, v) => rt.set(P(p), v), update:(p, v) => rt.update(P(p), v), remove:p => rt.remove(P(p)), onLeave:p => rt.onLeave(P(p)),
+      get:p => new Promise(res => { let un = null; un = rt.watch(P(p), v => { res(v); setTimeout(() => un && un(), 0); }); }), watch:(p, cb) => rt.watch(P(p), cb)}; } } catch(e){ console.warn(e); }
+  return localTransport();
+}
+const ANIMS = ["idle","run","jump","fall","wall","ledge","dash","jab","charge","fsmash","usmash","dsmash","airkick","spike","slam","throw","hurt","spin"];
+const NET = {on:false, host:false, mode:null, room:null, slot:-1, T:null, subs:[], seats:{}, meta:null, inp:{}, evq:[], es:0, lastEs:0, pc:[0, 0, 0, 0, 0], lastBits:-1, lastPcSent:"", lastSendF:0, hall:null, role:null, wager:0, err:"", joined:false};
+const BITS = ["left","right","up","down","jump","light","heavy","item","dash"], PCK = ["jump","light","heavy","item","dash"];
+const r1 = v => typeof v === "number" ? Math.round(v * 10) / 10 : v;
+/* record every visual/sound effect on the host so guests can replay it */
+function wrapFX(){ const make = (name, fn) => (...a) => { if (NET.on && NET.host && STATE === "ARENA_BATTLE") { NET.es++; NET.evq.push([NET.es, name, a.map(r1)]); if (NET.evq.length > 60) NET.evq.shift(); } return fn(...a); };
+  dust = make("dust", dust); ring = make("ring", ring); burst = make("burst", burst); spark = make("spark", spark); koBlast = make("koBlast", koBlast); popup = make("popup", popup); popupScreen = make("popupScreen", popupScreen);
+  const s0 = sfx; sfx = (k) => { if (NET.on && NET.host && STATE === "ARENA_BATTLE" && !["select","right","wrong","charge"].includes(k)) { NET.es++; NET.evq.push([NET.es, "sfx", [k]]); if (NET.evq.length > 60) NET.evq.shift(); } return s0(k); }; }
+wrapFX();
+const FXN = () => ({dust, ring, burst, spark, koBlast, popup, popupScreen, sfx});
+function snap(){ return JSON.parse(JSON.stringify(snapRaw())); }
+function snapRaw(){
+  return {f:G.frame, t:G.timeLeft, cd:G.countdown, es:NET.es, ev:NET.evq.filter(e => e[0] > NET.es - 40),
+    P:G.players.map(p => [Math.round(p.x), Math.round(p.y), p.facing, Math.max(0, ANIMS.indexOf(p.anim)), p.animT % 1000, Math.round(p.damage), p.stocks,
+      (p.dead ? 1 : 0) | (p.out ? 2 : 0) | (p.respawnT > 0 ? 4 : 0) | (p.invuln > 0 ? 8 : 0) | (p.onHalo ? 16 : 0) | (p.onGround ? 32 : 0) | (p.dashT > 0 ? 64 : 0) | (p.iframes > 0 ? 128 : 0) | (p.bot ? 256 : 0),
+      p.item ? (p.item.type === "ball" ? 1 : 2) : 0, (p.buffs.ruler > 0 ? 1 : 0) | (p.buffs.speed > 0 ? 2 : 0), Math.round((p.spin || 0) * 100), Math.round(Math.max(0, p.flash) * 10), p.charge, p.invuln, p.stats.kos, p.stats.falls, p.stats.dealt]),
+    I:G.items.map(i => [i.type, i.skin || "", Math.round(i.x), Math.round(i.y), i.landed ? 1 : 0, i.life]),
+    J:G.proj.map(b => [b.kind, Math.round(b.x), Math.round(b.y), Math.round(b.rot * 100), b.spent ? 1 : 0, b.life])};
+}
+function applySnap(s){
+  if (!s || !G.players.length) return; G.timeLeft = s.t; G.countdown = s.cd;
+  (s.P || []).forEach((a, i) => { const p = G.players[i]; if (!p || !a) return; p.tx = a[0]; p.ty = a[1];
+    if (p.x == null || Math.abs(p.x - a[0]) > 160 || Math.abs(p.y - a[1]) > 160) { p.x = a[0]; p.y = a[1]; }
+    p.facing = a[2]; p.anim = ANIMS[a[3]] || "idle"; p.animT = a[4]; p.damage = a[5]; p.stocks = a[6]; const fl = a[7];
+    p.dead = !!(fl & 1); p.out = !!(fl & 2); p.respawnT = fl & 4 ? 1 : 0; p.invuln = fl & 8 ? a[13] : 0; p.onHalo = !!(fl & 16); p.onGround = !!(fl & 32); p.dashT = fl & 64 ? 1 : 0; p.iframes = fl & 128 ? 1 : 0; p.bot = !!(fl & 256);
+    p.item = a[8] ? {type:a[8] === 1 ? "ball" : "book"} : null; p.buffs.ruler = a[9] & 1 ? 1 : 0; p.buffs.speed = a[9] & 2 ? 1 : 0; p.spin = a[10] / 100; p.flash = a[11] / 10; p.charge = a[12];
+    p.stats.kos = a[14]; p.stats.falls = a[15]; p.stats.dealt = a[16]; });
+  G.items = (s.I || []).map(a => ({type:a[0], skin:a[1] || null, x:a[2], y:a[3], landed:!!a[4], life:a[5]}));
+  G.proj = (s.J || []).map(a => ({kind:a[0], x:a[1], y:a[2], rot:a[3] / 100, spent:!!a[4], life:a[5], r:PROJ[a[0]] ? PROJ[a[0]].r : 13}));
+  const fx = FXN(); (s.ev || []).forEach(e => { if (!e || e[0] <= NET.lastEs) return; NET.lastEs = e[0]; const f = fx[e[1]]; if (f) { try { f(...(e[2] || [])); } catch(err){} } });
+}
+function rawToBits(r){ let b = 0; BITS.forEach((k, i) => { if (r[k]) b |= 1 << i; }); return b; }
+function bitsToRaw(b){ const r = {}; BITS.forEach((k, i) => { r[k] = !!(b & (1 << i)); }); return r; }
+function anyRaw(){ const u = {}; for (const m of [KEYMAPS.kb1, KEYMAPS.kb3]) for (const k of BITS) u[k] = u[k] || !!(keys[m[k]] || tapped[m[k]]);
+  const g = readPad(0); if (g) for (const k of BITS) u[k] = u[k] || !!g[k]; return u; }
+/* guest: send my buttons */
+let guestPrev = {};
+function guestSend(){ const r = anyRaw(); PCK.forEach((k, i) => { if (r[k] && !guestPrev[k]) NET.pc[i]++; }); guestPrev = r;
+  const b = rawToBits(r), pcs = NET.pc.join(","); if ((b !== NET.lastBits || pcs !== NET.lastPcSent) && G.frame - NET.lastSendF >= 2 || G.frame - NET.lastSendF > 30) {
+    NET.lastBits = b; NET.lastPcSent = pcs; NET.lastSendF = G.frame; NET.T.set(`${NET.room}/in/${NET.slot}`, {b, c:NET.pc.slice()}).catch(() => {}); } }
+function guestStep(){ G.frame++; for (const k in tapped) delete tapped[k]; if (STATE !== "ARENA_BATTLE") return; if (!G.paused) guestSend();
+  for (const p of G.players) { if (p.tx != null) { p.x += (p.tx - p.x) * 0.4; p.y += (p.ty - p.y) * 0.4; } p.animT++; if (p.flash > 0) p.flash -= 0.05; }
+  updateFX(); updateCamera(); }
+function hostSend(){ if (G.frame % 5 === 0) NET.T.set(`${NET.room}/st`, snap()).catch(() => {}); }
+
+/* ---------- lobby */
+const randCode = () => Array.from({length:4}, () => "ABCDEFGHJKLMNPQRSTUVWXYZ"[Math.floor(Math.random() * 24)]).join("");
+function myCfg(){ const s = G.slotsCfg[0]; return {name:s.name || "Player", av:s.av, focus:s.focus || 0}; }
+async function enterOnline(){
+  NET.T = transport(); NET.on = true; NET.err = ""; const uid = NET.T.uid(), me = myCfg();
+  if (NET.mode === "host") {
+    if (!NET.room) { for (let i = 0; i < 6; i++) { const c = randCode(); const m = await NET.T.get(c + "/meta").catch(() => null); if (!m) { NET.room = c; break; } } }
+    NET.host = true; NET.slot = 0;
+    const old = await NET.T.get(NET.room + "/meta").catch(() => null);
+    if (old && old.host === uid) { await NET.T.update(NET.room + "/meta", {status:"lobby"}); await NET.T.set(NET.room + "/seats/0", {uid, sid:params.get("sid") || "", name:me.name, av:me.av, focus:me.focus, ready:true, bot:false, at:Date.now()}); }
+    else await NET.T.set(NET.room, {meta:{host:uid, status:"lobby", hall:NET.hall || "", wager:NET.wager || 0, settings:{stocks:CFG.STOCKS, time:CFG.TIME_SEC, items:CFG.ITEMS}, at:Date.now()},
+      seats:{0:{uid, sid:params.get("sid") || "", name:me.name, av:me.av, focus:me.focus, ready:true, bot:false, at:Date.now()}}});
+    NET.T.onLeave(NET.room);
+  } else { NET.host = false; }
+  watchRoom(); STATE = "ONLINE_LOBBY"; renderUI();
+}
+async function joinSeat(){ const uid = NET.T.uid(), me = myCfg(); if (NET.joined || NET.joining || !NET.meta || !NET.seatsLoaded) return; NET.joining = true;
+  const seats = (await NET.T.get(NET.room + "/seats").catch(() => null)) || NET.seats || {}; const mine = Object.entries(seats).find(([, s]) => s && s.uid === uid);
+  let slot = mine ? +mine[0] : NET.role === "b" ? 1 : [0, 1, 2, 3].find(i => !seats[i]);
+  if (NET.meta.hall && NET.role !== "b") slot = -1;
+  NET.joining = false;
+  if (slot == null || slot < 0 || (seats[slot] && seats[slot].uid !== uid)) { NET.err = NET.meta.hall ? "This match is for two players." : "This room is full."; renderUI(); return; }
+  if (NET.meta.status !== "lobby" && !mine) { NET.err = "That match already started."; renderUI(); return; }
+  NET.slot = slot; NET.joined = true;
+  await NET.T.set(`${NET.room}/seats/${slot}`, {uid, sid:params.get("sid") || "", name:me.name, av:me.av, focus:me.focus, ready:false, bot:false, at:Date.now()});
+  NET.T.onLeave(`${NET.room}/seats/${slot}`); NET.T.onLeave(`${NET.room}/in/${slot}`); }
+function watchRoom(){ NET.subs.forEach(u => { try { u(); } catch(e){} }); NET.subs = []; const R = NET.room;
+  NET.subs.push(NET.T.watch(R + "/meta", m => { const was = NET.meta; NET.meta = m;
+    if (!m) { if (was && !NET.host) { NET.err = "The host left the room."; leaveToMenu(true); } else if (!NET.host) { NET.err = "Waiting for the room to open…"; renderUI(); } return; }
+    if (!NET.host && !NET.joined) joinSeat();
+    if (m.settings) { CFG.STOCKS = m.settings.stocks; CFG.TIME_SEC = m.settings.time; CFG.ITEMS = m.settings.items; }
+    if (!NET.host && m.status === "playing" && STATE !== "ARENA_BATTLE") guestStart();
+    if (!NET.host && m.status === "lobby" && (STATE === "PODIUM_RESULTS" || STATE === "ARENA_BATTLE")) { STATE = "ONLINE_LOBBY"; NET.T.update(`${R}/seats/${NET.slot}`, {ready:false}).catch(() => {}); }
+    if (STATE === "ONLINE_LOBBY") renderUI(); }));
+  NET.subs.push(NET.T.watch(R + "/seats", s => { const prev = NET.seats || {}; NET.seats = s || {}; NET.seatsLoaded = true;
+    if (!NET.host && NET.meta && !NET.joined) joinSeat();
+    if (NET.host && STATE === "ARENA_BATTLE") G.players.forEach(p => { if (p.remote && !NET.seats[p.slot]) { p.remote = false; p.bot = true; p.diff = "normal"; popupScreen(p.name + " left · CPU takes over"); } });
+    if (!NET.host && NET.joined && !NET.seats[NET.slot] && prev[NET.slot]) { NET.joined = false; NET.T.get(R + "/meta").then(m => { if (!NET.on) return; NET.err = m ? "You were removed from the room." : "The host left the room."; leaveToMenu(true); }); return; }
+    if (STATE === "ONLINE_LOBBY") renderUI(); }));
+  if (NET.host) NET.subs.push(NET.T.watch(R + "/in", v => { NET.inp = v || {}; }));
+  else { NET.subs.push(NET.T.watch(R + "/st", s => { if (s && STATE === "ARENA_BATTLE") applySnap(s); }));
+    NET.subs.push(NET.T.watch(R + "/res", r => { if (r && STATE === "ARENA_BATTLE") guestEnd(r); })); }
+}
+function seatsToSlots(){ return [0, 1, 2, 3].map(i => { const s = NET.seats[i]; if (!s) return {type:"off"};
+  return {type:s.bot ? "bot" : "human", diff:s.diff || "normal", name:s.name, av:s.av, focus:s.focus || 0, ctrl:i === NET.slot ? "any" : "net", remote:!s.bot && i !== NET.slot}; }); }
+function hostStart(){ const slots = seatsToSlots(); if (slots.filter(s => s.type !== "off").length < 2) return;
+  NET.es = 0; NET.evq = []; NET.T.remove(NET.room + "/res").catch(() => {}); NET.T.remove(NET.room + "/in").catch(() => {});
+  NET.T.update(NET.room + "/meta", {status:"playing", settings:{stocks:CFG.STOCKS, time:CFG.TIME_SEC, items:CFG.ITEMS}, at:Date.now()}).catch(() => {});
+  startMatch(slots); G.players.forEach(p => { const s = slots[p.slot]; p.remote = !!s.remote; if (p.remote) p.ctrl = "net"; }); }
+function guestStart(){ NET.lastEs = 0; const slots = seatsToSlots(); startMatch(slots); G.players.forEach(p => { p.tx = p.x; p.ty = p.y; p.ai = p.ai || {raw:{}}; }); }
+function guestEnd(r){ const byId = {}; G.players.forEach(p => { byId[p.slot] = p; }); G.results = (r.order || []).map(sl => byId[sl]).filter(Boolean); G.results.forEach((p, i) => p.place = i + 1);
+  STATE = "PODIUM_RESULTS"; renderUI(); sfx("go"); }
+function hostEnded(){ if (!NET.on || !NET.host) return; const order = G.results.map(p => p.slot);
+  NET.T.set(NET.room + "/st", snap()).catch(() => {}); NET.T.set(NET.room + "/res", {order, at:Date.now()}).catch(() => {}); NET.T.update(NET.room + "/meta", {status:"done"}).catch(() => {});
+  if (NET.hall && HUB && window.parent.gmSmackResult) { const w = G.results[0]; try { window.parent.gmSmackResult(NET.hall, w ? (w.slot === 0 ? "a" : "b") : "tie"); } catch(e){ console.warn(e); } } }
+async function leaveRoom(){ if (!NET.on) return; const R = NET.room; NET.subs.forEach(u => { try { u(); } catch(e){} }); NET.subs = [];
+  try { if (NET.host) await NET.T.remove(R); else if (NET.slot >= 0) { await NET.T.remove(`${R}/seats/${NET.slot}`); await NET.T.remove(`${R}/in/${NET.slot}`); } } catch(e){}
+  Object.assign(NET, {on:false, host:false, room:null, slot:-1, seats:{}, meta:null, joined:false, joining:false, seatsLoaded:false, inp:{}}); }
+function leaveToMenu(keepErr){ const err = NET.err; leaveRoom(); if (keepErr) NET.err = err; G.quiz = null; STATE = "QUIZ_GATE"; NET.mode = null; renderUI(); if (HUB && NET.hall) { /* stay; the Game Hall overlay has a close button */ } }
+
+function renderLobby(){
+  const seats = NET.seats || {}, m = NET.meta, uid = NET.T && NET.T.uid(), me = seats[NET.slot], humans = Object.values(seats).filter(s => s && !s.bot);
+  const allReady = humans.every(s => s.ready), n = Object.values(seats).filter(Boolean).length, cols = ["#E63946","#3BAFDA","#2ECC71","#F1C40F"];
+  ui.innerHTML = `<div class="screen"><div class="logo" style="font-size:44px">Online <span>Smackdown</span></div>
+    <div class="panel center">${NET.room ? `<div class="tag">${NET.hall ? "Game Hall match" + (NET.wager ? ` · 💵 ${NET.wager} each` : "") : "Room code"}</div>${NET.hall ? "" : `<div style="font:700 56px Fredoka;letter-spacing:.2em">${esc(NET.room)}</div><p class="hint">Classmates open Smackdown from the Game Hall, choose <b>Join with code</b> and type this code.</p>`}` : ""}
+      ${NET.err ? `<p style="font-weight:800;color:#C8102E">${esc(NET.err)}</p>` : ""}
+      ${!m && !NET.host ? `<p>⏳ Connecting to the room…</p>` : ""}</div>
+    <div class="slots">${[0, 1, 2, 3].map(i => { const s = seats[i];
+      return `<div class="slot ${s ? "" : "off"}" style="border-top:10px solid ${cols[i]}"><h3>P${i + 1} ${s ? (s.bot ? "🤖" : i === NET.slot ? "⭐ You" : "🌐") : ""}${s && s.focus ? `<span class="badge">🧠 +${Math.round(s.focus * 100)}%</span>` : ""}</h3>
+        ${s ? `<canvas id="lv${i}" width="300" height="300"></canvas><b style="font:700 18px Fredoka">${esc(s.name)}</b><div>${s.bot ? `<span class="badge">${s.diff || "normal"} bot</span>` : s.ready ? `<span class="badge">✅ Ready</span>` : `<span class="badge" style="background:#FFF3C4">… getting ready</span>`}</div>
+          ${i === NET.slot ? `<button class="btn mini" data-a="nlook">🎲 New look</button>` : ""}${NET.host && s.bot ? `<button class="btn mini" data-a="nbotRm" data-v="${i}">Remove bot</button>` : ""}${NET.host && !s.bot && i !== 0 ? `<button class="btn mini" data-a="nkick" data-v="${i}">Remove</button>` : ""}`
+          : NET.host && !NET.hall ? `<p class="hint">Open seat.</p><button class="btn mini" data-a="nbot" data-v="${i}">+ Add a bot</button>` : `<p class="hint">Open seat</p>`}</div>`; }).join("")}</div>
+    <div class="panel row" style="justify-content:space-between;width:min(1200px,100%)">
+      <div class="row">${NET.host ? `<button class="btn mini" data-a="nset" data-v="stocks">❤️ ${CFG.STOCKS} stock${CFG.STOCKS > 1 ? "s" : ""}</button><button class="btn mini" data-a="nset" data-v="time">⏱️ ${CFG.TIME_SEC ? CFG.TIME_SEC / 60 + " min" : "No timer"}</button><button class="btn mini" data-a="nset" data-v="items">🎒 Items ${CFG.ITEMS ? "on" : "off"}</button>`
+        : `<span class="hint">❤️ ${CFG.STOCKS} stocks · ⏱️ ${CFG.TIME_SEC ? CFG.TIME_SEC / 60 + " min" : "no timer"} · 🎒 items ${CFG.ITEMS ? "on" : "off"}</span>`}
+        <button class="btn mini" data-a="nleave">Leave</button></div>
+      ${NET.host ? `<button class="btn go" data-a="nstart" ${n >= 2 && allReady ? "" : "disabled"}>${n < 2 ? "Waiting for players…" : allReady ? "START! →" : "Waiting for ready…"}</button>`
+        : me ? `<button class="btn go" data-a="nready">${me.ready ? "✅ Ready (tap to undo)" : "I'm ready →"}</button>` : ""}</div>
+    <div class="panel"><div class="tag">Your controls online</div><p class="hint" style="margin:6px 0 0">WASD or arrow keys move · Q or / jump (up also jumps) · E or . light · R or , smash · F or M item · Shift dash · or a gamepad. Esc pauses your screen only.</p></div></div>`;
+}
+function drawLobbyPreviews(){ const seats = NET.seats || {}; [0, 1, 2, 3].forEach(i => { const c = document.getElementById("lv" + i), s = seats[i]; if (!c || !s) return; const x = c.getContext("2d"); x.setTransform(1, 0, 0, 1, 0, 0); x.clearRect(0, 0, 300, 300); x.translate(150, 270); x.scale(2.4, 2.4); drawAvatar(x, s.av || randomAvatar(), {pose:"idle", t:G.frame, facing:1}); }); }
+const BOT_NAMES = ["Bot Bella","Bot Marcus","Bot Rosa","Bot Tyler","Bot Kai"];
+const onlineActions = {
+  nbot:v => NET.T.set(`${NET.room}/seats/${v}`, {uid:"bot", name:pick(BOT_NAMES), av:randomAvatar(), focus:0, ready:true, bot:true, diff:"normal", at:Date.now()}),
+  nbotRm:v => NET.T.remove(`${NET.room}/seats/${v}`), nkick:v => NET.T.remove(`${NET.room}/seats/${v}`),
+  nready:() => { const s = NET.seats[NET.slot]; if (s) NET.T.update(`${NET.room}/seats/${NET.slot}`, {ready:!s.ready}); },
+  nstart:() => hostStart(),
+  nlook:() => { const av = randomAvatar(); G.slotsCfg[0].av = av; save({slots:G.slotsCfg.map(s => ({av:s.av, name:s.name, ctrl:s.ctrl, diff:s.diff}))}); NET.T.update(`${NET.room}/seats/${NET.slot}`, {av}); sfx("select"); }, nleave:() => { leaveToMenu(false); if (HUB && window.parent.gmArenaClose) try { window.parent.gmArenaClose(); } catch(e){} },
+  nset:v => { if (v === "stocks") CFG.STOCKS = CFG.STOCKS % 5 + 1; if (v === "time") CFG.TIME_SEC = [180, 300, 0, 120][([180, 300, 0, 120].indexOf(CFG.TIME_SEC) + 1) % 4]; if (v === "items") CFG.ITEMS = !CFG.ITEMS;
+    NET.T.update(NET.room + "/meta", {settings:{stocks:CFG.STOCKS, time:CFG.TIME_SEC, items:CFG.ITEMS}}); renderUI(); },
+  nlobby:() => { if (NET.host) { NET.T.update(NET.room + "/meta", {status:"lobby"}); NET.T.remove(NET.room + "/st"); STATE = "ONLINE_LOBBY"; renderUI(); } },
+  hostOnline:() => { NET.mode = "host"; G.humans = 1; beginQuiz(); }, joinOnline:() => { NET.mode = "join"; G.humans = 1; beginQuiz(); },
+  joinCode:() => { const v = (document.getElementById("joinCode").value || "").toUpperCase().replace(/[^A-Z]/g, "").slice(0, 4); if (v.length !== 4) return; NET.room = v; enterOnline(); }
+};
+
+/* =====================================================================================
    19. Boot + test hooks
    ===================================================================================== */
-window.SMACK = {G, CFG, BANK:() => BANK, get state(){ return STATE; }, startMatch, step:n => { for (let i = 0; i < (n || 1); i++) step(); }, slots:() => G.slotsCfg,
+window.SMACK = {NET, leave:() => leaveRoom(), G, CFG, BANK:() => BANK, get state(){ return STATE; }, startMatch, step:n => { for (let i = 0; i < (n || 1); i++) step(); }, slots:() => G.slotsCfg,
   quiz:() => G.quiz, answerRight:() => { const Q = G.quiz.players[G.quiz.cur], it = Q.qs[Q.i]; answerQuiz(it.order.indexOf(it.q.answer)); }, nextQuestion, goSelect, beginQuiz,
   setHumans:n => { G.humans = n; }, demo:() => { G.slotsCfg.forEach((s, i) => { s.type = "bot"; s.diff = ["hard","normal","hard","normal"][i]; s.name = "Bot " + NAMES[i]; s.focus = 0; }); startMatch(G.slotsCfg); }};
 G.humans = +(params.get("players") || 1);
-loadHubBank(() => { renderUI(); if (params.get("demo")) SMACK.demo(); });
+if (params.get("hall")) { NET.hall = params.get("hall"); NET.room = "g" + NET.hall.replace(/[^A-Za-z0-9]/g, ""); NET.role = params.get("role") === "b" ? "b" : "a"; NET.mode = NET.role === "a" ? "host" : "join"; NET.wager = +(params.get("wager") || 0); }
+else if (params.get("online")) NET.mode = params.get("online") === "join" ? "join" : "host";
+loadHubBank(() => { renderUI(); if (params.get("demo")) SMACK.demo();
+  if (NET.mode) { G.humans = 1; if (params.get("name")) G.slotsCfg[0].name = params.get("name");
+    const q = params.has("q") ? +params.get("q") : -1;
+    if (NET.hall && q >= CFG.PASS_SCORE) { G.slotsCfg[0].focus = Math.min(CFG.FOCUS_CAP, CFG.FOCUS_PER_STREAK * Math.max(0, q - 2)); G.quiz = {cur:0, players:[{done:true, right:q, best:q, qs:[], log:[]}]}; enterOnline(); }
+    else beginQuiz(); } });
 renderUI();
 requestAnimationFrame(t => { last = t; frame(t); });
 })();

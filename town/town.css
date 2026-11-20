@@ -746,3 +746,6 @@ body.wx-storm .ehead::before{content:"";position:absolute;inset:0;pointer-events
 @media (min-width:900px){.tadmnav{flex-wrap:wrap;overflow:visible}.tadmbar .tclasses{flex-wrap:wrap;overflow:visible}}
 .evcard .eve img{width:72px;height:72px;object-fit:contain}
 .smkcard{display:flex;align-items:center;gap:14px;background:linear-gradient(120deg,#FFE3E3,#E3F1FF)}.smkcard .smke{font-size:44px}.smkcard b{font:800 20px var(--disp)}.smkcard .btn{margin-left:auto;flex:none;text-decoration:none}
+.smkbtns{display:flex;flex-wrap:wrap;gap:6px;margin-left:auto;justify-content:flex-end}.smkcard{flex-wrap:wrap}.smkhall{display:grid;gap:8px;justify-items:start}
+#smkOverlay{position:fixed;inset:0;z-index:400;background:#1D1B2E}#smkOverlay iframe{width:100%;height:100%;border:0;display:block}
+#smkOverlay>.btn{position:absolute;top:10px;right:10px;z-index:2;font-size:13px;padding:6px 10px}

@@ -70,7 +70,7 @@ const check = (n, ok, info) => { results.push((ok ? 'PASS ' : 'FAIL ') + n + (in
   await A.waitForTimeout(800);
   const benSid = await B.evaluate(() => TOWN.session.sid);
   await A.evaluate(() => townTab('games')); await A.waitForTimeout(400);
-  check('Game Hall lists 6 games', await A.evaluate(() => document.querySelectorAll('.ggames button').length) === 6);
+  check('Game Hall lists 7 games (incl. Smackdown)', await A.evaluate(() => document.querySelectorAll('.ggames button').length) === 7);
   await A.screenshot({ path: SHOTS + '/games_hall.png', fullPage: true });
   const tokens = p => p.evaluate(() => S.tokens);
   const a0 = await tokens(A), b0 = await tokens(B);

@@ -198,7 +198,7 @@ service cloud.firestore {
       match /games/{id} {
         allow read: if member(cid) || owns(cid);
         allow create: if isSid(cid, request.resource.data.a) && live(cid) && request.resource.data.status == 'invited'
-          && request.resource.data.kind in ['rps','colors','four','bj','checkers','chess']
+          && request.resource.data.kind in ['rps','colors','four','bj','checkers','chess','smack']
           && request.resource.data.wager is int && request.resource.data.wager >= 0 && request.resource.data.wager <= 25
           && request.resource.data.b is string && request.resource.data.b != request.resource.data.a;
         allow update: if live(cid) && (isSid(cid, resource.data.a) || isSid(cid, resource.data.b))
