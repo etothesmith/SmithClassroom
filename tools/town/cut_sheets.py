@@ -12,6 +12,8 @@ T = "v2/assets/town/"
 ITEMS, DOWN, WORLD, GAMES, PL3 = T + "items/", T + "downtown/", T + "world/", T + "games/", T + "places3/"
 FARM = T + "farm/"
 PL4 = T + "places4/"
+PL5 = T + "places5/"
+EVT = T + "events/"
 FISH = ["bluegill","bass","catfish","crappie","sunfish","tilapia","boot","mullet","gar","peacock","snook","feather","redfish","tarpon","sturgeon","koi"]
 ALIAS = {"tw_champ": ["tw_champ_apecon", "tw_champ_apgov", "tw_champ_econ", "tw_champ_gov"]}
 SHEETS = {   # file: (cols, rows, folder, ids, max side)
@@ -41,6 +43,8 @@ SHEETS = {   # file: (cols, rows, folder, ids, max side)
   "farm_2.png": (5, 4, FARM, "chicken duck goat sheep pig cow bee horse egg milk cheese wool truffle honey plot plot_taken feed market_stall farmhand fence", 220),
   "furniture_5.png": (6, 4, ITEMS, "bed_quilt sofa_porch table_crate rug_braided lamp_lantern art_rooster table_bench sofa_jury wall_seal trophy_goldgavel art_scales plant_officefern wall_map table_globedesk trophy_plane rug_compass art_postcards sofa_suitcase bed_boat table_tank lamp_jelly rug_wave wall_anchor trophy_conch", 240),
   "places_4.png": (2, 1, PL4, "gigs records", 300),
+  "places_5.png": (2, 1, PL5, "rescue tower", 300),
+  "events_1.png": (4, 3, EVT, "market showers festival mall transit lowtide jobfair harvest safety heat museum quiet", 200),
   "npc_rosa_fix.png": (1, 1, WORLD, "npc_rosa", 360),
 }
 

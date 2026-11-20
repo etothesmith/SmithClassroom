@@ -517,7 +517,7 @@ if (window.TODAY) { const base = window.TODAY.items; window.TODAY.items = functi
   return out; }; }
 window.twFromTodo = k => { closeSheet(); twOpen(k); };
 EXT.pubExtra.push(() => { const s = tw(); return {exam:{tower:s.best, mock:Object.fromEntries(Object.entries(s.mock).map(([k, m]) => [k, {best:m.best, last:m.last, n:m.n}])), due:dueCards().length, grad:s.grad, lab:s.lab.right, cases:Object.keys(s.cases.right).length}}; });
-EXT.adminPanels.push({
+EXT.adminPanels.push({tab:"learning", 
   html: c => `<section class="panel tadm"><div class="eyebrow">🎓 ${W2("Exam prep","Preparación para exámenes")}</div>
     <p class="muted" style="font-size:13px">${W2("AP Gov exam: Tue May 4, 2027, 8 AM. AP Macro exam: Fri May 7, 2027, 12 PM. Set your course final exam date for the honors courses so students see a countdown.","Examen AP de Gobierno: martes 4 de mayo de 2027, 8 AM. AP Macro: viernes 7 de mayo de 2027, 12 PM. Fija la fecha del examen final para los cursos honors.")}</p>
     <label class="cform">📅 ${W2("Course final exam (CFE) date","Fecha del examen final (CFE)")}<input type="date" value="${E(c.cfeDate || "")}" onchange="townSet('cfeDate', this.value || null)"></label><div id="aExam"></div></section>`,

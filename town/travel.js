@@ -63,7 +63,8 @@ EXT.onSession.push(() => setTimeout(watch, 1100)); EXT.onLeave.push(stop);
 /* ---------------------------------------------------------------- getting there */
 const gar = () => { const c = civ(); c.garage = c.garage || {car:null}; return c.garage; };
 const myCar = () => gar().car && CARS[gar().car] ? gar().car : null;
-function ride(k){ if (myCar()) return `<p class="trv">${CARS[myCar()].e} ${W2("You drove here.","Llegaste manejando.")}</p>`;
+function ride(k){ if ((window.TOWN_FX ? TOWN_FX("bus", 1) : 1) === 0) return `<p class="trv">🎉 ${W2("Free Transit Day: no fare today.","Día de transporte gratis: sin pasaje.")}</p>`;
+  if (myCar()) return `<p class="trv">${CARS[myCar()].e} ${W2("You drove here.","Llegaste manejando.")}</p>`;
   const c = civ(); c.rides = c.rides && c.rides.day === day() ? c.rides : {day:day(), set:{}};
   if (!c.rides.set[k]) { c.rides.set[k] = 1; T.coins(-Math.min(1, S.tokens | 0)); T.persist(); T.toast(W2("🚌 Bus fare: −💵1. A car makes every trip free.","🚌 Pasaje: −💵1. Con auto los viajes son gratis.")); }
   return `<p class="trv">🚌 ${W2("You took the bus (💵1 today).","Tomaste el autobús (💵1 hoy).")}</p>`; }
@@ -94,7 +95,7 @@ function paintDealer(){ const k = myCar();
 const mallItems = () => { const ids = Object.values(T.ITEMS).filter(i => i.p > 0 && !i.biz).map(i => i.id).sort(); const out = [], h0 = hn("mall" + week());
   for (let i = 0; out.length < 6 && i < 50; i++) { const id = ids[hn(h0 + ":" + i) % ids.length]; if (!out.includes(id)) out.push(id); } return out; };
 const mallSold = id => MALLB.filter(b => b.item === id).length;
-const mallPrice = id => Math.ceil(T.priceOf ? T.priceOf(T.ITEMS[id]) * 1.25 * (1 + 0.2 * mallSold(id)) : T.ITEMS[id].p * 1.25);
+const mallPrice = id => Math.ceil((window.TOWN_FX ? TOWN_FX("mall", 1) : 1) * (T.priceOf ? T.priceOf(T.ITEMS[id]) : T.ITEMS[id].p) * 1.25 * (1 + 0.2 * mallSold(id)));
 window.trMall = async function(id){ const p = mallPrice(id); if (mallSold(id) >= 3) return T.toast(W2("Sold out!","¡Agotado!"));
   if ((S.tokens | 0) < p) return T.toast(W2(`You need 💵${p}.`, `Necesitas 💵${p}.`));
   try { await store().add(`${C()}/mallbuys`, {week:week(), item:id, sid:me(), at:Date.now()}); T.coins(-p); T.addItem(id, 1); T.persist(); T.toast(W2(`🛍️ Bought ${T.itemName(id)}!`, `🛍️ ¡Compraste ${T.itemName(id)}!`)); } catch(e){} };
@@ -107,7 +108,7 @@ const shells = () => { const c = civ(); c.shells = c.shells || {}; return c.shel
 function pickShell(seed){ const tot = SHELLS.reduce((a, s) => a + s[3], 0); let r = seed % tot; for (const s of SHELLS) { if ((r -= s[3]) < 0) return s; } return SHELLS[0]; }
 window.trShells = function(){ const c = civ(); if (c.shellDay === day()) return T.toast(W2("The tide is out until tomorrow.","La marea vuelve mañana."));
   LIVE.qRun({items:LIVE.pickItems(3), title:W2("Shell hunt","Búsqueda de conchas"), e:"🏖️"}, right => { c.shellDay = day(); const got = [];
-    for (let i = 0; i < right; i++) { const s = pickShell(hn(me() + day() + i + Math.random())); shells()[s[0]] = (shells()[s[0]] | 0) + 1; got.push(s[1]); }
+    const extra = right ? (window.TOWN_FX ? TOWN_FX("shells", 0) : 0) : 0; for (let i = 0; i < right + extra; i++) { const s = pickShell(hn(me() + day() + i + Math.random())); shells()[s[0]] = (shells()[s[0]] | 0) + 1; got.push(s[1]); }
     T.persist(); T.toast(right ? W2(`🏖️ You found ${got.join(" ")}!`, `🏖️ ¡Encontraste ${got.join(" ")}!`) : W2("Only seaweed today.","Hoy solo algas.")); T.paintSub(); }); };
 window.trSellShell = function(k){ const s = SHELLS.find(x => x[0] === k), n = shells()[k] | 0; if (!n) return; const v = Math.max(1, Math.round(10 / s[3] * 5));
   shells()[k] = n - 1; T.coins(Math.min(v, 25)); T.persist(); T.toast(W2(`🐚 Sold a ${L(s[2])} for 💵${Math.min(v, 25)}.`, `🐚 Vendiste por 💵${Math.min(v, 25)}.`)); T.paintSub(); };
@@ -120,17 +121,17 @@ function paintBeach(){ const sh = shells();
 /* ---------------------------------------------------------------- theater */
 const showToday = () => SHOWS.filter(s => s.day === day()).sort((a, b) => b.score - a.score || a.at - b.at);
 window.trShow = function(){ if (SHOWS.some(s => s.day === day() && s.sid === me())) return T.toast(W2("You already played tonight.","Ya jugaste hoy."));
-  if ((S.tokens | 0) < 2) return T.toast(W2("A ticket costs 💵2.","Un boleto cuesta 💵2.")); T.coins(-2); T.persist();
+  const tk = (window.TOWN_FX ? TOWN_FX("show", 2) : 2); if ((S.tokens | 0) < tk) return T.toast(W2(`A ticket costs 💵${tk}.`, `Un boleto cuesta 💵${tk}.`)); if (tk) { T.coins(-tk); T.persist(); }
   LIVE.qRun({items:LIVE.pickItems(5), title:W2("Trivia Night","Noche de trivia"), e:"🎭", timer:15}, async (right, ms) => {
     const score = right * 100 + Math.max(0, 75 - Math.round(ms / 1000));
-    await store().set(`${C()}/shows/${day()}_${me()}`, {day:day(), sid:me(), name:myName(), score, right, at:Date.now()}).catch(() => {});
+    await store().set(`${C()}/shows/${day()}_${me()}`, {day:day(), sid:me(), name:myName(), score, right, prize:6 * (window.TOWN_FX ? TOWN_FX("prize", 1) : 1), at:Date.now()}).catch(() => {});
     T.toast(W2(`🎭 ${right}/5 · score ${score}. Top score at the end of the day wins 💵6!`, `🎭 ${right}/5 · puntaje ${score}. ¡El mejor del día gana 💵6!`)); }); };
 function showPrize(){ const days = [...new Set(SHOWS.map(s => s.day))].filter(d => d < day()); let ch = false;
   days.forEach(d => { const top = SHOWS.filter(s => s.day === d).sort((a, b) => b.score - a.score || a.at - b.at)[0];
-    if (top && top.sid === me()) ch = T.once("show:" + d, () => { T.coins(6); T.toast(W2(`🏆 You won Trivia Night on ${d}! +💵6.`, `🏆 ¡Ganaste la Noche de trivia del ${d}! +💵6.`)); }) || ch; });
+    if (top && top.sid === me()) ch = T.once("show:" + d, () => { const pz = top.prize || 6; T.coins(pz); T.toast(W2(`🏆 You won Trivia Night on ${d}! +💵${pz}.`, `🏆 ¡Ganaste la Noche de trivia del ${d}! +💵${pz}.`)); }) || ch; });
   if (ch) T.persist(); }
 function paintTheater(){ const t = showToday();
-  return `<section class="panel"><div class="eyebrow">🎭 ${W2("Trivia Night · ticket 💵2 · 5 questions, 15 seconds each","Noche de trivia · boleto 💵2 · 5 preguntas")}</div>
+  return `<section class="panel"><div class="eyebrow">🎭 ${W2(`Trivia Night · ticket 💵${(window.TOWN_FX ? TOWN_FX("show", 2) : 2)} · 5 questions, 15 seconds each`, `Noche de trivia · boleto 💵${(window.TOWN_FX ? TOWN_FX("show", 2) : 2)} · 5 preguntas`)}</div>
     <button class="btn primary" ${t.some(s => s.sid === me()) ? "disabled" : ""} onclick="trShow()">🎟️ ${W2("Buy a ticket and play","Comprar boleto y jugar")}</button>
     <div class="eyebrow" style="margin-top:12px">🏆 ${W2("Tonight's leaderboard (winner gets 💵6 tomorrow)","Tabla de hoy (el ganador recibe 💵6 mañana)")}</div>
     ${t.slice(0, 8).map((s, i) => `<div class="ebill"><span>${["🥇","🥈","🥉"][i] || i + 1 + "."} <b>${E(s.name)}</b></span><small>${s.right}/5</small><b>${s.score}</b></div>`).join("") || `<p class="muted">${W2("Nobody has played yet tonight.","Nadie ha jugado hoy.")}</p>`}</section>`; }
@@ -141,10 +142,10 @@ window.trDonate = function(){ const inv = T.freeInv ? T.freeInv() : {}; const id
   sheet(`<div class="eyebrow">🏛️ ${W2("Donate to the museum","Donar al museo")}</div><p class="muted" style="margin-top:0">${W2("Your name goes on the exhibit label. First donation of a kind: +💵2.","Tu nombre va en la etiqueta. Primera donación de un tipo: +💵2.")}</p>
     <div class="gpickk">${ids.slice(0, 24).map(id => `<button onclick="trDonateGo('${id}')">${T.itemArt(id, 40)}<b>${E(T.itemName(id))}</b></button>`).join("")}</div><button class="btn ghost wide" onclick="townCloseCard()">${W2("Cancel","Cancelar")}</button>`); };
 window.trDonateGo = async function(id){ closeSheet(); if (!T.has(id)) return; const first = !MUSEUM.some(m => m.item === id);
-  try { await store().add(`${C()}/museum`, {item:id, sid:me(), name:myName(), at:Date.now()}); T.addItem(id, -1); if (first) T.coins(2); T.persist();
+  try { await store().add(`${C()}/museum`, {item:id, sid:me(), name:myName(), at:Date.now()}); T.addItem(id, -1); if (first) T.coins(2 * (window.TOWN_FX ? TOWN_FX("donate", 1) : 1)); T.persist();
     T.toast(first ? W2(`🏛️ ${T.itemName(id)} is now on display! +💵2.`, `🏛️ ¡${T.itemName(id)} está en exhibición! +💵2.`) : W2("🏛️ Thank you for your donation!","🏛️ ¡Gracias por tu donación!")); } catch(e){} };
 window.trDocent = function(){ const c = civ(); if (c.docent === day()) return;
-  W.ask({title:W2("The docent asks…","El guía pregunta…"), e:"🏛️"}, ok => { closeSheet(); c.docent = day(); if (ok) T.coins(1); T.persist(); T.toast(ok ? W2("🏛️ The docent is impressed. +💵1.","🏛️ ¡El guía está impresionado! +💵1.") : W2("Come back tomorrow for another question.","Vuelve mañana.")); T.paintSub(); }); };
+  W.ask({title:W2("The docent asks…","El guía pregunta…"), e:"🏛️"}, ok => { closeSheet(); c.docent = day(); if (ok) T.coins((window.TOWN_FX ? TOWN_FX("docent", 1) : 1)); T.persist(); T.toast(ok ? W2("🏛️ The docent is impressed. +💵1.","🏛️ ¡El guía está impresionado! +💵1.") : W2("Come back tomorrow for another question.","Vuelve mañana.")); T.paintSub(); }); };
 function paintMuseum(){ const ex = [...MUSEUM].sort((a, b) => b.at - a.at);
   return `<section class="panel"><div class="eyebrow">🏛️ ${W2("The class collection","La colección de la clase")} · ${new Set(ex.map(m => m.item)).size} ${W2("kinds on display","tipos en exhibición")}</div>
     <div class="eprow"><button class="btn primary" onclick="trDonate()">🎁 ${W2("Donate an item","Donar un objeto")}</button><button class="btn" ${civ().docent === day() ? "disabled" : ""} onclick="trDocent()">🧑‍🏫 ${W2("Docent's question (+💵1)","Pregunta del guía (+💵1)")}</button></div>
@@ -229,7 +230,7 @@ window.trTFare = n => { const c = window._trTc || {}; T.adminSet({travel:{...(c.
 window.trTRoutes = async function(){ const list = await T.net.myClasses(); const sis = list.map(c => ({id:c.id, name:c.name}));
   for (const c of list) await T.net.setClass(c.id, {sisters:sis}).catch(() => {}); T.toast(W2(`✈️ Routes open between ${sis.length} classes.`, `✈️ Rutas abiertas entre ${sis.length} clases.`)); T.paintAdmin(); };
 window.trTClose = async function(){ const list = await T.net.myClasses(); for (const c of list) await T.net.setClass(c.id, {sisters:[]}).catch(() => {}); T.paintAdmin(); };
-EXT.adminPanels.push({html: c => { window._trTc = c; const t = c.travel || {}, open = (c.sisters || []).length;
+EXT.adminPanels.push({tab:"world", html: c => { window._trTc = c; const t = c.travel || {}, open = (c.sisters || []).length;
   return `<section class="panel tadm"><div class="eyebrow">✈️ ${W2("Airport: visits between your periods","Aeropuerto: visitas entre periodos")}</div>
     <p class="muted" style="font-size:13px">${W2("Students with a passport can fly to your other classes, see who lives there, greet them and sign the guestbook. They can't change anything in another class.","Los alumnos con pasaporte pueden visitar tus otras clases, saludar y firmar el libro. No pueden cambiar nada.")}</p>
     <div class="eprow">${open ? `<button class="btn" onclick="trTClose()">🛑 ${W2("Close all routes","Cerrar rutas")}</button><span class="muted">${W2(`${open} classes connected`, `${open} clases conectadas`)}</span>` : `<button class="btn primary" onclick="trTRoutes()">🛫 ${W2("Open routes between all my classes","Abrir rutas entre mis clases")}</button>`}

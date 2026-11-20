@@ -86,7 +86,7 @@ window.jsCiteGo = async function(sid){ const law = document.getElementById("jsLa
   catch(e){ console.warn(e); err.textContent = W2("Only marshals can write citations.","Solo los alguaciles pueden multar."); } };
 window.jsPay = async function(id){ const c = CITES.find(x => x.id === id); if (!c || c.status !== "open") return;
   if ((S.tokens | 0) < c.fine) return T.toast(W2(`You need 💵${c.fine}.`, `Necesitas 💵${c.fine}.`));
-  await store().update(`${C()}/citations/${id}`, {status:"paid", upd:Date.now()}); T.once("cite:" + id, () => T.coins(-c.fine)); T.persist();
+  await store().update(`${C()}/citations/${id}`, {status:"paid", upd:Date.now()}); T.once("cite:" + id, () => T.coins(-c.fine + (window.TOWN_FX ? TOWN_FX("finerebate", 0) : 0))); T.persist();
   T.toast(W2(`✅ Paid your 💵${c.fine} fine.`, `✅ Pagaste tu multa de 💵${c.fine}.`)); };
 window.jsContest = async function(id){ await store().update(`${C()}/citations/${id}`, {status:"contested", upd:Date.now()}).catch(() => {}); T.toast(W2("⚖️ Contested. The judge (or Coach Smith) will decide.","⚖️ Impugnada. El juez decidirá.")); };
 window.jsRule = async function(id, uphold){ await store().update(`${C()}/citations/${id}`, {status:uphold ? "open" : "dismissed", ruled:uphold ? "upheld" : "dismissed", ruledBy:myName() || "Coach Smith", upd:Date.now()}).catch(() => {});
@@ -160,6 +160,7 @@ function settleSuits(){ let ch = false; const o = (k, f) => { ch = T.once(k, f) 
 /* ---------------------------------------------------------------- break-ins */
 const brokeToday = () => BREAKS.some(b => b.by === me() && b.day === day());
 window.jsBreak = function(sid){ if (!breakinsOn() || jailBlock()) return;
+  if ((window.TOWN_FX ? TOWN_FX("nobreak", 0) : 0)) return T.toast(W2("🚨 Safety Week: extra patrols everywhere. No break-ins today.","🚨 Semana de seguridad: hoy no hay allanamientos."));
   if (brokeToday()) return T.toast(W2("One attempt a day. Lie low until tomorrow.","Un intento al día. Espera a mañana."));
   if (BREAKS.some(b => b.by === me() && b.to === sid)) return T.toast(W2("You already tried their house this week.","Ya intentaste esa casa esta semana."));
   const lock = ((T.pub || {})[sid] || {}).lock, need = lock ? 5 : 4;
@@ -252,7 +253,7 @@ window.jsT = (k, v) => jset({[k]:v});
 window.jsTLaw = (k, on) => { const cur = (window._jsTc && window._jsTc.laws) || DEFAULT_LAWS; jset({laws:on ? [...new Set([...cur, k])] : cur.filter(x => x !== k)}); };
 window.jsTRelease = (cid, sid) => T.net.store.update(`classes/${cid}/jail/${sid}`, {until:Date.now() - 1}).then(T.paintAdmin).catch(() => {});
 window.jsTVoid = (cid, col, id) => T.net.store.update(`classes/${cid}/${col}/${id}`, col === "suits" ? {status:"dropped", voided:true, upd:Date.now()} : {status:"dismissed", upd:Date.now()}).then(T.paintAdmin).catch(() => {});
-EXT.adminPanels.push({html: c => { window._jsTc = c.justice || {}; const jj = c.justice || {}, on = jj.laws || DEFAULT_LAWS;
+EXT.adminPanels.push({tab:"civics", html: c => { window._jsTc = c.justice || {}; const jj = c.justice || {}, on = jj.laws || DEFAULT_LAWS;
   return `<section class="panel tadm"><div class="eyebrow">⚖️ ${W2("Justice: laws, jail, court, break-ins","Justicia: leyes, cárcel, tribunal, allanamientos")}</div>
     <div class="jslaws">${Object.entries(LAWS).map(([k, l]) => `<label class="etog"><input type="checkbox" ${on.includes(k) ? "checked" : ""} onchange="jsTLaw('${k}',this.checked)"> ${l.e} ${E(L(l.l))} (💵${l.fine})</label>`).join("")}</div>
     <label class="etog"><input type="checkbox" ${jj.jail === false ? "" : "checked"} onchange="jsT('jail',this.checked)"> ${W2("Jail is on (max 15 minutes)","Cárcel activa (máx. 15 min)")}</label>

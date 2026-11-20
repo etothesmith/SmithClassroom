@@ -11,6 +11,7 @@ const answer1 = p => p.evaluate(() => { const st = window._w2q; w2Ans(st.order.i
   await ctx.route('**/town/config.js', r => r.fulfill({ contentType: 'text/javascript', body: 'window.TOWN_FIREBASE = null;' }));
   const errs = [];
   async function page(name){ const p = await ctx.newPage(); p.on('pageerror', e => errs.push(name + ': ' + e.message));
+    await p.addInitScript(() => { try { if (!localStorage.getItem('town.admTab')) localStorage.setItem('town.admTab', 'all'); } catch(e){} Object.defineProperty(window, 'TOWN_FX', {configurable:true, get(){ return (k, d) => d; }, set(){} }); });
     await p.goto(BASE + 'index.html'); await p.waitForFunction(() => window.JUSTICE && TOWN.net, null, { timeout: 20000 });
     await p.evaluate(() => { document.querySelectorAll('body *').forEach(e => { if (/CHOOSE YOUR/i.test(e.textContent) && getComputedStyle(e).position === 'fixed') e.remove(); }); S.v2seen = '2.0'; }); return p; }
   const T = await page('teacher'); await T.evaluate(() => { localStorage.removeItem('town.db'); });
@@ -83,7 +84,7 @@ const answer1 = p => p.evaluate(() => { const st = window._w2q; w2Ans(st.order.i
   await A.evaluate(() => jsView('patrol')); await A.waitForTimeout(600);
   check('marshal sees the break-in report', await A.evaluate(() => /broke into/.test(document.body.innerText)));
   /* teacher */
-  await T.evaluate(() => { TEACHER_OK = true; townTab('admin'); }); await T.waitForTimeout(1500);
+  await T.evaluate(() => { TEACHER_OK = true; townTab('admin'); }); await T.waitForTimeout(800); await T.evaluate(() => townAdminTab('civics')); await T.waitForTimeout(1500);
   check('teacher sees jail and cases', await T.evaluate(() => /In jail/.test((document.getElementById('jsTList') || {}).textContent || '')));
   check('no page errors', errs.length === 0, errs.slice(0, 5));
   console.log(results.join('\n')); await b.close(); process.exit(fail ? 1 : 0);

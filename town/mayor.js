@@ -204,7 +204,7 @@ window.myrT = async function(id, fire){
   await store().update(`classes/${cid}/firereqs/${id}`, {status:fire ? "fired" : "kept", decidedAt:Date.now()}); T.paintAdmin();
 };
 window.myrTClear = async function(id){ await store().del(`classes/${tc()}/firereqs/${id}`); T.paintAdmin(); };
-EXT.adminPanels.push({
+EXT.adminPanels.push({tab:"people", 
   html: c => `<section class="panel tadm"><div class="eyebrow">🎖️ ${W2("Mayor: firing requests and city firings","Alcalde: solicitudes de despido")}</div>
     <p class="muted" style="font-size:13px">${W2("The mayor hires and fires the 6 city jobs (firefighter, marshal, sanitation, ranger, builder, mail) on their own, with a reason you can see here. For any other job, the mayor asks and you decide.","El alcalde contrata y despide los 6 empleos municipales; para los demás, el alcalde pide y tú decides.")}</p><div id="aFire"></div></section>`,
   after: c => {

@@ -505,6 +505,14 @@ const PLACES = () => [
   {k:"towns", e:"🏙️", l:["Other towns","Otros pueblos"], d:["Best Town of the Month and the Trade Post","Mejor Pueblo del Mes y el Puesto de comercio"]},
   {k:"album", e:"📔", l:["My album","Mi álbum"], d:["Your collections","Tus colecciones"]}, ...MORE.places];
 const MORE = {places:[], views:{}};
+/* the map is grouped into neighborhoods so it's easy to find things */
+const MAP_ZONES = [["town","⛲",["Around town","Por el pueblo"]],["civic","🏛️",["Work, law and records","Trabajo, ley y récords"]],["fun","🎡",["Shopping and fun","Compras y diversión"]],
+  ["country","🌾",["Countryside","El campo"]],["travel","✈️",["Getting around","Transporte"]],["districts","🗺️",["Neighborhoods","Barrios"]],["learn","🎓",["Study","Estudio"]],["you","📔",["You and other towns","Tú y otros pueblos"]]];
+const ZONE = {plaza:"town", homes:"town", rescue:"town", downtown:"civic", justice:"civic", gigs:"civic", records:"you", album:"you", towns:"you", tower:"learn",
+  mall:"fun", beach:"fun", theater:"fun", museum:"fun", farm:"country", dealer:"travel", airport:"travel", port:"travel"};
+const zoneOf = p => p.district ? "districts" : ZONE[p.k] || "fun";
+const MAP_ART = {farm:"places3/barn", justice:"places3/jail", dealer:"places3/dealer", airport:"places3/airport", port:"places3/port", mall:"places3/mall", beach:"places3/beach",
+  theater:"places3/theater", museum:"places3/museum", gigs:"places4/gigs", records:"places4/records", rescue:"places5/rescue", tower:"places5/tower"};
 function paintMap(el){
   const back = `<div class="eprow"><button class="btn ghost" onclick="w2Go(null)">← ${W2("Map","Mapa")}</button></div>`;
   if (SUBV === "waterfront" && isOpen("waterfront")) return paintWaterfront(el, back);
@@ -517,11 +525,13 @@ function paintMap(el){
   el.innerHTML = `<section class="panel raised"><div class="eyebrow">🧭 ${W2("Map of Smithtopia","Mapa de Smithtopia")}</div><h2>${W2("Where to?","¿A dónde?")}</h2>
       <div style="margin-top:6px">${needsHtml(false)}</div></section>
     ${storyPanel(false)}
-    <div class="kmap wmap">${PLACES().map(p => { const lock = p.district && !isOpen(p.k), need = p.district ? DISTRICTS[p.k].need : 0;
+    ${(EXT.mapTop || []).map(f => { try { return f() || ""; } catch(e){ return ""; } }).join("")}
+    ${MAP_ZONES.map(([z, ze, zl]) => { const ps = PLACES().filter(p => zoneOf(p) === z); if (!ps.length) return "";
+      return `<section class="wzone wz-${z}"><div class="wzhead"><span>${ze}</span><b>${L(zl)}</b></div><div class="kmap wmap">${ps.map(p => { const lock = p.district && !isOpen(p.k), need = p.district ? DISTRICTS[p.k].need : 0;
       return `<button class="kb ${lock ? "locked" : ""}" onclick="${p.go ? `townTab('${p.go}')` : lock ? `w2Locked('${p.k}')` : `w2Go('${p.k}')`}">
-        ${lock ? `<i class="khire wlock">🔒 ${W2("LOCKED","CERRADO")}</i>` : ""}${img(`${WA}${p.k}.webp`, p.e, "big")}<b>${L(p.l)}</b>
+        ${lock ? `<i class="khire wlock">🔒 ${W2("LOCKED","CERRADO")}</i>` : ""}${(EXT.mapBadge || []).map(f => { try { return f(p.k) || ""; } catch(e){ return ""; } }).join("")}${img(MAP_ART[p.k] ? `${TA}${MAP_ART[p.k]}.webp` : `${WA}${p.k}.webp`, p.e, "big")}<b>${L(p.l)}</b>
         <small>${lock ? W2(`Opens when the class averages ${need} certificates (now ${avg.toFixed(1)})`, `Abre cuando la clase promedie ${need} certificados (ahora ${avg.toFixed(1)})`) : L(p.d)}</small>
-        ${lock ? bar(avg / need) : ""}</button>`; }).join("")}</div>
+        ${lock ? bar(avg / need) : ""}</button>`; }).join("")}</div></section>`; }).join("")}
     <section class="panel"><div class="eyebrow">👥 ${W2("Townspeople","Vecinos")}</div>${Object.keys(NPCS).filter(id => NPCS[id].at).map(npcCard).join("")}
       <p class="muted" style="font-size:12px">${W2("Captain Rosa is down at Lake Eola.","La capitana Rosa está en el lago Eola.")}</p></section>`;
 }
@@ -552,7 +562,7 @@ if (window.TODAY) { const base = window.TODAY.items; window.TODAY.items = functi
     done:w.daily.story >= 3, opt:true, go:"todoStory()"}); } return out; }; }
 window.todoStory = function(){ closeSheet(); go("town"); setTimeout(() => w2Go(null), 350); };
 /* teacher */
-EXT.adminPanels.push({
+EXT.adminPanels.push({tab:"world", 
   html: c => `<section class="panel tadm"><div class="eyebrow">🧭 ${W2("World","Mundo")}</div>
     <p class="muted" style="font-size:13px">${W2("Neighborhoods open on their own when the class averages enough certificates (Waterfront 1, Theme Park 2.5, Space Coast 4). You can open one early.","Los barrios abren solos cuando la clase promedia suficientes certificados (Malecón 1, Parque 2.5, Costa Espacial 4). Puedes abrirlos antes.")}</p>
     <div class="cmake">${Object.entries(DISTRICTS).map(([k, D]) => { const on = (c.districts || []).includes(k);

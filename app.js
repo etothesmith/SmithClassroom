@@ -10,7 +10,7 @@
    ========================================================================== */
 (function(){
 "use strict";
-const APP_VERSION = "3.4";
+const APP_VERSION = "3.5";
 const es = () => typeof S !== "undefined" && S.lang === "es";
 const t = (en, sp) => es() ? sp : en;
 const esc = s => String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
@@ -65,10 +65,10 @@ window.appClose = close;
 
 /* ---------------------------------------------------------------- what's new */
 const NOTES = [
-  ["💼", ["Gig Board","Bolsa de trabajo"], ["Hire classmates (paint my house, tutor me, run my shop…) or get hired. Pay is held until the work is approved and rated.","Contrata compañeros o consigue trabajo. El pago se retiene hasta aprobar."]],
-  ["📌", ["Wanted board","Se busca"], ["Post an item you want with a bounty. Whoever brings it gets paid.","Publica lo que buscas con recompensa."]],
-  ["🏅", ["Collection combos","Combos de colección"], ["Complete sets, shells, a barnyard, passport stamps and more for rewards. Every furniture set you finish takes 2% off the shop.","Completa juegos y colecciones para premios y descuentos."]],
-  ["📜", ["Weekly certificate","Certificado semanal"], ["See what you accomplished this week, print it, and claim +💵3 with 10 right answers. Plus 24 new pieces of furniture!","Mira tus logros de la semana, imprímelo y cobra +💵3. ¡Y 24 muebles nuevos!"]]
+  ["🎪", ["A new event every day","Un evento nuevo cada día"], ["Farmers' Market Day, Free Transit Day, Harvest Moon, Mall Madness… Check the Map each morning to see what's different today.","Día del mercado, transporte gratis, luna de cosecha… Revisa el mapa cada mañana."]],
+  ["📡", ["Smithtopia Live","Smithtopia en vivo"], ["A news ticker on the Map shows verdicts, arrests, finished gigs, visitors and more.","Un noticiero en el mapa muestra veredictos, arrestos, trabajos y visitas."]],
+  ["🤖", ["Townspeople at work","Vecinos trabajando"], ["Empty jobs are covered by town NPCs, so services work even before a classmate is hired.","Los trabajos vacíos los cubren NPCs, así que los servicios funcionan desde ya."]],
+  ["📚", ["126 new questions","126 preguntas nuevas"], ["Six new questions in every unit of every class, plus a cleaner map grouped by neighborhood.","Seis preguntas nuevas en cada unidad, y un mapa ordenado por barrios."]]
 ];
 function whatsNew(){
   open(`<div class="ey">✨ ${t("What's new","Novedades")} · v${APP_VERSION}</div><h2>${t("Big update!","¡Gran actualización!")}</h2>
