@@ -1,0 +1,50 @@
+/* Smackdown online: host + guest in two tabs over the same-computer channel */
+const { chromium } = require('playwright');
+const BASE = process.env.BASE || 'http://localhost:8765/';
+const results = []; let fail = 0;
+const check = (n, ok, info) => { results.push((ok ? 'PASS ' : 'FAIL ') + n + (info !== undefined ? '  ' + JSON.stringify(info) : '')); if (!ok) fail++; };
+const passQuiz = async p => { await p.waitForFunction(() => SMACK.quiz && SMACK.quiz()); for (let i = 0; i < 5; i++) { await p.evaluate(() => { SMACK.answerRight(); SMACK.nextQuestion(); }); } await p.evaluate(() => SMACK.goSelect()); };
+(async () => {
+  const b = await chromium.launch({ executablePath: '/usr/bin/google-chrome', args: ['--no-sandbox'] });
+  const ctx = await b.newContext({ viewport: { width: 1200, height: 720 } }); const errs = [];
+  const A = await ctx.newPage(), B = await ctx.newPage(); [A, B].forEach((p, i) => p.on('pageerror', e => errs.push('ABCD'[i] + ': ' + e.message)));
+  await A.goto(BASE + 'smackdown/index.html?online=host&net=local&name=Hosty'); await passQuiz(A);
+  await A.waitForFunction(() => SMACK.state === 'ONLINE_LOBBY' && SMACK.NET.room);
+  const code = await A.evaluate(() => SMACK.NET.room);
+  check('host gets a 4-letter room code', /^[A-Z]{4}$/.test(code), code);
+  await B.goto(BASE + 'smackdown/index.html?online=join&net=local&name=Guesty'); await passQuiz(B);
+  await B.waitForFunction(() => SMACK.state === 'ONLINE_JOIN');
+  await B.fill('#joinCode', code); await B.keyboard.press('Enter');
+  await B.waitForFunction(() => SMACK.state === 'ONLINE_LOBBY' && SMACK.NET.joined, null, {timeout:8000});
+  await A.waitForTimeout(400);
+  check('host sees the guest seat', await A.evaluate(() => Object.values(SMACK.NET.seats).filter(Boolean).length === 2));
+  check('start waits for ready', await A.evaluate(() => document.querySelector('[data-a="nstart"]').disabled));
+  await B.click('[data-a="nready"]'); await A.click('[data-a="nbot"][data-v="2"]'); await A.waitForTimeout(400);
+  await A.screenshot({ path: '/tmp/smk_lobby.png' });
+  check('host can start with 3 fighters', await A.evaluate(() => !document.querySelector('[data-a="nstart"]').disabled));
+  await A.click('[data-a="nstart"]');
+  await B.waitForFunction(() => SMACK.state === 'ARENA_BATTLE', null, {timeout:6000});
+  check('guest enters the arena', true);
+  await A.waitForTimeout(3200);
+  const before = await A.evaluate(() => Math.round(SMACK.G.players[1].x));
+  await B.keyboard.down('KeyD'); await B.waitForTimeout(700); await B.keyboard.up('KeyD'); await B.keyboard.press('KeyQ'); await A.waitForTimeout(300);
+  const after = await A.evaluate(() => ({x:Math.round(SMACK.G.players[1].x), y:Math.round(SMACK.G.players[1].y)}));
+  check('guest buttons move the guest fighter on the host', after.x - before > 60, {before, after});
+  await B.waitForTimeout(400);
+  const seen = await B.evaluate(() => Math.round(SMACK.G.players[1].x));
+  check('guest screen follows the host snapshot', Math.abs(seen - after.x) < 120, {seen, host:after.x});
+  await B.screenshot({ path: '/tmp/smk_guest.png' });
+  // hit sync: let the host play it out quickly
+  for (let k = 0; k < 30; k++) { const st = await A.evaluate(() => { SMACK.step(600); return SMACK.state; }); await B.waitForTimeout(60); if (st !== 'ARENA_BATTLE') break; }
+  await B.waitForFunction(() => SMACK.state === 'PODIUM_RESULTS', null, {timeout:8000}).catch(() => {});
+  const res = await B.evaluate(() => ({state:SMACK.state, first:SMACK.G.results && SMACK.G.results[0] && SMACK.G.results[0].name, falls:SMACK.G.players.map(p => p.stats.falls)}));
+  check('guest gets the podium with the same winner', res.state === 'PODIUM_RESULTS' && res.first === await A.evaluate(() => SMACK.G.results[0].name), res);
+  check('guest saw effects (KOs/hits replayed)', await B.evaluate(() => SMACK.NET.lastEs > 5));
+  await A.click('[data-a="nlobby"]'); await B.waitForFunction(() => SMACK.state === 'ONLINE_LOBBY', null, {timeout:5000}).catch(() => {});
+  check('back to lobby for everyone', await B.evaluate(() => SMACK.state === 'ONLINE_LOBBY'));
+  await A.evaluate(() => SMACK.leave()); await B.waitForTimeout(600);
+  const hl = await B.evaluate(() => ({st:SMACK.state, err:SMACK.NET.err, txt:document.body.innerText.slice(0, 200)}));
+  check('guest is told when the host leaves', hl.st === 'QUIZ_GATE' && /host left/i.test(hl.txt), hl);
+  check('no page errors', errs.length === 0, errs.slice(0, 5));
+  console.log(results.join('\n')); await b.close(); process.exit(fail ? 1 : 0);
+})();

@@ -30,7 +30,8 @@ const KINDS = {
   four:    {e:"🔴", ic:"ic_four",      l:["Four in a Row","Cuatro en línea"], d:["Drop discs. Four in a row wins.","Suelta fichas. Cuatro en línea gana."]},
   bj:      {e:"🂡", ic:"ic_blackjack", l:["Blackjack 21","Blackjack 21"], d:["Get closer to 21 than your opponent without going over.","Acércate más a 21 que tu rival sin pasarte."]},
   checkers:{e:"⛀", ic:"ic_checkers",  l:["Checkers","Damas"], d:["Jump to capture. Reach the end to become a king.","Salta para capturar. Llega al final para coronar."]},
-  chess:   {e:"♞", ic:"ic_chess",     l:["Chess","Ajedrez"], d:["Checkmate the king.","Haz jaque mate al rey."]}
+  chess:   {e:"♞", ic:"ic_chess",     l:["Chess","Ajedrez"], d:["Checkmate the king.","Haz jaque mate al rey."]},
+  smack:   {e:"🥊", ic:"ic_smack",     l:["Smackdown","Smackdown"], d:["A live platform fight, each on your own computer. 3 stocks; knock your rival off the rooftop.","Una pelea en vivo, cada uno en su computadora. 3 vidas; saca a tu rival de la azotea."]}
 };
 
 /* ---------------------------------------------------------------- seeded randomness (both players get the same deck) */
@@ -206,7 +207,27 @@ const CH = {
       return `<span class="gsq ${dark ? "dk" : "lt"} ${sel === i ? "sel" : ""} ${targets.includes(i) ? "tgt" : ""} ${(st.last || []).includes(i) ? "last" : ""} ${chk === i ? "chk" : ""} ${CH.isW(ch) ? "wp" : "bp"}" ${click}>${pc}</span>`; }).join("");
     return `<div class="gboard chess">${cells}</div><p class="muted gsub">${E(st.w === "a" ? g.aName : g.bName)} ♔ · ${E(st.w === "a" ? g.bName : g.aName)} ♚${chk >= 0 ? " · <b>" + W2("Check!","¡Jaque!") + "</b>" : ""}</p>`; }
 };
-const ENGINE = {rps:RPS, colors:CC, four:FOUR, bj:BJ, checkers:CK, chess:CH};
+/* ---------- Smackdown: the fight runs in smackdown/index.html; player a's computer hosts and reports the winner */
+const SMK = {
+  init: () => ({live:1}),
+  render(g, st, mine){ const q = g["q" + mine] | 0;
+    return `<div class="smkhall"><p>${W2("Both of you open the arena on your own computers.","Ambos abran la arena en su propia computadora.")} <b>${E(g.aName)}</b> ${W2("hosts the match.","es el anfitrión.")}</p>
+      <p class="muted" style="font-size:13px">${q >= 3 ? W2(`Your review: ${q}/5 · Focus Buff +${Math.min(30, 10 * Math.max(0, q - 2))}% knockback resistance.`, `Tu repaso: ${q}/5 · Enfoque +${Math.min(30, 10 * Math.max(0, q - 2))}%.`) : W2(`Your review: ${q}/5. You'll need 3 right, so the arena gives you another quick review first.`, `Tu repaso: ${q}/5. Necesitas 3, así que la arena te dará otro repaso.`)}</p>
+      ${g.winner ? "" : `<button class="btn primary" onclick="gmArena('${g.id}')">🥊 ${W2("Enter the arena","Entrar a la arena")}</button>`}</div>`; },
+  result: () => null
+};
+const ENGINE = {rps:RPS, colors:CC, four:FOUR, bj:BJ, checkers:CK, chess:CH, smack:SMK};
+/* the arena opens over the town in a frame; it uses the town's connection for the live match */
+window.gmArena = function(id, mode){ gmArenaClose(true); const s = SESS() || {}, base = `smackdown/index.html?name=${encodeURIComponent(s.name || "")}&sid=${encodeURIComponent(s.sid || "")}`;
+  let url = base + "&online=" + (mode || "host");
+  if (id) { const g = (CUR && CUR.id === id) ? CUR : GAMES.find(x => x.id === id), p = g && role(g); if (!g || !p) return; url = base + `&hall=${encodeURIComponent(id)}&role=${p}&q=${g["q" + p] | 0}&wager=${g.wager | 0}`; }
+  const box = document.createElement("div"); box.id = "smkOverlay";
+  box.innerHTML = `<iframe src="${url}" allow="gamepad; fullscreen; autoplay" title="Smithtopia Smackdown"></iframe><button class="btn" onclick="gmArenaClose()">✕ ${W2("Leave the arena","Salir de la arena")}</button>`;
+  document.body.appendChild(box); const fr = box.querySelector("iframe"); fr.addEventListener("load", () => { try { fr.focus(); } catch(e){} }); };
+window.gmArenaClose = function(silent){ const box = document.getElementById("smkOverlay"); if (!box) return; const fr = box.querySelector("iframe");
+  try { fr.contentWindow.SMACK && fr.contentWindow.SMACK.leave(); } catch(e){} setTimeout(() => box.remove(), 150); if (!silent && OPEN) paintGame(); };
+window.gmSmackResult = async function(id, w){ const g = GAMES.find(x => x.id === id) || (CUR && CUR.id === id ? CUR : null); if (!g || g.kind !== "smack" || g.status !== "playing" || g.winner || role(g) !== "a") return;
+  try { await store().update(gpath(id), {status:"done", winner:["a","b","tie"].includes(w) ? w : "tie", turn:null, upd:Date.now()}); } catch(e){ console.warn(e); } };
 
 /* ================================================================ matches */
 let GAMES = [], OPEN = null, CUR = null, SEL = -1, SUBS = [], DOCSUB = null;
@@ -298,7 +319,7 @@ window.gmQuiz = function(id){
       if (oq >= 0) {                                       /* both done: more right answers moves first */
         const first = right > oq ? p : oq > right ? other(p) : "a";
         const st = ENGINE[g.kind].init(id, first);
-        Object.assign(patch, {status:"playing", st:JSON.stringify(st), turn:g.kind === "rps" ? null : first === "a" ? g.a : g.b});
+        Object.assign(patch, {status:"playing", st:JSON.stringify(st), turn:g.kind === "rps" || g.kind === "smack" ? null : first === "a" ? g.a : g.b});
       }
       await store().update(gpath(id), patch);
       T.toast(W2(`✔ ${right}/5. ${oq >= 0 ? "Game on!" : "Waiting for your opponent to answer theirs."}`, `✔ ${right}/5. ${oq >= 0 ? "¡A jugar!" : "Esperando a que tu rival responda."}`));
@@ -354,7 +375,7 @@ function paintGame(){
   else if (["declined","canceled"].includes(g.status)) body = `<p class="muted">${g.status === "declined" ? W2("They said no this time.","Dijeron que no esta vez.") : W2("Canceled.","Cancelado.")}</p>`;
   else if (st) body = ENGINE[g.kind].render(g, st, p);
   const done = g.status === "done", res = done ? (g.winner === "tie" ? "🤝 " + W2("It's a tie!","¡Empate!") : g.winner === p ? "🏆 " + W2("You won!","¡Ganaste!") : "😤 " + W2(`${E(opName)} won.`, `Ganó ${E(opName)}.`)) : "";
-  const turn = g.status === "playing" && !done ? (g.kind === "rps" ? W2("Pick at the same time","Elijan a la vez") : g.turn === me() ? "👉 " + W2("Your turn","Tu turno") : "⏳ " + W2(`${E(opName)}'s turn`, `Turno de ${E(opName)}`)) : "";
+  const turn = g.status === "playing" && !done ? (g.kind === "smack" ? "🥊 " + W2("Live match: both of you enter the arena","En vivo: ambos entren a la arena") : g.kind === "rps" ? W2("Pick at the same time","Elijan a la vez") : g.turn === me() ? "👉 " + W2("Your turn","Tu turno") : "⏳ " + W2(`${E(opName)}'s turn`, `Turno de ${E(opName)}`)) : "";
   el.innerHTML = `<div class="gview"><div class="eprow"><button class="btn ghost" onclick="gmClose()">← ${W2("Game Hall","Sala de juegos")}</button></div>
     <section class="panel ghead"><span class="gic">${art(K.ic, K.e)}</span><div><div class="eyebrow">${E(L(K.l))}${g.wager ? ` · 💵 ${g.wager} ${W2("each","c/u")}` : ""}</div>
       <h2>${E(g.aName)} <small>vs</small> ${E(g.bName)}</h2>${turn ? `<p class="gturn ${g.turn === me() ? "mine" : ""}">${turn}</p>` : ""}${res ? `<p class="gres">${res}${g.resigned ? ` <small>(${W2("resigned","se rindió")})</small>` : ""}</p>` : ""}</div></section>
@@ -371,6 +392,10 @@ function paintHall(el){
   el.innerHTML = `<section class="panel raised ghall">${art("hall", "🎲")}<div><div class="eyebrow">${W2("Game Hall","Sala de juegos")}</div><h2>${W2("Challenge a classmate","Reta a un compañero")}</h2>
       <p class="muted" style="margin:0">${W2("Pick a game and a wager. Each of you answers 5 class questions, then play. Winner takes the pot.","Elige un juego y una apuesta. Cada uno responde 5 preguntas y luego juegan. El ganador se lleva todo.")}</p>
       <p class="muted" style="margin:4px 0 0;font-size:13px">🏆 ${rec.w} · 😤 ${rec.l} · 🤝 ${rec.t}</p></div></section>
+    <section class="panel smkcard"><span class="smke">🥊</span><div><div class="eyebrow">${W2("New · online or on one computer · 2–4 players","Nuevo · en línea o en una computadora · 2–4 jugadores")}</div><b>Smithtopia Smackdown</b>
+      <p class="muted" style="margin:2px 0 0">${W2("A platform fighter: pass a 5-question review, then battle classmates or bots with dodgeballs, yardsticks and textbooks.","Un juego de pelea: pasa un repaso de 5 preguntas y luego pelea con compañeros o bots.")}</p></div>
+      <div class="smkbtns"><button class="btn primary" onclick="gmNew('smack')">🎲 ${W2("Challenge for Smithbucks","Retar por Smithbucks")}</button><button class="btn" onclick="gmArena(null,'host')">🌐 ${W2("Host a room (2–4)","Crear sala (2–4)")}</button><button class="btn" onclick="gmArena(null,'join')">🔑 ${W2("Join with code","Unirse con código")}</button>
+        <a class="btn ghost" href="smackdown/index.html?name=${encodeURIComponent((V.SESS() && V.SESS().name) || "")}" target="_blank" rel="noopener">🖥️ ${W2("Same computer","Misma computadora")}</a></div></section>
     ${inv.length ? `<section class="panel ginv"><div class="eyebrow">📨 ${W2("Challenges for you","Retos para ti")}</div>${inv.map(g => `<div class="myrrow"><span>${KINDS[g.kind].e} <b>${E(g.aName)}</b> · ${E(L(KINDS[g.kind].l))}${g.wager ? ` · 💵 ${g.wager}` : ""}</span>
         <span><button class="btn primary" onclick="gmAnswer('${g.id}',true)">${W2("Accept","Aceptar")}</button> <button class="btn ghost" onclick="gmAnswer('${g.id}',false)">✖</button></span></div>`).join("")}</section>` : ""}
     <section class="panel"><div class="ggames">${Object.entries(KINDS).map(([k, K]) => `<button onclick="gmNew('${k}')">${art(K.ic, K.e)}<b>${E(L(K.l))}</b><small>${E(L(K.d))}</small></button>`).join("")}</div></section>
