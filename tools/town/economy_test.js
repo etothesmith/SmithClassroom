@@ -9,6 +9,7 @@ const check = (n, ok, info) => { results.push((ok ? 'PASS ' : 'FAIL ') + n + (in
   await ctx.route('**/town/config.js', r => r.fulfill({ contentType: 'text/javascript', body: 'window.TOWN_FIREBASE = null;' }));
   const errs = [];
   async function page(name){ const p = await ctx.newPage(); p.on('pageerror', e => errs.push(name + ': ' + e.message));
+    await p.addInitScript(() => { try { if (!localStorage.getItem('town.admTab')) localStorage.setItem('town.admTab', 'all'); } catch(e){} Object.defineProperty(window, 'TOWN_FX', {configurable:true, get(){ return (k, d) => d; }, set(){} }); });
     await p.goto(BASE + 'index.html'); await p.waitForFunction(() => window.ECON && TOWN.net, null, { timeout: 20000 });
     await p.evaluate(() => { document.querySelectorAll('body *').forEach(e => { if (/CHOOSE YOUR/i.test(e.textContent) && getComputedStyle(e).position === 'fixed') e.remove(); }); S.v2seen = '2.0'; }); return p; }
   const T = await page('teacher'); await T.evaluate(() => { localStorage.removeItem('town.db'); });

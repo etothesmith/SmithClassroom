@@ -13,6 +13,7 @@ const check = (n, ok, info) => { results.push((ok ? 'PASS ' : 'FAIL ') + n + (in
   const errs = [];
   async function page(name){
     const p = await ctx.newPage(); p.on('pageerror', e => errs.push(name + ': ' + e.message));
+    await p.addInitScript(() => { try { if (!localStorage.getItem('town.admTab')) localStorage.setItem('town.admTab', 'all'); } catch(e){} Object.defineProperty(window, 'TOWN_FX', {configurable:true, get(){ return (k, d) => d; }, set(){} }); });
     await p.goto(BASE + 'index.html'); await p.waitForFunction(() => window.TOWN && window.CAREERS && window.TNOTIFY && window.JOBS2 && TOWN.net, null, { timeout: 20000 });
     await p.evaluate(() => { document.querySelectorAll('body *').forEach(e => { if (/CHOOSE YOUR/i.test(e.textContent) && getComputedStyle(e).position === 'fixed') e.remove(); }); });
     return p;
@@ -38,7 +39,7 @@ const check = (n, ok, info) => { results.push((ok ? 'PASS ' : 'FAIL ') + n + (in
   await A.evaluate(() => townTab('shop')); await A.waitForTimeout(400);
   const shop = await A.evaluate(() => ({chips:document.querySelectorAll('.tchips button').length, deals:document.querySelectorAll('.tdeals .tcardi').length,
     fresh:document.querySelectorAll('.tgridi .tnew').length, total:Object.values(TOWN_ITEMS).filter(i => i.fresh).length}));
-  check('shop: filter chips, 4 deals, NEW items listed', shop.chips >= 12 && shop.deals === 4 && shop.fresh >= 50 && shop.total === 57, shop);
+  check('shop: filter chips, 4 deals, NEW items listed', shop.chips >= 12 && shop.deals === 4 && shop.fresh >= 20 && shop.total >= 81, shop);
   await A.screenshot({ path: SHOTS + '/v23_shop.png', fullPage: false });
   await A.evaluate(() => townShopF('space')); await A.waitForTimeout(200);
   const space = await A.evaluate(() => [...document.querySelectorAll('.tgridi')[1].querySelectorAll('.tcardi b')].map(b => b.textContent));

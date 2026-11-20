@@ -332,7 +332,7 @@ setInterval(() => { if (SESS()) { try { payDividends(); claimLotto(); } catch(e)
 /* teacher levers */
 window.ecMood = m => { const c = CLS() || {}; T.adminSet({econ:{...(c.econ || {}), mood:m, moodAt:Date.now()}}); };
 window.ecBills = on => { const c = CLS() || {}; T.adminSet({econ:{...(c.econ || {}), bills:on}}); };
-EXT.adminPanels.push({html: c => { const e = c.econ || {};
+EXT.adminPanels.push({tab:"economy", html: c => { const e = c.econ || {};
   return `<section class="panel tadm"><div class="eyebrow">💹 ${W2("Economy: Exchange, lottery, bills","Economía: bolsa, lotería, facturas")}</div>
     <p class="muted" style="font-size:13px">${W2("Move the stock market for a lesson. The Fed rate is set in Economy levers above and also changes mortgage rates.","Mueve la bolsa para una lección. La tasa Fed también cambia las hipotecas.")}</p>
     <div class="eprow"><button class="btn ${e.mood === "boom" ? "primary" : ""}" onclick="ecMood('boom')">🐂 ${W2("Boom","Auge")}</button><button class="btn ${e.mood === "recession" ? "primary" : ""}" onclick="ecMood('recession')">🐻 ${W2("Recession","Recesión")}</button><button class="btn ${!e.mood ? "primary" : ""}" onclick="ecMood(null)">${W2("Normal","Normal")}</button></div>

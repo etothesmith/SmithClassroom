@@ -118,7 +118,7 @@ EXT.onSession.push(() => {
 EXT.onLeave.push(() => { if (BG) { try { BG(); } catch(e){} BG = null; } });
 
 /* ---------------------------------------------------------------- teacher: read and delete house chats */
-EXT.adminPanels.push({
+EXT.adminPanels.push({tab:"safety", 
   html: c => `<section class="panel tadm"><div class="eyebrow">💬 ${W2("House chats","Chats de las casas")}</div>
     <p class="muted" style="font-size:13px">${W2("Students can chat only inside a house they were let into. Newest first. The class chat switch and mutes apply here too.","Los estudiantes solo chatean dentro de una casa donde los dejaron entrar. Lo más nuevo primero. El interruptor de chat y los silencios también aplican.")}</p>
     <div id="aHchat" class="hcadm"></div></section>`,

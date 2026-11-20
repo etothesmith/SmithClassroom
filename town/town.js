@@ -796,17 +796,47 @@ function paintAdmin(){
       <p id="tErr" class="terr" role="alert"></p><button class="btn ghost wide" onclick="townTab('plaza')">← ${WL("Back to Town","Volver al Pueblo")}</button></section>`;
     return;
   }
+  const y0 = window.scrollY, same = document.getElementById("tAdm") && window._tAdmCid === ADMIN_CID;
   NET.myClasses().then(list => {
-    if (!ADMIN_CID && list.length) ADMIN_CID = list[0].id;
-    V().innerHTML = `${modeBanner()}<section class="panel raised"><div class="eprow" style="justify-content:space-between;flex-wrap:wrap">
-        <div><div class="eyebrow">${WL("Town controls","Controles del Pueblo")} · ${esc(t.email || "")}</div><h1 style="margin:2px 0">${WL("Smithtopia","Smithtopia")}</h1></div>
-        <div><button class="btn ghost" onclick="townTab('plaza')">← ${WL("Town","Pueblo")}</button> <button class="btn ghost" onclick="townTOut()">${WL("Sign out","Salir")}</button></div></div>
-      <div class="tclasses">${list.map(c => `<button class="${c.id === ADMIN_CID ? "on" : ""}" onclick="townAdminPick('${c.id}')">${esc(c.name)}<b>${c.code}</b></button>`).join("")}
-        <button onclick="townNewClass()">＋ ${WL("New class period","Nuevo periodo")}</button></div></section>
+    if (ADMIN_CID && !list.some(c => c.id === ADMIN_CID)) ADMIN_CID = null;
+    if (!ADMIN_CID && list.length) { const last = (() => { try { return localStorage.getItem("town.admCid"); } catch(e){ return null; } })(); ADMIN_CID = list.some(c => c.id === last) ? last : list[0].id; }
+    try { localStorage.setItem("town.admCid", ADMIN_CID || ""); } catch(e){}
+    const cur = list.find(c => c.id === ADMIN_CID);
+    V().innerHTML = `${modeBanner()}<div class="tadmbar">
+        <div class="tadmtop"><div><div class="eyebrow">${WL("Teacher controls","Controles docentes")}</div><b class="tadmt">${cur ? esc(cur.name) : "Smithtopia"}${cur ? ` <span class="tadmcode">${cur.code}</span>` : ""}</b></div>
+          <div class="tadmbtns"><button class="btn ghost" onclick="townTab('plaza')">← ${WL("Town","Pueblo")}</button><button class="btn ghost" onclick="townTOut()">${WL("Sign out","Salir")}</button></div></div>
+        <div class="tclasses" role="tablist">${list.map((c, n) => `<button role="tab" class="${c.id === ADMIN_CID ? "on" : ""}" onclick="townAdminPick('${c.id}')" title="${WL("Alt+" + (n + 1), "Alt+" + (n + 1))}">${esc(c.name)}<b>${c.code}</b><i class="tbadge" id="tb_${c.id}" hidden></i></button>`).join("")}
+          <button onclick="townNewClass()">＋ ${WL("New period","Nuevo periodo")}</button></div>
+        <nav class="tadmnav">${ADMIN_TABS.map(([k, e, l]) => `<button class="${ADMIN_TAB === k ? "on" : ""}" onclick="townAdminTab('${k}')">${e} <span>${WL(l[0], l[1])}</span><i class="tbadge" id="tt_${k}" hidden></i></button>`).join("")}</nav></div>
       <div id="tAdm"></div>`;
-    if (ADMIN_CID) paintAdminClass(list.find(c => c.id === ADMIN_CID));
+    window._tAdmCid = ADMIN_CID;
+    if (cur) paintAdminClass(cur);
+    adminBadges(list);
+    /* keep your place: after hiring, approving, toggling… the page stays where you were */
+    if (same) [0, 120, 450, 1000].forEach(ms => setTimeout(() => { if (window._tAdmCid === ADMIN_CID && Math.abs(window.scrollY - y0) > 40 && !window._tAdmUserScroll) window.scrollTo(0, y0); }, ms));
+    window._tAdmUserScroll = false;
   }).catch(e => { console.warn(e); V().innerHTML = `<p class="terr">${WL("Couldn't load your classes.","No se pudieron cargar tus clases.")}</p>`; });
 }
+const ADMIN_TABS = [["overview","🏠",["Overview","Resumen"]],["people","👥",["Students & jobs","Estudiantes y empleos"]],["economy","💵",["Economy","Economía"]],
+  ["civics","🏛️",["Government & justice","Gobierno y justicia"]],["learning","🎓",["Learning","Aprendizaje"]],["world","🧭",["World & travel","Mundo y viajes"]],["safety","🛡️",["Chat & safety","Chat y seguridad"]]];
+let ADMIN_TAB = (() => { try { return localStorage.getItem("town.admTab") || "overview"; } catch(e){ return "overview"; } })();
+window.townAdminTab = k => { ADMIN_TAB = k; try { localStorage.setItem("town.admTab", k); } catch(e){} window._tAdmCid = null; paintAdmin(); window.scrollTo(0, 0); };
+addEventListener("wheel", () => { window._tAdmUserScroll = true; }, {passive:true}); addEventListener("touchmove", () => { window._tAdmUserScroll = true; }, {passive:true});
+addEventListener("keydown", e => { if (TT !== "admin" || !e.altKey) return; const n = parseInt(e.key, 10); if (!(n >= 1 && n <= 9)) return;
+  NET.myClasses().then(list => { const c = list[n - 1]; if (c) townAdminPick(c.id); }); });
+/* what needs you: red badges on each class and on each section */
+const NEEDS = [["apps", r => r.status === "pending", "people", ["job application","solicitud de empleo"]], ["firereqs", r => r.status === "open" && !r.done, "people", ["firing request","solicitud de despido"]],
+  ["wordreqs", r => r.status === "open", "safety", ["word to review","palabra por revisar"]], ["citations", r => r.status === "contested", "civics", ["contested citation","multa impugnada"]],
+  ["suits", r => r.status === "trial" || r.status === "filed", "civics", ["court case","caso judicial"]]];
+async function needsFor(cid){ const out = [];
+  await Promise.all(NEEDS.map(async ([col, f, tab, l]) => { try { const rows = (await NET.store.list(`classes/${cid}/${col}`)).filter(f); rows.forEach(r => out.push({col, tab, l, r})); } catch(e){} }));
+  return out; }
+async function adminBadges(list){ const per = await Promise.all(list.map(c => needsFor(c.id).then(n => [c.id, n])));
+  per.forEach(([cid, n]) => { const b = document.getElementById("tb_" + cid); if (b) { b.hidden = !n.length; b.textContent = n.length; }
+    if (cid === ADMIN_CID) { ADMIN_TABS.forEach(([k]) => { const t = document.getElementById("tt_" + k), m = n.filter(x => x.tab === k).length; if (t) { t.hidden = !m; t.textContent = m; } });
+      const box = document.getElementById("tNeeds"); if (box) box.innerHTML = n.length ? n.slice(0, 12).map(x => `<button class="tneed" onclick="townAdminTab('${x.tab}')">${{apps:"💼", firereqs:"🎖️", wordreqs:"🔤", citations:"⚖️", suits:"🏛️"}[x.col]} <b>${esc(x.r.name || x.r.aName || x.r.toName || "")}</b> · ${WL(x.l[0], x.l[1])}${x.r.job ? ` (${esc(x.r.job)})` : ""} <span>→</span></button>`).join("")
+        : `<p class="muted" style="margin:0">✅ ${WL("Nothing needs you right now.","Nada requiere tu atención ahora.")}</p>`; } }); }
+
 window.townTSign = async function(create){
   const em = document.getElementById("tEm").value.trim(), pw = document.getElementById("tPw").value, err = document.getElementById("tErr");
   try { if (create) await NET.teacherSignUp(em, pw); else await NET.teacherSignIn(em, pw); paintAdmin(); }
@@ -846,7 +876,8 @@ window.townDeleteClass = async function(cid){
 function paintAdminClass(c){
   const box = document.getElementById("tAdm"); if (!box || !c) return;
   const e = c.econ || {shopMult:1, ceiling:0};
-  box.innerHTML = `<section class="panel tadm">
+  const T_ = ADMIN_TAB, ALLT = T_ === "all", panels = EXT.adminPanels.filter(f => ALLT || (f.tab || "overview") === T_);
+  box.innerHTML = (T_ === "overview" || ALLT ? `<section class="panel tadm traised"><div class="eyebrow">🔔 ${WL("Needs your attention","Requiere tu atención")}</div><div id="tNeeds" class="tneeds"><p class="muted">…</p></div></section>` : "") + `<section class="panel tadm" ${ALLT || T_ === "overview" ? "" : "hidden"}>
       <div class="tcode"><span>${WL("Class code","Código")}</span><b>${c.code}</b><small>${WL("Students: Town → Join your class","Estudiantes: Pueblo → Únete a tu clase")}</small></div>
       <div class="tsw"><button class="btn" onclick="townRenameClass('${c.id}')">✏️ ${WL("Rename this class","Renombrar esta clase")}</button>
         <button class="btn ghost" onclick="townDeleteClass('${c.id}')">🗑️ ${WL("Delete this class","Eliminar esta clase")}</button></div>
@@ -854,18 +885,18 @@ function paintAdminClass(c){
         <button class="btn ${c.frozen ? "primary" : ""}" onclick="townSet('frozen',${!c.frozen})">${c.frozen ? "▶️ " + WL("Unpause the Town","Reanudar el Pueblo") : "⏸️ " + WL("Pause the Town (eyes up front)","Pausar el Pueblo (atención)")}</button>
         <button class="btn" onclick="townSet('chatOn',${!c.chatOn})">${c.chatOn ? "🔇 " + WL("Turn chat off","Apagar chat") : "💬 " + WL("Turn chat on","Encender chat")}</button>
         <button class="btn" onclick="townProjector()">📽️ ${WL("Show the plaza on the board","Mostrar la plaza en el pizarrón")}</button></div></section>
-    <section class="panel tadm"><div class="eyebrow">${WL("Economy levers","Palancas económicas")}</div>
+    <section class="panel tadm" ${ALLT || T_ === "economy" ? "" : "hidden"}><div class="eyebrow">${WL("Economy levers","Palancas económicas")}</div>
       <div class="tlev"><label>${WL("Shop prices ×","Precios de tienda ×")}<input type="number" step="0.25" min="0.25" max="5" value="${e.shopMult}" onchange="townEcon('shopMult',this.value)"></label>
         <label>${WL("Market price ceiling (0 = none)","Precio máximo del mercado (0 = ninguno)")}<input type="number" min="0" max="999" value="${e.ceiling}" onchange="townEcon('ceiling',this.value)"></label>
         <button class="btn" onclick="townStim()">💸 ${WL("Stimulus: give every student Smithbucks","Estímulo: dar Smithbucks a todos")}</button>
         <button class="btn" onclick="townGift()">🎁 ${WL("Give every student a crate","Dar una caja a todos")}</button></div>
       <p class="muted" style="font-size:13px">${WL("Try it in class: raise shop prices (inflation), set a price ceiling below what pets sell for and watch the shortage, or pay a stimulus and watch Market prices climb.",
         "Pruébalo en clase: sube los precios (inflación), pon un precio máximo menor al de las mascotas y observa la escasez, o da un estímulo y mira subir los precios.")}</p></section>
-    ${EXT.adminPanels.map(f => f.html(c) || "").join("")}
-    <section class="panel tadm"><div class="eyebrow">${WL("Roster","Lista")}</div><div id="tRos">…</div></section>
-    <section class="panel tadm"><div class="eyebrow">${WL("Chat log","Registro del chat")}</div><ul id="tChat" class="tlogl"></ul></section>
-    <section class="panel tadm"><div class="eyebrow">${WL("Sales and trades","Ventas e intercambios")}</div><div id="tDeals"></div></section>`;
-  run(EXT.adminPanels.map(f => f.after || (() => {})), c);
+    ${panels.map(f => { try { return f.html(c) || ""; } catch(e){ console.warn(e); return ""; } }).join("")}
+    <section class="panel tadm" ${ALLT || T_ === "people" ? "" : "hidden"}><div class="eyebrow">${WL("Roster","Lista")}</div><div id="tRos">…</div></section>
+    <section class="panel tadm" ${ALLT || T_ === "safety" ? "" : "hidden"}><div class="eyebrow">${WL("Chat log","Registro del chat")}</div><ul id="tChat" class="tlogl"></ul></section>
+    <section class="panel tadm" ${ALLT || T_ === "safety" ? "" : "hidden"}><div class="eyebrow">${WL("Sales and trades","Ventas e intercambios")}</div><div id="tDeals"></div></section>`;
+  run(panels.map(f => f.after || (() => {})), c);
   NET.roster(c.id).then(rows => { const r = document.getElementById("tRos"); if (!r) return;
     r.innerHTML = `<table class="ttab"><tr><th>${WL("Student","Estudiante")}</th><th>${WL("Last save","Último guardado")}</th><th></th></tr>${rows.map(s => `<tr><td>${esc(s.name)}${s.left ? ` <small class="muted">· ${WL("left the class","salió de la clase")} ${new Date(s.left).toLocaleDateString()}</small>` : ""}</td>
       <td>${s.saveAt ? new Date(s.saveAt).toLocaleString() : "—"}</td><td>

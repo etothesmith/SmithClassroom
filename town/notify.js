@@ -178,7 +178,7 @@ window.tnWord = async function(id, ok){
 };
 window.tnUnallow = function(w){ T.net.myClasses().then(list => { const k = list.find(x => x.id === T.adminCid); if (!k) return;
   T.adminSet({allowWords:(k.allowWords || []).filter(x => x !== w)}); setTimeout(T.paintAdmin, 300); }); };
-EXT.adminPanels.push({
+EXT.adminPanels.push({tab:"safety", 
   html: c => `<section class="panel tadm"><div class="eyebrow">🔤 ${WLx("Word filter","Filtro de palabras")}</div>
     <p class="muted" style="font-size:13px">${WLx("When the filter blocks a word, students see it in red and can ask you to allow it. Allowed words work for the whole class.","Cuando el filtro bloquea una palabra, el alumno la ve en rojo y puede pedirte que la permitas. Las palabras permitidas valen para toda la clase.")}</p>
     <div id="aWords"></div>${(c.allowWords || []).length ? `<p style="margin:8px 0 0"><b>${WLx("Allowed","Permitidas")}:</b> ${(c.allowWords || []).map(w => `<span class="kst">${esc(w)} <button class="btn ghost" title="${WLx("Block again","Bloquear otra vez")}" onclick="tnUnallow('${esc(w)}')">✖</button></span>`).join(" ")}</p>` : ""}</section>`,

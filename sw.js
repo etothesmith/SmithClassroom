@@ -4,10 +4,10 @@
    - Images, sounds and fonts: cache first, refreshed in the background.
    - Only this site's own files; Firebase and other sites are never touched.
    Bump VERSION when the app shell changes. */
-const VERSION = "sc-3.4.0";
-const SHELL = ["./", "index.html", "content.js", "bank_plus.js", "art.js", "avatar.js", "world.js", "world.css", "app.js",
+const VERSION = "sc-3.5.0";
+const SHELL = ["./", "index.html", "content.js", "bank_plus.js", "bank_plus2.js", "art.js", "avatar.js", "world.js", "world.css", "app.js",
   "town/town.css", "town/items.js", "town/config.js", "town/net.js", "town/town.js", "town/civic.js", "town/careers.js", "town/jobs2.js", "town/mayor.js", "town/today.js",
-  "town/world2.js", "town/pets.js", "town/houselife.js", "town/ambient.js", "town/live.js", "town/tower.js", "town/games.js", "town/economy.js", "town/farm.js", "town/justice.js", "town/travel.js", "town/records.js", "town/notify.js", "manifest.webmanifest",
+  "town/world2.js", "town/pets.js", "town/houselife.js", "town/ambient.js", "town/live.js", "town/tower.js", "town/games.js", "town/economy.js", "town/farm.js", "town/justice.js", "town/travel.js", "town/records.js", "town/events.js", "town/notify.js", "manifest.webmanifest",
   "assets/app/icon-192.png", "assets/app/icon-512.png"];
 self.addEventListener("install", e => {
   e.waitUntil(caches.open(VERSION).then(c => Promise.all(SHELL.map(u => c.add(u).catch(() => null)))));

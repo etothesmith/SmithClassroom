@@ -832,7 +832,7 @@ EXT.plazaSub.push(() => { const q = quiz(); if (q && q.phase === "open" && civ()
 
 /* ================================================================ teacher panels */
 let A_BUZZ = [];
-EXT.adminPanels.push({
+EXT.adminPanels.push({tab:"civics", 
   html: c => {
     const g = c.goal && c.goal.id ? c.goal : null, ev = c.event && c.event.id && (!c.event.until || c.event.until > Date.now()) ? c.event : null, el = c.election && c.election.id ? c.election : null;
     const q = c.quiz && c.quiz.id ? c.quiz : null, rate = c.econ && c.econ.rate != null ? c.econ.rate : 2;

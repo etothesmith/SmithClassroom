@@ -586,7 +586,7 @@ window.todoLive = k => { closeSheet(); LSUB = k; if (typeof go === "function") g
 
 /* ---------------------------------------------------------------- the teacher */
 const tc = () => T.adminCid;
-EXT.adminPanels.push({
+EXT.adminPanels.push({tab:"learning", 
   html: c => { const L2 = STDS() ? STDS().stdList() : {};
     return `<section class="panel tadm"><div class="eyebrow">🔥 ${W2("Live: raids, duels, feuds, mysteries","En vivo: incursiones, duelos, disputas, misterios")}</div>
       <p class="muted" style="font-size:13px">${W2("Period Raids run Monday–Friday 7:00–1:30 so students get the most out of logging in during class. Every right answer in class or in town hits the class boss; focus-standard answers hit twice.","Las incursiones son de lunes a viernes 7:00–1:30. Cada respuesta correcta golpea al jefe; las del estándar de enfoque, doble.")}</p>

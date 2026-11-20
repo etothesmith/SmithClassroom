@@ -88,7 +88,7 @@ function settleGigs(){ let ch = false; const o = (k, f) => { ch = T.once(k, f) |
     if (g.by === me() && g.status === "canceled") o("gigref:" + g.id, () => { T.coins(g.pay); T.toast(W2(`↩️ Gig canceled: 💵${g.pay} back.`, `↩️ Trabajo cancelado: 💵${g.pay} de vuelta.`)); });
     if (g.by === me() && g.status === "taken") o("gigtk:" + g.id + g.worker, () => T.toast(W2(`💼 ${g.workerName} took your gig: ${L(GIGS[g.kind].l)}.`, `💼 ${g.workerName} aceptó tu trabajo.`)));
     if (g.by === me() && g.status === "done") o("gigdn:" + g.id + g.doneAt, () => T.toast(W2(`📬 ${g.workerName} finished your gig. Approve it at the Gig Board.`, `📬 ${g.workerName} terminó. Apruébalo en la bolsa de trabajo.`)));
-    if (g.worker === me() && g.status === "paid") o("gigwage:" + g.id, () => { T.coins(g.pay); const w = wk(); w.gigs++; const c = civ(); c.gigsDone = (c.gigsDone | 0) + 1; c.gigStars = (c.gigStars | 0) + (g.stars | 0);
+    if (g.worker === me() && g.status === "paid") o("gigwage:" + g.id, () => { const bonus = (window.TOWN_FX ? TOWN_FX("gig", 0) : 0); T.coins(g.pay + bonus); if (bonus) T.toast(W2(`💼 Job Fair bonus: +💵${bonus}.`, `💼 Bono de la feria: +💵${bonus}.`)); const w = wk(); w.gigs++; const c = civ(); c.gigsDone = (c.gigsDone | 0) + 1; c.gigStars = (c.gigStars | 0) + (g.stars | 0);
       T.toast(W2(`💵 ${g.byName} paid you ${g.pay} for “${L(GIGS[g.kind].l)}” · ${"★".repeat(g.stars)}${"☆".repeat(5 - g.stars)}`, `💵 ${g.byName} te pagó ${g.pay} · ${"★".repeat(g.stars)}`)); }); });
   if (ch) { T.persist(); checkCombos(); } }
 const rep = () => { const c = civ(); return c.gigsDone ? (c.gigStars / c.gigsDone).toFixed(1) : "—"; };
@@ -209,7 +209,7 @@ EXT.banner.push(() => { if (!SESS()) return ""; const appr = GIGL.filter(g => g.
   return `<section class="panel jban"><b>📬 ${W2(`${appr} gig${appr > 1 ? "s" : ""} waiting for your approval`, `${appr} trabajo(s) por aprobar`)}</b><button class="btn primary" onclick="rcView('board');w2Go('gigs')">${W2("Gig Board","Bolsa de trabajo")}</button></section>`; });
 
 /* ---------------------------------------------------------------- teacher: weekly honor roll */
-EXT.adminPanels.push({html: () => `<section class="panel tadm"><div class="eyebrow">🏅 ${W2("This week's honor roll","Cuadro de honor de la semana")}</div><div id="rcTRoll" class="muted" style="font-size:13px">${W2("Loading…","Cargando…")}</div></section>`,
+EXT.adminPanels.push({tab:"overview", html: () => `<section class="panel tadm"><div class="eyebrow">🏅 ${W2("This week's honor roll","Cuadro de honor de la semana")}</div><div id="rcTRoll" class="muted" style="font-size:13px">${W2("Loading…","Cargando…")}</div></section>`,
   after: async c => { const box = document.getElementById("rcTRoll"); if (!box) return;
     try { const pubs = (await T.net.store.list(`classes/${c.id}/pub`)).filter(p => p.wk && p.wk.w === week());
       const top = (k, l) => { const r = [...pubs].sort((a, b) => (b.wk[k] | 0) - (a.wk[k] | 0)).filter(p => p.wk[k] > 0).slice(0, 3); return `<b>${l}</b>: ${r.map(p => `${E(p.name)} (${p.wk[k]})`).join(", ") || "—"}`; };

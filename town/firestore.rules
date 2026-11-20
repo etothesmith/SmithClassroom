@@ -336,7 +336,11 @@ service cloud.firestore {
         allow update: if owns(cid) || (live(cid) && (
             (isSid(cid, request.resource.data.get('worker', '')) && request.resource.data.worker in cls(cid).staff[resource.data.job]
               && onlyChanges(['n','status','worker','workerName','doneAt','result']))
-            || (resource.data.kind in ['litter','park'] && isSid(cid, request.resource.data.by) && request.resource.data.by in cls(cid).staff[resource.data.job])));
+            || (resource.data.kind in ['litter','park'] && isSid(cid, request.resource.data.by) && request.resource.data.by in cls(cid).staff[resource.data.job])
+            // a town NPC covers an empty job: the requester's app closes the case after 3 minutes
+            || (isSid(cid, resource.data.for) && request.resource.data.worker == 'npc' && request.resource.data.status == 'done'
+              && cls(cid).get('staff', {}).get(resource.data.job, []).size() == 0 && request.time.toMillis() > resource.data.at + 170000
+              && onlyChanges(['n','status','worker','workerName','doneAt','result']))));
         allow delete: if owns(cid);
       }
       // Town project requests: anyone asks; the mayor (or teacher) approves; builders and donors add progress

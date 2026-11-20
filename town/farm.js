@@ -66,11 +66,11 @@ const stockOf = k => (CROPS[k] || ANIMALS[k]).stock;
 const left = k => Math.max(0, stockOf(k) - bought(k));
 const supplyPrice = k => { const b = CROPS[k] ? CROPS[k].seed : ANIMALS[k].cost; return Math.ceil(b * (1 + bought(k) / stockOf(k))); };
 const soldWk = k => SALES.filter(s => s.good === k).reduce((a, s) => a + (s.n | 0), 0);
-const mktPrice = k => ALL[k].base * Math.max(0.4, Math.min(1.6, 1.6 - 1.2 * soldWk(k) / TARGET));
+const mktPrice = k => (window.TOWN_FX ? TOWN_FX("crop", 1) : 1) * ALL[k].base * Math.max(0.4, Math.min(1.6, 1.6 - 1.2 * soldWk(k) / TARGET));
 
 /* ---------------------------------------------------------------- crops */
 const stageOf = b => { if (!b || !b.c) return null; const C2 = CROPS[b.c]; if (!C2) return null;
-  const need = C2.hrs * H, rate = 1 + Math.min(2, b.w | 0) * 0.5;           /* each watering (max 2) speeds growth 50% */
+  const need = C2.hrs * H, rate = (1 + Math.min(2, b.w | 0) * 0.5) * (window.TOWN_FX ? TOWN_FX("grow", 1) : 1);           /* each watering (max 2) speeds growth 50% */
   const g = Math.min(1, (Date.now() - b.at) * rate / (need * 2)); const ripeAt = b.at + need * 2 / rate;
   const wilt = g >= 1 && Date.now() - ripeAt > 48 * H;
   return {g, ready:g >= 1, wilt, st:g >= 1 ? 3 : g >= 0.5 ? 2 : 1, mins:Math.max(0, Math.ceil((ripeAt - Date.now()) / 6e4))}; };
@@ -110,7 +110,7 @@ window.fmFeed = function(p){ const f = FARMS[p]; if (!f || f.fed === day()) retu
   if (!Object.keys(f.ani || {}).length) return;
   if (isOwner(p) && (S.tokens | 0) < cost) return T.toast(W2(`Feed costs 💵${cost} today.`, `El alimento cuesta 💵${cost} hoy.`));
   W.ask({title:W2("Feed the animals","Alimentar a los animales"), e:"🌾"}, async ok => { closeSheet(); if (!ok) return T.toast(W2("The animals didn't like that answer. Try again!","¡Intenta otra vez!"));
-    const stash = {...(f.stash || {})}; Object.entries(f.ani || {}).forEach(([k, n]) => { const A = ANIMALS[k]; if (A && A.out) stash[A.out] = (stash[A.out] | 0) + A.n * n; });
+    const stash = {...(f.stash || {})}; Object.entries(f.ani || {}).forEach(([k, n]) => { const A = ANIMALS[k]; if (A && A.out) stash[A.out] = (stash[A.out] | 0) + A.n * n * (window.TOWN_FX ? TOWN_FX("ani", 1) : 1); });
     const extra = {}; if (!isOwner(p)) { extra.owed = {...(f.owed || {})}; extra.owed[me()] = (extra.owed[me()] | 0) + (f.wage | 0); extra.feedOwed = (f.feedOwed | 0) + cost; }
     await patch(p, {fed:day(), hungry:0, stash, ...extra}); if (isOwner(p) && cost) { T.coins(-cost); T.persist(); }
     T.toast(W2("🥚 Fed! Today's eggs, milk, wool and honey are in the barn.","🥚 ¡Alimentados! Lo de hoy está en el granero.")); }); };
@@ -139,7 +139,7 @@ window.fmSupply = async function(k){
 /* ---------------------------------------------------------------- Farmers Market */
 window.fmSell = async function(k, n){
   const p = myPlot(); if (!p) return; const f = FARMS[p], have = (f.stash || {})[k] | 0; n = Math.min(n, have); if (n < 1) return;
-  let total = 0, sold = soldWk(k); for (let i = 0; i < n; i++) { total += ALL[k].base * Math.max(0.4, Math.min(1.6, 1.6 - 1.2 * sold / TARGET)); sold++; }
+  let total = 0, sold = soldWk(k); for (let i = 0; i < n; i++) { total += (window.TOWN_FX ? TOWN_FX("crop", 1) : 1) * ALL[k].base * Math.max(0.4, Math.min(1.6, 1.6 - 1.2 * sold / TARGET)); sold++; }
   total = Math.max(1, Math.floor(total));
   try { const stash = {...f.stash}; stash[k] = have - n; if (!stash[k]) delete stash[k];
     await patch(p, {stash}); await store().add(`${C()}/sales`, {week:week(), good:k, n, sid:me(), at:Date.now()});

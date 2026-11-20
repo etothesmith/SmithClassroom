@@ -705,3 +705,43 @@ mark.badw{background:#FFD3D8;color:#B0102A;font-weight:800;border-radius:4px;pad
 .rccombos>div.on{background:#FFF4C9;opacity:1;outline:3px solid #F2B33D}.rccombos span{font-size:26px}.rccombos small{font-size:11px}.rccombos i{height:6px;background:#0001;border-radius:4px;overflow:hidden}.rccombos em{display:block;height:100%;background:#3BAA5C}
 .rccert{border:8px double #C8102E;border-radius:18px;padding:20px;text-align:center;background:#FFFDF5}.rccert h1{font-size:32px;margin:2px 0}.rccert h2{color:#C8102E;margin:4px 0}.rcseal{font-size:44px}
 .rcsig{margin-top:12px;display:grid;justify-items:center}.rcsig span{font-family:cursive;font-size:24px;border-bottom:2px solid var(--char,#1D1B2E);padding:0 30px}
+/* teacher controls 3.5: sticky class bar, section tabs, attention list */
+.tadmbar{position:sticky;top:60px;z-index:30;background:var(--paper,#FFF8EC);border:2.5px solid var(--char);border-radius:18px;padding:10px 12px;margin:0 0 12px;box-shadow:0 4px 0 var(--char)}
+.tadmtop{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap}.tadmt{font:800 22px var(--disp)}.tadmcode{font:800 13px var(--body);letter-spacing:.14em;background:var(--goldfill);border:2px solid var(--char);border-radius:8px;padding:1px 6px;vertical-align:middle}
+.tadmbtns{display:flex;gap:6px}.tadmbar .tclasses{flex-wrap:nowrap;overflow-x:auto;margin-top:8px;padding-bottom:4px;scrollbar-width:thin}
+.tadmbar .tclasses button{flex:0 0 auto;position:relative;padding:4px 12px;font-size:14px}
+.tadmnav{display:flex;gap:6px;overflow-x:auto;margin-top:8px;padding-bottom:2px;scrollbar-width:thin}
+.tadmnav button{flex:0 0 auto;position:relative;border:2px solid var(--char);border-radius:999px;background:#fff;padding:5px 12px;font:800 14px var(--body);cursor:pointer}
+.tadmnav button.on{background:var(--char);color:#fff}
+.tbadge{position:absolute;top:-7px;right:-7px;min-width:20px;height:20px;border-radius:10px;background:#C8102E;color:#fff;font:800 12px/20px var(--body);font-style:normal;text-align:center;padding:0 5px;border:2px solid #fff}
+.tbadge[hidden]{display:none}
+.tneeds{display:grid;gap:6px}.tneed{display:flex;align-items:center;gap:6px;text-align:left;border:2px solid var(--char);border-radius:12px;background:#FFF4C9;padding:8px 10px;font:600 14px var(--body);cursor:pointer}
+.tneed span{margin-left:auto;font-weight:800}.traised{box-shadow:0 4px 0 var(--char)}
+@media (max-width:640px){.tadmbar{top:52px;padding:8px}.tadmnav button span{display:none}.tadmnav button{font-size:18px;padding:4px 10px}.tadmt{font-size:18px}}
+.knpc{background:#EEF3FF;border-style:dashed}.knpc small{font-size:10px;font-weight:800;color:#4A5BD8;letter-spacing:.06em}
+/* 3.5 map neighborhoods, event of the day, live ticker */
+.wzone{margin:14px 0}.wzhead{display:flex;align-items:center;gap:8px;margin:0 4px 8px;font:800 18px var(--disp)}.wzhead span{font-size:22px}
+.wzone .kmap{margin-top:0}
+.wmap .kb{transition:transform .18s ease, box-shadow .18s ease}.wmap .kb:hover{transform:translateY(-3px) rotate(-.4deg);box-shadow:0 7px 0 var(--char)}
+.wmap .kb img{transition:transform .3s ease}.wmap .kb:hover img{transform:scale(1.06)}
+.evcard{display:flex;align-items:center;gap:14px;background:linear-gradient(120deg,#FFF4C9,#FFE0EC);overflow:hidden;position:relative}
+.evcard .eve{font-size:54px;filter:drop-shadow(0 3px 0 #0002);animation:evbob 3s ease-in-out infinite}.evcard p{margin:2px 0 0;font-size:14px}.evcard b{font:800 20px var(--disp)}
+.evcard .btn{margin-left:auto;flex:none}.ev-showers,.ev-lowtide{background:linear-gradient(120deg,#DDF1FF,#E8F7EE)}.ev-harvest{background:linear-gradient(120deg,#2A2550,#5B3F7A);color:#fff}.ev-harvest .eyebrow{color:#FFD86B}
+.ev-safety{background:linear-gradient(120deg,#E7ECFF,#FFE3E3)}.ev-heat{background:linear-gradient(120deg,#FFE7B8,#FFC9A8)}.ev-quiet{background:linear-gradient(120deg,#F2EEE6,#EAF1F5)}
+@keyframes evbob{0%,100%{transform:translateY(0) rotate(-3deg)}50%{transform:translateY(-6px) rotate(3deg)}}
+.evbadge{background:#FFD23F !important;color:#1D1B2E !important;animation:evbob 2.4s ease-in-out infinite}
+.ticker{display:flex;align-items:center;gap:10px;border:2.5px solid var(--char);border-radius:14px;background:#1D1B2E;color:#fff;padding:6px 10px;margin:10px 0;overflow:hidden}
+.ticker>b{flex:none;background:#C8102E;border-radius:8px;padding:2px 8px;font:800 12px var(--body);letter-spacing:.1em;animation:tkblink 1.6s steps(2) infinite}
+.tkwrap{overflow:hidden;flex:1;mask-image:linear-gradient(90deg,transparent,#000 6%,#000 94%,transparent)}.tkrun{display:inline-flex;gap:14px;white-space:nowrap;animation:tkrun 40s linear infinite;font:600 14px var(--body)}
+.tkrun i{color:#FFD23F;font-style:normal}@keyframes tkrun{from{transform:translateX(0)}to{transform:translateX(-50%)}}@keyframes tkblink{50%{opacity:.6}}
+/* the look of the day on place art */
+body.sky-dawn .ehead img,body.sky-dawn .wmap .kb img{filter:sepia(.25) saturate(1.15) hue-rotate(-8deg)}
+body.sky-dusk .ehead img,body.sky-dusk .wmap .kb img,body.sky-golden .ehead img,body.sky-golden .wmap .kb img{filter:sepia(.35) saturate(1.2) brightness(.92) hue-rotate(-15deg)}
+body.sky-night .ehead img,body.sky-night .wmap .kb img{filter:brightness(.72) saturate(.85) hue-rotate(10deg) drop-shadow(0 0 6px #FFD86B66)}
+.ehead{position:relative;overflow:hidden}
+body.wx-rain .ehead::after,body.wx-storm .ehead::after{content:"";position:absolute;inset:0;pointer-events:none;background-image:repeating-linear-gradient(105deg,transparent 0 14px,rgba(80,120,200,.18) 14px 15px);animation:rain .6s linear infinite}
+body.wx-storm .ehead::before{content:"";position:absolute;inset:0;pointer-events:none;background:#fff;opacity:0;animation:flash 7s infinite}
+@keyframes rain{from{background-position:0 0}to{background-position:-30px 60px}}@keyframes flash{0%,92%,96%,100%{opacity:0}93%,95%{opacity:.35}}
+@media (prefers-reduced-motion:reduce){.tkrun,.evcard .eve,.evbadge,body.wx-rain .ehead::after,body.wx-storm .ehead::after,body.wx-storm .ehead::before{animation:none}}
+@media (min-width:900px){.tadmnav{flex-wrap:wrap;overflow:visible}.tadmbar .tclasses{flex-wrap:wrap;overflow:visible}}
+.evcard .eve img{width:72px;height:72px;object-fit:contain}
